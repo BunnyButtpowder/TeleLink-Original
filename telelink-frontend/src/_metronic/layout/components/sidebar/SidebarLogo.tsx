@@ -53,19 +53,19 @@ const SidebarLogo = (props: PropsType) => {
         {config.layoutType === 'dark-sidebar' ? (
           <img
             alt='Logo'
-            src={toAbsoluteUrl('')}
+            src={toAbsoluteUrl('media/logos/telecom.svg')}
             className='h-25px app-sidebar-logo-default'
           />
         ) : (
           <>
             <img
               alt='Logo'
-              src={toAbsoluteUrl('media/logos/default.svg')}
+              src={toAbsoluteUrl('media/logos/telecom.svg')}
               className='h-25px app-sidebar-logo-default theme-light-show'
             />
             <img
               alt='Logo'
-              src={toAbsoluteUrl('media/logos/default-dark.svg')}
+              src={toAbsoluteUrl('media/logos/telecom.svg')}
               className='h-25px app-sidebar-logo-default theme-dark-show'
             />
           </>
@@ -73,7 +73,7 @@ const SidebarLogo = (props: PropsType) => {
 
         <img
           alt='Logo'
-          src={toAbsoluteUrl('media/logos/default-small.svg')}
+          src={toAbsoluteUrl('media/logos/telecom-mini.svg')}
           className='h-20px app-sidebar-logo-minimize'
         />
       </Link>

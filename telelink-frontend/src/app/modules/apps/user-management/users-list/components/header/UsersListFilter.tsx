@@ -3,12 +3,14 @@ import {MenuComponent} from '../../../../../../../_metronic/assets/ts/components
 import {initialQueryState, KTIcon} from '../../../../../../../_metronic/helpers'
 import {useQueryRequest} from '../../core/QueryRequestProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
+import {useIntl} from 'react-intl'
 
 const UsersListFilter = () => {
   const {updateState} = useQueryRequest()
   const {isLoading} = useQueryResponse()
   const [role, setRole] = useState<string | undefined>()
   const [lastLogin, setLastLogin] = useState<string | undefined>()
+  const intl = useIntl()
 
   useEffect(() => {
     MenuComponent.reinitialization()
@@ -36,14 +38,14 @@ const UsersListFilter = () => {
         data-kt-menu-placement='bottom-end'
       >
         <KTIcon iconName='filter' className='fs-2' />
-        Filter
+        {intl.formatMessage({id: 'ECOMMERCE.COMMON.FILTER'})}
       </button>
       {/* end::Filter Button */}
       {/* begin::SubMenu */}
       <div className='menu menu-sub menu-sub-dropdown w-300px w-md-325px' data-kt-menu='true'>
         {/* begin::Header */}
         <div className='px-7 py-5'>
-          <div className='fs-5 text-gray-900 fw-bolder'>Filter Options</div>
+          <div className='fs-5 text-gray-900 fw-bolder'>{intl.formatMessage({id: 'ECOMMERCE.COMMON.FILTER_OPTIONS'})}</div>
         </div>
         {/* end::Header */}
 
@@ -67,11 +69,9 @@ const UsersListFilter = () => {
               value={role}
             >
               <option value=''></option>
-              <option value='Administrator'>Administrator</option>
-              <option value='Analyst'>Analyst</option>
-              <option value='Developer'>Developer</option>
-              <option value='Support'>Support</option>
-              <option value='Trial'>Trial</option>
+              <option value='Partner'>Partner</option>
+              <option value='Sub-admin'>Administrator (Sub)</option>
+              <option value='Salesman'>Salesman</option>
             </select>
           </div>
           {/* end::Input group */}

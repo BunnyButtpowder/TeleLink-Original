@@ -7,7 +7,7 @@ export type User = {
   position?: string
   role?: string
   last_login?: string
-  two_steps?: boolean
+  status?: boolean
   joined_day?: string
   online?: boolean
   initials?: {
@@ -19,9 +19,10 @@ export type User = {
 export type UsersQueryResponse = Response<Array<User>>
 
 export const initialUser: User = {
-  avatar: 'avatars/300-6.jpg',
-  position: 'Art Director',
-  role: 'Administrator',
+  avatar: 'avatars/blank.png',
+  position: 'Developer',
+  role: 'Sub-admin',
   name: '',
   email: '',
+  status: false,
 }

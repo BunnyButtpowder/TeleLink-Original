@@ -44,6 +44,7 @@
   "ECOMMERCE.COMMON.SUSPENDED": "Suspended",
   "ECOMMERCE.COMMON.ACTIVE": "Active",
   "ECOMMERCE.COMMON.FILTER": "Filter",
+  "ECOMMERCE.COMMON.FILTER_OPTIONS": "Filter Options",
   "ECOMMERCE.COMMON.BY_STATUS": "by Status",
   "ECOMMERCE.COMMON.BY_TYPE": "by Type",
   "ECOMMERCE.COMMON.BUSINESS": "Business",
@@ -65,5 +66,10 @@
   "ECOMMERCE.CUSTOMERS.UPDATE_STATUS.TITLE": "Status has been updated for selected customers",
   "ECOMMERCE.CUSTOMERS.UPDATE_STATUS.MESSAGE": "Selected customers status have successfully been updated",
   "ECOMMERCE.CUSTOMERS.EDIT.UPDATE_MESSAGE": "Customer has been updated",
-  "ECOMMERCE.CUSTOMERS.EDIT.ADD_MESSAGE": "Customer has been created"
+  "ECOMMERCE.CUSTOMERS.EDIT.ADD_MESSAGE": "Customer has been created",
+  "SIDEBAR.ADMINISTRATION": "Administration",
+  "SIDEBAR.USER_MANAGEMENT": "User Management",
+  "USERS.USER_LIST": "Users list",
+  "USERS.MANAGEMENT.ADD_USER": "Add User",
+  "USERS.AVATAR": "Avatar"
 }

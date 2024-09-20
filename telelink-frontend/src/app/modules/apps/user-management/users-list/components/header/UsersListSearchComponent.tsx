@@ -3,6 +3,7 @@
 import {useEffect, useState} from 'react'
 import {initialQueryState, KTIcon, useDebounce} from '../../../../../../../_metronic/helpers'
 import {useQueryRequest} from '../../core/QueryRequestProvider'
+import {useIntl} from 'react-intl'
 
 const UsersListSearchComponent = () => {
   const {updateState} = useQueryRequest()
@@ -11,6 +12,7 @@ const UsersListSearchComponent = () => {
   // ... if searchTerm has not been updated within last 500ms.
   // The goal is to only have the API call fire when user stops typing ...
   // ... so that we aren't hitting our API rapidly.
+  const intl = useIntl()
   const debouncedSearchTerm = useDebounce(searchTerm, 150)
   // Effect for API call
   useEffect(
@@ -32,7 +34,7 @@ const UsersListSearchComponent = () => {
           type='text'
           data-kt-user-table-filter='search'
           className='form-control form-control-solid w-250px ps-14'
-          placeholder='Search user'
+          placeholder={intl.formatMessage({id: 'ECOMMERCE.COMMON.SEARCH'})}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
