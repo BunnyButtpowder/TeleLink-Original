@@ -1,5 +1,5 @@
 import {useIntl} from 'react-intl'
-import {KTIcon} from '../../../../helpers'
+import {KTIcon, toAbsoluteUrl} from '../../../../helpers'
 import {SidebarMenuItemWithSub} from './SidebarMenuItemWithSub'
 import {SidebarMenuItem} from './SidebarMenuItem'
 
@@ -12,6 +12,12 @@ const SidebarMenuMain = () => {
         to='/dashboard'
         icon='element-11'
         title={intl.formatMessage({id: 'MENU.DASHBOARD'})}
+        fontIcon='bi-app-indicator'
+      />
+      <SidebarMenuItem
+        to='/customers'
+        icon='profile-user'
+        title={intl.formatMessage({id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS'})}
         fontIcon='bi-app-indicator'
       />
       <SidebarMenuItem to='/builder' icon='switch' title='Layout Builder' fontIcon='bi-layers' />
@@ -102,18 +108,6 @@ const SidebarMenuMain = () => {
         title={intl.formatMessage({id: 'SIDEBAR.USER_MANAGEMENT'})}
         fontIcon='bi-layers'
       />
-      <div className='menu-item'>
-        <a
-          target='_blank'
-          className='menu-link'
-          href={import.meta.env.VITE_APP_PREVIEW_DOCS_URL + '/changelog'}
-        >
-          <span className='menu-icon'>
-            <KTIcon iconName='code' className='fs-2' />
-          </span>
-          <span className='menu-title'>Changelog {import.meta.env.VITE_APP_VERSION}</span>
-        </a>
-      </div>
     </>
   )
 }
