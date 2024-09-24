@@ -21,6 +21,7 @@ const Content = ({children}: WithChildren) => {
         classes.content.join(' '),
         config?.app?.content?.class
       )}
+      style={{overflowX: 'auto'}}
     >
       {appContentContainer ? (
         <div
