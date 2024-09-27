@@ -10,7 +10,11 @@ dotenv.config();
 // Định nghĩa 1 webserver
 const app = express();
 const corsOptions = {
-    origin: ['http://localhost:5173, https://didongtelecom.com, http://didongtelecom.com'],
+    origin: [
+        'http://localhost:5173', 
+        'https://didongtelecom.com', 
+        'http://didongtelecom.com'
+    ],
     optionsSuccessStatus: 200
 };
 
