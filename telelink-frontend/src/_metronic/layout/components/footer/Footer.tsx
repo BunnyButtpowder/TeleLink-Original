@@ -17,7 +17,7 @@ const Footer = () => {
           target='_blank'
           className='text-gray-800 text-hover-primary'
         >
-          Keenthemes
+          Telecom
         </a>
       </div>
 
@@ -36,11 +36,11 @@ const Footer = () => {
 
         <li className='menu-item'>
           <a
-            href='https://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469'
+            href='https://selfolio.pages.dev/minhvu'
             target='_blank'
             className='menu-link px-2'
           >
-            Purchase
+            Credit
           </a>
         </li>
       </ul>

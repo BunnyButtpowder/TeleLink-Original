@@ -5,7 +5,7 @@ const User = require('../models/user');
 // Login
 const login = (req, res) => {
     const {username, password} = req.body;
-    User.findByEmail(username, (err, user) => {
+    User.findByUsername(username, (err, user) => {
         if(err || !user) {
             return res.status(400).json({
                 message: 'Username không tồn tại'
@@ -22,7 +22,7 @@ const login = (req, res) => {
             expiresIn: 86400,
         });        
         res.status(200).json({
-            user: {id: user.id, username: user.username},
+            user: {id: user.id, username: user.username, email: user.email, role: user.role},
             token,
         });
     });
