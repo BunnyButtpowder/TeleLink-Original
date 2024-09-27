@@ -2,7 +2,7 @@ const db = require('../db');
 const bcrypt = require('bcryptjs');
 
 
-const findByEmail = (username, callback) => {
+const findByUsername = (username, callback) => {
     db.query(`SELECT * FROM users WHERE username = ?`, [username], (err, result) => {
         if (err) {
             console.log(err);
@@ -90,7 +90,7 @@ const createUser = (username, email, password, role, callback) => {
 
 
 module.exports = {
-    findByEmail,
+    findByUsername,
     createUser,
     changePassword
 };

@@ -21,7 +21,7 @@ const usersColumns: ReadonlyArray<Column<Customer>> = [
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Gói hiện tại' className='min-w-125px' />,
-    accessor: 'role',
+    accessor: 'currentPack',
   },
   {
     Header: (props) => (

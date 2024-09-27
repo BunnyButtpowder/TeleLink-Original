@@ -71,13 +71,13 @@ const AuthLayout = () => {
 
           {/* begin::Title */}
           <h1 className='text-white fs-2qx fw-bolder text-center mb-7'>
-            Fast, Efficient and Productive
+            Kết Nối Telesales, Nâng Tầm Hiệu Quả
           </h1>
           {/* end::Title */}
 
           {/* begin::Text */}
           <div className='text-white fs-base text-center'>
-            In this kind of post,{' '}
+            {/* In this kind of post,{' '}
             <a href='#' className='opacity-75-hover text-warning fw-bold me-1'>
               the blogger
             </a>
@@ -86,7 +86,9 @@ const AuthLayout = () => {
             <a href='#' className='opacity-75-hover text-warning fw-bold me-1'>
               the interviewee
             </a>
-            and their <br /> work following this is a transcript of the interview.
+            and their <br /> work following this is a transcript of the interview. */}
+            TeleLink là hệ thống quản lý giúp tối ưu hóa quy trình bán gói cước qua điện thoại. <br />
+            Truy cập ngay để trải nghiệm sự tiện lợi và hiệu quả vượt trội!
           </div>
           {/* end::Text */}
         </div>
