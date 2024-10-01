@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 
 const findByUsername = (username, callback) => {
-    db.query(`SELECT * FROM users WHERE username = ?`, [username], (err, result) => {
+    db.query(`SELECT * FROM Users WHERE username = ?`, [username], (err, result) => {
         if (err) {
             console.log(err);
             return callback(err, null);
@@ -13,7 +13,7 @@ const findByUsername = (username, callback) => {
     });
 }
 const changePassword = (id, oldPassword, newPassword, callback) => {
-    const sql = 'SELECT * FROM users WHERE id = ?';
+    const sql = 'SELECT * FROM Users WHERE id = ?';
     
     db.query(sql, [id], (err, results) => {
         if (err) {
@@ -58,7 +58,7 @@ const createUser = (username, email, password, role, callback) => {
         return callback(new Error('Username, email, password, and role are required'));
     }
 
-    const checkSql = 'SELECT * FROM users WHERE email = ? OR username = ?';
+    const checkSql = 'SELECT * FROM Users WHERE email = ? OR username = ?';
     db.query(checkSql, [email, username], (err, results) => {
         if (err) {
             console.error("Error checking for existing user:", err);
@@ -74,7 +74,7 @@ const createUser = (username, email, password, role, callback) => {
                 console.error("Error hashing password:", err);
                 return callback(err);
             }
-            const sql = 'INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)';
+            const sql = 'INSERT INTO Users (username, email, password, role) VALUES (?, ?, ?, ?)';
             db.query(sql, [username, email, hash, role], (err, result) => {
                 if (err) {
                     console.error("Error inserting user into database:", err);

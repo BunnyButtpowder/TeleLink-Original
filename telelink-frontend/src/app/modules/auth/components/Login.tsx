@@ -48,6 +48,7 @@ export function Login() {
         const {user, token} = response.data
         saveAuth({api_token: token})
         // const {data: user} = await getUserByToken(auth.api_token)
+        localStorage.setItem('auth_token', token);
         setCurrentUser(user)
         setLoading(false)
       } catch (error) {
@@ -59,8 +60,6 @@ export function Login() {
       }
     },
   })
-
-  console.log("Login successfully!")
 
   return (
     <form
@@ -98,7 +97,7 @@ export function Login() {
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
-        <label className='form-label fs-6 fw-bolder text-gray-900'>Username</label>
+        <label className='form-label fs-6 fw-bolder text-gray-900'>Tên đăng nhập</label>
         <input
           placeholder='Username'
           {...formik.getFieldProps('username')}
@@ -126,6 +125,7 @@ export function Login() {
         <label className='form-label fw-bolder text-gray-900 fs-6 mb-0'>{intl.formatMessage({id: 'AUTH.INPUT.PASSWORD'})}</label>
         <input
           type='password'
+          placeholder='Password'
           autoComplete='off'
           {...formik.getFieldProps('password')}
           className={clsx(

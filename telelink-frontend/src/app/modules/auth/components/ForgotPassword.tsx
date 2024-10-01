@@ -6,7 +6,7 @@ import {useFormik} from 'formik'
 import {requestPassword} from '../core/_requests'
 
 const initialValues = {
-  email: 'admin@demo.com',
+  email: '',
 }
 
 const forgotPasswordSchema = Yup.object().shape({
@@ -51,12 +51,12 @@ export function ForgotPassword() {
     >
       <div className='text-center mb-10'>
         {/* begin::Title */}
-        <h1 className='text-gray-900 fw-bolder mb-3'>Forgot Password ?</h1>
+        <h1 className='text-gray-900 fw-bolder mb-3'>Quên mật khẩu ?</h1>
         {/* end::Title */}
 
         {/* begin::Link */}
         <div className='text-gray-500 fw-semibold fs-6'>
-          Enter your email to reset your password.
+          Vui lòng nhập email của bạn để đặt lại mật khẩu.
         </div>
         {/* end::Link */}
       </div>
@@ -106,7 +106,7 @@ export function ForgotPassword() {
       {/* begin::Form group */}
       <div className='d-flex flex-wrap justify-content-center pb-lg-0'>
         <button type='submit' id='kt_password_reset_submit' className='btn btn-primary me-4'>
-          <span className='indicator-label'>Submit</span>
+          <span className='indicator-label'>Gửi</span>
           {loading && (
             <span className='indicator-progress'>
               Please wait...
@@ -121,7 +121,7 @@ export function ForgotPassword() {
             className='btn btn-light'
             disabled={formik.isSubmitting || !formik.isValid}
           >
-            Cancel
+            Hủy
           </button>
         </Link>{' '}
       </div>
