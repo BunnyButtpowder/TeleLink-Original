@@ -2,6 +2,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes.js');
+const userRoutes = require('./routes/userRoutes.js');
+const roleRoutes = require('./routes/roleRoutes.js');
 const cors = require('cors');
 const createError = require('http-errors');
 
@@ -22,6 +24,8 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
+app.use('/role', roleRoutes);
 
 const port = process.env.PORT || 8080;
 
