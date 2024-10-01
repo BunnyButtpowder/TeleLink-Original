@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer');
 // Login
 const login = (req, res) => {
     const { username, password } = req.body;
-    User.findByEmail(username, (err, user) => {
+    User.findByUsername(username, (err, user) => {
         if (err || !user) {
             return res.status(400).json({
                 message: 'Username không tồn tại'

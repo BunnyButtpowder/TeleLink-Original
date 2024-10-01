@@ -33,7 +33,7 @@ const forgotPassword = (email, callback) => {
     });
 
 }
-const findByEmail = (username, callback) => {
+const findByUsername = (username, callback) => {
     db.query(`SELECT * FROM Users WHERE username = ?`, [username], (err, result) => {
         if (err) {
             console.log(err);
@@ -167,7 +167,7 @@ cron.schedule('0 * * * *', () => {
 
 module.exports = {
     forgotPassword,
-    findByEmail,
+    findByUsername,
     createUser,
     changePassword,
     verifyOTP,
