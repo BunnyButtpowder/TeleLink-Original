@@ -9,6 +9,7 @@ import { WithChildren } from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import { CustomersPage } from '../pages/customer/CustomersPage'
 import { RevenuePage } from '../pages/reportRevenue/RevenuePage'
+import { ResultPage } from '../pages/reportCallResults/ResultPage'
 // import { PlanPage } from '../pages/plan/PlanPage'
 
 const PrivateRoutes = () => {
@@ -46,7 +47,7 @@ const PrivateRoutes = () => {
           path='reports/call-results'
           element={
             <SuspensedView>
-              <RevenuePage />
+              <ResultPage />
             </SuspensedView>
           }
         />
