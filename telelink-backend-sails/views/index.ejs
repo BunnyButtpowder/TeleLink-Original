@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OBT SERVICES</title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+</head>
+<body>
+<h1 id="browserId"></h1>
+<p>Welcome to OBT</p>
+<script>
+  $(document).ready(function () {
+    // Initialize the agent at application startup.
+    const fpPromise = import("/javascripts/fgp.js")
+      .then(FingerprintJS => FingerprintJS.load());
+
+    // Get the visitor identifier when you need it.
+    fpPromise
+      .then(fp => fp.get())
+      .then(result => {
+        // This is the visitor identifier:
+        const visitorId = result.visitorId;
+        console.log(visitorId);
+        $("#browserId").text(visitorId);
+      });
+  });
+</script>
+</body>
+</html>

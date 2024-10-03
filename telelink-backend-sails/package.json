@@ -1,0 +1,49 @@
+{
+  "name": "didongtelecom",
+  "private": true,
+  "version": "0.0.0",
+  "description": "a Sails application",
+  "keywords": [],
+  "dependencies": {
+    "@sailshq/lodash": "^3.10.3",
+    "grunt": "1.0.4",
+    "include-all": "^4.0.3",
+    "jsonwebtoken": "^9.0.2",
+    "md5": "^2.3.0",
+    "moment": "^2.24.0",
+    "qs": "^6.6.0",
+    "request": "^2.88.0",
+    "sails": "^1.5.8",
+    "sails-hook-apianalytics": "^2.0.3",
+    "sails-hook-custom-blueprints": "^1.0.0",
+    "sails-hook-grunt": "^5.0.0",
+    "sails-hook-morgan": "^1.0.5",
+    "sails-hook-orm": "^4.0.0",
+    "sails-hook-sockets": "^2.0.0",
+    "sails-hook-swagger-generator-pr": "^2.10.3",
+    "sails-mysql": "^1.0.1",
+    "uuid": "^3.4.0",
+    "winston": "^2.4.3",
+    "winston-daily-rotate-file": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "5.16.0",
+    "sails-hook-watch": "^0.3.5"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node app.js",
+    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "lint": "./node_modules/eslint/bin/eslint.js . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
+    "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/khangpq/abc.git"
+  },
+  "author": "",
+  "license": "",
+  "engines": {
+    "node": "^16.20"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+      "name": "App",
+      "script": "./app.js",
+      "instances": 5,
+      "exec_mode": "cluster",
+      "interpreter" : "node@16.20.2",
+      "watch": false,
+      "env": {
+        "NUM_OF_INSTANCE": 5,
+        "NODE_ENV": "production",
+        "PORT": 22896,
+        "MYSQL_DB": "mysql://acc:pass@localhost:3306/db"
+      }
+    }
+  ]
+}
