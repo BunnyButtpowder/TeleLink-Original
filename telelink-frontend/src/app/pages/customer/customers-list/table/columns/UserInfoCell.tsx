@@ -2,40 +2,41 @@
 import clsx from 'clsx'
 import {FC} from 'react'
 import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
-import {User} from '../../core/_models'
+import {Customer} from '../../core/_models'
 
 type Props = {
-  user: User
+  customer: Customer
 }
 
-const UserInfoCell: FC<Props> = ({user}) => (
+const UserInfoCell: FC<Props> = ({customer}) => (
   <div className='d-flex align-items-center'>
     {/* begin:: Avatar */}
     <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
       <a href='#'>
-        {user.avatar ? (
+        {/* {customer.phoneNum ? (
           <div className='symbol-label'>
-            <img src={toAbsoluteUrl(`media/${user.avatar}`)} alt={user.name} className='w-100' />
+            <img src={toAbsoluteUrl(`media/${customer.avatar}`)} alt={customer.name} className='w-100' />
           </div>
         ) : (
           <div
             className={clsx(
               'symbol-label fs-3',
-              `bg-light-${user.initials?.state}`,
-              `text-${user.initials?.state}`
+              `bg-light-${customer.initials?.state}`,
+              `text-${customer.initials?.state}`
             )}
           >
-            {user.initials?.label}
+            {customer.initials?.label}
           </div>
-        )}
+        )} */}
+        {customer.phoneNum}
       </a>
     </div>
-    <div className='d-flex flex-column'>
+    {/* <div className='d-flex flex-column'>
       <a href='#' className='text-gray-800 text-hover-primary mb-1'>
-        {user.name}
+        {customer.name}
       </a>
-      <span>{user.email}</span>
-    </div>
+      <span>{customer.email}</span>
+    </div> */}
   </div>
 )
 

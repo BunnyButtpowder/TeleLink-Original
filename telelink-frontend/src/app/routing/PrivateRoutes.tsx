@@ -8,7 +8,7 @@ import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils'
 import { WithChildren } from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import { CustomersPage } from '../pages/customer/CustomersPage'
-import { PlanPage } from '../pages/plan/PlanPage'
+// import { PlanPage } from '../pages/plan/PlanPage'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))

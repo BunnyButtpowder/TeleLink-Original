@@ -17,7 +17,7 @@ const usersColumns: ReadonlyArray<Column<Customer>> = [
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Số thuê bao' className='min-w-125px' />,
     id: 'phoneNum',
-    Cell: ({...props}) => <UserInfoCell user={props.data[props.row.index]} />,
+    Cell: ({...props}) => <UserInfoCell customer={props.data[props.row.index]} />,
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Gói hiện tại' className='min-w-125px' />,
@@ -28,14 +28,14 @@ const usersColumns: ReadonlyArray<Column<Customer>> = [
       <UserCustomHeader tableProps={props} title='Gói đặc biệt (ưu tiên 1)' className='min-w-125px' />
     ),
     id: 'last_login',
-    Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].last_login} />,
+    // Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].last_login} />,
   },
   {
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='Gói cước gán (ưu tiên 2)' className='min-w-125px' />
     ),
     id: 'two_steps',
-    Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].two_steps} />,
+    // Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].two_steps} />,
   },
   {
     Header: (props) => (

@@ -30,13 +30,13 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     id: 'last_login',
     Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].last_login} />,
   },
-  {
-    Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Two steps' className='min-w-125px' />
-    ),
-    id: 'two_steps',
-    Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].two_steps} />,
-  },
+  // {
+  //   Header: (props) => (
+  //     <UserCustomHeader tableProps={props} title='Two steps' className='min-w-125px' />
+  //   ),
+  //   id: 'two_steps',
+  //   Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].two_steps} />,
+  // },
   {
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='Joined day' className='min-w-125px' />
