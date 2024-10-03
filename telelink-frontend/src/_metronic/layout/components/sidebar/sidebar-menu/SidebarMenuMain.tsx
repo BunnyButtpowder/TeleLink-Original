@@ -26,6 +26,15 @@ const SidebarMenuMain = () => {
         title={intl.formatMessage({id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS'})}
         fontIcon='bi-app-indicator'
       />
+      <SidebarMenuItemWithSub
+        to='/reports'
+        title='Báo cáo'
+        fontIcon='bi-chat-left'
+        icon='graph-4'
+      >
+        <SidebarMenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
+        <SidebarMenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
+      </SidebarMenuItemWithSub>
       <SidebarMenuItem to='/builder' icon='switch' title='Layout Builder' fontIcon='bi-layers' />
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
