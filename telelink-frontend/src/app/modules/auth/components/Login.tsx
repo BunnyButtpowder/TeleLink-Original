@@ -153,7 +153,7 @@ export function Login() {
         <div />
 
         {/* begin::Link */}
-        <Link to='/auth/forgot-password' className='link-primary'>
+        <Link to='/auth/forgot-password' className='link-dark'>
           {intl.formatMessage({id: 'AUTH.GENERAL.FORGOT_BUTTON'})}
         </Link>
         {/* end::Link */}
@@ -165,7 +165,7 @@ export function Login() {
         <button
           type='submit'
           id='kt_sign_in_submit'
-          className='btn btn-primary'
+          className='btn btn-danger'
           disabled={formik.isSubmitting || !formik.isValid}
         >
           {!loading && <span className='indicator-label'>{intl.formatMessage({id: 'AUTH.LOGIN.BUTTON'})}</span>}
