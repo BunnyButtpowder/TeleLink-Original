@@ -46,6 +46,6 @@ module.exports.datastores = {
      *                                                                          *
      ***************************************************************************/
     adapter: "sails-mysql",
-    url: process.env.MYSQL_DB,
+    url:'mysql://telelink_user:G2rJ84iH@@123.25.21.119:33066/telelink_db',
   },
 };

@@ -68,7 +68,7 @@ module.exports.models = {
     createdAt: { type: "number", autoCreatedAt: true },
     updatedAt: { type: "number", autoUpdatedAt: true },
     id: { type: "number", autoIncrement: true, columnType: "bigint" },
-    isDeleted: { type: "boolean", defaultsTo: false },
+    isDelete: { type: "boolean", defaultsTo: false },
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?
     //  ||   Replace `id` above with this instead:

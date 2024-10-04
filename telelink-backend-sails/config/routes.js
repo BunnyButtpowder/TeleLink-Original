@@ -42,4 +42,5 @@ module.exports.routes = {
   // "POST /proxy/:serviceKey/:endPointDelegate": "ProxyController.index",
   // "GET /store/checklic.php": "CrackAirController.checklic",
   // "GET /store/activate.php": "CrackAirController.activate"
+  'POST /auth/change-password/:id': 'AuthController.changePassword',
 };
