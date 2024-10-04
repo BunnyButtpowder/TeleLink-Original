@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "App",
+      "name": "telelink-be",
       "script": "./app.js",
       "instances": 5,
       "exec_mode": "cluster",
@@ -10,6 +10,11 @@
       "env": {
         "NUM_OF_INSTANCE": 5,
         "NODE_ENV": "production",
+        "PORT": 22896,
+        "MYSQL_DB": "mysql://acc:pass@localhost:3306/db"
+      },
+      "env_development": {
+        "NODE_ENV": "development",
         "PORT": 22896,
         "MYSQL_DB": "mysql://acc:pass@localhost:3306/db"
       }
