@@ -6,6 +6,7 @@
   "keywords": [],
   "dependencies": {
     "@sailshq/lodash": "^3.10.3",
+    "bcrypt": "^5.1.1",
     "grunt": "1.0.4",
     "include-all": "^4.0.3",
     "jsonwebtoken": "^9.0.2",
@@ -21,7 +22,7 @@
     "sails-hook-orm": "^4.0.0",
     "sails-hook-sockets": "^2.0.0",
     "sails-hook-swagger-generator-pr": "^2.10.3",
-    "sails-mysql": "^1.0.1",
+    "sails-mysql": "^1.0.3",
     "uuid": "^3.4.0",
     "winston": "^2.4.3",
     "winston-daily-rotate-file": "^3.2.1"

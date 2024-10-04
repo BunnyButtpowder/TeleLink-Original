@@ -29,14 +29,14 @@ module.exports.blueprints = {
    *                                                                          *
    ***************************************************************************/
   shortcuts: true,
-  prefix: "/api",
-  parseBlueprintOptions: function (req) {
-    // Get the default query options.
-    var queryOptions = req._sails.hooks.blueprints.parseBlueprintOptions(req);
+  // prefix: "/api",
+  // parseBlueprintOptions: function (req) {
+  //   // Get the default query options.
+  //   var queryOptions = req._sails.hooks.blueprints.parseBlueprintOptions(req);
 
-    if (!req.param("populate", false) && !queryOptions.alias) {
-      queryOptions.populates = {};
-    }
-    return queryOptions;
-  },
+  //   if (!req.param("populate", false) && !queryOptions.alias) {
+  //     queryOptions.populates = {};
+  //   }
+  //   return queryOptions;
+  // },
 };
