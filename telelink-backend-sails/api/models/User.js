@@ -14,11 +14,23 @@ module.exports = {
       type: 'string',
       allowNull: true
     },
-    // Khóa ngoại tham chiếu đến bảng Auth
+    agency: {
+      type: 'number'
+    },
+    avatar: {
+      type: 'string',
+    },
+    gender: {
+      type: 'string',
+      isIn: ['male', 'female', 'other']
+    },
+    loai_data: {
+      type: 'string',
+    },
     auth: {
       model: 'auth',
       unique: true
     },
-    
+
   },
 };

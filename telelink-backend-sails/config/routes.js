@@ -7,6 +7,8 @@
  * For more information on configuring custom routes, check out:
  * https://sailsjs.com/anatomy/config/routes-js
  */
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 module.exports.routes = {
   /***************************************************************************
@@ -42,5 +44,22 @@ module.exports.routes = {
   // "POST /proxy/:serviceKey/:endPointDelegate": "ProxyController.index",
   // "GET /store/checklic.php": "CrackAirController.checklic",
   // "GET /store/activate.php": "CrackAirController.activate"
-  'POST /auth/change-password/:id': 'AuthController.changePassword',
+  // 'POST /auth/change-password/:id': 'AuthController.changePassword',
+  // 'POST /auth/change/:id': { action: 'auth/change' },
+  'POST /import-data': (req, res) => {
+    upload.single('file')(req, res, (err) => {
+      if (err) {
+        console.error("Multer Error: ", err); // Ghi log lỗi từ multer
+        return res.badRequest({ error: 'Có lỗi xảy ra khi tải lên tệp.' });
+      }
+  
+      // Kiểm tra file được tải lên
+      if (!req.file) {
+        return res.badRequest({ error: 'Không có tệp được tải lên' });
+      }
+  
+      // Chuyển tiếp tới action sau khi upload thành công
+      return DataController.importData(req, res); // Giả sử bạn đã định nghĩa importData trong DataController
+    });
+  },
 };

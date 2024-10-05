@@ -6,5 +6,7 @@ module.exports = {
             adapter: 'sails-mysql',
             url: process.env.DATABASE_URL,
         }
-    }
+        
+    },
+    port: process.env.PORT || 1337,
 };

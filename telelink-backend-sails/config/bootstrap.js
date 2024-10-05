@@ -10,6 +10,7 @@
  */
 
 module.exports.bootstrap = async function () {
+  // require('dotenv').config();
   sails.services = require("include-all")({
     dirname: require("path").resolve("api/services"),
     filter: /(.+Service)\.js$/,

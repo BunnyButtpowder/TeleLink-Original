@@ -1,5 +1,5 @@
 // api/models/Auth.js
-// api/models/Auth.js
+
 
 module.exports = {
   attributes: {
