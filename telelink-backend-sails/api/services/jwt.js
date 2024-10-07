@@ -1,4 +1,4 @@
-const secret = "DCMA3281emndscfjldsjs2";
+// const secret = "DCMA3281emndscfjldsjs2";
 const jwt = require("jsonwebtoken");
 const services = {};
 services.sign = function (data) {
@@ -7,13 +7,13 @@ services.sign = function (data) {
 
 services.verifyAsync = function (token) {
   return new Promise((res, rej) => {
-    jwt.verify(token, secret, function (err, decoded) {
+    jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
       if (err) return rej(err);
       return res(decoded);
     });
   });
 };
 services.verify = function (token) {
-  return jwt.verify(token, secret);
+  return jwt.verify(token, process.env.JWT_SECRET);
 };
 module.exports = services;

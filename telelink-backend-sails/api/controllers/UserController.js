@@ -1,6 +1,7 @@
 
 const bcrypt = require('bcrypt');
 
+
 module.exports = {
   create: async function (req, res) {
     const { fullName, phoneNumber, address, email, username, password , role } = req.body;
@@ -9,13 +10,13 @@ module.exports = {
      
       const existingAuth = await Auth.findOne({ email });
       if (existingAuth) {
-        return res.badRequest({ message: "Email đã tồn tại rồi" });
+        return res.status(422).json({ message: "Email đã tồn tại rồi" });
       }
 
   
       const existingUsername = await Auth.findOne({ username });
       if (existingUsername) {
-        return res.badRequest({ message: "Username đã tồn tại" });
+        return res.status(422).json({ message: "Username đã tồn tại" });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10); 
@@ -38,11 +39,11 @@ module.exports = {
       }).fetch();
 
       return res.json({ user: newUser, auth: newAuth });
+      
 
     } catch (error) {
       console.error('Error in createUserWithAuth:', error);
       return res.serverError(error);
     }
-  }
-  
+  }  
 };
