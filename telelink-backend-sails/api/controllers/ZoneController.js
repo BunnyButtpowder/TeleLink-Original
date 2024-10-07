@@ -1,5 +1,19 @@
 
 module.exports = {
+
+    getAll: async function (req, res) {
+        try {
+            const zones = await Zone.find();
+            if (!zones.length) {
+                return res.status(404).json({ message: "Không có chi nhánh nào." });
+            }
+            return res.json(zones);
+        } catch (error) {
+            console.error('Error in getAll:', error);
+            return res.status(500).json({ message: "Lỗi hệ thống.", error });
+        }
+    },
+
     create: async function (req, res) {
         const { code, title } = req.body;
         try {
@@ -31,31 +45,26 @@ module.exports = {
         console.log(id);
     
         try {
-            // Check if both code and title are empty
             if (!code && !title) {
                 return res.status(400).json({ message: "Cần ít nhất một giá trị để cập nhật." });
             }
-    
-            // Find the zone by id
             const zone = await Zone.findOne({ id });
+
             if (!zone) {
                 return res.status(404).json({ message: "Chi nhánh không tồn tại." });
             }
-    
-            // Check if code already exists
+
+            const updates = {};
+            if (code) updates.code = code;
+            if (title) updates.title = title;
+
             if (code) {
                 const existingCode = await Zone.findOne({ code });
                 if (existingCode) {
                     return res.status(422).json({ message: "Mã chi nhánh đã tồn tại." });
                 }
-            }
-    
-            // Create an object to store the updated fields
-            const updates = {};
-            if (code) updates.code = code;
-            if (title) updates.title = title;
-    
-            // Update the zone with the new data
+            }            
+
             await Zone.updateOne({ id: zone.id }).set(updates);
     
             return res.json({ message: "Chi nhánh đã được cập nhật thành công." });
@@ -64,7 +73,7 @@ module.exports = {
             return res.status(500).json({ message: "Lỗi hệ thống.", error });
         }
     }
-    
+
     
 };
 
