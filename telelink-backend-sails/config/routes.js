@@ -7,8 +7,9 @@
  * For more information on configuring custom routes, check out:
  * https://sailsjs.com/anatomy/config/routes-js
  */
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+
+const DataController = require('../api/controllers/DataController');
+
 
 module.exports.routes = {
   /***************************************************************************
@@ -46,20 +47,24 @@ module.exports.routes = {
   // "GET /store/activate.php": "CrackAirController.activate"
   // 'POST /auth/change-password/:id': 'AuthController.changePassword',
   // 'POST /auth/change/:id': { action: 'auth/change' },
-  'POST /import-data': (req, res) => {
-    upload.single('file')(req, res, (err) => {
-      if (err) {
-        console.error("Multer Error: ", err); // Ghi log lỗi từ multer
-        return res.badRequest({ error: 'Có lỗi xảy ra khi tải lên tệp.' });
-      }
-  
-      // Kiểm tra file được tải lên
-      if (!req.file) {
+  'POST /import-data': async (req, res) => {
+    try {
+      if (!req.files || Object.keys(req.files).length === 0) {
+        console.log('No files uploaded');
         return res.badRequest({ error: 'Không có tệp được tải lên' });
       }
+
+      const uploadedFile = req.files.file;
+      console.log(uploadedFile);
+      const tempPath = __dirname + '/tmp/' + uploadedFile.name;
+      await uploadedFile.mv(tempPath);
+      console.log('File uploaded to: ', tempPath);
+      return DataController.importData(req, res, tempPath);
+      
+    } catch (err) {
+      console.error('Error during file upload: ', err);
+      return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
+    }
+  }
   
-      // Chuyển tiếp tới action sau khi upload thành công
-      return DataController.importData(req, res); // Giả sử bạn đã định nghĩa importData trong DataController
-    });
-  },
 };

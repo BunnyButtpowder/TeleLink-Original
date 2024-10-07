@@ -2,42 +2,12 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 
 module.exports = {
-  friendlyName: 'Import data',
-
-  description: 'Nhập dữ liệu từ file Excel được tải lên vào bảng Data',
-
-  inputs: {
-    file: {
-      type: 'ref',
-      required: true,
-    },
-  },
-
-  exits: {
-    success: {
-      description: 'Dữ liệu đã được nhập thành công từ file Excel.',
-    },
-    badRequest: {
-      description: 'Có lỗi xảy ra khi xử lý file Excel.',
-    },
-  },
-
-  fn: async function (inputs) {
-    let { res } = this;
-
+  importData: async function (req, res, filePath) {
     try {
-      const uploadedFile = inputs.file;
-      console.log("Uploaded file: ", uploadedFile);
-
-      if (!uploadedFile) {
-        return res.badRequest({ error: 'Không có tệp được tải lên' });
-      }
-
-      
-      const workbook = XLSX.readFile(uploadedFile.fd || uploadedFile.path);
-      const sheetName = workbook.SheetNames[0]; 
+      const workbook = XLSX.readFile(filePath);
+      const sheetName = workbook.SheetNames[0];
       const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-      
+
       for (const row of worksheet) {
         await Data.create({
           noi_cap_data: row.noi_cap_data,
@@ -63,6 +33,8 @@ module.exports = {
           khac_3: row.khac_3
         });
       }
+
+      fs.unlinkSync(filePath);
 
       return res.json({ message: 'Dữ liệu đã được nhập thành công!' });
 
