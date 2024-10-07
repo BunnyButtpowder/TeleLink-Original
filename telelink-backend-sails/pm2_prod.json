@@ -10,12 +10,12 @@
       "env": {
         "NUM_OF_INSTANCE": 5,
         "NODE_ENV": "production",
-        "PORT": 22896,
+        "PORT": 9999,
         "MYSQL_DB": "mysql://acc:pass@localhost:3306/db"
       },
       "env_development": {
         "NODE_ENV": "development",
-        "PORT": 22896,
+        "PORT": 1337,
         "MYSQL_DB": "mysql://acc:pass@localhost:3306/db"
       }
     }

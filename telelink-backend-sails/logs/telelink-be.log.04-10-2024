@@ -86,3 +86,121 @@ Additional data:
   },
   meta: undefined
 }
+2024-10-04 17:26:22 - info: [32m info: [39mInitializing `apianalytics` hook...  (requests to monitored routes will be logged!)
+2024-10-04 17:26:23 - info: [32m info: [39m
+2024-10-04 17:26:23 - info: [32m info: [39m               .-..-.
+2024-10-04 17:26:23 - info: [32m info: [39m
+2024-10-04 17:26:23 - info: [32m info: [39m   Sails              <|    .-..-.
+2024-10-04 17:26:23 - info: [32m info: [39m   v1.5.12             |\
+2024-10-04 17:26:23 - info: [32m info: [39m                      /|.\
+2024-10-04 17:26:23 - info: [32m info: [39m                     / || \
+2024-10-04 17:26:23 - info: [32m info: [39m                   ,'  |'  \
+2024-10-04 17:26:23 - info: [32m info: [39m                .-'.-==|/_--'
+2024-10-04 17:26:23 - info: [32m info: [39m                `--'-------' 
+2024-10-04 17:26:23 - info: [32m info: [39m   __---___--___---___--___---___--___
+2024-10-04 17:26:23 - info: [32m info: [39m ____---___--___---___--___---___--___-__
+2024-10-04 17:26:23 - info: [32m info: [39m
+2024-10-04 17:26:23 - info: [32m info: [39mServer lifted in `F:\Visual Code\TeleLink\telelink-backend-sails`
+2024-10-04 17:26:23 - info: [32m info: [39mTo shut down Sails, press <CTRL> + C at any time.
+2024-10-04 17:26:23 - info: [32m info: [39mRead more at [4mhttps://sailsjs.com/support[24m.
+2024-10-04 17:26:23 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:26:23 - debug: [94mdebug: [39m[90m:: Fri Oct 04 2024 17:26:23 GMT+0700 (Indochina Time)[39m
+2024-10-04 17:26:23 - debug: [94mdebug: [39mEnvironment : development
+2024-10-04 17:26:23 - debug: [94mdebug: [39mPort        : 1337
+2024-10-04 17:26:23 - debug: [94mdebug: [39mLocal       : [4mhttp://localhost:1337[24m
+2024-10-04 17:26:23 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:28:47 - warn: [33m warn: [39msails.config.models.archiveModelIdentity should be set to `false` but got `undefined`
+2024-10-04 17:28:47 - warn: [33m warn: [39mAborting...
+2024-10-04 17:29:35 - warn: [33m warn: [39msails.config.models.archiveModelIdentity should be set to `false` but got `undefined`
+2024-10-04 17:29:35 - warn: [33m warn: [39mAborting...
+2024-10-04 17:29:41 - warn: [33m warn: [39msails.config.models.archiveModelIdentity should be set to `false` but got `undefined`
+2024-10-04 17:29:41 - warn: [33m warn: [39mAborting...
+2024-10-04 17:45:06 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:45:06 - debug: [94mdebug: [39m[90m:: Fri Oct 04 2024 17:45:06 GMT+0700 (Indochina Time)[39m
+2024-10-04 17:45:06 - debug: [94mdebug: [39mEnvironment : production
+2024-10-04 17:45:06 - debug: [94mdebug: [39mPort        : 1337
+2024-10-04 17:45:06 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:48:21 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:48:21 - debug: [94mdebug: [39m[90m:: Fri Oct 04 2024 17:48:21 GMT+0700 (Indochina Time)[39m
+2024-10-04 17:48:21 - debug: [94mdebug: [39mEnvironment : production
+2024-10-04 17:48:21 - debug: [94mdebug: [39mPort        : 1337
+2024-10-04 17:48:21 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:53:57 - info: [32m info: [39mInitializing `apianalytics` hook...  (requests to monitored routes will be logged!)
+2024-10-04 17:53:57 - info: [32m info: [39m
+2024-10-04 17:53:57 - info: [32m info: [39m               .-..-.
+2024-10-04 17:53:57 - info: [32m info: [39m
+2024-10-04 17:53:57 - info: [32m info: [39m   Sails              <|    .-..-.
+2024-10-04 17:53:57 - info: [32m info: [39m   v1.5.12             |\
+2024-10-04 17:53:57 - info: [32m info: [39m                      /|.\
+2024-10-04 17:53:57 - info: [32m info: [39m                     / || \
+2024-10-04 17:53:57 - info: [32m info: [39m                   ,'  |'  \
+2024-10-04 17:53:57 - info: [32m info: [39m                .-'.-==|/_--'
+2024-10-04 17:53:57 - info: [32m info: [39m                `--'-------' 
+2024-10-04 17:53:57 - info: [32m info: [39m   __---___--___---___--___---___--___
+2024-10-04 17:53:57 - info: [32m info: [39m ____---___--___---___--___---___--___-__
+2024-10-04 17:53:57 - info: [32m info: [39m
+2024-10-04 17:53:57 - info: [32m info: [39mServer lifted in `F:\Visual Code\TeleLink\telelink-backend-sails`
+2024-10-04 17:53:57 - info: [32m info: [39mTo shut down Sails, press <CTRL> + C at any time.
+2024-10-04 17:53:57 - info: [32m info: [39mRead more at [4mhttps://sailsjs.com/support[24m.
+2024-10-04 17:53:57 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:53:57 - debug: [94mdebug: [39m[90m:: Fri Oct 04 2024 17:53:57 GMT+0700 (Indochina Time)[39m
+2024-10-04 17:53:57 - debug: [94mdebug: [39mEnvironment : development
+2024-10-04 17:53:57 - debug: [94mdebug: [39mPort        : 1337
+2024-10-04 17:53:57 - debug: [94mdebug: [39mLocal       : [4mhttp://localhost:1337[24m
+2024-10-04 17:53:57 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:54:19 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:54:19 - debug: [94mdebug: [39m[90m:: Fri Oct 04 2024 17:54:19 GMT+0700 (Indochina Time)[39m
+2024-10-04 17:54:19 - debug: [94mdebug: [39mEnvironment : production
+2024-10-04 17:54:19 - debug: [94mdebug: [39mPort        : 1337
+2024-10-04 17:54:19 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:56:03 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 17:56:03 - debug: [94mdebug: [39m[90m:: Fri Oct 04 2024 17:56:03 GMT+0700 (Indochina Time)[39m
+2024-10-04 17:56:03 - debug: [94mdebug: [39mEnvironment : production
+2024-10-04 17:56:03 - debug: [94mdebug: [39mPort        : 1337
+2024-10-04 17:56:03 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 18:06:28 - info: [32m info: [39mInitializing `apianalytics` hook...  (requests to monitored routes will be logged!)
+2024-10-04 18:06:29 - info: [32m info: [39m
+2024-10-04 18:06:29 - info: [32m info: [39m               .-..-.
+2024-10-04 18:06:29 - info: [32m info: [39m
+2024-10-04 18:06:29 - info: [32m info: [39m   Sails              <|    .-..-.
+2024-10-04 18:06:29 - info: [32m info: [39m   v1.5.12             |\
+2024-10-04 18:06:29 - info: [32m info: [39m                      /|.\
+2024-10-04 18:06:29 - info: [32m info: [39m                     / || \
+2024-10-04 18:06:29 - info: [32m info: [39m                   ,'  |'  \
+2024-10-04 18:06:29 - info: [32m info: [39m                .-'.-==|/_--'
+2024-10-04 18:06:29 - info: [32m info: [39m                `--'-------' 
+2024-10-04 18:06:29 - info: [32m info: [39m   __---___--___---___--___---___--___
+2024-10-04 18:06:29 - info: [32m info: [39m ____---___--___---___--___---___--___-__
+2024-10-04 18:06:29 - info: [32m info: [39m
+2024-10-04 18:06:29 - info: [32m info: [39mServer lifted in `F:\Visual Code\TeleLink\telelink-backend-sails`
+2024-10-04 18:06:29 - info: [32m info: [39mTo shut down Sails, press <CTRL> + C at any time.
+2024-10-04 18:06:29 - info: [32m info: [39mRead more at [4mhttps://sailsjs.com/support[24m.
+2024-10-04 18:06:29 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 18:06:29 - debug: [94mdebug: [39m[90m:: Fri Oct 04 2024 18:06:29 GMT+0700 (Indochina Time)[39m
+2024-10-04 18:06:29 - debug: [94mdebug: [39mEnvironment : development
+2024-10-04 18:06:29 - debug: [94mdebug: [39mPort        : 9999
+2024-10-04 18:06:29 - debug: [94mdebug: [39mLocal       : [4mhttp://localhost:9999[24m
+2024-10-04 18:06:29 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 18:14:25 - info: [32m info: [39mInitializing `apianalytics` hook...  (requests to monitored routes will be logged!)
+2024-10-04 18:14:25 - info: [32m info: [39m
+2024-10-04 18:14:25 - info: [32m info: [39m               .-..-.
+2024-10-04 18:14:25 - info: [32m info: [39m
+2024-10-04 18:14:25 - info: [32m info: [39m   Sails              <|    .-..-.
+2024-10-04 18:14:25 - info: [32m info: [39m   v1.5.12             |\
+2024-10-04 18:14:25 - info: [32m info: [39m                      /|.\
+2024-10-04 18:14:25 - info: [32m info: [39m                     / || \
+2024-10-04 18:14:25 - info: [32m info: [39m                   ,'  |'  \
+2024-10-04 18:14:25 - info: [32m info: [39m                .-'.-==|/_--'
+2024-10-04 18:14:25 - info: [32m info: [39m                `--'-------' 
+2024-10-04 18:14:25 - info: [32m info: [39m   __---___--___---___--___---___--___
+2024-10-04 18:14:25 - info: [32m info: [39m ____---___--___---___--___---___--___-__
+2024-10-04 18:14:25 - info: [32m info: [39m
+2024-10-04 18:14:25 - info: [32m info: [39mServer lifted in `F:\Visual Code\TeleLink\telelink-backend-sails`
+2024-10-04 18:14:25 - info: [32m info: [39mTo shut down Sails, press <CTRL> + C at any time.
+2024-10-04 18:14:25 - info: [32m info: [39mRead more at [4mhttps://sailsjs.com/support[24m.
+2024-10-04 18:14:25 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m
+2024-10-04 18:14:25 - debug: [94mdebug: [39m[90m:: Fri Oct 04 2024 18:14:25 GMT+0700 (Indochina Time)[39m
+2024-10-04 18:14:25 - debug: [94mdebug: [39mEnvironment : development
+2024-10-04 18:14:25 - debug: [94mdebug: [39mPort        : 9999
+2024-10-04 18:14:25 - debug: [94mdebug: [39mLocal       : [4mhttp://localhost:9999[24m
+2024-10-04 18:14:25 - debug: [94mdebug: [39m[90m-------------------------------------------------------[39m

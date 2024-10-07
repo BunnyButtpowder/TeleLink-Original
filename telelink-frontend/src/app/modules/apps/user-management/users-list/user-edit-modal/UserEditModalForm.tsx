@@ -15,6 +15,8 @@ type Props = {
   user: User
 }
 
+
+
 const editUserSchema = Yup.object().shape({
   email: Yup.string()
     .email('Wrong email format')
@@ -400,47 +402,18 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
                   {...formik.getFieldProps('role')}
                   name='role'
                   type='radio'
-                  value='Sub-admin'
+                  value='agency'
                   id='kt_modal_update_role_option_0'
-                  checked={formik.values.role === 'Sub-admin'}
+                  checked={formik.values.role === 'agency'}
                   disabled={formik.isSubmitting || isUserLoading}
                 />
 
                 {/* end::Input */}
                 {/* begin::Label */}
                 <label className='form-check-label' htmlFor='kt_modal_update_role_option_0'>
-                  <div className='fw-bolder text-gray-800'>Administrator (Sub)</div>
+                  <div className='fw-bolder text-gray-800'>Chi nhánh</div>
                   <div className='text-gray-600'>
                     Best for business owners and company administrators
-                  </div>
-                </label>
-                {/* end::Label */}
-              </div>
-              {/* end::Radio */}
-            </div>
-            {/* end::Input row */}
-            <div className='separator separator-dashed my-5'></div>
-            {/* begin::Input row */}
-            <div className='d-flex fv-row'>
-              {/* begin::Radio */}
-              <div className='form-check form-check-custom form-check-solid'>
-                {/* begin::Input */}
-                <input
-                  className='form-check-input me-3'
-                  {...formik.getFieldProps('role')}
-                  name='role'
-                  type='radio'
-                  value='Partner'
-                  id='kt_modal_update_role_option_1'
-                  checked={formik.values.role === 'Partner'}
-                  disabled={formik.isSubmitting || isUserLoading}
-                />
-                {/* end::Input */}
-                {/* begin::Label */}
-                <label className='form-check-label' htmlFor='kt_modal_update_role_option_1'>
-                  <div className='fw-bolder text-gray-800'>Partner</div>
-                  <div className='text-gray-600'>
-                    Best for developers or people primarily using the API
                   </div>
                 </label>
                 {/* end::Label */}

@@ -134,9 +134,12 @@ module.exports = {
      *                                                                          *
      ***************************************************************************/
     cors: {
-      // allowOrigins: [
-      //   'https://example.com',
-      // ]
+      allowOrigins: [
+        'http://localhost:5173', 
+        'https://didongtelecom.com', 
+        'http://didongtelecom.com'
+      ],
+      optionsSuccessStatus: 200
     },
   },
 
@@ -294,7 +297,7 @@ module.exports = {
      *                                                                          *
      ***************************************************************************/
     cache: 365.25 * 24 * 60 * 60 * 1000, // One year
-
+    port: 9999,
     /***************************************************************************
      *                                                                          *
      * Proxy settings                                                           *

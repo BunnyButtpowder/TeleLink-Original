@@ -11,20 +11,20 @@ module.exports = {
     // login: async function (req, res) {
     //     const { username, password } = req.body;
 
-    //     try {
-    //         const auth = await Auth.findOne({ username });
-    //         if (!auth) {
-    //             return res.badRequest({ message: "Username không tồn tại" });
-    //         }
-    //         const isMatch = await bcrypt.compare(password, auth.password);
-    //         if (!isMatch) {
-    //             return res.badRequest({ message: "Mật khẩu không đúng" });
-    //         }
-    //         const user = await User.findOne({ auth: auth.id });
-    //         if (!user) {
-    //             return res.badRequest({ message: "Không tìm thấy người dùng liên quan" });
-    //         }
-    //         return res.json({ user, message: "Đăng nhận thành công" });
+        try {
+            const auth = await Auth.findOne({ username });
+            if (!auth) {
+                return res.badRequest({ message: "Username không tồn tại" });
+            }
+            const isMatch = await bcrypt.compare(password, auth.password);
+            if (!isMatch) {
+                return res.badRequest({ message: "Mật khẩu không đúng" });
+            }
+            const user = await User.findOne({ auth: auth.id });
+            if (!user) {
+                return res.badRequest({ message: "Không tìm thấy người dùng!" });
+            }
+            return res.json({ user, message: "Đăng nhập thành công" });
 
     //     } catch (error) {
     //         console.error('Error in login:', error);
