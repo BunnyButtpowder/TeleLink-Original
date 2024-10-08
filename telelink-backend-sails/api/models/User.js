@@ -18,6 +18,10 @@ module.exports = {
       type: 'string',
       allowNull: true
     },
+    dob: {
+      type: 'string',
+      allowNull: true
+    },
     agency: {
       type: 'string'
     },
