@@ -1,6 +1,6 @@
 import { Column } from 'react-table'
 import { UserInfoCell } from './UserInfoCell'
-import { UserLastLoginCell } from './UserLastLoginCell'
+import { UserStatusCell } from './UserStatusCell'
 import { UserRoleCell } from './UserRoleCell'
 import { UserActionsCell } from './UserActionsCell'
 import { UserSelectionCell } from './UserSelectionCell'
@@ -35,13 +35,36 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     id: 'role',
     Cell: ({ ...props }) => <UserRoleCell role={props.data[props.row.index].auth?.role}></UserRoleCell>,
   },
-  // {
-  //   Header: (props) => (
-  //     <UserCustomHeader tableProps={props} title='Two steps' className='min-w-125px' />
-  //   ),
-  //   id: 'two_steps',
-  //   Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].two_steps} />,
-  // },
+  {
+    Header: (props) => <UserCustomHeader tableProps={props} title='Liên hệ' className='min-w-125px' />,
+    accessor: 'phoneNumber',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.phoneNumber}</span>,
+  },
+  {
+    Header: (props) => <UserCustomHeader tableProps={props} title='Địa chỉ' className='min-w-125px' />,
+    accessor: 'address',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.address}</span>,
+  },
+  {
+    Header: (props) => <UserCustomHeader tableProps={props} title='Ngày sinh' className='min-w-125px' />,
+    accessor: 'dob',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.dob}</span>,
+  },
+  {
+    Header: (props) => <UserCustomHeader tableProps={props} title='Giới tính' className='min-w-125px' />,
+    accessor: 'gender',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.gender === 'male'? 'Nam':'Nữ'}</span>,
+  },
+  {
+    Header: (props) => <UserCustomHeader tableProps={props} title='Phân loại data' className='min-w-125px' />,
+    accessor: 'dataType',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.dataType}</span>,
+  },
+  {
+    Header: (props) => <UserCustomHeader tableProps={props} title='Chi nhánh' className='min-w-125px' />,
+    accessor: 'agency',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.agency}</span>,
+  },
   // {
   //   Header: (props) => <UserCustomHeader tableProps={props} title='Ngày tạo' className='min-w-125px' />,
   //   accessor: 'createdAt',
@@ -50,6 +73,11 @@ const usersColumns: ReadonlyArray<Column<User>> = [
   //     return <span>{date.toLocaleDateString()}</span>
   //   }
   // },
+  {
+    Header: (props) => <UserCustomHeader tableProps={props} title='Trạng thái' className='min-w-125px' />,
+    id: 'status',
+    Cell: ({ ...props }) => <UserStatusCell status={props.data[props.row.index].auth?.status? 0 : 1}></UserStatusCell>,
+  },
   {
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='Tác vụ' className='text-end min-w-100px' />
