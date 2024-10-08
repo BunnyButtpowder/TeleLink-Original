@@ -10,7 +10,7 @@ module.exports = {
             
             const existingCode = await Zone.findOne({code});
             if (existingCode) {
-                return res.status(422).json({ message: "Code đã tồn tại rồi" });
+                return res.status(422).json({ message: "Mã chi nhánh đã tồn tại." });
             }
 
             const newZone = await Zone.create({
@@ -46,7 +46,7 @@ module.exports = {
             if (code) {
                 const existingCode = await Zone.findOne({ code });
                 if (existingCode) {
-                    return res.status(422).json({ message: "Code đã tồn tại rồi" });
+                    return res.status(422).json({ message: "Mã chi nhánh đã tồn tại." });
                 }
             }
     

@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
   create: async function (req, res) {
-    const { fullName, phoneNumber, address, email, username, password , role } = req.body;
+    const { fullName, phoneNumber, dob, address, email, username, password , role } = req.body;
 
     try {
      
@@ -34,6 +34,7 @@ module.exports = {
       const newUser = await User.create({
         fullName,
         phoneNumber,
+        dob,
         address,
         auth: newAuth.id
       }).fetch();

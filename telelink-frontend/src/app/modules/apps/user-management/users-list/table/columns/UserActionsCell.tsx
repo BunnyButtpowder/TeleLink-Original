@@ -40,7 +40,7 @@ const UserActionsCell: FC<Props> = ({id}) => {
         data-kt-menu-trigger='click'
         data-kt-menu-placement='bottom-end'
       >
-        Actions
+        Tác vụ
         <KTIcon iconName='down' className='fs-5 m-0' />
       </a>
       {/* begin::Menu */}
@@ -51,7 +51,7 @@ const UserActionsCell: FC<Props> = ({id}) => {
         {/* begin::Menu item */}
         <div className='menu-item px-3'>
           <a className='menu-link px-3' onClick={openEditModal}>
-            Edit
+            Sửa
           </a>
         </div>
         {/* end::Menu item */}
@@ -63,7 +63,15 @@ const UserActionsCell: FC<Props> = ({id}) => {
             data-kt-users-table-filter='delete_row'
             onClick={async () => await deleteItem.mutateAsync()}
           >
-            Delete
+            Xoá
+          </a>
+        </div>
+        {/* end::Menu item */}
+
+        {/* begin::Menu item */}
+        <div className='menu-item px-3'>
+          <a className='menu-link px-3' onClick={openEditModal}>
+            Cấp mật khẩu
           </a>
         </div>
         {/* end::Menu item */}
