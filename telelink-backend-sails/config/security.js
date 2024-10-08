@@ -27,6 +27,12 @@ module.exports.security = {
    *                                                                          *
    ***************************************************************************/
   cors: {
+    allowOrigins: [
+      'http://localhost:5173',
+      'https://didongtelecom.com',
+      'http://didongtelecom.com'
+    ],
+    allowRequestHeaders: 'Authorization, Content-Type',
     allRoutes: true,
     allowOrigins: "*",
     allowCredentials: true,

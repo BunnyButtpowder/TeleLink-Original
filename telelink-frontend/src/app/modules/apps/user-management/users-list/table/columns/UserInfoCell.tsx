@@ -15,26 +15,26 @@ const UserInfoCell: FC<Props> = ({user}) => (
       <a href='#'>
         {user.avatar ? (
           <div className='symbol-label'>
-            <img src={toAbsoluteUrl(`media/${user.avatar}`)} alt={user.name} className='w-100' />
+            <img src={toAbsoluteUrl(`media/${user.avatar}`)} alt={user.fullName} className='w-100' />
           </div>
         ) : (
           <div
             className={clsx(
               'symbol-label fs-3',
-              `bg-light-${user.initials?.state}`,
-              `text-${user.initials?.state}`
+              // `bg-light-${user.initials?.state}`,
+              // `text-${user.initials?.state}`
             )}
           >
-            {user.initials?.label}
+            {/* {user.initials?.label} */}
           </div>
         )}
       </a>
     </div>
     <div className='d-flex flex-column'>
       <a href='#' className='text-gray-800 text-hover-primary mb-1'>
-        {user.name}
+        {user.fullName}
       </a>
-      <span>{user.email}</span>
+      {user.auth && <span>{user.auth.email}</span>}
     </div>
   </div>
 )

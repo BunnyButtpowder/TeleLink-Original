@@ -2,14 +2,20 @@ import axios, { AxiosResponse } from "axios";
 import { ID, Response } from "../../../../../../_metronic/helpers";
 import { User, UsersQueryResponse } from "./_models";
 
-const API_URL = import.meta.env.VITE_APP_THEME_API_URL;
-const USER_URL = `${API_URL}/user`;
-const GET_USERS_URL = `${API_URL}/user/query`;
+const API_URL = import.meta.env.VITE_APP_API_URL;
+const USER_URL = `${API_URL}/api/user`;
+const GET_USERS_URL = `${API_URL}/user`;
 
-const getUsers = (query: string): Promise<UsersQueryResponse> => {
+// const getUsers = (query: string): Promise<UsersQueryResponse> => {
+//   return axios
+//     .get(`${GET_USERS_URL}?${query}`)
+//     .then((d: AxiosResponse<UsersQueryResponse>) => d.data);
+// };
+
+const getUsers = (): Promise<UsersQueryResponse> => {
   return axios
-    .get(`${GET_USERS_URL}?${query}`)
-    .then((d: AxiosResponse<UsersQueryResponse>) => d.data);
+    .get(GET_USERS_URL)
+    .then((response: AxiosResponse<UsersQueryResponse>) => response.data);
 };
 
 const getUserById = (id: ID): Promise<User | undefined> => {

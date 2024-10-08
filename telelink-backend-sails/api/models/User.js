@@ -10,12 +10,16 @@ module.exports = {
       type: 'string',
       allowNull: true
     },
+    dob: {
+      type: 'string',
+      allowNull: true
+    },
     address: {
       type: 'string',
       allowNull: true
     },
     agency: {
-      type: 'number'
+      type: 'string'
     },
     avatar: {
       type: 'string',
@@ -24,13 +28,12 @@ module.exports = {
       type: 'string',
       isIn: ['male', 'female', 'other']
     },
-    loai_data: {
+    dataType: {
       type: 'string',
     },
     auth: {
       model: 'auth',
       unique: true
     },
-
   },
 };
