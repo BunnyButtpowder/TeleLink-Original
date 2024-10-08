@@ -23,7 +23,7 @@ const editUserSchema = Yup.object().shape({
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Email is required'),
-  name: Yup.string()
+  fullName: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Name is required'),
@@ -42,8 +42,8 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
     ...user,
     avatar: user.avatar || initialUser.avatar,
     role: user.role || initialUser.role,
-    position: user.position || initialUser.position,
-    name: user.name || initialUser.name,
+    // position: user.position || initialUser.position,
+    fullName: user.fullName || initialUser.fullName,
     email: user.email || initialUser.email,
     status: user.status || initialUser.status,
   })
@@ -164,23 +164,23 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
             {/* begin::Input */}
             <input
               placeholder='Tên đầy đủ'
-              {...formik.getFieldProps('name')}
+              {...formik.getFieldProps('fullName')}
               type='text'
-              name='name'
+              name='fullName'
               className={clsx(
                 'form-control form-control-solid mb-3 mb-lg-0',
-                {'is-invalid': formik.touched.name && formik.errors.name},
+                {'is-invalid': formik.touched.fullName && formik.errors.fullName},
                 {
-                  'is-valid': formik.touched.name && !formik.errors.name,
+                  'is-valid': formik.touched.fullName && !formik.errors.fullName,
                 }
               )}
               autoComplete='off'
               disabled={formik.isSubmitting || isUserLoading}
             />
-            {formik.touched.name && formik.errors.name && (
+            {formik.touched.fullName && formik.errors.fullName && (
               <div className='fv-plugins-message-container'>
                 <div className='fv-help-block'>
-                  <span role='alert'>{formik.errors.name}</span>
+                  <span role='alert'>{formik.errors.fullName}</span>
                 </div>
               </div>
             )}
@@ -231,9 +231,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
               {...formik.getFieldProps('otp')}
               className={clsx(
                 'form-control form-control-solid mb-3 mb-lg-0',
-                {'is-invalid': formik.touched.name && formik.errors.name},
+                {'is-invalid': formik.touched.fullName && formik.errors.fullName},
                 {
-                  'is-valid': formik.touched.name && !formik.errors.name,
+                  'is-valid': formik.touched.fullName && !formik.errors.fullName,
                 }
               )}
               type='address'
@@ -242,9 +242,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
               disabled={formik.isSubmitting || isUserLoading}
             />
             {/* end::Input */}
-            {formik.touched.name && formik.errors.name && (
+            {formik.touched.fullName && formik.errors.fullName && (
               <div className='fv-plugins-message-container'>
-                <span role='alert'>{formik.errors.name}</span>
+                <span role='alert'>{formik.errors.fullName}</span>
               </div>
             )}
           </div>
@@ -262,9 +262,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
               {...formik.getFieldProps('otp')}
               className={clsx(
                 'form-control form-control-solid mb-3 mb-lg-0',
-                {'is-invalid': formik.touched.name && formik.errors.name},
+                {'is-invalid': formik.touched.fullName && formik.errors.fullName},
                 {
-                  'is-valid': formik.touched.name && !formik.errors.name,
+                  'is-valid': formik.touched.fullName && !formik.errors.fullName,
                 }
               )}
               type='otp'
@@ -273,9 +273,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
               disabled={formik.isSubmitting || isUserLoading}
             />
             {/* end::Input */}
-            {formik.touched.name && formik.errors.name && (
+            {formik.touched.fullName && formik.errors.fullName && (
               <div className='fv-plugins-message-container'>
-                <span role='alert'>{formik.errors.name}</span>
+                <span role='alert'>{formik.errors.fullName}</span>
               </div>
             )}
           </div>
@@ -293,9 +293,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
               {...formik.getFieldProps('dob')}
               className={clsx(
               'form-control form-control-solid mb-3 mb-lg-0',
-              {'is-invalid': formik.touched.name && formik.errors.name},
+              {'is-invalid': formik.touched.fullName && formik.errors.fullName},
               {
-                'is-valid': formik.touched.name && !formik.errors.name,
+                'is-valid': formik.touched.fullName && !formik.errors.fullName,
               }
               )}
               type='date'
@@ -303,15 +303,15 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
               autoComplete='off'
               disabled={formik.isSubmitting || isUserLoading}
             />
-            {formik.touched.name && formik.errors.name && (
+            {formik.touched.fullName && formik.errors.fullName && (
               <div className='fv-plugins-message-container'>
-              <span role='alert'>{formik.errors.name}</span>
+              <span role='alert'>{formik.errors.fullName}</span>
               </div>
             )}
             {/* end::Input */}
-            {formik.touched.name && formik.errors.name && (
+            {formik.touched.fullName && formik.errors.fullName && (
               <div className='fv-plugins-message-container'>
-                <span role='alert'>{formik.errors.name}</span>
+                <span role='alert'>{formik.errors.fullName}</span>
               </div>
             )}
           </div>
@@ -328,9 +328,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
               {...formik.getFieldProps('gender')}
               className={clsx(
               'form-control form-control-solid mb-3 mb-lg-0',
-              {'is-invalid': formik.touched.name && formik.errors.name},
+              {'is-invalid': formik.touched.fullName && formik.errors.fullName},
               {
-                'is-valid': formik.touched.name && !formik.errors.name,
+                'is-valid': formik.touched.fullName && !formik.errors.fullName,
               }
               )}
               name='gender'
@@ -341,15 +341,15 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
               <option value='female'>{intl.formatMessage({id: 'GENDER.FEMALE'})}</option>
               <option value='other'>{intl.formatMessage({id: 'GENDER.OTHER'})}</option>
             </select>
-            {formik.touched.name && formik.errors.name && (
+            {formik.touched.fullName && formik.errors.fullName && (
               <div className='fv-plugins-message-container'>
-              <span role='alert'>{formik.errors.name}</span>
+              <span role='alert'>{formik.errors.fullName}</span>
               </div>
             )}
             {/* end::Input */}
-            {formik.touched.name && formik.errors.name && (
+            {formik.touched.fullName && formik.errors.fullName && (
               <div className='fv-plugins-message-container'>
-                <span role='alert'>{formik.errors.name}</span>
+                <span role='alert'>{formik.errors.fullName}</span>
               </div>
             )}
           </div>
@@ -367,9 +367,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
               {...formik.getFieldProps('otp')}
               className={clsx(
                 'form-control form-control-solid mb-3 mb-lg-0',
-                {'is-invalid': formik.touched.name && formik.errors.name},
+                {'is-invalid': formik.touched.fullName && formik.errors.fullName},
                 {
-                  'is-valid': formik.touched.name && !formik.errors.name,
+                  'is-valid': formik.touched.fullName && !formik.errors.fullName,
                 }
               )}
               type='otp'
@@ -378,9 +378,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
               disabled={formik.isSubmitting || isUserLoading}
             />
             {/* end::Input */}
-            {formik.touched.name && formik.errors.name && (
+            {formik.touched.fullName && formik.errors.fullName && (
               <div className='fv-plugins-message-container'>
-                <span role='alert'>{formik.errors.name}</span>
+                <span role='alert'>{formik.errors.fullName}</span>
               </div>
             )}
           </div>
@@ -404,7 +404,7 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
                   type='radio'
                   value='agency'
                   id='kt_modal_update_role_option_0'
-                  checked={formik.values.role === 'agency'}
+                  checked={formik.values.role === 2}
                   disabled={formik.isSubmitting || isUserLoading}
                 />
 
@@ -434,7 +434,7 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
                   type='radio'
                   value='Salesman'
                   id='kt_modal_update_role_option_2'
-                  checked={formik.values.role === 'Salesman'}
+                  checked={formik.values.role === 3}
                   disabled={formik.isSubmitting || isUserLoading}
                 />
 

@@ -47,6 +47,7 @@ module.exports.routes = {
   // "GET /store/activate.php": "CrackAirController.activate"
   // 'POST /auth/change-password/:id': 'AuthController.changePassword',
   // 'POST /auth/change/:id': { action: 'auth/change' },
+  
   'POST /import-data': async (req, res) => {
     try {
       if (!req.files || Object.keys(req.files).length === 0) {

@@ -15,7 +15,8 @@ module.exports = {
         let { res, req } = this;
     
         try {
-            // Lấy thông tin username và password từ inputs
+            
+            
             const { username, password } = inputs;
 
             const auth = await Auth.findOne({ username });
@@ -31,7 +32,7 @@ module.exports = {
                 return res.badRequest({ message: "Không tìm thấy người dùng liên quan" });
             }
             const token = jwt.sign({ id: auth.id, username: auth.username }, process.env.JWT_SECRET, { expiresIn: '365d' });
-            return res.json({  message: "Đăng nhận thành công" , user: { id: user.id, fullname: user.fullName }, token });
+            return res.json({  message: "Đăng nhập thành công" , user: { id: user.id, fullname: user.fullName }, token });
     
             
         } catch (err) {
