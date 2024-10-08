@@ -14,6 +14,10 @@ module.exports = {
       type: 'string',
       allowNull: true
     },
+    dob: {
+      type: 'string',
+      allowNull: true
+    },
     agency: {
       type: 'number'
     },
@@ -24,7 +28,7 @@ module.exports = {
       type: 'string',
       isIn: ['male', 'female', 'other']
     },
-    loai_data: {
+    dataType: {
       type: 'string',
     },
     auth: {

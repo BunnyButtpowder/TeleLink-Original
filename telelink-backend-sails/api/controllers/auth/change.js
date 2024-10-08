@@ -1,35 +1,37 @@
-
+const bcrypt = require('bcrypt');
 
 module.exports = {
+
     inputs: {
+        oldPassword: { type: "string", required: true },
+        newPassword: { type: "string", required: true },
+        id: { type: "number", required: true }
     },
-  
-    exits: {
-      success: {
-        description: 'Danh sách người dùng đã được lấy thành công.',
-      },
-      serverError: {
-        description: 'Có lỗi xảy ra khi truy vấn cơ sở dữ liệu.',
-      },
-    },
-  
+
+    exits: {},
+
     fn: async function (inputs) {
-      let { res } = this;
-  
-      try {
-    
-        const users = await User.find();
-  
-    
-        if (!users || users.length === 0) {
-          return res.notFound({ message: "Không tìm thấy người dùng nào." });
+        let { res, req } = this;
+
+        try {
+            
+            const { oldPassword, newPassword , id } = inputs;
+            const auth = await Auth.findOne({ id });
+            if (!auth) {
+                return res.badRequest({ message: "Không tìm thấy tài khoản." });
+            }
+            const isMatch = await bcrypt.compare(oldPassword, auth.password);
+            if (!isMatch) {
+                return res.badRequest({ message: "Mật khẩu cũ không đúng" });
+            }
+
+            const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+            await Auth.updateOne({ id: auth.id }).set({ password: hashedNewPassword });
+
+            return res.json({ message: "Mật khẩu đã được thay đổi thành công." });
+
+        } catch (err) {
+            return res.serverError({ error: "Đã xảy ra lỗi trong quá trình đổi mật khẩu", details: err.message });
         }
-  
-        return res.json(users);
-      } catch (err) {
-        sails.log.error('Error fetching users:', err);
-        return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách người dùng' });
-      }
-    },
-  };
-  
+    }
+};
