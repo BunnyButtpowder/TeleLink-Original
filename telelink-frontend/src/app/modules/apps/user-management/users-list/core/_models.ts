@@ -30,9 +30,20 @@ export type UsersQueryResponse = Response<Array<User>>
 
 export const initialUser: User = {
   avatar: 'avatars/blank.png',
-  // position: 'Developer',
-  // role: 1,
   fullName: '',
+  phoneNumber: '',
+  dob: null,
+  address: null,
+  agency: 0,
+  gender: '',
+  dataType: '',
+  auth: {
+    email: '',
+    status: false,
+    username: '',
+    role: 0,
+  },
+  isDelete: false,
   // email: '',
   // status: false,
 }
