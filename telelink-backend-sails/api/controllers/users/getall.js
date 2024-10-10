@@ -1,6 +1,5 @@
 module.exports = {
-  inputs: {
-  },
+  inputs: {},
 
   exits: {
     success: {
@@ -14,20 +13,29 @@ module.exports = {
   fn: async function (inputs) {
     let { res } = this;
     try {
-      const users = await User.find();
+      const users = await User.find().populate('auth');
+      
 
       if (!users || users.length === 0) {
         return res.notFound({ message: "Không tìm thấy người dùng nào." });
       }
-      for (let user of users) {
-        const authData = await Auth.findOne({ id: user.auth });
-        user.authInfo = authData;
-      }
 
-      return res.json(users);
+      const allUsers = users.map(user => {
+        return {
+          ...user,
+          auth: {
+            email: user.auth.email,
+            role: user.auth.role,
+            username: user.auth.username
+          }
+        };
+      });
+      
+
+      return res.json({ data: allUsers , count: allUsers.length });
     } catch (err) {
       sails.log.error('Error fetching users or auth info:', err);
       return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách người dùng hoặc thông tin xác thực.' });
     }
-  },
+  }
 };

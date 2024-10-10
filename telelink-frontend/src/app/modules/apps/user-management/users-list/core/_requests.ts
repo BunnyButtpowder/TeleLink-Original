@@ -3,8 +3,8 @@ import { ID, Response } from "../../../../../../_metronic/helpers";
 import { User, UsersQueryResponse } from "./_models";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
-const USER_URL = `${API_URL}/api/user`;
-const GET_USERS_URL = `${API_URL}/user`;
+const USER_URL = `${API_URL}/user`;
+const GET_USERS_URL = `${API_URL}/users/getall`;
 
 // const getUsers = (query: string): Promise<UsersQueryResponse> => {
 //   return axios
@@ -12,7 +12,7 @@ const GET_USERS_URL = `${API_URL}/user`;
 //     .then((d: AxiosResponse<UsersQueryResponse>) => d.data);
 // };
 
-const getUsers = (): Promise<UsersQueryResponse> => {
+const getUsers = (query: string): Promise<UsersQueryResponse> => {
   return axios
     .get(GET_USERS_URL)
     .then((response: AxiosResponse<UsersQueryResponse>) => response.data);
