@@ -3,6 +3,7 @@ import {KTIcon} from '../../../../../../_metronic/helpers'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
 import {IUpdateEmail, IUpdatePassword, updateEmail, updatePassword} from '../SettingsModel'
+import {useIntl} from 'react-intl'
 
 const emailFormValidationSchema = Yup.object().shape({
   newEmail: Yup.string()
@@ -20,15 +21,15 @@ const passwordFormValidationSchema = Yup.object().shape({
   currentPassword: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Password is required'),
+    .required('Mật khẩu không được để trống'),
   newPassword: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Password is required'),
+    .required('Mật khẩu không được để trống'),
   passwordConfirmation: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Password is required')
+    .required('Mật khẩu không được để trống')
     .oneOf([Yup.ref('newPassword')], 'Passwords must match'),
 })
 
@@ -38,7 +39,7 @@ const SignInMethod: FC = () => {
 
   const [showEmailForm, setShowEmailForm] = useState<boolean>(false)
   const [showPasswordForm, setPasswordForm] = useState<boolean>(false)
-
+  const intl = useIntl()
   const [loading1, setLoading1] = useState(false)
 
   const formik1 = useFormik<IUpdateEmail>({
@@ -208,7 +209,7 @@ const SignInMethod: FC = () => {
                   <div className='col-lg-4'>
                     <div className='fv-row mb-0'>
                       <label htmlFor='currentpassword' className='form-label fs-6 fw-bolder mb-3'>
-                        Current Password
+                        {intl.formatMessage({id: 'AUTH.INPUT.CURRENT_PASSWORD'})}
                       </label>
                       <input
                         type='password'
@@ -227,7 +228,7 @@ const SignInMethod: FC = () => {
                   <div className='col-lg-4'>
                     <div className='fv-row mb-0'>
                       <label htmlFor='newpassword' className='form-label fs-6 fw-bolder mb-3'>
-                        New Password
+                        {intl.formatMessage({id: 'AUTH.INPUT.NEW_PASSWORD'})}
                       </label>
                       <input
                         type='password'
@@ -246,7 +247,7 @@ const SignInMethod: FC = () => {
                   <div className='col-lg-4'>
                     <div className='fv-row mb-0'>
                       <label htmlFor='confirmpassword' className='form-label fs-6 fw-bolder mb-3'>
-                        Confirm New Password
+                        {intl.formatMessage({id: 'AUTH.INPUT.CONFIRM_NEW_PASSWORD'})}
                       </label>
                       <input
                         type='password'
@@ -264,7 +265,7 @@ const SignInMethod: FC = () => {
                 </div>
 
                 <div className='form-text mb-5'>
-                  Password must be at least 8 character and contain symbols
+                  {intl.formatMessage({id: 'AUTH.VALIDATION.PASSWORD_REQUIREMENTS'})}
                 </div>
 
                 <div className='d-flex'>
@@ -273,7 +274,7 @@ const SignInMethod: FC = () => {
                     type='submit'
                     className='btn btn-primary me-2 px-6'
                   >
-                    {!loading2 && 'Update Password'}
+                    {!loading2 && 'Đổi mật khẩu'}
                     {loading2 && (
                       <span className='indicator-progress' style={{display: 'block'}}>
                         Please wait...{' '}
@@ -289,7 +290,7 @@ const SignInMethod: FC = () => {
                     type='button'
                     className='btn btn-color-gray-500 btn-active-light-primary px-6'
                   >
-                    Cancel
+                    {intl.formatMessage({id: 'FORM.CANCEL'})}
                   </button>
                 </div>
               </form>
@@ -305,7 +306,7 @@ const SignInMethod: FC = () => {
                 }}
                 className='btn btn-light btn-active-light-primary'
               >
-                Reset Password
+                {intl.formatMessage({id: 'AUTH.TITLE.PASSWORD_RESET'})}
               </button>
             </div>
           </div>
