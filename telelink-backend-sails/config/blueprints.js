@@ -21,14 +21,14 @@ module.exports.blueprints = {
    * Automatically expose RESTful routes for your models?                     *
    *                                                                          *
    ***************************************************************************/
-  rest: false,
+  rest: true,
   /***************************************************************************
    *                                                                          *
    * Automatically expose CRUD "shortcut" routes to GET requests?             *
    * (These are enabled by default in development only.)                      *
    *                                                                          *
    ***************************************************************************/
-  shortcuts: false,
+  shortcuts: true,
   // prefix: "/api",
   // parseBlueprintOptions: function (req) {
   //   // Get the default query options.
@@ -39,7 +39,4 @@ module.exports.blueprints = {
   //   }
   //   return queryOptions;
   // },
-  restBlueprints: {
-    destroy: false
-  }
 };
