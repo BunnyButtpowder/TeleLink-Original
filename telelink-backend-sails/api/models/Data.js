@@ -1,137 +1,119 @@
 /**
  * Data.js
  *
- * @description :: Model đại diện cho bảng 'Data' trong cơ sở dữ liệu.
+ * @description :: Model representing the 'Data' table in the database.
  */
 
 module.exports = {
   attributes: {
    
-
-    noi_cap_data: {
+    placeOfIssue: {    // Nơi cấp data 
       type: 'string',
       required: true,
-      
     },
-
-    phan_loai_data: {
+    networkName: { // Nhà mạng 
       type: 'string',
       required: true,
-      
     },
 
-    so_thue_bao: {
+    category: {    // Phân loại data
+      type: 'string',
+      required: true,
+    },
+
+    subscriberNumber: {    // Số thuê bao
       type: 'number',
       required: true,
-     
     },
 
-    goi_hien_tai: {
+    currentPackage: {    // Gói hiện tại
       type: 'string',
       allowNull: true,
-      
     },
 
-    goi_uu_tien_1: {
+    priorityPackage1: {    // Gói ưu tiên 1
       type: 'string',
       allowNull: true,
-      
     },
 
-    goi_uu_tien_2: {
+    priorityPackage2: {    // Gói ưu tiên 2
       type: 'string',
       allowNull: true,
-     
     },
 
-    ngay_dang_ky: {
+    registrationDate: {    // Ngày đăng kí
       type: 'ref',
       columnType: 'date',
-      
     },
 
-    ngay_het_han: {
+    expirationDate: {    // Ngày hết hạn
       type: 'ref',
       columnType: 'date',
-      
     },
 
-    ghi_chu: {
+    notes: {    // Ghi chú
       type: 'string',
       allowNull: true,
-      
     },
 
-    TKC: {
+    TKC: {    // TKC
       type: 'string',
       allowNull: true,
-     
     },
 
-    APRU_3thang: {
+    ARPU3Months: {    // APRU 3 tháng
       type: 'string',
       allowNull: true,
-      
     },
 
-    tieu_dung_n1: {
+    usageMonth1: {    // Tiêu dùng n1
       type: 'string',
       allowNull: true,
-      
     },
 
-    tieu_dung_n2: {
+    usageMonth2: {    // Tiêu dùng n2
       type: 'string',
       allowNull: true,
-      
     },
 
-    tieu_dung_n3: {
+    usageMonth3: {    // Tiêu dùng n3
       type: 'string',
       allowNull: true,
-     
     },
 
-    tieu_dung_TKC: {
+    totalTKCUsage: {    // Tiêu dùng TKC
       type: 'string',
       allowNull: true,
-      
     },
 
-    tieu_dung_thoai: {
+    voiceUsage: {    // Tiêu dùng thoại
       type: 'string',
       allowNull: true,
-      
     },
 
-    tieu_dung_data: {
+    dataUsage: {    // Tiêu dùng data
       type: 'string',
       allowNull: true,
-      
     },
 
-    dung_data_ngoai_goi: {
+    outOfPackageDataUsage: {    // Dùng data ngoại gói
       type: 'string',
       allowNull: true,
-      
     },
 
-    khac_1: {
+    other1: {    // Khác 1
       type: 'string',
       allowNull: true,
-     
     },
 
-    khac_2: {
+    other2: {    // Khác 2
       type: 'string',
       allowNull: true,
-      
     },
 
-    khac_3: {
+    other3: {    // Khác 3
       type: 'string',
       allowNull: true,
-      
     },
   },
 };
