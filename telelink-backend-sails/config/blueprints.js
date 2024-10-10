@@ -39,4 +39,7 @@ module.exports.blueprints = {
   //   }
   //   return queryOptions;
   // },
+  restBlueprints: {
+    destroy: false
+  }
 };

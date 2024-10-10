@@ -1,137 +1,115 @@
 /**
  * Data.js
  *
- * @description :: Model đại diện cho bảng 'Data' trong cơ sở dữ liệu.
+ * @description :: Model representing the 'Data' table in the database.
  */
 
 module.exports = {
   attributes: {
    
-
-    noi_cap_data: {
+    placeOfIssue: {    // "noi_cap_data"
       type: 'string',
       required: true,
-      
     },
 
-    phan_loai_data: {
+    category: {    // "phan_loai_data"
       type: 'string',
       required: true,
-      
     },
 
-    so_thue_bao: {
+    subscriberNumber: {    // "so_thue_bao"
       type: 'number',
       required: true,
-     
     },
 
-    goi_hien_tai: {
+    currentPackage: {    // "goi_hien_tai"
       type: 'string',
       allowNull: true,
-      
     },
 
-    goi_uu_tien_1: {
+    priorityPackage1: {    // "goi_uu_tien_1"
       type: 'string',
       allowNull: true,
-      
     },
 
-    goi_uu_tien_2: {
+    priorityPackage2: {    // "goi_uu_tien_2"
       type: 'string',
       allowNull: true,
-     
     },
 
-    ngay_dang_ky: {
+    registrationDate: {    // "ngay_dang_ky"
       type: 'ref',
       columnType: 'date',
-      
     },
 
-    ngay_het_han: {
+    expirationDate: {    // "ngay_het_han"
       type: 'ref',
       columnType: 'date',
-      
     },
 
-    ghi_chu: {
+    notes: {    // "ghi_chu"
       type: 'string',
       allowNull: true,
-      
     },
 
-    TKC: {
+    TKC: {    // "TKC"
       type: 'string',
       allowNull: true,
-     
     },
 
-    APRU_3thang: {
+    ARPU3Months: {    // "APRU_3thang"
       type: 'string',
       allowNull: true,
-      
     },
 
-    tieu_dung_n1: {
+    usageMonth1: {    // "tieu_dung_n1"
       type: 'string',
       allowNull: true,
-      
     },
 
-    tieu_dung_n2: {
+    usageMonth2: {    // "tieu_dung_n2"
       type: 'string',
       allowNull: true,
-      
     },
 
-    tieu_dung_n3: {
+    usageMonth3: {    // "tieu_dung_n3"
       type: 'string',
       allowNull: true,
-     
     },
 
-    tieu_dung_TKC: {
+    totalTKCUsage: {    // "tieu_dung_TKC"
       type: 'string',
       allowNull: true,
-      
     },
 
-    tieu_dung_thoai: {
+    voiceUsage: {    // "tieu_dung_thoai"
       type: 'string',
       allowNull: true,
-      
     },
 
-    tieu_dung_data: {
+    dataUsage: {    // "tieu_dung_data"
       type: 'string',
       allowNull: true,
-      
     },
 
-    dung_data_ngoai_goi: {
+    outOfPackageDataUsage: {    // "dung_data_ngoai_goi"
       type: 'string',
       allowNull: true,
-      
     },
 
-    khac_1: {
+    other1: {    // "khac_1"
       type: 'string',
       allowNull: true,
-     
     },
 
-    khac_2: {
+    other2: {    // "khac_2"
       type: 'string',
       allowNull: true,
-      
     },
 
-    khac_3: {
+    other3: {    // "khac_3"
       type: 'string',
       allowNull: true,
-      
     },
   },
 };

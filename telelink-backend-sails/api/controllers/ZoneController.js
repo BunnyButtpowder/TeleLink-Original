@@ -3,9 +3,9 @@ module.exports = {
 
     getAll: async function (req, res) {
         try {
-            const zones = await Zone.find();
+            const zones = await Zone.find({ isDelete: false });  
             if (!zones.length) {
-                return res.status(404).json({ message: "Không có chi nhánh nào." });
+                return res.status(404).json({ message: "Chi nhánh không tồn tại." });
             }
             return res.json(zones);
         } catch (error) {
@@ -24,7 +24,7 @@ module.exports = {
             
             const existingCode = await Zone.findOne({code});
             if (existingCode) {
-                return res.status(422).json({ message: "Mã chi nhánh đã tồn tại." });
+                return res.status(422).json({ message: "Code đã tồn tại rồi" });
             }
 
             const newZone = await Zone.create({
@@ -61,7 +61,7 @@ module.exports = {
             if (code) {
                 const existingCode = await Zone.findOne({ code });
                 if (existingCode) {
-                    return res.status(422).json({ message: "Mã chi nhánh đã tồn tại." });
+                    return res.status(422).json({ message: "Code đã tồn tại rồi" });
                 }
             }            
 
@@ -72,8 +72,31 @@ module.exports = {
             console.error('Error in edit:', error);
             return res.status(500).json({ message: "Lỗi hệ thống.", error });
         }
-    }
-
+    },
+    delete: async function (req, res) {
+        const { id } = req.params;
     
+        try {
+            const zone = await Zone.findOne({ id });
+            if (!zone) {
+                return res.status(404).json({ message: "Zone not found." });
+            }
+    
+            // Update isDeleted to true (soft delete)
+            const updates = {
+                isDeleted: true,
+            };
+            const updatedZone = await Zone.updateOne({ id }).set(updates);
+    
+            if (!updatedZone) {
+                return res.status(500).json({ message: "Unable to delete the zone." });
+            }
+    
+            return res.json({ message: "Zone successfully soft-deleted.", zone: updatedZone });
+        } catch (error) {
+            console.error('Error in delete:', error);
+            return res.status(500).json({ message: "Internal server error.", error });
+        }
+    }
 };
 
