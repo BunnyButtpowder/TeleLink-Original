@@ -2,8 +2,8 @@ import {ID, Response} from '../../../../../../_metronic/helpers'
 export type AuthInfo = {
   id?: ID
   email?: string
-  username?: string
-  password?: string
+  username: string
+  password: string
   status?: boolean
   role?: number
 }
@@ -18,7 +18,7 @@ export type User = {
   avatar?: string
   gender?: string
   dataType?: string
-  auth?: AuthInfo
+  auth: AuthInfo
   isDelete?: boolean
   createdAt?: number
   updatedAt?: number
@@ -41,6 +41,7 @@ export const initialUser: User = {
     email: '',
     status: false,
     username: '',
+    password: '',
     role: 0,
   },
   isDelete: false,
