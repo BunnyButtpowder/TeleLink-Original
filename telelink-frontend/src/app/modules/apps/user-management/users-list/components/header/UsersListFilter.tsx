@@ -57,7 +57,7 @@ const UsersListFilter = () => {
         <div className='px-7 py-5' data-kt-user-table-filter='form'>
           {/* begin::Input group */}
           <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Role:</label>
+            <label className='form-label fs-6 fw-bold'>Loại tài khoản:</label>
             <select
               className='form-select form-select-solid fw-bolder'
               data-kt-select2='true'
@@ -69,9 +69,9 @@ const UsersListFilter = () => {
               value={role}
             >
               <option value=''></option>
-              <option value='Partner'>Partner</option>
-              <option value='Sub-admin'>Administrator (Sub)</option>
-              <option value='Salesman'>Salesman</option>
+              <option value='Partner'>Admin</option>
+              <option value='Sub-admin'>Chi nhánh</option>
+              <option value='Salesman'>Nhân viên</option>
             </select>
           </div>
           {/* end::Input group */}
