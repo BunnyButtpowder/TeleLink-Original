@@ -32,7 +32,7 @@ module.exports = {
       });
       
 
-      return res.json(allUsers);
+      return res.json({ data: allUsers , count: allUsers.length });
     } catch (err) {
       sails.log.error('Error fetching users or auth info:', err);
       return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách người dùng hoặc thông tin xác thực.' });
