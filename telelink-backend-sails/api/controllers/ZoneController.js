@@ -81,10 +81,14 @@ module.exports = {
             if (!zone) {
                 return res.status(404).json({ message: "Zone not found." });
             }
+
+            if (zone.isDelete) {
+                return res.status(400).json({ message: "Zone has already been deleted." });
+            }
     
             // Update isDeleted to true (soft delete)
             const updates = {
-                isDeleted: true,
+                isDelete: true,
             };
             const updatedZone = await Zone.updateOne({ id }).set(updates);
     
@@ -97,6 +101,6 @@ module.exports = {
             console.error('Error in delete:', error);
             return res.status(500).json({ message: "Internal server error.", error });
         }
-    }
+    }    
 };
 

@@ -66,6 +66,7 @@ module.exports.routes = {
       console.error('Error during file upload: ', err);
       return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
     }
-  }
-  
+  },
+  'DELETE /zone/:id': 'ZoneController.delete',
+
 };
