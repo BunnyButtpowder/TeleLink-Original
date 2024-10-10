@@ -88,7 +88,7 @@ module.exports = {
       fs.unlinkSync(filePath);
 
 
-      return res.ok({ message: 'Dữ liệu được nhập thành công.' });
+      return res.ok({ message: 'Dữ liệu được nhập thành công' });
 
     } catch (err) {
       sails.log.error('Error importing data:', err);

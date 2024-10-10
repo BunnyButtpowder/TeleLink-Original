@@ -1,0 +1,17 @@
+{
+    "watch": [
+    
+      "api/controllers",
+      "api/services",
+      "config/locales",
+      "api/policies"
+    ],
+    "ignore": [
+      "node_modules",
+      "**/*.test.js",
+      "**/*.ts"
+    ],
+    "ext": "js,json",
+    "exec": "sails lift"
+  }
+  

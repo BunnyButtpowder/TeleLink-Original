@@ -1,6 +1,6 @@
 module.exports.watch = {
   active: true,
-  usePolling: false,
+  usePolling: true,
   dirs: ["api/models", "api/controllers", "api/services", "config/locales","api/policies"],
   ignored: [
     // Ignore all files with .ts extension
