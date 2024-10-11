@@ -6,9 +6,12 @@ import {Dropdown1} from '../../../_metronic/partials'
 import {useLocation} from 'react-router'
 import { ToolbarWrapper } from '../../../_metronic/layout/components/toolbar'
 import { Content } from '../../../_metronic/layout/components/content'
+import { useAuth } from '../../../app/modules/auth'
+import { UserRoleCell } from '../../../app/modules/apps/user-management/users-list/table/columns/UserRoleCell'
 
 const AccountHeader: FC = () => {
   const location = useLocation()
+  const {currentUser} = useAuth()
 
   return (
     <>
@@ -29,7 +32,7 @@ const AccountHeader: FC = () => {
                   <div className='d-flex flex-column'>
                     <div className='d-flex align-items-center mb-2'>
                       <a href='#' className='text-gray-800 text-hover-primary fs-2 fw-bolder me-1'>
-                        Minh Vu
+                        {currentUser?.fullName}
                       </a>
                       <a href='#'>
                         <KTIcon iconName='verify' className='fs-1 text-primary' />
@@ -50,21 +53,21 @@ const AccountHeader: FC = () => {
                         className='d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2'
                       >
                         <KTIcon iconName='profile-circle' className='fs-4 me-1' />
-                        Developer
+                        <UserRoleCell role={currentUser?.auth?.role}></UserRoleCell>
                       </a>
                       <a
                         href='#'
                         className='d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2'
                       >
                         <KTIcon iconName='geolocation' className='fs-4 me-1' />
-                        SF, Bay Area
+                        {currentUser?.address}
                       </a>
                       <a
                         href='#'
                         className='d-flex align-items-center text-gray-500 text-hover-primary mb-2'
                       >
                         <KTIcon iconName='sms' className='fs-4 me-1' />
-                        max@kt.com
+                        {currentUser?.auth.email}
                       </a>
                     </div>
                   </div>
@@ -75,7 +78,7 @@ const AccountHeader: FC = () => {
 
                       <span className='indicator-label'>Follow</span>
                       <span className='indicator-progress'>
-                        Please wait...
+                        Vui lòng đợi...
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
                     </a>
@@ -160,7 +163,7 @@ const AccountHeader: FC = () => {
                     }
                     to='/crafted/account/overview'
                   >
-                    Overview
+                    Tổng quan
                   </Link>
                 </li>
                 <li className='nav-item'>
@@ -171,7 +174,7 @@ const AccountHeader: FC = () => {
                     }
                     to='/crafted/account/settings'
                   >
-                    Settings
+                    Cài đặt
                   </Link>
                 </li>
               </ul>

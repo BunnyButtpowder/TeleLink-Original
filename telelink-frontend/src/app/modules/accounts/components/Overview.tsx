@@ -1,5 +1,5 @@
-import {Link} from 'react-router-dom'
-import {KTIcon} from '../../../../_metronic/helpers'
+import { Link } from 'react-router-dom'
+import { KTIcon } from '../../../../_metronic/helpers'
 import {
   ChartsWidget1,
   ListsWidget5,
@@ -7,93 +7,85 @@ import {
   TablesWidget5,
 } from '../../../../_metronic/partials/widgets'
 import { Content } from '../../../../_metronic/layout/components/content'
+import { useAuth } from '../../../../app/modules/auth'
 
 export function Overview() {
+  const { currentUser } = useAuth();
   return (
     <Content>
       <div className='card mb-5 mb-xl-10' id='kt_profile_details_view'>
         <div className='card-header cursor-pointer'>
           <div className='card-title m-0'>
-            <h3 className='fw-bolder m-0'>Profile Details</h3>
+            <h3 className='fw-bolder m-0'>Thông tin</h3>
           </div>
 
           <Link to='/crafted/account/settings' className='btn btn-primary align-self-center'>
-            Edit Profile
+            Chỉnh sửa
           </Link>
         </div>
 
         <div className='card-body p-9'>
           <div className='row mb-7'>
-            <label className='col-lg-4 fw-bold text-muted'>Full Name</label>
+            <label className='col-lg-4 fw-bold text-muted'>Tên đầy đủ</label>
 
             <div className='col-lg-8'>
-              <span className='fw-bolder fs-6 text-gray-900'>Max Smith</span>
+              <span className='fw-bolder fs-6 text-gray-900'>{currentUser?.fullName}</span>
             </div>
           </div>
 
           <div className='row mb-7'>
-            <label className='col-lg-4 fw-bold text-muted'>Company</label>
+            <label className='col-lg-4 fw-bold text-muted'>Chi nhánh</label>
 
             <div className='col-lg-8 fv-row'>
-              <span className='fw-bold fs-6'>Keenthemes</span>
+              <span className='fw-bold fs-6'>{currentUser?.agency}</span>
             </div>
           </div>
 
           <div className='row mb-7'>
             <label className='col-lg-4 fw-bold text-muted'>
-              Contact Phone
+              Số điện thoại
               <i
                 className='fas fa-exclamation-circle ms-1 fs-7'
                 data-bs-toggle='tooltip'
-                title='Phone number must be active'
+                title='Số điện thoại phải đang hoạt động'
               ></i>
             </label>
 
             <div className='col-lg-8 d-flex align-items-center'>
-              <span className='fw-bolder fs-6 me-2'>044 3276 454 935</span>
+              <span className='fw-bolder fs-6 me-2'>{currentUser?.phoneNumber}</span>
 
-              <span className='badge badge-success'>Verified</span>
+              <span className='badge badge-success'>Đã xác minh</span>
             </div>
           </div>
 
           <div className='row mb-7'>
-            <label className='col-lg-4 fw-bold text-muted'>Company Site</label>
+            <label className='col-lg-4 fw-bold text-muted'>Website chi nhánh</label>
 
             <div className='col-lg-8'>
-              <a href='#' className='fw-bold fs-6 text-gray-900 text-hover-primary'>
-                keenthemes.com
+              <a href='https://selfolio.pages.dev/minhvu' className='fw-bold fs-6 text-gray-900 text-hover-primary'>
+                selfolio.pages.dev/minhvu
               </a>
             </div>
           </div>
 
           <div className='row mb-7'>
             <label className='col-lg-4 fw-bold text-muted'>
-              Country
+              Địa chỉ
               <i
-                className='fas fa-exclamation-circle ms-1 fs-7'
-                data-bs-toggle='tooltip'
-                title='Country of origination'
+                className='fas ms-1 fs-7'
               ></i>
             </label>
 
             <div className='col-lg-8'>
-              <span className='fw-bolder fs-6 text-gray-900'>Germany</span>
-            </div>
-          </div>
-
-          <div className='row mb-7'>
-            <label className='col-lg-4 fw-bold text-muted'>Communication</label>
-
-            <div className='col-lg-8'>
-              <span className='fw-bolder fs-6 text-gray-900'>Email, Phone</span>
+              <span className='fw-bolder fs-6 text-gray-900'>{currentUser?.address}</span>
             </div>
           </div>
 
           <div className='row mb-10'>
-            <label className='col-lg-4 fw-bold text-muted'>Allow Changes</label>
+            <label className='col-lg-4 fw-bold text-muted'>Ngày sinh</label>
 
             <div className='col-lg-8'>
-              <span className='fw-bold fs-6'>Yes</span>
+            <span className='fw-bolder fs-6 text-gray-900'>{currentUser?.dob}</span>
             </div>
           </div>
 

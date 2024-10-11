@@ -5,8 +5,7 @@ import * as Yup from 'yup'
 import {useFormik} from 'formik'
 
 const profileDetailsSchema = Yup.object().shape({
-  fName: Yup.string().required('First name is required'),
-  lName: Yup.string().required('Last name is required'),
+  fullName: Yup.string().required('Full name is required'),
   company: Yup.string().required('Company name is required'),
   contactPhone: Yup.string().required('Contact phone is required'),
   companySite: Yup.string().required('Company site is required'),
@@ -51,7 +50,7 @@ const ProfileDetails: FC = () => {
         aria-controls='kt_account_profile_details'
       >
         <div className='card-title m-0'>
-          <h3 className='fw-bolder m-0'>Profile Details</h3>
+          <h3 className='fw-bolder m-0'>Thông tin</h3>
         </div>
       </div>
 
@@ -59,7 +58,7 @@ const ProfileDetails: FC = () => {
         <form onSubmit={formik.handleSubmit} noValidate className='form'>
           <div className='card-body border-top p-9'>
             <div className='row mb-6'>
-              <label className='col-lg-4 col-form-label fw-bold fs-6'>Avatar</label>
+              <label className='col-lg-4 col-form-label fw-bold fs-6'>Ảnh đại diện</label>
               <div className='col-lg-8'>
                 <div
                   className='image-input image-input-outline'
@@ -75,9 +74,9 @@ const ProfileDetails: FC = () => {
             </div>
 
             <div className='row mb-6'>
-              <label className='col-lg-4 col-form-label required fw-bold fs-6'>Full Name</label>
+              <label className='col-lg-4 col-form-label required fw-bold fs-6'>Tên đầy đủ</label>
 
-              <div className='col-lg-8'>
+              {/* <div className='col-lg-8'>
                 <div className='row'>
                   <div className='col-lg-6 fv-row'>
                     <input
@@ -107,11 +106,24 @@ const ProfileDetails: FC = () => {
                     )}
                   </div>
                 </div>
+              </div> */}
+              <div className='col-lg-8 fv-row'>
+                <input
+                  type='text'
+                  className='form-control form-control-lg form-control-solid'
+                  placeholder='Họ và tên'
+                  {...formik.getFieldProps('fullName')}
+                />
+                {formik.touched.company && formik.errors.company && (
+                  <div className='fv-plugins-message-container'>
+                    <div className='fv-help-block'>{formik.errors.company}</div>
+                  </div>
+                )}
               </div>
             </div>
 
             <div className='row mb-6'>
-              <label className='col-lg-4 col-form-label required fw-bold fs-6'>Company</label>
+              <label className='col-lg-4 col-form-label required fw-bold fs-6'>Chi nhánh</label>
 
               <div className='col-lg-8 fv-row'>
                 <input
@@ -130,7 +142,7 @@ const ProfileDetails: FC = () => {
 
             <div className='row mb-6'>
               <label className='col-lg-4 col-form-label fw-bold fs-6'>
-                <span className='required'>Contact Phone</span>
+                <span className='required'>Số điện thoại</span>
               </label>
 
               <div className='col-lg-8 fv-row'>
@@ -150,7 +162,7 @@ const ProfileDetails: FC = () => {
 
             <div className='row mb-6'>
               <label className='col-lg-4 col-form-label fw-bold fs-6'>
-                <span className='required'>Company Site</span>
+                <span className='required'>Website chi nhánh</span>
               </label>
 
               <div className='col-lg-8 fv-row'>
@@ -170,7 +182,7 @@ const ProfileDetails: FC = () => {
 
             <div className='row mb-6'>
               <label className='col-lg-4 col-form-label fw-bold fs-6'>
-                <span className='required'>Country</span>
+                <span className='required'>Địa chỉ</span>
               </label>
 
               <div className='col-lg-8 fv-row'>

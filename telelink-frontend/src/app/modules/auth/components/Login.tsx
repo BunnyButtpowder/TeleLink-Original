@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
-import {getUserByToken, login} from '../core/_requests'
+import {getUserByToken, login, getUserById} from '../core/_requests'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {useAuth} from '../core/Auth'
 import {useIntl} from 'react-intl'
@@ -49,7 +49,11 @@ export function Login() {
         saveAuth({api_token: token})
         // const {data: user} = await getUserByToken(auth.api_token)
         localStorage.setItem('auth_token', token);
-        setCurrentUser(user)
+        const userResponse = await getUserById(user.id)
+        const safeUser = {...userResponse.data, auth: {...userResponse.data.auth, password: undefined}}
+        
+        setCurrentUser(safeUser)
+        console.log('user', safeUser)
         setLoading(false)
       } catch (error) {
         console.error(error)

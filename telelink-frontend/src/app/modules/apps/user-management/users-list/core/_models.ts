@@ -45,6 +45,4 @@ export const initialUser: User = {
     role: 0,
   },
   isDelete: false,
-  // email: '',
-  // status: false,
 }
