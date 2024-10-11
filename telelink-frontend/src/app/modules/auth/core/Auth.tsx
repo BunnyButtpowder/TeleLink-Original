@@ -25,12 +25,17 @@ const initAuthContextPropsState = {
 const AuthContext = createContext<AuthContextProps>(initAuthContextPropsState)
 
 const useAuth = () => {
-  return useContext(AuthContext)
+  const context = useContext(AuthContext)
+  if(!context) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+  return context;
 }
 
 const AuthProvider: FC<WithChildren> = ({children}) => {
   const [auth, setAuth] = useState<AuthModel | undefined>(authHelper.getAuth())
   const [currentUser, setCurrentUser] = useState<UserModel | undefined>()
+
   const saveAuth = (auth: AuthModel | undefined) => {
     setAuth(auth)
     if (auth) {
@@ -63,11 +68,11 @@ const AuthInit: FC<WithChildren> = ({children}) => {
         if (!currentUser) {
           const {data} = await getUserByToken(apiToken)
           if (data) {
-            setCurrentUser(data)
+            setCurrentUser(data) // Set current user
           }
         }
       } catch (error) {
-        console.error(error)
+        console.error('Error while fetching user by token', error)
         if (currentUser) {
           logout()
         }
@@ -77,10 +82,10 @@ const AuthInit: FC<WithChildren> = ({children}) => {
     }
 
     if (auth && auth.api_token) {
-      requestUser(auth.api_token)
+      requestUser(auth.api_token);  // Verify token using /verify_token endpoint
     } else {
-      logout()
-      setShowSplashScreen(false)
+      logout();
+      setShowSplashScreen(false);
     }
     // eslint-disable-next-line
   }, [])
