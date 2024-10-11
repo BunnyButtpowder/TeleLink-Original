@@ -78,17 +78,17 @@ const SidebarMenuMain = () => {
       </SidebarMenuItemWithSub>
       <SidebarMenuItemWithSub
         to='/crafted/accounts'
-        title='Accounts'
+        title='Tài khoản'
         icon='profile-circle'
         fontIcon='bi-person'
       >
-        <SidebarMenuItem to='/crafted/account/overview' title='Overview' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/account/settings' title='Settings' hasBullet={true} />
+        <SidebarMenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
+        <SidebarMenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
       </SidebarMenuItemWithSub>
-      <SidebarMenuItemWithSub to='/error' title='Errors' fontIcon='bi-sticky' icon='cross-circle'>
+      {/* <SidebarMenuItemWithSub to='/error' title='Errors' fontIcon='bi-sticky' icon='cross-circle'>
         <SidebarMenuItem to='/error/404' title='Error 404' hasBullet={true} />
         <SidebarMenuItem to='/error/500' title='Error 500' hasBullet={true} />
-      </SidebarMenuItemWithSub>
+      </SidebarMenuItemWithSub> */}
       <SidebarMenuItemWithSub
         to='/crafted/widgets'
         title='Widgets'

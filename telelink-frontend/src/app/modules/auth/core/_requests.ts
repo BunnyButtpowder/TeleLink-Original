@@ -7,8 +7,8 @@ export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/auth/verify_token`;
 export const LOGIN_URL = `${API_URL}/auth/login`;
 export const REGISTER_URL = `${API_URL}/auth/register`;
 export const REQUEST_PASSWORD_URL = `${API_URL}/forgot_password`;
+const USER_URL = `${API_URL}/user`;
 
-// Server should return AuthModel
 export function login(username: string, password: string) {
   return axios.post<{user: UserModel; token: string}>(LOGIN_URL, {
     username,
@@ -34,6 +34,10 @@ export function requestPassword(email: string) {
   return axios.post<{ result: boolean }>(REQUEST_PASSWORD_URL, {
     email,
   });
+}
+
+export function getUserById(id: number) {
+  return axios.get<UserModel>(`${USER_URL}/${id}`);
 }
 
 export function getUserByToken(token: string) {

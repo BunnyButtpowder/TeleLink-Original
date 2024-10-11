@@ -43,12 +43,32 @@ export interface UserSocialNetworksModel {
   instagram: string
 }
 
+export interface AuthInfo {
+  id?: number
+  email?: string
+  username: string
+  password?: string
+  status?: boolean
+  role?: number
+}
+
 export interface UserModel {
   id: number
   // username: string
   // password: string | undefined
   // email: string
-  fullname?: string
+  fullName?: string
+  phoneNumber?: string
+  dob?: string | null
+  address?: string | null
+  agency?: number
+  avatar?: string
+  gender?: string
+  dataType?: string
+  auth: AuthInfo
+  isDelete?: boolean
+  createdAt?: number
+  updatedAt?: number
   // occupation?: string
   // companyName?: string
   // phone?: string

@@ -1,9 +1,9 @@
-import {useState, FC} from 'react'
-import {KTIcon} from '../../../../../../_metronic/helpers'
+import { useState, FC } from 'react'
+import { KTIcon } from '../../../../../../_metronic/helpers'
 import * as Yup from 'yup'
-import {useFormik} from 'formik'
-import {IUpdateEmail, IUpdatePassword, updateEmail, updatePassword} from '../SettingsModel'
-import {useIntl} from 'react-intl'
+import { useFormik } from 'formik'
+import { IUpdateEmail, IUpdatePassword, updateEmail, updatePassword } from '../SettingsModel'
+import { useIntl } from 'react-intl'
 
 const emailFormValidationSchema = Yup.object().shape({
   newEmail: Yup.string()
@@ -83,7 +83,7 @@ const SignInMethod: FC = () => {
         data-bs-target='#kt_account_signin_method'
       >
         <div className='card-title m-0'>
-          <h3 className='fw-bolder m-0'>Sign-in Method</h3>
+          <h3 className='fw-bolder m-0'>Bảo mật</h3>
         </div>
       </div>
 
@@ -91,7 +91,7 @@ const SignInMethod: FC = () => {
         <div className='card-body border-top p-9'>
           <div className='d-flex flex-wrap align-items-center'>
             <div id='kt_signin_email' className={' ' + (showEmailForm && 'd-none')}>
-              <div className='fs-6 fw-bolder mb-1'>Email Address</div>
+              <div className='fs-6 fw-bolder mb-1'>Email</div>
               <div className='fw-bold text-gray-600'>support@keenthemes.com</div>
             </div>
 
@@ -155,7 +155,7 @@ const SignInMethod: FC = () => {
                   >
                     {!loading1 && 'Update Email'}
                     {loading1 && (
-                      <span className='indicator-progress' style={{display: 'block'}}>
+                      <span className='indicator-progress' style={{ display: 'block' }}>
                         Please wait...{' '}
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
@@ -191,7 +191,7 @@ const SignInMethod: FC = () => {
 
           <div className='d-flex flex-wrap align-items-center mb-10'>
             <div id='kt_signin_password' className={' ' + (showPasswordForm && 'd-none')}>
-              <div className='fs-6 fw-bolder mb-1'>Password</div>
+              <div className='fs-6 fw-bolder mb-1'>Mật khẩu đăng nhập</div>
               <div className='fw-bold text-gray-600'>************</div>
             </div>
 
@@ -209,7 +209,7 @@ const SignInMethod: FC = () => {
                   <div className='col-lg-4'>
                     <div className='fv-row mb-0'>
                       <label htmlFor='currentpassword' className='form-label fs-6 fw-bolder mb-3'>
-                        {intl.formatMessage({id: 'AUTH.INPUT.CURRENT_PASSWORD'})}
+                        {intl.formatMessage({ id: 'AUTH.INPUT.CURRENT_PASSWORD' })}
                       </label>
                       <input
                         type='password'
@@ -228,7 +228,7 @@ const SignInMethod: FC = () => {
                   <div className='col-lg-4'>
                     <div className='fv-row mb-0'>
                       <label htmlFor='newpassword' className='form-label fs-6 fw-bolder mb-3'>
-                        {intl.formatMessage({id: 'AUTH.INPUT.NEW_PASSWORD'})}
+                        {intl.formatMessage({ id: 'AUTH.INPUT.NEW_PASSWORD' })}
                       </label>
                       <input
                         type='password'
@@ -247,7 +247,7 @@ const SignInMethod: FC = () => {
                   <div className='col-lg-4'>
                     <div className='fv-row mb-0'>
                       <label htmlFor='confirmpassword' className='form-label fs-6 fw-bolder mb-3'>
-                        {intl.formatMessage({id: 'AUTH.INPUT.CONFIRM_NEW_PASSWORD'})}
+                        {intl.formatMessage({ id: 'AUTH.INPUT.CONFIRM_NEW_PASSWORD' })}
                       </label>
                       <input
                         type='password'
@@ -265,7 +265,7 @@ const SignInMethod: FC = () => {
                 </div>
 
                 <div className='form-text mb-5'>
-                  {intl.formatMessage({id: 'AUTH.VALIDATION.PASSWORD_REQUIREMENTS'})}
+                  {intl.formatMessage({ id: 'AUTH.VALIDATION.PASSWORD_REQUIREMENTS' })}
                 </div>
 
                 <div className='d-flex'>
@@ -276,7 +276,7 @@ const SignInMethod: FC = () => {
                   >
                     {!loading2 && 'Đổi mật khẩu'}
                     {loading2 && (
-                      <span className='indicator-progress' style={{display: 'block'}}>
+                      <span className='indicator-progress' style={{ display: 'block' }}>
                         Please wait...{' '}
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
@@ -290,7 +290,7 @@ const SignInMethod: FC = () => {
                     type='button'
                     className='btn btn-color-gray-500 btn-active-light-primary px-6'
                   >
-                    {intl.formatMessage({id: 'FORM.CANCEL'})}
+                    {intl.formatMessage({ id: 'FORM.CANCEL' })}
                   </button>
                 </div>
               </form>
@@ -306,7 +306,7 @@ const SignInMethod: FC = () => {
                 }}
                 className='btn btn-light btn-active-light-primary'
               >
-                {intl.formatMessage({id: 'AUTH.TITLE.PASSWORD_RESET'})}
+                {intl.formatMessage({ id: 'AUTH.TITLE.PASSWORD_RESET' })}
               </button>
             </div>
           </div>
@@ -337,4 +337,4 @@ const SignInMethod: FC = () => {
   )
 }
 
-export {SignInMethod}
+export { SignInMethod }
