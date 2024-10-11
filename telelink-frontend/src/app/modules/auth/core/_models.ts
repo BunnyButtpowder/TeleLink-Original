@@ -45,19 +45,19 @@ export interface UserSocialNetworksModel {
 
 export interface UserModel {
   id: number
-  username: string
-  password: string | undefined
-  email: string
+  // username: string
+  // password: string | undefined
+  // email: string
   fullname?: string
-  occupation?: string
-  companyName?: string
-  phone?: string
-  roles?: Array<number>
-  pic?: string
-  timeZone?: string
-  emailSettings?: UserEmailSettingsModel
-  auth?: AuthModel
-  communication?: UserCommunicationModel
-  address?: UserAddressModel
-  socialNetworks?: UserSocialNetworksModel
+  // occupation?: string
+  // companyName?: string
+  // phone?: string
+  // roles?: Array<number>
+  // pic?: string
+  // timeZone?: string
+  // emailSettings?: UserEmailSettingsModel
+  // auth?: AuthModel
+  // communication?: UserCommunicationModel
+  // address?: UserAddressModel
+  // socialNetworks?: UserSocialNetworksModel
 }
