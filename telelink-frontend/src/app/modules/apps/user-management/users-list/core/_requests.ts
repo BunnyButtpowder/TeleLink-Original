@@ -5,6 +5,7 @@ import { User, UsersQueryResponse } from "./_models";
 const API_URL = import.meta.env.VITE_APP_API_URL;
 const USER_URL = `${API_URL}/user`;
 const GET_USERS_URL = `${API_URL}/users/getall`;
+export const REGISTER_URL = `${API_URL}/users/create`;
 
 // const getUsers = (query: string): Promise<UsersQueryResponse> => {
 //   return axios
@@ -24,13 +25,22 @@ const getUserById = (id: ID): Promise<User | undefined> => {
     .then((response: AxiosResponse<Response<User>>) => response.data)
     .then((response: Response<User>) => response.data);
 };
-// const getUserById = (id: number) => {
-//   return axios.get<User>(`${USER_URL}/${id}`);
-// }
 
 const createUser = (user: User): Promise<User | undefined> => {
+  const transformedUser = {
+    fullName: user.fullName,
+    phoneNumber: user.phoneNumber,
+    dob: user.dob,
+    address: user.address,
+    email: user.auth.email,
+    username: user.auth.username,
+    password: user.auth.password,
+    role: user.auth.role,
+    gender: user.gender,
+    agency: user.agency,
+  };
   return axios
-    .put(USER_URL, user)
+    .post(REGISTER_URL, transformedUser)
     .then((response: AxiosResponse<Response<User>>) => response.data)
     .then((response: Response<User>) => response.data);
 };
@@ -43,12 +53,12 @@ const updateUser = (user: User): Promise<User | undefined> => {
 };
 
 const deleteUser = (userId: ID): Promise<void> => {
-  return axios.delete(`${USER_URL}/${userId}`).then(() => {});
+  return axios.delete(`${USER_URL}/${userId}`).then(() => { });
 };
 
 const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
   const requests = userIds.map((id) => axios.delete(`${USER_URL}/${id}`));
-  return axios.all(requests).then(() => {});
+  return axios.all(requests).then(() => { });
 };
 
 export {

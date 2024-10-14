@@ -23,29 +23,33 @@ const salesmanSchema = Yup.object().shape({
       .min(3, 'Minimum 3 symbols')
       .max(50, 'Maximum 50 symbols')
       .required('Vui lòng điền vào trường này'),
+    password: Yup.string().required('Vui lòng nhập mật khẩu'),
     status: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
+    role: Yup.number().required('Vui lòng chọn quyền'),
   }),
   fullName: Yup.string().min(3, 'Minimum 3 symbols').required('Vui lòng điền vào trường này'),
   phoneNumber: Yup.string().nullable(),
   address: Yup.string().nullable(),
   dob: Yup.string().nullable(),
   gender: Yup.string().nullable(),
-  agency: Yup.number().required('Vui lòng điền vào trường này'),
+  agency: Yup.string().nullable(),
 })
 
 const agencySchema = Yup.object().shape({
   auth: Yup.object().shape({
     username: Yup.string().required('Vui lòng điền vào trường này'),
-    email: Yup.string().email('Sai định dạng email').required('Vui lòng điền vào trường này'),
+    email: Yup.string()
+      .email('Sai định dạng email')
+      .min(3, 'Minimum 3 symbols')
+      .max(50, 'Maximum 50 symbols')
+      .required('Vui lòng điền vào trường này'),
+    password: Yup.string().required('Vui lòng nhập mật khẩu'),
     status: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
+    role: Yup.number().required('Vui lòng chọn quyền'),
   }),
-  agencyName: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Vui lòng điền vào trường này'),
+  fullName: Yup.string().min(3, 'Minimum 3 symbols').required('Vui lòng điền vào trường này'),
   phoneNumber: Yup.string().nullable(),
-  address: Yup.string()
-    .nullable(),
+  address: Yup.string().nullable(),
 })
 
 const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
@@ -93,6 +97,14 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
       try {
+        // const newUser = {
+        //   ...values,
+        //   auth: {
+        //     ...values.auth,
+        //     password: values.auth.password || 'defaultPassword123', // Use a default or require the user to provide one
+        //   }
+        // };
+
         if (isNotEmpty(values.id)) {
           await updateUser(values)
         } else {
@@ -130,7 +142,14 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
 
   // Handling the role change
   const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedRole(e.target.value);
+    const selectedRole = e.target.value;
+    setSelectedRole(selectedRole);
+
+    const roleValue = selectedRole === 'agency' ? 2 : 3;
+
+    // Update auth.role
+    agencyFormik.setFieldValue('auth.role', roleValue);
+    salemanFormik.setFieldValue('auth.role', roleValue);
   }
 
   return (
@@ -165,7 +184,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
       </div>
 
       {/* Form for Salesman */}
-      {selectedRole === 'salesman' && (
+      {selectedRole === 'salesman' ? (
         <form id='kt_modal_add_user_form' className='form' onSubmit={salemanFormik.handleSubmit} noValidate>
           {/* Salesman form fields */}
           <div
@@ -294,12 +313,41 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                 autoComplete='off'
                 disabled={salemanFormik.isSubmitting || isUserLoading}
               />
-
-
               {salemanFormik.touched.auth?.username && salemanFormik.errors.auth?.username && (
                 <div className='fv-plugins-message-container'>
                   <div className='fv-help-block'>
                     <span role='alert'>{salemanFormik.errors.auth?.username}</span>
+                  </div>
+                </div>
+              )}
+              {/* end::Input */}
+            </div>
+            {/* end::Input group */}
+
+            {/* begin::Input group */}
+            <div className='fv-row mb-7'>
+              {/* begin::Label */}
+              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}</label>
+              {/* end::Label */}
+
+              {/* begin::Input */}
+              <input
+                placeholder={intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}
+                {...salemanFormik.getFieldProps('auth.password')}
+                type='text'
+                name='auth.password'
+                className={clsx(
+                  'form-control form-control-solid mb-3 mb-lg-0',
+                  { 'is-invalid': salemanFormik.touched.auth?.password && salemanFormik.errors.auth?.password },
+                  { 'is-valid': salemanFormik.touched.auth?.password && !salemanFormik.errors.auth?.password }
+                )}
+                autoComplete='off'
+                disabled={salemanFormik.isSubmitting || isUserLoading}
+              />
+              {salemanFormik.touched.auth?.password && salemanFormik.errors.auth?.password && (
+                <div className='fv-plugins-message-container'>
+                  <div className='fv-help-block'>
+                    <span role='alert'>{salemanFormik.errors.auth?.password}</span>
                   </div>
                 </div>
               )}
@@ -455,9 +503,42 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                 <option value='female'>{intl.formatMessage({ id: 'GENDER.FEMALE' })}</option>
                 <option value='other'>{intl.formatMessage({ id: 'GENDER.OTHER' })}</option>
               </select>
-              {salemanFormik.touched.fullName && salemanFormik.errors.fullName && (
+              {salemanFormik.touched.gender && salemanFormik.errors.gender && (
                 <div className='fv-plugins-message-container'>
                   <span role='alert'>{salemanFormik.errors.gender}</span>
+                </div>
+              )}
+              {/* end::Input */}
+            </div>
+            {/* end::Input group */}
+
+            {/* begin::Input group */}
+            <div className='fv-row mb-7'>
+              {/* begin::Label */}
+              <label className=' fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AGENCY' })}</label>
+              {/* end::Label */}
+
+              {/* begin::Input */}
+              <select
+                {...salemanFormik.getFieldProps('agency')}
+                className={clsx(
+                  'form-control form-control-solid mb-3 mb-lg-0',
+                  { 'is-invalid': salemanFormik.touched.agency && salemanFormik.errors.agency },
+                  {
+                    'is-valid': salemanFormik.touched.agency && !salemanFormik.errors.agency,
+                  }
+                )}
+                name='agency'
+                disabled={salemanFormik.isSubmitting || isUserLoading}
+              >
+                <option value='' disabled>{intl.formatMessage({ id: 'SELECT.AGENCY' })}</option>
+                {/* <option value='male'>{intl.formatMessage({ id: 'GENDER.MALE' })}</option>
+                <option value='female'>{intl.formatMessage({ id: 'GENDER.FEMALE' })}</option>
+                <option value='other'>{intl.formatMessage({ id: 'GENDER.OTHER' })}</option> */}
+              </select>
+              {salemanFormik.touched.agency && salemanFormik.errors.agency && (
+                <div className='fv-plugins-message-container'>
+                  <span role='alert'>{salemanFormik.errors.agency}</span>
                 </div>
               )}
               {/* end::Input */}
@@ -469,7 +550,6 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               {/* begin::Label */}
               <label className='required fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.STATUS' })}</label>
               {/* end::Label */}
-              {/* begin::Roles */}
               {/* begin::Input row */}
               <div className='d-flex fv-row'>
                 {/* begin::Radio */}
@@ -478,11 +558,12 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                   <input
                     className='form-check-input me-3'
                     {...salemanFormik.getFieldProps('auth.status')}
-                    name='role'
+                    name='auth.status'
                     type='radio'
-                    value='active'
+                    value="true"
                     id='kt_modal_update_role_option_0'
                     checked={salemanFormik.values.auth?.status === true}
+                    onChange={() => salemanFormik.setFieldValue('auth.status', true)} // Ensure correct update
                     disabled={salemanFormik.isSubmitting || isUserLoading}
                   />
                   {/* end::Input */}
@@ -504,11 +585,12 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                   <input
                     className='form-check-input me-3'
                     {...salemanFormik.getFieldProps('auth.status')}
-                    name='role'
+                    name='auth.status'
                     type='radio'
-                    value='inactive'
+                    value="false"
                     id='kt_modal_update_role_option_1'
                     checked={salemanFormik.values.auth?.status === false}
+                    onChange={() => salemanFormik.setFieldValue('auth.status', false)}
                     disabled={salemanFormik.isSubmitting || isUserLoading}
                   />
                   {/* end::Input */}
@@ -544,7 +626,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               type='submit'
               className='btn btn-primary'
               data-kt-users-modal-action='submit'
-              disabled={isUserLoading || salemanFormik.isSubmitting || !salemanFormik.isValid || !salemanFormik.touched}
+              disabled={isUserLoading || salemanFormik.isSubmitting || !salemanFormik.isValid}
             >
               <span className='indicator-label'>{intl.formatMessage({ id: "FORM.SUBMIT" })}</span>
               {(salemanFormik.isSubmitting || isUserLoading) && (
@@ -557,10 +639,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
             {(salemanFormik.isSubmitting || isUserLoading) && <UsersListLoading />}
           </div>
         </form>
-      )}
-
-      {/* Form for Agency */}
-      {selectedRole === 'agency' && (
+      ) : (
         <form id='kt_modal_add_user_form' className='form' onSubmit={agencyFormik.handleSubmit} noValidate>
           {/* Agency form fields */}
           <div className='fv-row mb-7'>
@@ -583,7 +662,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                 {/* begin::Input */}
                 <input
                   placeholder='Tên đầy đủ'
-                  {...salemanFormik.getFieldProps('fullName')}
+                  {...agencyFormik.getFieldProps('fullName')}
                   type='text'
                   name='fullName'
                   className={clsx(
@@ -643,6 +722,37 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               {/* begin::Input group */}
               <div className='fv-row mb-7'>
                 {/* begin::Label */}
+                <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}</label>
+                {/* end::Label */}
+
+                {/* begin::Input */}
+                <input
+                  placeholder={intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}
+                  {...agencyFormik.getFieldProps('auth.password')}
+                  type='text'
+                  name='auth.password'
+                  className={clsx(
+                    'form-control form-control-solid mb-3 mb-lg-0',
+                    { 'is-invalid': agencyFormik.touched.auth?.password && agencyFormik.errors.auth?.password },
+                    { 'is-valid': agencyFormik.touched.auth?.password && !agencyFormik.errors.auth?.password }
+                  )}
+                  autoComplete='off'
+                  disabled={agencyFormik.isSubmitting || isUserLoading}
+                />
+                {agencyFormik.touched.auth?.password && agencyFormik.errors.auth?.password && (
+                  <div className='fv-plugins-message-container'>
+                    <div className='fv-help-block'>
+                      <span role='alert'>{agencyFormik.errors.auth?.password}</span>
+                    </div>
+                  </div>
+                )}
+                {/* end::Input */}
+              </div>
+              {/* end::Input group */}
+
+              {/* begin::Input group */}
+              <div className='fv-row mb-7'>
+                {/* begin::Label */}
                 <label className='required fw-bold fs-6 mb-2'>Email</label>
                 {/* end::Label */}
 
@@ -657,8 +767,8 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                       'is-valid': agencyFormik.touched.auth?.email && !agencyFormik.errors.auth?.email,
                     }
                   )}
-                  type='email'
-                  name='email'
+                  type='text'
+                  name='auth.email'
                   autoComplete='off'
                   disabled={agencyFormik.isSubmitting || isUserLoading}
                 />
@@ -746,11 +856,12 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                     <input
                       className='form-check-input me-3'
                       {...agencyFormik.getFieldProps('auth.status')}
-                      name='role'
+                      name='auth.status'
                       type='radio'
-                      value='active'
+                      value="true"
                       id='kt_modal_update_role_option_0'
                       checked={agencyFormik.values.auth?.status === true}
+                      onChange={() => agencyFormik.setFieldValue('auth.status', true)}
                       disabled={agencyFormik.isSubmitting || isUserLoading}
                     />
 
@@ -773,11 +884,12 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                     <input
                       className='form-check-input me-3'
                       {...agencyFormik.getFieldProps('auth.status')}
-                      name='role'
+                      name='auth.status'
                       type='radio'
-                      value='inactive'
+                      value="false"
                       id='kt_modal_update_role_option_1'
                       checked={agencyFormik.values.auth?.status === false}
+                      onChange={() => agencyFormik.setFieldValue('auth.status', false)}
                       disabled={agencyFormik.isSubmitting || isUserLoading}
                     />
                     {/* end::Input */}
@@ -814,7 +926,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               type='submit'
               className='btn btn-primary'
               data-kt-users-modal-action='submit'
-              disabled={isUserLoading || agencyFormik.isSubmitting || !agencyFormik.isValid || !agencyFormik.touched}
+              disabled={isUserLoading || agencyFormik.isSubmitting || !agencyFormik.isValid}
             >
               <span className='indicator-label'>{intl.formatMessage({ id: "FORM.SUBMIT" })}</span>
               {(agencyFormik.isSubmitting || isUserLoading) && (
