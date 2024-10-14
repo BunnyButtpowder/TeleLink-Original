@@ -30,28 +30,29 @@ module.exports = {
     },
   },
 
-  fn: async function (inputs) {
+  fn: async function (inputs, exits) {
     try {
-      let { res, req, next } = this;
       const { role_id, action, module } = inputs;
 
-      const action_id = await Action.findOne({ action });
-      const module_id = await Module.findOne({ module });
+      const action_id = await Action.findOne({ title:action });
+      const module_id = await Module.findOne({ title:module });
+      
       if (!action_id || !module_id) {
-        return res.unauthorized({ message: "Permission not exists" });
+        return exits.success(false)
       }
 
       const permission = await Permission.findOne({
-        role_id: existingUser.role,
+        role_id: role_id,
         action: action_id.id,
         module: module_id.id,
       });
+      
       if (!permission) {
-        return res.unauthorized({ message: "Không có quyền truy cập" });
+        return exits.success(false)
       }
-      next();
+      return exits.success(true)
     } catch (err) {
-      return res.unauthorized({ message: "Không có quyền truy cập" });
+      return exits.success(false)
     }
   },
 };
