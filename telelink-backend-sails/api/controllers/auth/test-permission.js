@@ -19,8 +19,10 @@ module.exports = {
 
   fn: async function (inputs) {
     let { res, req } = this;
-    await sails.helpers.checkPermission(role_id=req.role,action="test",module="permission")
-    if(req.param("action") != "test" || req.param("module") != "permission"){
+    const authorized = await sails.helpers.checkPermission.with({role_id:req.role,action:"test",module:"permission"})
+    console.log(authorized);
+    
+    if(!authorized){
       return res.unauthorized({message: "Không có quyền truy cập"})
     }
     
