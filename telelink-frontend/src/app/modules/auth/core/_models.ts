@@ -54,14 +54,11 @@ export interface AuthInfo {
 
 export interface UserModel {
   id: number
-  // username: string
-  // password: string | undefined
-  // email: string
   fullName?: string
   phoneNumber?: string
   dob?: string | null
   address?: string | null
-  agency?: number
+  agency?: string | null
   avatar?: string
   gender?: string
   dataType?: string

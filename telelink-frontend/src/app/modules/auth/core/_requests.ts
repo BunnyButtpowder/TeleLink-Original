@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_APP_API_URL;
 
 export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/auth/verify_token`;
 export const LOGIN_URL = `${API_URL}/auth/login`;
-export const REGISTER_URL = `${API_URL}/auth/register`;
+export const REGISTER_URL = `${API_URL}/users/create`;
 export const REQUEST_PASSWORD_URL = `${API_URL}/forgot_password`;
 const USER_URL = `${API_URL}/user`;
 
@@ -18,14 +18,26 @@ export function login(username: string, password: string) {
 
 // Server should return AuthModel
 export function register(
+  fullName: string,
+  phoneNumber: string,
+  dob: string,
+  address: string,
   email: string,
+  username: string,
   password: string,
-  password_confirmation: string
+  role: number,
+  gender: string
 ) {
   return axios.post(REGISTER_URL, {
+    fullName,
+    phoneNumber,
+    dob,
+    address,
     email,
+    username,
     password,
-    password_confirmation,
+    role,
+    gender
   });
 }
 

@@ -32,9 +32,9 @@ export const initialUser: User = {
   avatar: 'avatars/blank.png',
   fullName: '',
   phoneNumber: '',
-  dob: null,
+  dob: undefined,
   address: null,
-  agency: 0,
+  agency: undefined,
   gender: '',
   dataType: '',
   auth: {
@@ -42,7 +42,7 @@ export const initialUser: User = {
     status: false,
     username: '',
     password: '',
-    role: 0,
+    role: undefined,
   },
   isDelete: false,
 }

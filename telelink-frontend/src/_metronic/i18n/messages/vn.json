@@ -104,5 +104,6 @@
   "GENDER.OTHER" : "Khác",
   "APP.DESCRIPTION" : "Hệ thống quản lý Telesale",
   "AGENCY": "Chi nhánh",
+  "SELECT.AGENCY": "Chọn chi nhánh",
   "SALESMAN": "Nhân viên"
 }
