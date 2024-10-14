@@ -1,10 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
-import {FC, useState, useEffect, createContext, useContext, Dispatch, SetStateAction} from 'react'
-import {LayoutSplashScreen} from '../../../../_metronic/layout/core'
-import {AuthModel, UserModel} from './_models'
+import { FC, useState, useEffect, createContext, useContext, Dispatch, SetStateAction } from 'react'
+import { LayoutSplashScreen } from '../../../../_metronic/layout/core'
+import { AuthModel, UserModel } from './_models'
 import * as authHelper from './AuthHelpers'
-import {getUserByToken} from './_requests'
-import {WithChildren} from '../../../../_metronic/helpers'
+import { getUserByToken } from './_requests'
+import { WithChildren } from '../../../../_metronic/helpers'
 
 type AuthContextProps = {
   auth: AuthModel | undefined
@@ -16,21 +16,28 @@ type AuthContextProps = {
 
 const initAuthContextPropsState = {
   auth: authHelper.getAuth(),
-  saveAuth: () => {},
+  saveAuth: () => { },
   currentUser: undefined,
-  setCurrentUser: () => {},
-  logout: () => {},
+  setCurrentUser: () => { },
+  logout: () => { },
 }
 
 const AuthContext = createContext<AuthContextProps>(initAuthContextPropsState)
 
 const useAuth = () => {
-  return useContext(AuthContext)
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+  return context;
 }
 
-const AuthProvider: FC<WithChildren> = ({children}) => {
+const AuthProvider: FC<WithChildren> = ({ children }) => {
   const [auth, setAuth] = useState<AuthModel | undefined>(authHelper.getAuth())
-  const [currentUser, setCurrentUser] = useState<UserModel | undefined>()
+  const [currentUser, setCurrentUser] = useState<UserModel | undefined>(
+    () => JSON.parse(localStorage.getItem('currentUser') || 'null') // Retrieve current user from local storage
+  )
+
   const saveAuth = (auth: AuthModel | undefined) => {
     setAuth(auth)
     if (auth) {
@@ -40,20 +47,28 @@ const AuthProvider: FC<WithChildren> = ({children}) => {
     }
   }
 
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem('currentUser', JSON.stringify(currentUser))
+    } else {
+      localStorage.removeItem('currentUser')
+    }
+  }, [currentUser])
+
   const logout = () => {
     saveAuth(undefined)
     setCurrentUser(undefined)
   }
 
   return (
-    <AuthContext.Provider value={{auth, saveAuth, currentUser, setCurrentUser, logout}}>
+    <AuthContext.Provider value={{ auth, saveAuth, currentUser, setCurrentUser, logout }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
-const AuthInit: FC<WithChildren> = ({children}) => {
-  const {auth, currentUser, logout, setCurrentUser} = useAuth()
+const AuthInit: FC<WithChildren> = ({ children }) => {
+  const { auth, currentUser, logout, setCurrentUser } = useAuth()
   const [showSplashScreen, setShowSplashScreen] = useState(true)
 
   // We should request user by authToken (IN OUR EXAMPLE IT'S API_TOKEN) before rendering the application
@@ -61,13 +76,13 @@ const AuthInit: FC<WithChildren> = ({children}) => {
     const requestUser = async (apiToken: string) => {
       try {
         if (!currentUser) {
-          const {data} = await getUserByToken(apiToken)
+          const { data } = await getUserByToken(apiToken)
           if (data) {
-            setCurrentUser(data)
+            setCurrentUser(data) // Set current user
           }
         }
       } catch (error) {
-        console.error(error)
+        console.error('Error while fetching user by token', error)
         if (currentUser) {
           logout()
         }
@@ -77,10 +92,10 @@ const AuthInit: FC<WithChildren> = ({children}) => {
     }
 
     if (auth && auth.api_token) {
-      requestUser(auth.api_token)
+      requestUser(auth.api_token);  // Verify token using /verify_token endpoint
     } else {
-      logout()
-      setShowSplashScreen(false)
+      logout();
+      setShowSplashScreen(false);
     }
     // eslint-disable-next-line
   }, [])
@@ -88,4 +103,4 @@ const AuthInit: FC<WithChildren> = ({children}) => {
   return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>
 }
 
-export {AuthProvider, AuthInit, useAuth}
+export { AuthProvider, AuthInit, useAuth }

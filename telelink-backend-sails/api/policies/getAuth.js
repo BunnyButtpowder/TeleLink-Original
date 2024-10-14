@@ -1,38 +1,21 @@
 module.exports = async function (req, res, next) {
   let token;
   if (req.headers && req.headers.authorization) {
-    const parts = req.headers.authorization.split(" ");
-    if (parts.length === 2) {
-      const scheme = parts[0];
-      const credentials = parts[1];
-
-      if (/^Bearer$/i.test(scheme)) {
-        token = credentials;
-      }
+    const parts = req.headers.authorization.split(' ');
+    if (parts.length === 2 && /^Bearer$/i.test(parts[0])) {
+      token = parts[1];
     } else {
-      return res.json(401, {
-        err: {status: "danger", message: "auth.policy.wrongFormat"},
-      });
+      return res.status(401).json({ err: 'Wrong token format' });
     }
-  } else if (req.param("token")) {
-    token = req.param("token");
-    // We delete the token from param to not mess with blueprints
-    delete req.query.token;
   } else {
-    return res.json(401, {
-      err: {
-        status: "danger",
-        message: "auth.policy.noAuthorizationHeaderFound",
-      },
-    });
+    return res.status(401).json({ err: 'Authorization header missing' });
   }
 
-  jwt.verifyAsync(token).then((decodedToken) => {
-    req.user = decodedToken;
-    next();
-  }).catch((err) => {
-    return res.json(401, {
-      err: {status: "danger", message: "auth.policy.invalidToken", detail: err,},
-    });
-  });
+  try {
+    const decodedToken = await sails.helpers.jwt.verifyAsync(token);
+    req.user = decodedToken; // Attach the user data to req object
+    return next();
+  } catch (err) {
+    return res.status(401).json({ err: 'Invalid token', details: err });
+  }
 };

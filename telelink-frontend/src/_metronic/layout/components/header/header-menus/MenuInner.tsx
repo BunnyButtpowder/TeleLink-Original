@@ -69,7 +69,7 @@ export function MenuInner() {
         </MenuInnerWithSub>
 
         {/* ERRORS */}
-        <MenuInnerWithSub
+        {/* <MenuInnerWithSub
           title='Errors'
           to='/error'
           fontIcon='bi-sticky'
@@ -79,7 +79,7 @@ export function MenuInner() {
         >
           <MenuItem to='/error/404' title='Error 404' hasBullet={true} />
           <MenuItem to='/error/500' title='Error 500' hasBullet={true} />
-        </MenuInnerWithSub>
+        </MenuInnerWithSub> */}
 
         {/* Widgets */}
         <MenuInnerWithSub

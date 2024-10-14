@@ -1,8 +1,11 @@
-import {useState, FC} from 'react'
-import {KTIcon} from '../../../../../../_metronic/helpers'
+import { useState, FC } from 'react'
+import { KTIcon } from '../../../../../../_metronic/helpers'
 import * as Yup from 'yup'
-import {useFormik} from 'formik'
-import {IUpdateEmail, IUpdatePassword, updateEmail, updatePassword} from '../SettingsModel'
+import { useFormik } from 'formik'
+import { IUpdateEmail, IUpdatePassword, updateEmail, updatePassword } from '../SettingsModel'
+import { useIntl } from 'react-intl'
+import { useAuth } from '../../../../../../app/modules/auth'
+import { changePassword } from '../../../../../../app/modules/accounts/components/core/_request';
 
 const emailFormValidationSchema = Yup.object().shape({
   newEmail: Yup.string()
@@ -20,25 +23,27 @@ const passwordFormValidationSchema = Yup.object().shape({
   currentPassword: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Password is required'),
+    .required('Mật khẩu không được để trống'),
   newPassword: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Password is required'),
+    .required('Mật khẩu không được để trống'),
   passwordConfirmation: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Password is required')
-    .oneOf([Yup.ref('newPassword')], 'Passwords must match'),
+    .required('Mật khẩu không được để trống')
+    .oneOf([Yup.ref('newPassword')], 'Mật khẩu không khớp'),
 })
 
 const SignInMethod: FC = () => {
+  const { currentUser } = useAuth();
+
   const [emailUpdateData, setEmailUpdateData] = useState<IUpdateEmail>(updateEmail)
   const [passwordUpdateData, setPasswordUpdateData] = useState<IUpdatePassword>(updatePassword)
 
   const [showEmailForm, setShowEmailForm] = useState<boolean>(false)
   const [showPasswordForm, setPasswordForm] = useState<boolean>(false)
-
+  const intl = useIntl()
   const [loading1, setLoading1] = useState(false)
 
   const formik1 = useFormik<IUpdateEmail>({
@@ -63,13 +68,28 @@ const SignInMethod: FC = () => {
       ...passwordUpdateData,
     },
     validationSchema: passwordFormValidationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setLoading2(true)
-      setTimeout(() => {
-        setPasswordUpdateData(values)
-        setLoading2(false)
-        setPasswordForm(false)
-      }, 1000)
+      
+      try {
+        const userId = currentUser?.id;
+        
+        if (!userId) {
+          console.error('User is not logged in');
+          setLoading2(false);
+          return;
+        };
+        await changePassword(userId, values.currentPassword, values.newPassword);
+        setPasswordUpdateData(values);
+        setLoading2(false);
+        setPasswordForm(false);
+        alert('Password changed successfully');
+
+      } catch (error) {
+        console.error('Error while changing password', error);
+        setLoading2(false);
+        alert('Error while changing password');
+      }
     },
   })
 
@@ -82,7 +102,7 @@ const SignInMethod: FC = () => {
         data-bs-target='#kt_account_signin_method'
       >
         <div className='card-title m-0'>
-          <h3 className='fw-bolder m-0'>Sign-in Method</h3>
+          <h3 className='fw-bolder m-0'>Bảo mật</h3>
         </div>
       </div>
 
@@ -90,7 +110,7 @@ const SignInMethod: FC = () => {
         <div className='card-body border-top p-9'>
           <div className='d-flex flex-wrap align-items-center'>
             <div id='kt_signin_email' className={' ' + (showEmailForm && 'd-none')}>
-              <div className='fs-6 fw-bolder mb-1'>Email Address</div>
+              <div className='fs-6 fw-bolder mb-1'>Email</div>
               <div className='fw-bold text-gray-600'>support@keenthemes.com</div>
             </div>
 
@@ -154,7 +174,7 @@ const SignInMethod: FC = () => {
                   >
                     {!loading1 && 'Update Email'}
                     {loading1 && (
-                      <span className='indicator-progress' style={{display: 'block'}}>
+                      <span className='indicator-progress' style={{ display: 'block' }}>
                         Please wait...{' '}
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
@@ -190,7 +210,7 @@ const SignInMethod: FC = () => {
 
           <div className='d-flex flex-wrap align-items-center mb-10'>
             <div id='kt_signin_password' className={' ' + (showPasswordForm && 'd-none')}>
-              <div className='fs-6 fw-bolder mb-1'>Password</div>
+              <div className='fs-6 fw-bolder mb-1'>Mật khẩu đăng nhập</div>
               <div className='fw-bold text-gray-600'>************</div>
             </div>
 
@@ -208,7 +228,7 @@ const SignInMethod: FC = () => {
                   <div className='col-lg-4'>
                     <div className='fv-row mb-0'>
                       <label htmlFor='currentpassword' className='form-label fs-6 fw-bolder mb-3'>
-                        Current Password
+                        {intl.formatMessage({ id: 'AUTH.INPUT.CURRENT_PASSWORD' })}
                       </label>
                       <input
                         type='password'
@@ -227,7 +247,7 @@ const SignInMethod: FC = () => {
                   <div className='col-lg-4'>
                     <div className='fv-row mb-0'>
                       <label htmlFor='newpassword' className='form-label fs-6 fw-bolder mb-3'>
-                        New Password
+                        {intl.formatMessage({ id: 'AUTH.INPUT.NEW_PASSWORD' })}
                       </label>
                       <input
                         type='password'
@@ -246,7 +266,7 @@ const SignInMethod: FC = () => {
                   <div className='col-lg-4'>
                     <div className='fv-row mb-0'>
                       <label htmlFor='confirmpassword' className='form-label fs-6 fw-bolder mb-3'>
-                        Confirm New Password
+                        {intl.formatMessage({ id: 'AUTH.INPUT.CONFIRM_NEW_PASSWORD' })}
                       </label>
                       <input
                         type='password'
@@ -264,7 +284,7 @@ const SignInMethod: FC = () => {
                 </div>
 
                 <div className='form-text mb-5'>
-                  Password must be at least 8 character and contain symbols
+                  {intl.formatMessage({ id: 'AUTH.VALIDATION.PASSWORD_REQUIREMENTS' })}
                 </div>
 
                 <div className='d-flex'>
@@ -273,9 +293,9 @@ const SignInMethod: FC = () => {
                     type='submit'
                     className='btn btn-primary me-2 px-6'
                   >
-                    {!loading2 && 'Update Password'}
+                    {!loading2 && 'Đổi mật khẩu'}
                     {loading2 && (
-                      <span className='indicator-progress' style={{display: 'block'}}>
+                      <span className='indicator-progress' style={{ display: 'block' }}>
                         Please wait...{' '}
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
@@ -289,7 +309,7 @@ const SignInMethod: FC = () => {
                     type='button'
                     className='btn btn-color-gray-500 btn-active-light-primary px-6'
                   >
-                    Cancel
+                    {intl.formatMessage({ id: 'FORM.CANCEL' })}
                   </button>
                 </div>
               </form>
@@ -305,7 +325,7 @@ const SignInMethod: FC = () => {
                 }}
                 className='btn btn-light btn-active-light-primary'
               >
-                Reset Password
+                {intl.formatMessage({ id: 'AUTH.TITLE.PASSWORD_RESET' })}
               </button>
             </div>
           </div>
@@ -336,4 +356,4 @@ const SignInMethod: FC = () => {
   )
 }
 
-export {SignInMethod}
+export { SignInMethod }

@@ -24,6 +24,9 @@ const getUserById = (id: ID): Promise<User | undefined> => {
     .then((response: AxiosResponse<Response<User>>) => response.data)
     .then((response: Response<User>) => response.data);
 };
+// const getUserById = (id: number) => {
+//   return axios.get<User>(`${USER_URL}/${id}`);
+// }
 
 const createUser = (user: User): Promise<User | undefined> => {
   return axios
