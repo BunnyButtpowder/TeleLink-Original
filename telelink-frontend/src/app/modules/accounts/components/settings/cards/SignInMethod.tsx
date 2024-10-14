@@ -4,6 +4,8 @@ import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { IUpdateEmail, IUpdatePassword, updateEmail, updatePassword } from '../SettingsModel'
 import { useIntl } from 'react-intl'
+import { useAuth } from '../../../../../../app/modules/auth'
+import { changePassword } from '../../../../../../app/modules/accounts/components/core/_request';
 
 const emailFormValidationSchema = Yup.object().shape({
   newEmail: Yup.string()
@@ -30,10 +32,12 @@ const passwordFormValidationSchema = Yup.object().shape({
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Mật khẩu không được để trống')
-    .oneOf([Yup.ref('newPassword')], 'Passwords must match'),
+    .oneOf([Yup.ref('newPassword')], 'Mật khẩu không khớp'),
 })
 
 const SignInMethod: FC = () => {
+  const { currentUser } = useAuth();
+
   const [emailUpdateData, setEmailUpdateData] = useState<IUpdateEmail>(updateEmail)
   const [passwordUpdateData, setPasswordUpdateData] = useState<IUpdatePassword>(updatePassword)
 
@@ -64,13 +68,28 @@ const SignInMethod: FC = () => {
       ...passwordUpdateData,
     },
     validationSchema: passwordFormValidationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setLoading2(true)
-      setTimeout(() => {
-        setPasswordUpdateData(values)
-        setLoading2(false)
-        setPasswordForm(false)
-      }, 1000)
+      
+      try {
+        const userId = currentUser?.id;
+        
+        if (!userId) {
+          console.error('User is not logged in');
+          setLoading2(false);
+          return;
+        };
+        await changePassword(userId, values.currentPassword, values.newPassword);
+        setPasswordUpdateData(values);
+        setLoading2(false);
+        setPasswordForm(false);
+        alert('Password changed successfully');
+
+      } catch (error) {
+        console.error('Error while changing password', error);
+        setLoading2(false);
+        alert('Error while changing password');
+      }
     },
   })
 
