@@ -20,7 +20,7 @@ module.exports = {
   fn: async function (inputs) {
     let { req, res, next } = this;
     const { role_id } = inputs;
-    const result = Permission.findOne({role_id}).populate("action").populate("module")
+    const result = await Permission.findOne({role_id}).populate("action").populate("module")
     return res.ok(result);
 
   }
