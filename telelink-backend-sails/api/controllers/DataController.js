@@ -58,15 +58,27 @@ module.exports = {
 
       for (let i = 1; i < worksheet.length; i++) {
         const row = worksheet[i];
+        const subscriberNumber = row[headerIndexes['subscriberNumber']] || '';
+
+       
+        const existingData = await Data.findOne({ where: { subscriberNumber } });
+        
+
+        if (existingData) {
+          
+          await Data.destroy({ id: existingData.id });
+        }
+        
+
+       
         await Data.create({
           placeOfIssue: row[headerIndexes['placeOfIssue']] || '',
           networkName: row[headerIndexes['networkName']] || '',
           category: row[headerIndexes['category']] || '',
-          subscriberNumber: row[headerIndexes['subscriberNumber']] || '',
+          subscriberNumber: subscriberNumber,
           currentPackage: row[headerIndexes['currentPackage']] || '',
           priorityPackage1: row[headerIndexes['priorityPackage1']] || '',
           priorityPackage2: row[headerIndexes['priorityPackage2']] || '',
-          registrationDate: row[headerIndexes['registrationDate']] || '',
           registrationDate: row[headerIndexes['registrationDate']] || '',
           expirationDate: row[headerIndexes['expirationDate']] || '',
           notes: row[headerIndexes['notes']] || '',
@@ -85,10 +97,11 @@ module.exports = {
         });
       }
 
+      // Xóa file đã nhập
       fs.unlinkSync(filePath);
 
-
       return res.ok({ message: 'Dữ liệu được nhập thành công' });
+        
 
     } catch (err) {
       sails.log.error('Error importing data:', err);
