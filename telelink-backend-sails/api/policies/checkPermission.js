@@ -9,7 +9,14 @@ module.exports = async function (req, res, next) {
             return res.unauthorized("Người dùng đăng nhập không tồn tại")
         }
         req.role = existingUser.role
-        next()
+        let {
+            query,
+            params,
+            options,
+            method
+        } = req;
+        console.log(query, params, options, method);
+        
     }
     else return res.unauthorized({ message: "Không có quyền truy cập" })
   };

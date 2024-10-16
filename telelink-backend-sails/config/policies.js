@@ -19,5 +19,5 @@ module.exports.policies = {
   "auth/login": true,
   '*': 'getAuth',
   'auth/verifyToken': 'getAuth',
-  "auth/test-permission": ["getAuth","getRole"]
+  "auth/test-permission": ["getAuth","checkPermission"]
 };

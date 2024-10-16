@@ -5,13 +5,23 @@
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
+const { required } = require("include-all");
+
 module.exports = {
   attributes: {
-    name: { 
+    title: { 
       type: 'string', 
       required: true, 
       unique: true 
     },
+    onlyViewCreateBy: {
+      type: 'boolean',
+      required: true,
+    },
+    permissions: {
+      type: 'json',
+      defaultsTo: [],
+    }
   }
 
 };

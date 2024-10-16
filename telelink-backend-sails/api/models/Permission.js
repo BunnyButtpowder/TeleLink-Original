@@ -8,17 +8,18 @@
 module.exports = {
 
   attributes: {
-    role_id:{
-      model: 'role',
-      required: true
+    title:{
+      type:"string",
+      required: true,
+      unique: true
     },
-    action:{
-      model: 'action',
-      required: true
+    path:{
+      type:"string",
+      required: true,
     },
-    module:{
-      model: 'module',
-      required: true
+    method:{
+      type:"string",
+      required: true,
     },
   },
 
