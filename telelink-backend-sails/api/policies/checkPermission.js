@@ -16,6 +16,8 @@ module.exports = async function (req, res, next) {
             method
         } = req;
         console.log(query, params, options, method);
+
+        next();
         
     }
     else return res.unauthorized({ message: "Không có quyền truy cập" })
