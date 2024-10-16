@@ -69,11 +69,11 @@ const UserActionsCell: FC<Props> = ({id}) => {
         {/* end::Menu item */}
 
         {/* begin::Menu item */}
-        <div className='menu-item px-3'>
+        {/* <div className='menu-item px-3'>
           <a className='menu-link px-3' onClick={openEditModal}>
             Cấp mật khẩu
           </a>
-        </div>
+        </div> */}
         {/* end::Menu item */}
       </div>
       {/* end::Menu */}

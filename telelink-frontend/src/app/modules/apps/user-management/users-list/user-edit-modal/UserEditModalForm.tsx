@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { isNotEmpty, toAbsoluteUrl } from '../../../../../../_metronic/helpers'
@@ -14,6 +14,8 @@ type Props = {
   isUserLoading: boolean
   user: User
 }
+
+const token = localStorage.getItem('auth_token');
 
 const salesmanSchema = Yup.object().shape({
   auth: Yup.object().shape({
@@ -68,7 +70,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
 
   const [selectedRole, setSelectedRole] = useState(user.auth?.role ? roleConfig[user.auth.role] : 'salesman');
 
-  const [userForEdit] = useState<User>({
+  const [userForEdit, setUserForEdit] = useState<User>({
     ...user,
     avatar: user.avatar || initialUser.avatar,
     fullName: user.fullName || initialUser.fullName,
@@ -81,6 +83,9 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
     },
     address: user.address || initialUser.address,
   });
+
+  // const [userForEdit, setUserForEdit] = useState<User>(user);
+
 
   const cancel = (withRefresh?: boolean) => {
     if (withRefresh) {
@@ -95,20 +100,13 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   // Salesman formik form
   const salemanFormik = useFormik({
     initialValues: userForEdit,
+    enableReinitialize: true,
     validationSchema: salesmanSchema,
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
       try {
-        // const newUser = {
-        //   ...values,
-        //   auth: {
-        //     ...values.auth,
-        //     password: values.auth.password || 'defaultPassword123', // Use a default or require the user to provide one
-        //   }
-        // };
-
-        if (isNotEmpty(values.id)) {
-          await updateUser(values)
+        if (isNotEmpty(values.id), token) {
+          await updateUser(values, token)
         } else {
           await createUser(values)
         }
@@ -124,12 +122,13 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   // Agency formik form
   const agencyFormik = useFormik({
     initialValues: userForEdit,
+    enableReinitialize: true,
     validationSchema: agencySchema,
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
       try {
-        if (isNotEmpty(values.id)) {
-          await updateUser(values)
+        if (isNotEmpty(values.id), token) {
+          await updateUser(values, token)
         } else {
           await createUser(values)
         }

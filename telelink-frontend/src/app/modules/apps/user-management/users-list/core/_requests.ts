@@ -19,11 +19,9 @@ const getUsers = (query: string): Promise<UsersQueryResponse> => {
     .then((response: AxiosResponse<UsersQueryResponse>) => response.data);
 };
 
-const getUserById = (id: ID): Promise<User | undefined> => {
-  return axios
-    .get(`${USER_URL}/${id}`)
-    .then((response: AxiosResponse<Response<User>>) => response.data)
-    .then((response: Response<User>) => response.data);
+const getUserById = async (id: ID) => {
+  const response = await axios.get(`${USER_URL}/${id}`);
+  return response.data;
 };
 
 const createUser = (user: User): Promise<User | undefined> => {
@@ -45,12 +43,39 @@ const createUser = (user: User): Promise<User | undefined> => {
     .then((response: Response<User>) => response.data);
 };
 
-const updateUser = (user: User): Promise<User | undefined> => {
-  return axios
-    .post(`${USER_URL}/${user.id}`, user)
-    .then((response: AxiosResponse<Response<User>>) => response.data)
-    .then((response: Response<User>) => response.data);
-};
+const updateUser = async (user: User, token: string): Promise<User | undefined> => {
+  try {
+    const response = await fetch(`${USER_URL}/${user.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id: user.id,
+        isDelete: user.isDelete || false,
+        fullName: user.fullName,
+        phoneNumber: user.phoneNumber,
+        dob: user.dob,
+        address: user.address,
+        agency: user.agency || '',
+        avatar: user.avatar || '',
+        gender: user.gender,
+        dataType: user.dataType || '',
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update user');
+    }
+
+    const updatedUser = await response.json();
+    return updatedUser;
+  } catch (error) {
+    console.error('Failed to update user', error);
+    throw error;
+  }
+}
 
 const deleteUser = (userId: ID): Promise<void> => {
   return axios.delete(`${USER_URL}/${userId}`).then(() => { });
