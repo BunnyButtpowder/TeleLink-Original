@@ -13,6 +13,8 @@ export type Customer = {
   consump_n1?: string
   consump_n2?: string
   consump_n3?: string
+  consump_n4?: string
+  consultingPackage?: string
   dataSrc ?: string
   mainAcc_consump ?: string
   voice_consump ?: string
@@ -31,4 +33,21 @@ export const initialUser: Customer = {
   specialPack: ',,V200X,',
   assignedPack: 'B2000',
   regisDate: new Date(),
+  expDate: new Date(),
+  note: '',
+  mainAccount: '',
+  avg: '',
+  consump_n1: '',
+  consump_n2: '',
+  consump_n3: '',
+  consump_n4: '',
+  consultingPackage: '',
+  dataSrc: '',
+  mainAcc_consump : '',
+  voice_consump : '',
+  data_consump : '',
+  outPackage_consump: '',
+  khac1  : '',
+  khac2  : '',
+  khac3  : '',
 }

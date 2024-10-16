@@ -22,8 +22,6 @@ export type User = {
   isDelete?: boolean
   createdAt?: number
   updatedAt?: number
-  // last_login?: string
-  // joined_day?: string  
 }
 
 export type UsersQueryResponse = Response<Array<User>>
