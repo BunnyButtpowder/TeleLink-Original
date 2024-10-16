@@ -60,7 +60,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     }
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='Giới tính' className='min-w-125px' />,
+    Header: (props) => <UserCustomHeader tableProps={props} title='Giới tính' className='min-w-100px' />,
     accessor: 'gender',
     Cell: ({ ...props }) => <span>{props.data[props.row.index]?.gender === 'male' ? 'Nam' : 'Nữ'}</span>,
   },
