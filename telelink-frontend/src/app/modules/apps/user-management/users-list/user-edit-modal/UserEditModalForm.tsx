@@ -50,6 +50,8 @@ const agencySchema = Yup.object().shape({
   fullName: Yup.string().min(3, 'Minimum 3 symbols').required('Vui lòng điền vào trường này'),
   phoneNumber: Yup.string().nullable(),
   address: Yup.string().nullable(),
+  dob: Yup.string().nullable(),
+  gender: Yup.string().nullable(),
 })
 
 const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
@@ -840,6 +842,70 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                     <span role='alert'>{agencyFormik.errors.phoneNumber}</span>
                   </div>
                 )}
+              </div>
+              {/* end::Input group */}
+
+              {/* begin::Input group */}
+              <div className='fv-row mb-7'>
+                {/* begin::Label */}
+                <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.DOB' })}</label>
+                {/* end::Label */}
+
+                {/* begin::Input */}
+                <input
+                  placeholder='Ngày sinh'
+                  {...agencyFormik.getFieldProps('dob')}
+                  className={clsx(
+                    'form-control form-control-solid mb-3 mb-lg-0',
+                    { 'is-invalid': agencyFormik.touched.dob && agencyFormik.errors.dob },
+                    {
+                      'is-valid': agencyFormik.touched.dob && !agencyFormik.errors.dob,
+                    }
+                  )}
+                  type='date'
+                  name='dob'
+                  autoComplete='off'
+                  disabled={agencyFormik.isSubmitting || isUserLoading}
+                />
+                {agencyFormik.touched.dob && agencyFormik.errors.dob && (
+                  <div className='fv-plugins-message-container'>
+                    <span role='alert'>{agencyFormik.errors.dob}</span>
+                  </div>
+                )}
+                {/* end::Input */}
+              </div>
+              {/* end::Input group */}
+
+              {/* begin::Input group */}
+              <div className='fv-row mb-7'>
+                {/* begin::Label */}
+                <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.GENDER' })}</label>
+                {/* end::Label */}
+
+                {/* begin::Input */}
+                <select
+                  {...agencyFormik.getFieldProps('gender')}
+                  className={clsx(
+                    'form-control form-control-solid mb-3 mb-lg-0',
+                    { 'is-invalid': agencyFormik.touched.gender && agencyFormik.errors.gender },
+                    {
+                      'is-valid': agencyFormik.touched.gender && !agencyFormik.errors.gender,
+                    }
+                  )}
+                  name='gender'
+                  disabled={agencyFormik.isSubmitting || isUserLoading}
+                >
+                  <option value='' disabled>{intl.formatMessage({ id: 'SELECT.GENDER' })}</option>
+                  <option value='male'>{intl.formatMessage({ id: 'GENDER.MALE' })}</option>
+                  <option value='female'>{intl.formatMessage({ id: 'GENDER.FEMALE' })}</option>
+                  <option value='other'>{intl.formatMessage({ id: 'GENDER.OTHER' })}</option>
+                </select>
+                {agencyFormik.touched.gender && agencyFormik.errors.gender && (
+                  <div className='fv-plugins-message-container'>
+                    <span role='alert'>{agencyFormik.errors.gender}</span>
+                  </div>
+                )}
+                {/* end::Input */}
               </div>
               {/* end::Input group */}
 

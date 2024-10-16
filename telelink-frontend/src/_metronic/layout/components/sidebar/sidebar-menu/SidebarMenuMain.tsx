@@ -107,7 +107,7 @@ const SidebarMenuMain = () => {
           <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{intl.formatMessage({id: 'SIDEBAR.ADMINISTRATION'})}</span>
         </div>
       </div>
-      <SidebarMenuItemWithSub
+      {/* <SidebarMenuItemWithSub
         to='/apps/chat'
         title='Chat'
         fontIcon='bi-chat-left'
@@ -116,7 +116,7 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/apps/chat/private-chat' title='Private Chat' hasBullet={true} />
         <SidebarMenuItem to='/apps/chat/group-chat' title='Group Chart' hasBullet={true} />
         <SidebarMenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet={true} />
-      </SidebarMenuItemWithSub>
+      </SidebarMenuItemWithSub> */}
       <SidebarMenuItem
         to='/apps/user-management/users'
         icon='abstract-28'

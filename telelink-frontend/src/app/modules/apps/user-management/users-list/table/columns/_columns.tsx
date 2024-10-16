@@ -18,7 +18,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='#' className='min-w-30px' />,
     accessor: 'id',
-    Cell: ({ ...props }) =>  <span>{props.data[props.row.index].id}</span>,
+    Cell: ({ ...props }) => <span>{props.data[props.row.index].id}</span>,
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Tài khoản' className='min-w-125px' />,
@@ -48,12 +48,21 @@ const usersColumns: ReadonlyArray<Column<User>> = [
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Ngày sinh' className='min-w-125px' />,
     accessor: 'dob',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.dob}</span>,
+    // Cell: ({ ...props }) => <span>{props.data[props.row.index]?.dob}</span>,
+    Cell: ({ ...props }) => {
+      const timestamp = props.data[props.row.index].dob;
+
+      if (timestamp) {
+        const date = new Date(timestamp);
+        return <span>{date.toLocaleDateString('vi-VN')}</span>
+      }
+      return <span></span>; // return empty span if `dob` is null or undefined
+    }
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Giới tính' className='min-w-125px' />,
     accessor: 'gender',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.gender === 'male'? 'Nam':'Nữ'}</span>,
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.gender === 'male' ? 'Nam' : 'Nữ'}</span>,
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Phân loại data' className='min-w-125px' />,
@@ -65,18 +74,23 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     accessor: 'agency',
     Cell: ({ ...props }) => <span>{props.data[props.row.index]?.agency}</span>,
   },
-  // {
-  //   Header: (props) => <UserCustomHeader tableProps={props} title='Ngày tạo' className='min-w-125px' />,
-  //   accessor: 'createdAt',
-  //   Cell: ({ ...props }) => {
-  //     const date = new Date(props.data[props.row.index].createdAt)
-  //     return <span>{date.toLocaleDateString()}</span>
-  //   }
-  // },
+  {
+    Header: (props) => <UserCustomHeader tableProps={props} title='Ngày tạo' className='min-w-125px' />,
+    accessor: 'createdAt',
+    Cell: ({ ...props }) => {
+      const timestamp = props.data[props.row.index].createdAt;
+
+      if (timestamp) {
+        const date = new Date(timestamp);
+        return <span>{date.toLocaleDateString('vi-VN')}</span>
+      }
+      return <span></span>; // return empty span if `createdAt` is null or undefined
+    }
+  },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Trạng thái' className='min-w-125px' />,
     id: 'status',
-    Cell: ({ ...props }) => <UserStatusCell status={props.data[props.row.index].auth?.status? 0 : 1}></UserStatusCell>,
+    Cell: ({ ...props }) => <UserStatusCell status={props.data[props.row.index].auth?.status ? 0 : 1}></UserStatusCell>,
   },
   {
     Header: (props) => (

@@ -87,6 +87,18 @@ const usersColumns: ReadonlyArray<Column<Customer>> = [
   },
   {
     Header: (props) => (
+      <UserCustomHeader tableProps={props} title='Tiêu dùng n-4' className='min-w-125px' />
+    ),
+    accessor: 'consump_n4',
+  },
+  {
+    Header: (props) => (
+      <UserCustomHeader tableProps={props} title='Gói cước tư vấn' className='min-w-125px' />
+    ),
+    accessor: 'consultingPackage',
+  },
+  {
+    Header: (props) => (
       <UserCustomHeader tableProps={props} title='Nơi cấp data' className='min-w-125px' />
     ),
     accessor: 'dataSrc',
