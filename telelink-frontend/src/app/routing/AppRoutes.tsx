@@ -17,8 +17,8 @@ import {App} from '../App'
  *
  * 
  */
-// const {BASE_URL} = import.meta.env
-const BASE_URL = import.meta.env.VITE_BASE_URL || '/21823';
+const {BASE_URL} = import.meta.env
+// const BASE_URL = import.meta.env.VITE_BASE_URL || '/21823';
 
 const AppRoutes: FC = () => {
   const {currentUser} = useAuth()

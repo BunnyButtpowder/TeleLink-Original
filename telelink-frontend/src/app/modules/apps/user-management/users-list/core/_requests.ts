@@ -5,6 +5,7 @@ import { User, UsersQueryResponse } from "./_models";
 const API_URL = import.meta.env.VITE_APP_API_URL;
 const USER_URL = `${API_URL}/user`;
 const GET_USERS_URL = `${API_URL}/users/getall`;
+const DELETE_USER_URL = `${API_URL}/users/delete?id=`;
 export const REGISTER_URL = `${API_URL}/users/create`;
 
 // const getUsers = (query: string): Promise<UsersQueryResponse> => {
@@ -78,7 +79,7 @@ const updateUser = async (user: User, token: string): Promise<User | undefined> 
 }
 
 const deleteUser = (userId: ID): Promise<void> => {
-  return axios.delete(`${USER_URL}/${userId}`).then(() => { });
+  return axios.delete(`${DELETE_USER_URL}${userId}`).then(() => { });
 };
 
 const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
