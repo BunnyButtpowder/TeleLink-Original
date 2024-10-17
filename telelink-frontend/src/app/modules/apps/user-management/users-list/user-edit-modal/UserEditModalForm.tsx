@@ -82,6 +82,8 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
       role: user.auth?.role || initialUser.auth?.role,
     },
     address: user.address || initialUser.address,
+    dob: user.dob || initialUser.dob,
+    gender: user.gender || initialUser.gender,
   });
 
   // const [userForEdit, setUserForEdit] = useState<User>(user);
@@ -105,8 +107,8 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
       try {
-        if (isNotEmpty(values.id), token) {
-          await updateUser(values, token)
+        if (isNotEmpty(values.id)) {
+          await updateUser(values, token || '')
         } else {
           await createUser(values)
         }
@@ -119,6 +121,17 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
     },
   })
 
+  // useEffect(() => {
+  //   console.log('Formik state:', {
+  //     values: salemanFormik.values,
+  //     errors: salemanFormik.errors,
+  //     touched: salemanFormik.touched,
+  //     isValid: salemanFormik.isValid,
+  //     isSubmitting: salemanFormik.isSubmitting,
+  //     dirty: salemanFormik.dirty,
+  //   });
+  // }, [salemanFormik]);
+
   // Agency formik form
   const agencyFormik = useFormik({
     initialValues: userForEdit,
@@ -127,8 +140,8 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
       try {
-        if (isNotEmpty(values.id), token) {
-          await updateUser(values, token)
+        if (isNotEmpty(values.id)) {
+          await updateUser(values, token || '')
         } else {
           await createUser(values)
         }
@@ -627,7 +640,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               type='submit'
               className='btn btn-primary'
               data-kt-users-modal-action='submit'
-              disabled={isUserLoading || salemanFormik.isSubmitting || !salemanFormik.isValid}
+              disabled={isUserLoading || salemanFormik.isSubmitting || !salemanFormik.isValid || !salemanFormik.dirty}
             >
               <span className='indicator-label'>{intl.formatMessage({ id: "FORM.SUBMIT" })}</span>
               {(salemanFormik.isSubmitting || isUserLoading) && (
@@ -991,7 +1004,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               type='submit'
               className='btn btn-primary'
               data-kt-users-modal-action='submit'
-              disabled={isUserLoading || agencyFormik.isSubmitting || !agencyFormik.isValid}
+              disabled={isUserLoading || agencyFormik.isSubmitting || !agencyFormik.isValid || !agencyFormik.dirty}
             >
               <span className='indicator-label'>{intl.formatMessage({ id: "FORM.SUBMIT" })}</span>
               {(agencyFormik.isSubmitting || isUserLoading) && (

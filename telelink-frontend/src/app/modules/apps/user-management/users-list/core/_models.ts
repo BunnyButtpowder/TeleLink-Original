@@ -40,7 +40,7 @@ export const initialUser: User = {
     status: false,
     username: '',
     password: '',
-    role: undefined,
+    role: 3,
   },
   isDelete: false,
 }
