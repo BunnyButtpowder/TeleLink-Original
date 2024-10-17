@@ -15,9 +15,9 @@ const SidebarMenuMain = () => {
         fontIcon='bi-app-indicator'
       />
       <SidebarMenuItem
-        to='/cellphone-plan'
+        to='/data'
         icon='wifi-square'
-        title={intl.formatMessage({id: 'ECOMMERCE.CELLPHONE.PLAN'})}
+        title={intl.formatMessage({id: 'DATA'})}
         fontIcon='bi-app-indicator'
       />
       <SidebarMenuItem

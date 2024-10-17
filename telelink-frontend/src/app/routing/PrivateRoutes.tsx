@@ -8,6 +8,7 @@ import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils'
 import { WithChildren } from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import { CustomersPage } from '../pages/customer/CustomersPage'
+import { DataPage } from '../pages/data/DataPage'
 import { RevenuePage } from '../pages/reportRevenue/RevenuePage'
 import { ResultPage } from '../pages/reportCallResults/ResultPage'
 // import { PlanPage } from '../pages/plan/PlanPage'
@@ -27,6 +28,14 @@ const PrivateRoutes = () => {
         <Route path='auth/*' element={<Navigate to='/dashboard' />} />
         {/* Pages */}
         <Route path='dashboard' element={<DashboardWrapper />} />
+        <Route
+          path='data'
+          element={
+            <SuspensedView>
+              <DataPage />
+            </SuspensedView>
+          }
+        />
         <Route
           path='customers'
           element={
