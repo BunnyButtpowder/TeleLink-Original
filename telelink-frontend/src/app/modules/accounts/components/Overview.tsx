@@ -54,17 +54,24 @@ export function Overview() {
             <div className='col-lg-8 d-flex align-items-center'>
               <span className='fw-bolder fs-6 me-2'>{currentUser?.phoneNumber}</span>
 
-              <span className='badge badge-success'>Đã xác minh</span>
+              {/* <span className='badge badge-success'>Đã xác minh</span> */}
             </div>
           </div>
 
-          <div className='row mb-7'>
+          {/* <div className='row mb-7'>
             <label className='col-lg-4 fw-bold text-muted'>Website chi nhánh</label>
 
             <div className='col-lg-8'>
               <a href='https://selfolio.pages.dev/minhvu' className='fw-bold fs-6 text-gray-900 text-hover-primary'>
                 selfolio.pages.dev/minhvu
               </a>
+            </div>
+          </div> */}
+
+          <div className='row mb-7'>
+            <label className='col-lg-4 fw-bold text-muted'>Giới tính</label>
+            <div className='col-lg-8'>
+              <span className='fw-bolder fs-6 text-gray-900'>{currentUser?.gender}</span>
             </div>
           </div>
 
@@ -89,7 +96,7 @@ export function Overview() {
             </div>
           </div>
 
-          <div className='notice d-flex bg-light-warning rounded border-warning border border-dashed p-6'>
+          {/* <div className='notice d-flex bg-light-warning rounded border-warning border border-dashed p-6'>
             <KTIcon iconName='information-5' className='fs-2tx text-warning me-4' />
             <div className='d-flex flex-stack flex-grow-1'>
               <div className='fw-bold'>
@@ -104,11 +111,12 @@ export function Overview() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
-      <div className='row gy-10 gx-xl-10'>
+      {/* widget */}
+      {/* <div className='row gy-10 gx-xl-10'>
         <div className='col-xl-6'>
           <ChartsWidget1 className='card-xxl-stretch mb-5 mb-xl-10' />
         </div>
@@ -126,7 +134,7 @@ export function Overview() {
         <div className='col-xl-6'>
           <TablesWidget5 className='card-xxl-stretch mb-5 mb-xl-10' />
         </div>
-      </div>
+      </div> */}
     </Content>
   )
 }

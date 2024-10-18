@@ -61,7 +61,7 @@ export interface UserModel {
   phoneNumber?: string
   dob?: string | null
   address?: string | null
-  agency?: number
+  agency?: string
   avatar?: string
   gender?: string
   dataType?: string

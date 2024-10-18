@@ -34,7 +34,7 @@ const HeaderUserMenu: FC = () => {
       <div className='separator my-2'></div>
 
       <div className='menu-item px-5'>
-        <Link to={'/crafted/pages/profile'} className='menu-link px-5'>
+        <Link to={'/crafted/account/overview'} className='menu-link px-5'>
           Hồ sơ
         </Link>
       </div>
@@ -48,7 +48,7 @@ const HeaderUserMenu: FC = () => {
         </a>
       </div>
 
-      <div
+      {/* <div
         className='menu-item px-5'
         data-kt-menu-trigger='hover'
         data-kt-menu-placement='left-start'
@@ -106,13 +106,13 @@ const HeaderUserMenu: FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className='menu-item px-5'>
+      {/* <div className='menu-item px-5'>
         <a href='#' className='menu-link px-5'>
           My Statements
         </a>
-      </div>
+      </div> */}
 
       <div className='separator my-2'></div>
 
