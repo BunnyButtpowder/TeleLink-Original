@@ -11,9 +11,9 @@ export function Settings() {
     <Content>
       <ProfileDetails />
       <SignInMethod />
-      <ConnectedAccounts />
+      {/* <ConnectedAccounts />
       <EmailPreferences />
-      <Notifications />
+      <Notifications /> */}
       <DeactivateAccount />
     </Content>
   )

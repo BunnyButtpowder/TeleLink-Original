@@ -330,7 +330,7 @@ const SignInMethod: FC = () => {
             </div>
           </div>
 
-          <div className='notice d-flex bg-light-primary rounded border-primary border border-dashed p-6'>
+          {/* <div className='notice d-flex bg-light-primary rounded border-primary border border-dashed p-6'>
             <KTIcon iconName='shield-tick' className='fs-2tx text-primary me-4' />
             <div className='d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap'>
               <div className='mb-3 mb-md-0 fw-bold'>
@@ -349,7 +349,7 @@ const SignInMethod: FC = () => {
                 Enable
               </a>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

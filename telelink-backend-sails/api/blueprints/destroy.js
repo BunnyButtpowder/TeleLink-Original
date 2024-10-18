@@ -1,15 +1,13 @@
-
 var _ = require('@sailshq/lodash');
 var formatUsageError = require('sails/lib/hooks/blueprints/formatUsageError.js');
 
 /**
- * Destroy One Record
+ * Soft Delete One Record
  *
  * http://sailsjs.com/docs/reference/blueprint-api/destroy
  *
- * Destroys the single model instance with the specified `id` from
- * the data adapter for the given model if it exists.
- *
+ * Soft-deletes the single model instance by updating `isDeleted` to `true`
+ * instead of physically removing the record.
  */
 
 module.exports = function destroyOneRecord(req, res) {
@@ -25,51 +23,41 @@ module.exports = function destroyOneRecord(req, res) {
     var criteria = {};
     criteria[Model.primaryKey] = queryOptions.criteria.where[Model.primaryKey];
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // FUTURE: Use a database transaction here, if supported by the datastore.
-    // e.g.
-    // ```
-    // Model.getDatastore().transaction(function during(db, proceed){ ... })
-    // .exec(function afterwards(err, result){}));
-    // ```
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+    // Find the record to soft delete
     var query = Model.findOne(_.cloneDeep(criteria), queryOptions.populates).meta(queryOptions.meta);
     query.exec(function foundRecord(err, record) {
         if (err) {
-            // If this is a usage error coming back from Waterline,
-            // (e.g. a bad criteria), then respond w/ a 400 status code.
-            // Otherwise, it's something unexpected, so use 500.
+            // If this is a usage error coming back from Waterline (e.g., bad criteria), return 400.
+            // Otherwise, return 500 for unexpected errors.
             switch (err.name) {
                 case 'UsageError': return res.badRequest(formatUsageError(err, req));
                 default: return res.serverError(err);
             }
-        }//-•
+        }
 
-        if (!record) { return res.notFound('No record found with the specified `id`.'); }
+        if (!record) {
+            return res.notFound('No record found with the specified `id`.');
+        }
 
-        // (Note: this could be achieved in a single query, but a separate `findOne`
-        // is used first to provide a better experience for front-end developers
-        // integrating with the blueprint API out of the box.  If we didn't need
-        // or care about that, we could just use `.meta({fetch: true})` when calling
-        // `.destroy()`.
-        Model.destroy(_.cloneDeep(criteria)).meta({ fetch: true }).exec(function destroyedRecord(err) {
+        // Instead of destroying, perform a soft delete by updating `isDeleted` to true
+        Model.update(_.cloneDeep(criteria)).set({ isDelete: true }).meta({ fetch: true }).exec(function softDeletedRecord(err, updatedRecord) {
             if (err) {
                 switch (err.name) {
                     case 'UsageError': return res.badRequest(formatUsageError(err, req));
                     default: return res.serverError(err);
                 }
-            }//-•
+            }
 
+            // If pubsub is enabled, publish the update (soft delete)
             if (req._sails.hooks.pubsub) {
-                Model._publishDestroy(criteria[Model.primaryKey], !req._sails.config.blueprints.mirror && req, { previous: record });
+                Model._publishUpdate(criteria[Model.primaryKey], updatedRecord[0], !req._sails.config.blueprints.mirror && req, { previous: record });
                 if (req.isSocket) {
-                    Model.unsubscribe(req, [record[Model.primaryKey]]);
-                    Model._retire(record);
+                    Model.subscribe(req, [updatedRecord[0][Model.primaryKey]]);
                 }
             }
 
-            return res.ok(record);
+            // Return the updated (soft-deleted) record
+            return res.ok(updatedRecord[0]);
         });
     });
 };
