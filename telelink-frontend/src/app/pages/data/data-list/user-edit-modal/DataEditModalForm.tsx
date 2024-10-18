@@ -1,14 +1,14 @@
-import {FC, useState} from 'react'
+import { FC, useState } from 'react'
 import * as Yup from 'yup'
-import {useFormik} from 'formik'
-import {isNotEmpty, toAbsoluteUrl} from '../../../../../_metronic/helpers'
-import {initialData, Data} from '../core/_models'
+import { useFormik } from 'formik'
+import { isNotEmpty, toAbsoluteUrl } from '../../../../../_metronic/helpers'
+import { initialData, Data } from '../core/_models'
 import clsx from 'clsx'
-import {useListView} from '../core/ListViewProvider'
-import {UsersListLoading} from '../components/loading/UsersListLoading'
-import {createUser, updateUser} from '../core/_requests'
-import {useQueryResponse} from '../core/QueryResponseProvider'
-import {useIntl} from 'react-intl'
+import { useListView } from '../core/ListViewProvider'
+import { UsersListLoading } from '../components/loading/UsersListLoading'
+import { updateUser } from '../core/_requests'
+import { useQueryResponse } from '../core/QueryResponseProvider'
+import { useIntl } from 'react-intl'
 
 type Props = {
   isUserLoading: boolean
@@ -31,10 +31,10 @@ const editUserSchema = Yup.object().shape({
     .required('OTP is required'),
 })
 
-const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
+const DataEditModalForm: FC<Props> = ({ customer, isUserLoading }) => {
   const intl = useIntl();
-  const {setItemIdForUpdate} = useListView()
-  const {refetch} = useQueryResponse()
+  const { setItemIdForUpdate } = useListView()
+  const { refetch } = useQueryResponse()
 
   const [userForEdit] = useState<Data>({
     ...customer,
@@ -59,13 +59,13 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
   const formik = useFormik({
     initialValues: userForEdit,
     validationSchema: editUserSchema,
-    onSubmit: async (values, {setSubmitting}) => {
+    onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
       try {
         if (isNotEmpty(values.id)) {
           await updateUser(values)
         } else {
-          await createUser(values)
+          // await createUser(values)
         }
       } catch (ex) {
         console.error(ex)
@@ -93,14 +93,14 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
           {/* begin::Input group */}
           <div className='fv-row mb-7'>
             {/* begin::Label */}
-            <label className='d-block fw-bold fs-6 mb-5'>{intl.formatMessage({id: 'USERS.AVATAR'})}</label>
+            <label className='d-block fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.AVATAR' })}</label>
             {/* end::Label */}
 
             {/* begin::Image input */}
             <div
               className='image-input image-input-outline'
               data-kt-image-input='true'
-              style={{backgroundImage: `url('${blankImg}')`}}
+              style={{ backgroundImage: `url('${blankImg}')` }}
             >
               {/* begin::Preview existing avatar */}
               {/* <div
@@ -111,16 +111,16 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
 
               {/* begin::Label */}
               <label
-              className='btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow'
-              data-kt-image-input-action='change'
-              data-bs-toggle='tooltip'
-              title='Change avatar'
-            >
-              <i className='bi bi-pencil-fill fs-7'></i>
+                className='btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow'
+                data-kt-image-input-action='change'
+                data-bs-toggle='tooltip'
+                title='Change avatar'
+              >
+                <i className='bi bi-pencil-fill fs-7'></i>
 
-              <input type='file' name='avatar' accept='.png, .jpg, .jpeg' />
-              <input type='hidden' name='avatar_remove' />
-            </label>
+                <input type='file' name='avatar' accept='.png, .jpg, .jpeg' />
+                <input type='hidden' name='avatar_remove' />
+              </label>
               {/* end::Label */}
 
               {/* begin::Cancel */}
@@ -156,7 +156,7 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
           {/* begin::Input group */}
           <div className='fv-row mb-7'>
             {/* begin::Label */}
-            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({id: 'USERS.FULLNAME'})}</label>
+            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.FULLNAME' })}</label>
             {/* end::Label */}
 
             {/* begin::Input */}
@@ -220,7 +220,7 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
           {/* begin::Input group */}
           <div className='fv-row mb-7'>
             {/* begin::Label */}
-            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({id: 'USERS.ADDRESS'})}</label>
+            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.ADDRESS' })}</label>
             {/* end::Label */}
 
             {/* begin::Input */}
@@ -251,7 +251,7 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
           {/* begin::Input group */}
           <div className='fv-row mb-7'>
             {/* begin::Label */}
-            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({id: 'USERS.PHONE'})}</label>
+            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.PHONE' })}</label>
             {/* end::Label */}
 
             {/* begin::Input */}
@@ -282,7 +282,7 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
           {/* begin::Input group */}
           <div className='fv-row mb-7'>
             {/* begin::Label */}
-            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({id: 'USERS.DOB'})}</label>
+            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.DOB' })}</label>
             {/* end::Label */}
 
             {/* begin::Input */}
@@ -318,7 +318,7 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
           {/* begin::Input group */}
           <div className='fv-row mb-7'>
             {/* begin::Label */}
-            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({id: 'USERS.GENDER'})}</label>
+            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.GENDER' })}</label>
             {/* end::Label */}
 
             {/* begin::Input */}
@@ -334,10 +334,10 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
               name='gender'
               disabled={formik.isSubmitting || isUserLoading}
             >
-              <option value='' disabled>{intl.formatMessage({id: 'SELECT.GENDER'})}</option>
-              <option value='male'>{intl.formatMessage({id: 'GENDER.MALE'})}</option>
-              <option value='female'>{intl.formatMessage({id: 'GENDER.FEMALE'})}</option>
-              <option value='other'>{intl.formatMessage({id: 'GENDER.OTHER'})}</option>
+              <option value='' disabled>{intl.formatMessage({ id: 'SELECT.GENDER' })}</option>
+              <option value='male'>{intl.formatMessage({ id: 'GENDER.MALE' })}</option>
+              <option value='female'>{intl.formatMessage({ id: 'GENDER.FEMALE' })}</option>
+              <option value='other'>{intl.formatMessage({ id: 'GENDER.OTHER' })}</option>
             </select>
             {/* {formik.touched.name && formik.errors.name && (
               <div className='fv-plugins-message-container'>
@@ -356,7 +356,7 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
           {/* begin::Input group */}
           <div className='fv-row mb-7'>
             {/* begin::Label */}
-            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({id: 'AUTH.OTP'})}</label>
+            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AUTH.OTP' })}</label>
             {/* end::Label */}
 
             {/* begin::Input */}
@@ -387,7 +387,7 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
           {/* begin::Input group */}
           <div className='mb-7'>
             {/* begin::Label */}
-            <label className='required fw-bold fs-6 mb-5'>{intl.formatMessage({id: 'USERS.ROLE'})}</label>
+            <label className='required fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.ROLE' })}</label>
             {/* end::Label */}
             {/* begin::Roles */}
             {/* begin::Input row */}
@@ -487,7 +487,7 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
           {/* begin::Input group */}
           <div className='mb-7'>
             {/* begin::Label */}
-            <label className='required fw-bold fs-6 mb-5'>{intl.formatMessage({id: 'USERS.STATUS'})}</label>
+            <label className='required fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.STATUS' })}</label>
             {/* end::Label */}
             {/* begin::Roles */}
             {/* begin::Input row */}
@@ -558,7 +558,7 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
             data-kt-users-modal-action='cancel'
             disabled={formik.isSubmitting || isUserLoading}
           >
-            {intl.formatMessage({id: "FORM.CANCEL"})}
+            {intl.formatMessage({ id: "FORM.CANCEL" })}
           </button>
 
           <button
@@ -567,7 +567,7 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
             data-kt-users-modal-action='submit'
             disabled={isUserLoading || formik.isSubmitting || !formik.isValid || !formik.touched}
           >
-            <span className='indicator-label'>{intl.formatMessage({id: "FORM.SUBMIT"})}</span>
+            <span className='indicator-label'>{intl.formatMessage({ id: "FORM.SUBMIT" })}</span>
             {(formik.isSubmitting || isUserLoading) && (
               <span className='indicator-progress'>
                 Please wait...{' '}
@@ -583,4 +583,4 @@ const DataEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
   )
 }
 
-export {DataEditModalForm}
+export { DataEditModalForm }

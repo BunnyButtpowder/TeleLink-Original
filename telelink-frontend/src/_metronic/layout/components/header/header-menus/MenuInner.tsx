@@ -1,16 +1,16 @@
-import {useIntl} from 'react-intl'
-import {MenuItem} from './MenuItem'
-import {MenuInnerWithSub} from './MenuInnerWithSub'
-import {MegaMenu} from './MegaMenu'
+import { useIntl } from 'react-intl'
+import { MenuItem } from './MenuItem'
+import { MenuInnerWithSub } from './MenuInnerWithSub'
+import { MegaMenu } from './MegaMenu'
 
 export function MenuInner() {
   const intl = useIntl()
   return (
     <>
-      <MenuItem title={intl.formatMessage({id: 'MENU.DASHBOARD'})} to='/dashboard' />
-      <MenuItem title='Layout Builder' to='/builder' />
+      <MenuItem title={intl.formatMessage({ id: 'MENU.DASHBOARD' })} to='/dashboard' />
+      <MenuItem title='Sửa bố cục' to='/builder' />
       <MenuInnerWithSub
-        title='Crafted'
+        title='Cá Nhân'
         to='/crafted'
         menuPlacement='bottom-start'
         menuTrigger='click'
@@ -42,7 +42,7 @@ export function MenuInner() {
               hasBullet={true}
             />
           </MenuInnerWithSub>
-          <MenuInnerWithSub
+          {/* <MenuInnerWithSub
             title='Wizards'
             to='/crafted/pages/wizards'
             hasArrow={true}
@@ -52,20 +52,20 @@ export function MenuInner() {
           >
             <MenuItem to='/crafted/pages/wizards/horizontal' title='Horizontal' hasBullet={true} />
             <MenuItem to='/crafted/pages/wizards/vertical' title='Vertical' hasBullet={true} />
-          </MenuInnerWithSub>
+          </MenuInnerWithSub> */}
         </MenuInnerWithSub>
 
         {/* ACCOUNT */}
         <MenuInnerWithSub
-          title='Accounts'
+          title='Tài khoản'
           to='/crafted/accounts'
           fontIcon='bi-person'
           hasArrow={true}
           menuPlacement='right-start'
           menuTrigger={`{default:'click', lg: 'hover'}`}
         >
-          <MenuItem to='/crafted/account/overview' title='Overview' hasBullet={true} />
-          <MenuItem to='/crafted/account/settings' title='Settings' hasBullet={true} />
+          <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
+          <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
         </MenuInnerWithSub>
 
         {/* ERRORS */}
@@ -82,7 +82,7 @@ export function MenuInner() {
         </MenuInnerWithSub> */}
 
         {/* Widgets */}
-        <MenuInnerWithSub
+        {/* <MenuInnerWithSub
           title='Widgets'
           to='/crafted/widgets'
           fontIcon='bi-layers'
@@ -96,12 +96,12 @@ export function MenuInner() {
           <MenuItem to='/crafted/widgets/mixed' title='Mixed' hasBullet={true} />
           <MenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
           <MenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
-        </MenuInnerWithSub>
+        </MenuInnerWithSub> */}
       </MenuInnerWithSub>
 
-      <MenuInnerWithSub title='Apps' to='/apps' menuPlacement='bottom-start' menuTrigger='click'>
+      <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger='click'>
         {/* PAGES */}
-        <MenuInnerWithSub
+        {/* <MenuInnerWithSub
           title='Chat'
           to='/apps/chat'
           icon='message-text-2'
@@ -112,13 +112,13 @@ export function MenuInner() {
           <MenuItem to='/apps/chat/private-chat' title='Private Chat' hasBullet={true} />
           <MenuItem to='/apps/chat/group-chat' title='Group Chart' hasBullet={true} />
           <MenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet={true} />
-        </MenuInnerWithSub>
+        </MenuInnerWithSub> */}
         <MenuItem icon='abstract-28' to='/apps/user-management/users' title='User management' />
       </MenuInnerWithSub>
 
       <MenuInnerWithSub
         isMega={true}
-        title='Layouts'
+        title='Bố cục'
         to='/mega-menu'
         menuPlacement='bottom-start'
         menuTrigger='click'

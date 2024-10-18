@@ -1,27 +1,37 @@
 import axios, { AxiosResponse } from "axios";
 import { ID, Response } from "../../../../../_metronic/helpers";
-import { Data, UsersQueryResponse } from "./_models";
+import { Data, DataQueryResponse } from "./_models";
 
-const API_URL = import.meta.env.VITE_APP_THEME_API_URL;
+const API_URL = import.meta.env.VITE_APP_API_URL;
 const USER_URL = `${API_URL}/user`;
 const GET_ALL_DATA_URL = `${API_URL}/data`;
 
-const getAllData = (query: string): Promise<UsersQueryResponse> => {
+const importData = async (file: File): Promise<any> => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const response = await axios.post(`${API_URL}/import-data`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error importing data', error);
+    throw error;
+  }
+};
+
+const getAllData = (): Promise<DataQueryResponse> => {
   return axios
     .get(GET_ALL_DATA_URL)
-    .then((d: AxiosResponse<UsersQueryResponse>) => d.data);
+    .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 };
 
 const getUserById = (id: ID): Promise<Data | undefined> => {
   return axios
     .get(`${USER_URL}/${id}`)
-    .then((response: AxiosResponse<Response<Data>>) => response.data)
-    .then((response: Response<Data>) => response.data);
-};
-
-const createUser = (customer: Data): Promise<Data | undefined> => {
-  return axios
-    .put(USER_URL, customer)
     .then((response: AxiosResponse<Response<Data>>) => response.data)
     .then((response: Response<Data>) => response.data);
 };
@@ -43,10 +53,10 @@ const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
 };
 
 export {
+  importData,
   getAllData,
   deleteUser,
   deleteSelectedUsers,
   getUserById,
-  createUser,
   updateUser,
 };

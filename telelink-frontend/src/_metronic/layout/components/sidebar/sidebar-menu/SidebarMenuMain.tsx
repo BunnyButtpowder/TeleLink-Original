@@ -35,10 +35,10 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
         <SidebarMenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
       </SidebarMenuItemWithSub>
-      <SidebarMenuItem to='/builder' icon='switch' title='Layout Builder' fontIcon='bi-layers' />
+      {/* <SidebarMenuItem to='/builder' icon='switch' title='Layout Builder' fontIcon='bi-layers' /> */}
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Crafted</span>
+          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Cá Nhân</span>
         </div>
       </div>
       <SidebarMenuItemWithSub
@@ -89,7 +89,7 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/error/404' title='Error 404' hasBullet={true} />
         <SidebarMenuItem to='/error/500' title='Error 500' hasBullet={true} />
       </SidebarMenuItemWithSub> */}
-      <SidebarMenuItemWithSub
+      {/* <SidebarMenuItemWithSub
         to='/crafted/widgets'
         title='Widgets'
         icon='element-7'
@@ -101,7 +101,7 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/crafted/widgets/mixed' title='Mixed' hasBullet={true} />
         <SidebarMenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
         <SidebarMenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
-      </SidebarMenuItemWithSub>
+      </SidebarMenuItemWithSub> */}
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
           <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{intl.formatMessage({id: 'SIDEBAR.ADMINISTRATION'})}</span>

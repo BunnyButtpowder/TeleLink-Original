@@ -1,20 +1,28 @@
 import {ListViewProvider, useListView} from './core/ListViewProvider'
 import {QueryRequestProvider} from './core/QueryRequestProvider'
 import {QueryResponseProvider} from './core/QueryResponseProvider'
-import {UsersListHeader} from './components/header/UsersListHeader'
-import {UsersTable} from './table/UsersTable'
+import {DataListHeader} from './components/header/DataListHeader'
+import {DataTable} from './table/DataTable'
 import {DataEditModal} from './user-edit-modal/DataEditModal'
 import {KTCard} from '../../../../_metronic/helpers'
 import { ToolbarWrapper } from '../../../../_metronic/layout/components/toolbar'
 import { Content } from '../../../../_metronic/layout/components/content'
+import { useState } from 'react'
+import { Data } from './core/_models'
 
 const DataList = () => {
   const {itemIdForUpdate} = useListView()
+  const [tableData, setTableData] = useState<Data[]>([]); // Manage table data.
+
+  const handleUploadComplete = (uploadedData: Data[]) => {
+    setTableData(uploadedData);
+  };
+
   return (
     <>
       <KTCard>
-        <UsersListHeader />
-        <UsersTable />
+        <DataListHeader onUploadComplete = {handleUploadComplete}/>
+        <DataTable/>
       </KTCard>
       {itemIdForUpdate !== undefined && <DataEditModal />}
     </>

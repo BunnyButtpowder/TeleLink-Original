@@ -23,7 +23,7 @@ const ToolbarClassic = () => {
             data-kt-menu-placement='bottom-end'
           >
             <KTIcon iconName='filter' className='fs-6 text-muted me-1' />
-            Filter
+            Bộ lọc nâng cao
           </a>
           <Dropdown1 />
         </div>
@@ -45,11 +45,11 @@ const ToolbarClassic = () => {
 
       {config.app?.toolbar?.secondaryButton && (
         <a href='#' className='btn btn-sm btn-flex btn-light fw-bold'>
-          Filter
+          Lọc
         </a>
       )}
 
-      {config.app?.toolbar?.primaryButton && (
+      {/* {config.app?.toolbar?.primaryButton && (
         <a
           href='#'
           onClick={() => setShowCreateAppModal(true)}
@@ -57,7 +57,7 @@ const ToolbarClassic = () => {
         >
           Create
         </a>
-      )}
+      )} */}
       <CreateAppModal show={showCreateAppModal} handleClose={() => setShowCreateAppModal(false)} />
     </div>
   )
