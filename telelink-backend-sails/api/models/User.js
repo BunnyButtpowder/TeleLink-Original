@@ -10,10 +10,6 @@ module.exports = {
       type: 'string',
       allowNull: true
     },
-    dob: {
-      type: 'string',
-      allowNull: true
-    },
     address: {
       type: 'string',
       allowNull: true

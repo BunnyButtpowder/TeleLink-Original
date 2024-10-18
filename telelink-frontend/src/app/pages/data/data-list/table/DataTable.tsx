@@ -9,10 +9,10 @@ import {UsersListLoading} from '../components/loading/UsersListLoading'
 import {UsersListPagination} from '../components/pagination/UsersListPagination'
 import {KTCardBody} from '../../../../../_metronic/helpers'
 
-const UsersTable = () => {
-  const users = useQueryResponseData()
+const DataTable = () => {
+  const datas = useQueryResponseData()
   const isLoading = useQueryResponseLoading()
-  const data = useMemo(() => users, [users])
+  const data = useMemo(() => datas, [datas])
   const columns = useMemo(() => usersColumns, [])
   const {getTableProps, getTableBodyProps, headers, rows, prepareRow} = useTable({
     columns,
@@ -59,4 +59,4 @@ const UsersTable = () => {
   )
 }
 
-export {UsersTable}
+export {DataTable}

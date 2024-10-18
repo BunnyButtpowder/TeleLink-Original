@@ -6,6 +6,7 @@ import { UserActionsCell } from './UserActionsCell'
 import { UserSelectionCell } from './UserSelectionCell'
 import { UserCustomHeader } from './UserCustomHeader'
 import { UserSelectionHeader } from './UserSelectionHeader'
+import { UsernameCell } from './UsernameCell'
 import { User } from '../../core/_models'
 
 const usersColumns: ReadonlyArray<Column<User>> = [
@@ -28,7 +29,8 @@ const usersColumns: ReadonlyArray<Column<User>> = [
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Tên đăng nhập' className='min-w-125px' />,
     id: 'username',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.auth?.username}</span>,
+    // Cell: ({ ...props }) => <span>{props.data[props.row.index]?.auth?.username}</span>,
+    Cell: ({ ...props }) => <UsernameCell username={props.data[props.row.index].auth?.username}></UsernameCell>,
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Loại tài khoản' className='min-w-125px' />,
@@ -48,7 +50,6 @@ const usersColumns: ReadonlyArray<Column<User>> = [
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Ngày sinh' className='min-w-125px' />,
     accessor: 'dob',
-    // Cell: ({ ...props }) => <span>{props.data[props.row.index]?.dob}</span>,
     Cell: ({ ...props }) => {
       const timestamp = props.data[props.row.index].dob;
 
