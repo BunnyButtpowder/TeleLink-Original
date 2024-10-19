@@ -27,6 +27,41 @@ module.exports.bootstrap = async function () {
         isActive: 1,
         role: 1,
       },
+      {
+        email: "minhvu.contactforwork@gmail.com",
+        username: "minhvu",
+        password:
+          "$2b$10$twymI2UzxiLkV6T/TyQbN.JcUgolOEJa6//vfbeXgdgVH/OgKQO7q",
+        isActive: 1,
+        role: 3,
+      },
+    ]);
+  }
+
+  if ((await User.count()) == 0) {
+    await User.createEach([
+      {
+        fullName: "DM Tuan Cuong",
+        phoneNumber: "0974009765",
+        address: "Tây Mỗ, Hà Nội",
+        dob: "2003-09-21",
+        agency: "",
+        avatar: "",
+        gender: "male",
+        dataType: "",
+        auth: 1,
+      },
+      {
+        fullName: "Minh Vu",
+        phoneNumber: "0928911447",
+        address: "Hoàn Kiếm, Hà Nội",
+        dob: "2003-07-25",
+        agency: "",
+        avatar: "",
+        gender: "male",
+        dataType: "",
+        auth: 2,
+      },
     ]);
   }
 
@@ -46,8 +81,20 @@ module.exports.bootstrap = async function () {
 
   if ((await Package.count()) == 0) {
     await Package.createEach([
-      { code: "20",title: "V160N",provider: "Viettel",type: "Trả trước",price: "160000" },
-      { code: "21",title: "V250N",provider: "Viettel",type: "Trả trước",price: "250000" },
+      {
+        code: "20",
+        title: "V160N",
+        provider: "Viettel",
+        type: "Trả trước",
+        price: "160000",
+      },
+      {
+        code: "21",
+        title: "V250N",
+        provider: "Viettel",
+        type: "Trả trước",
+        price: "250000",
+      },
     ]);
   }
 
