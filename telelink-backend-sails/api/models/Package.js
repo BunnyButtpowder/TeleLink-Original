@@ -1,5 +1,5 @@
 /**
- * Permission.js
+ * Package.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
@@ -8,17 +8,25 @@
 module.exports = {
 
   attributes: {
-    title:{
-      type:"string",
-      required: true,
+
+    code: {
+      type: 'string',
       unique: true
     },
-    path:{
-      type:"string",
+    title: {
+      type: 'string',
+      unique: true
     },
-    method:{
-      type:"string",
+    provider: {
+      type: 'string',
     },
+    type: {
+      type: 'string'
+    },
+    price: {
+      type: 'number'
+    }
+
   },
 
 };
