@@ -19,7 +19,8 @@ module.exports = {
       allowNull: true
     },
     agency: {
-      type: 'string'
+      model: 'agency', 
+      
     },
     avatar: {
       type: 'string',

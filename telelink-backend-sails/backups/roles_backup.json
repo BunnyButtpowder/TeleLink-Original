@@ -1,0 +1,23 @@
+[
+	{
+		"createdAt" : 20241017110012,
+		"updatedAt" : 20241017110012,
+		"id" : 1,
+		"isDelete" : 0,
+		"title" : "Admin"
+	},
+	{
+		"createdAt" : 20241017110012,
+		"updatedAt" : 20241017110012,
+		"id" : 2,
+		"isDelete" : 0,
+		"title" : "Agency"
+	},
+	{
+		"createdAt" : 20241017110012,
+		"updatedAt" : 20241017110012,
+		"id" : 3,
+		"isDelete" : 0,
+		"title" : "Salesman"
+	}
+]

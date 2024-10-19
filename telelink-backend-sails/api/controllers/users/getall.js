@@ -13,7 +13,8 @@ module.exports = {
   fn: async function (inputs) {
     let { res } = this;
     try {
-      const users = await User.find().populate('auth');
+      const users = await User.find().populate('auth').populate('agency');
+      console.log(users)
       
 
       if (!users || users.length === 0) {
@@ -23,14 +24,16 @@ module.exports = {
       const allUsers = users.map(user => {
         return {
           ...user,
+         
           auth: {
             email: user.auth.email,
             role: user.auth.role,
             username: user.auth.username
-          }
+          },
+          
         };
       });
-      
+    
 
       return res.json({ data: allUsers , count: allUsers.length });
     } catch (err) {
