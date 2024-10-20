@@ -10,6 +10,7 @@ module.exports = {
         password : { type : "string", require : true},
         role : {type : 'number', require: true},
         gender : {type : 'string', require : true },
+        name : {type : 'string'},
     },
   
    
@@ -17,7 +18,7 @@ module.exports = {
     fn: async function (inputs) {
       let { req ,res } = this;
       try {
-        const { fullName, phoneNumber, dob, address, email, username, password , role , gender } = inputs;
+        const { fullName, phoneNumber, dob, address, email, username, password , role , gender ,name } = inputs;
         const existingEmail =await Auth.findOne({ email });
         if (existingEmail) {
             return res.conflict({ message: "Email đã tồn tại" });
@@ -34,14 +35,23 @@ module.exports = {
           role,
           isActive: true
         }).fetch();
+       
         const newUser = await User.create({
           fullName,
           phoneNumber,
           dob,
           address,
           gender,
-          auth: newAuth.id
+          auth: newAuth.id,
+          
         }).fetch();
+        if (newAuth.role === 2) {
+          const newAgency = await Agency.create({
+            name,
+            user: newUser.id 
+          }).fetch();
+          await User.update({ id: newUser.id }).set({ agency: newAgency.id });
+        };
         return res.status(201).json({ message: "Đăng ký thành công" , newUser });
       } catch (err) {
         sails.log.error('Error fetching users or auth info:', err);
