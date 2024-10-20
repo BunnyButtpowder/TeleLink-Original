@@ -1,3 +1,4 @@
+
 /**
  * Agency.js
  *
@@ -5,22 +6,20 @@
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
+
+// api/models/Agency.js
+
 module.exports = {
-
-  attributes: {
-
-  code:{
-    type: 'string',
-    required: true, 
-    unique: true
-  },
-
-  title:{
-    type: 'string',
-    required: true
-  }
-
-  },
-
-};
+    attributes: {
+      name: {
+        type: 'string',
+        required: true
+      },
+      users: {
+        collection: 'user', // Mối quan hệ một-nhiều với User
+        via: 'agency' 
+      },
+    },
+  };
+  
 

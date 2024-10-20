@@ -33,7 +33,7 @@ module.exports.bootstrap = async function () {
         password:
           "$2b$10$twymI2UzxiLkV6T/TyQbN.JcUgolOEJa6//vfbeXgdgVH/OgKQO7q",
         isActive: 1,
-        role: 3,
+        role: 1,
       },
     ]);
   }
@@ -45,7 +45,7 @@ module.exports.bootstrap = async function () {
         phoneNumber: "0974009765",
         address: "Tây Mỗ, Hà Nội",
         dob: "2003-09-21",
-        agency: "",
+        
         avatar: "",
         gender: "male",
         dataType: "",
@@ -56,7 +56,7 @@ module.exports.bootstrap = async function () {
         phoneNumber: "0928911447",
         address: "Hoàn Kiếm, Hà Nội",
         dob: "2003-07-25",
-        agency: "",
+        
         avatar: "",
         gender: "male",
         dataType: "",
@@ -73,29 +73,10 @@ module.exports.bootstrap = async function () {
 
   if ((await Role.count()) == 0) {
     await Role.createEach([
-      { title: "Admin", onlyViewCreateBy: false, permissions: [1] },
-      { title: "Salesman", onlyViewCreateBy: false, permissions: [1] },
-      { title: "Agency", onlyViewCreateBy: true, permissions: [1] },
-    ]);
-  }
-
-  if ((await Package.count()) == 0) {
-    await Package.createEach([
-      {
-        code: "20",
-        title: "V160N",
-        provider: "Viettel",
-        type: "Trả trước",
-        price: "160000",
-      },
-      {
-        code: "21",
-        title: "V250N",
-        provider: "Viettel",
-        type: "Trả trước",
-        price: "250000",
-      },
-    ]);
+      {title: 'Admin', onlyViewCreateBy: false, permissions: [1]},
+      {title: 'Agency', onlyViewCreateBy: false, permissions: [2]},
+      {title: 'Salesman', onlyViewCreateBy: false, permissions: [3]}
+    ])
   }
 
   // By convention, this is a good place to set up fake data during development.
