@@ -8,11 +8,7 @@ const GET_USERS_URL = `${API_URL}/users/getall`;
 const DELETE_USER_URL = `${API_URL}/users/delete?id=`;
 export const REGISTER_URL = `${API_URL}/users/create`;
 
-// const getUsers = (query: string): Promise<UsersQueryResponse> => {
-//   return axios
-//     .get(`${GET_USERS_URL}?${query}`)
-//     .then((d: AxiosResponse<UsersQueryResponse>) => d.data);
-// };
+
 
 const getUsers = (query: string): Promise<UsersQueryResponse> => {
   return axios
@@ -36,12 +32,33 @@ const createUser = (user: User): Promise<User | undefined> => {
     password: user.auth.password,
     role: user.auth.role,
     gender: user.gender,
-    agency: user.agency,
+    agency: user.agency?.id || null,
+    name: user.auth.role === 2 ? user.agency?.name : undefined,
   };
   return axios
     .post(REGISTER_URL, transformedUser)
     .then((response: AxiosResponse<Response<User>>) => response.data)
     .then((response: Response<User>) => response.data);
+};
+
+const updateAgency = async (agencyId: number, name: string, token: string): Promise<void> => {
+  try {
+    const response = await fetch(`${API_URL}/agency/${agencyId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update agency');
+    }
+  } catch (error) {
+    console.error('Failed to update agency', error);
+    throw error;
+  }
 };
 
 const updateUser = async (user: User, token: string): Promise<User | undefined> => {
@@ -59,7 +76,7 @@ const updateUser = async (user: User, token: string): Promise<User | undefined> 
         phoneNumber: user.phoneNumber,
         dob: user.dob,
         address: user.address,
-        agency: user.agency || '',
+        agency: user.agency?.id || null,
         avatar: user.avatar || '',
         gender: user.gender,
         dataType: user.dataType || '',
@@ -68,6 +85,10 @@ const updateUser = async (user: User, token: string): Promise<User | undefined> 
 
     if (!response.ok) {
       throw new Error('Failed to update user');
+    }
+
+    if (user.auth.role === 2 && user.agency && user.agency.id && user.agency.name) {
+      await updateAgency(user.agency.id, user.agency.name, token);
     }
 
     const updatedUser = await response.json();

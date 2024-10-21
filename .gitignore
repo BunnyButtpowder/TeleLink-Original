@@ -2,3 +2,5 @@
 telelink-backend-sails/.tmp/public/swagger.json
 
 telelink-backend-sails/assets/swagger.json
+
+telelink-backend-sails/config/tmp/
