@@ -4,7 +4,7 @@ import { Data, DataQueryResponse } from "./_models";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 const USER_URL = `${API_URL}/user`;
-const GET_ALL_DATA_URL = `${API_URL}/data`;
+const GET_ALL_DATA_URL = `${API_URL}/data/getall`;
 
 const importData = async (file: File): Promise<any> => {
   const formData = new FormData();

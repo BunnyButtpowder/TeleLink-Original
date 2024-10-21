@@ -5,16 +5,21 @@ export type AuthInfo = {
   username: string
   password: string
   status?: boolean
-  role?: number
+  role: number
+}
+
+export type Agency = {
+  id?: ID
+  name?: string
 }
 
 export type User = {
   id?: ID
-  fullName?: string
+  fullName: string
   phoneNumber?: string
   dob?: string | null
   address?: string | null
-  agency?: number
+  agency?: Agency
   avatar?: string
   gender?: string
   dataType?: string
@@ -30,9 +35,12 @@ export const initialUser: User = {
   avatar: 'avatars/blank.png',
   fullName: '',
   phoneNumber: '',
-  dob: undefined,
+  dob: null,
   address: null,
-  agency: undefined,
+  agency: {
+    id: 0,
+    name: '',
+  },
   gender: '',
   dataType: '',
   auth: {

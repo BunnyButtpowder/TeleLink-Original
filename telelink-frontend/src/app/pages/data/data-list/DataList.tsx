@@ -3,7 +3,6 @@ import {QueryRequestProvider} from './core/QueryRequestProvider'
 import {QueryResponseProvider} from './core/QueryResponseProvider'
 import {DataListHeader} from './components/header/DataListHeader'
 import {DataTable} from './table/DataTable'
-import {DataEditModal} from './user-edit-modal/DataEditModal'
 import {KTCard} from '../../../../_metronic/helpers'
 import { ToolbarWrapper } from '../../../../_metronic/layout/components/toolbar'
 import { Content } from '../../../../_metronic/layout/components/content'
@@ -24,7 +23,6 @@ const DataList = () => {
         <DataListHeader onUploadComplete = {handleUploadComplete}/>
         <DataTable/>
       </KTCard>
-      {itemIdForUpdate !== undefined && <DataEditModal />}
     </>
   )
 }
