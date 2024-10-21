@@ -49,7 +49,15 @@ export interface AuthInfo {
   username: string
   password?: string
   status?: boolean
-  role?: number
+  role: number
+}
+
+export interface Agency {
+  id?: number
+  name: string
+  isDelete?: boolean
+  createdAt?: number
+  updatedAt?: number
 }
 
 export interface UserModel {
@@ -58,7 +66,7 @@ export interface UserModel {
   phoneNumber?: string
   dob?: string | null
   address?: string | null
-  agency?: string | null
+  agency?: Agency
   avatar?: string
   gender?: string
   dataType?: string
@@ -66,15 +74,4 @@ export interface UserModel {
   isDelete?: boolean
   createdAt?: number
   updatedAt?: number
-  // occupation?: string
-  // companyName?: string
-  // phone?: string
-  // roles?: Array<number>
-  // pic?: string
-  // timeZone?: string
-  // emailSettings?: UserEmailSettingsModel
-  // auth?: AuthModel
-  // communication?: UserCommunicationModel
-  // address?: UserAddressModel
-  // socialNetworks?: UserSocialNetworksModel
 }

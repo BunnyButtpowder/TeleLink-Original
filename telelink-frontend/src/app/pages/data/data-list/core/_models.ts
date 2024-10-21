@@ -1,4 +1,5 @@
 import {ID, Response} from '../../../../../_metronic/helpers'
+import { Agency } from '../../../../modules/apps/user-management/users-list/core/_models'
 export type Data = {
   id?: ID
   placeOfIssue ?: string
@@ -17,7 +18,7 @@ export type Data = {
   usageMonth2?: string
   usageMonth3?: string
   usageMonth4?: string
-  consultingPackage?: string
+  Package?: string
   totalTKCUsage ?: string
   voiceUsage ?: string
   dataUsage ?: string
@@ -25,6 +26,9 @@ export type Data = {
   other1 ? : string
   other2 ? : string
   other3 ? : string
+  agency?: Agency
+  callResults?: string[]
+  rejectionCount?: number
 }
 
 export type DataQueryResponse = Response<Array<Data>>
@@ -43,7 +47,7 @@ export const initialData: Data = {
   usageMonth2: '',
   usageMonth3: '',
   usageMonth4: '',
-  consultingPackage: '',
+  Package: '',
   placeOfIssue: '',
   totalTKCUsage : '',
   voiceUsage : '',
@@ -52,4 +56,10 @@ export const initialData: Data = {
   other1  : '',
   other2  : '',
   other3  : '',
+  agency: {
+    id: 0,
+    name: '',
+  },
+  callResults: [],
+  rejectionCount: 0
 }

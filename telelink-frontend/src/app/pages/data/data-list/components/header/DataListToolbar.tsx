@@ -57,7 +57,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
           onClick={triggerFileUpload}
         >
           <KTIcon iconName="exit-up" className="fs-2" />
-          {uploading ? 'Đang tải lên...' : 'Tải dữ liệu lên'}
+          {uploading ? 'Đang tải lên...' : 'Upload dữ liệu'}
         </button>
       </label>
       {/* end::Upload data */}

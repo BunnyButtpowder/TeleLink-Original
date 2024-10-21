@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
-import { isNotEmpty, toAbsoluteUrl } from '../../../../../../_metronic/helpers'
+import { ID, isNotEmpty, toAbsoluteUrl } from '../../../../../../_metronic/helpers'
 import { initialUser, User } from '../core/_models'
 import clsx from 'clsx'
 import { useListView } from '../core/ListViewProvider'
@@ -9,6 +9,9 @@ import { UsersListLoading } from '../components/loading/UsersListLoading'
 import { createUser, updateUser } from '../core/_requests'
 import { useQueryResponse } from '../core/QueryResponseProvider'
 import { useIntl } from 'react-intl'
+import axios from 'axios'
+
+const API_URL = import.meta.env.VITE_APP_API_URL;
 
 type Props = {
   isUserLoading: boolean
@@ -34,7 +37,9 @@ const salesmanSchema = Yup.object().shape({
   address: Yup.string().nullable(),
   dob: Yup.string().nullable(),
   gender: Yup.string().nullable(),
-  agency: Yup.string().nullable(),
+  agency: Yup.object().shape({
+    id: Yup.number().nullable(),
+  }),
 })
 
 const agencySchema = Yup.object().shape({
@@ -54,6 +59,10 @@ const agencySchema = Yup.object().shape({
   address: Yup.string().nullable(),
   dob: Yup.string().nullable(),
   gender: Yup.string().nullable(),
+  agency: Yup.object().shape({
+    id: Yup.number().nullable(),
+    name: Yup.string().nullable().required('Vui lòng điền vào trường này'),
+  }),
 })
 
 const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
@@ -69,6 +78,15 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   };
 
   const [selectedRole, setSelectedRole] = useState(user.auth?.role ? roleConfig[user.auth.role] : 'salesman');
+  const [agencies, setAgencies] = useState<Array<{ id: ID; name: string }>>([]);
+
+  useEffect(() => {
+    axios.get(`${API_URL}/agency`).then((response) => {
+      setAgencies(response.data);
+    }).catch((error) => {
+      console.error('Error fetching agencies: ', error);
+    });
+  }, []);
 
   const [userForEdit, setUserForEdit] = useState<User>({
     ...user,
@@ -81,12 +99,15 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
       status: user.auth?.status || initialUser.auth?.status,
       role: user.auth?.role || initialUser.auth?.role,
     },
+    agency: {
+      ...user.agency,
+      id: user.agency?.id || null,
+      name: user.agency?.name || initialUser.agency?.name,
+    },
     address: user.address || initialUser.address,
     dob: user.dob || initialUser.dob,
     gender: user.gender || initialUser.gender,
   });
-
-  // const [userForEdit, setUserForEdit] = useState<User>(user);
 
 
   const cancel = (withRefresh?: boolean) => {
@@ -100,7 +121,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   const userAvatarImg = toAbsoluteUrl(`media/${userForEdit.avatar}`)
 
   // Salesman formik form
-  const salemanFormik = useFormik({
+  const salemanFormik = useFormik<User>({
     initialValues: userForEdit,
     enableReinitialize: true,
     validationSchema: salesmanSchema,
@@ -133,7 +154,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   // }, [salemanFormik]);
 
   // Agency formik form
-  const agencyFormik = useFormik({
+  const agencyFormik = useFormik<User>({
     initialValues: userForEdit,
     enableReinitialize: true,
     validationSchema: agencySchema,
@@ -153,6 +174,10 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
       }
     },
   })
+
+  const isAgencyNameTouched = agencyFormik.touched.agency && typeof agencyFormik.touched.agency === 'object' && (agencyFormik.touched.agency as any).name;
+  const isAgencyNameError = agencyFormik.errors.agency && typeof agencyFormik.errors.agency === 'object' && (agencyFormik.errors.agency as any).name;
+
 
   // Handling the role change
   const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -534,21 +559,21 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
 
               {/* begin::Input */}
               <select
-                {...salemanFormik.getFieldProps('agency')}
+                {...salemanFormik.getFieldProps('agency.id')}
                 className={clsx(
                   'form-control form-control-solid mb-3 mb-lg-0',
                   { 'is-invalid': salemanFormik.touched.agency && salemanFormik.errors.agency },
-                  {
-                    'is-valid': salemanFormik.touched.agency && !salemanFormik.errors.agency,
-                  }
+                  { 'is-valid': salemanFormik.touched.agency && !salemanFormik.errors.agency }
                 )}
-                name='agency'
+                name='agency.id'
                 disabled={salemanFormik.isSubmitting || isUserLoading}
               >
                 <option value='' disabled>{intl.formatMessage({ id: 'SELECT.AGENCY' })}</option>
-                {/* <option value='male'>{intl.formatMessage({ id: 'GENDER.MALE' })}</option>
-                <option value='female'>{intl.formatMessage({ id: 'GENDER.FEMALE' })}</option>
-                <option value='other'>{intl.formatMessage({ id: 'GENDER.OTHER' })}</option> */}
+                {agencies.map((agency) => (
+                  <option key={agency.id} value={agency.id ?? ''}>
+                    {agency.name}
+                  </option>
+                ))}
               </select>
               {salemanFormik.touched.agency && salemanFormik.errors.agency && (
                 <div className='fv-plugins-message-container'>
@@ -667,6 +692,37 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
               data-kt-scroll-offset='300px'
             >
+              {/* begin::Input group */}
+              <div className='fv-row mb-7'>
+                {/* begin::Label */}
+                <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AGENCY.NAME' })}</label>
+                {/* end::Label */}
+
+                {/* begin::Input */}
+                <input
+                  placeholder='Tên chi nhánh'
+                  {...agencyFormik.getFieldProps('agency.name')}
+                  type='text'
+                  name='agency.name'
+                  className={clsx(
+                    'form-control form-control-solid mb-3 mb-lg-0',
+                    { 'is-invalid': isAgencyNameTouched && isAgencyNameError },
+                    { 'is-valid': isAgencyNameTouched && !isAgencyNameError }
+                  )}
+                  autoComplete='off'
+                  disabled={agencyFormik.isSubmitting || isUserLoading}
+                />
+                {isAgencyNameTouched && isAgencyNameError && (
+                  <div className='fv-plugins-message-container'>
+                    <div className='fv-help-block'>
+                      <span role='alert'>{isAgencyNameError}</span>
+                    </div>
+                  </div>
+                )}
+                {/* end::Input */}
+              </div>
+              {/* end::Input group */}
+
               {/* begin::Input group */}
               <div className='fv-row mb-7'>
                 {/* begin::Label */}

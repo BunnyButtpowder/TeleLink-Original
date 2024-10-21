@@ -37,6 +37,8 @@ module.exports = {
         'tieudungn1': 'usageMonth1',
         'tieudungn2': 'usageMonth2',
         'tieudungn3': 'usageMonth3',
+        'tieudungn4': 'usageMonth4',
+        'goicuoc': 'Package',
         'tieudungtkc': 'totalTKCUsage',
         'tieudungthoai': 'voiceUsage',
         'tieudungdata': 'dataUsage',
@@ -60,17 +62,17 @@ module.exports = {
         const row = worksheet[i];
         const subscriberNumber = row[headerIndexes['subscriberNumber']] || '';
 
-       
+
         const existingData = await Data.findOne({ where: { subscriberNumber } });
-        
+
 
         if (existingData) {
-          
+
           await Data.destroy({ id: existingData.id });
         }
-        
 
-       
+
+
         await Data.create({
           placeOfIssue: row[headerIndexes['placeOfIssue']] || '',
           networkName: row[headerIndexes['networkName']] || '',
@@ -87,6 +89,8 @@ module.exports = {
           usageMonth1: row[headerIndexes['usageMonth1']] || '',
           usageMonth2: row[headerIndexes['usageMonth2']] || '',
           usageMonth3: row[headerIndexes['usageMonth3']] || '',
+          usageMonth4: row[headerIndexes['usageMonth4']] || '',
+          Package: row[headerIndexes['Package']]|| '',
           totalTKCUsage: row[headerIndexes['totalTKCUsage']] || '',
           voiceUsage: row[headerIndexes['voiceUsage']] || '',
           dataUsage: row[headerIndexes['dataUsage']] || '',
@@ -101,7 +105,7 @@ module.exports = {
       fs.unlinkSync(filePath);
 
       return res.ok({ message: 'Dữ liệu được nhập thành công' });
-        
+
 
     } catch (err) {
       sails.log.error('Error importing data:', err);
