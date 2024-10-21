@@ -17,7 +17,7 @@ export type Data = {
   usageMonth2?: string
   usageMonth3?: string
   usageMonth4?: string
-  consultingPackage?: string
+  Package?: string
   totalTKCUsage ?: string
   voiceUsage ?: string
   dataUsage ?: string
@@ -43,7 +43,7 @@ export const initialData: Data = {
   usageMonth2: '',
   usageMonth3: '',
   usageMonth4: '',
-  consultingPackage: '',
+  Package: '',
   placeOfIssue: '',
   totalTKCUsage : '',
   voiceUsage : '',
