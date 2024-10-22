@@ -5,6 +5,15 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useAuth } from '../../../../../../app/modules/auth';
 import { updateProfile } from '../../core/_request';
+import { useQueryResponse } from '../../../../apps/user-management/users-list/core/QueryResponseProvider'
+
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '../../core/firebaseConfig';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+
+const firebaseApp = initializeApp(firebaseConfig);
+
 
 // Regex for Vietnamese phone number format
 const vietnamesePhoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
@@ -26,6 +35,10 @@ const ProfileDetails: FC = () => {
   const [data, setData] = useState(initialValues);
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem('auth_token');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null); // New state for image preview
+
+  const storage = getStorage(firebaseApp);
 
   // Pre-populate the form when the component mounts or when `currentUser` changes
   useEffect(() => {
@@ -44,6 +57,36 @@ const ProfileDetails: FC = () => {
     }
   }, [currentUser]);
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    setSelectedFile(file);
+
+    if (file) {
+      const preview = URL.createObjectURL(file);  // Generate preview URL
+      setPreviewUrl(preview);  // Set preview URL for immediate image display
+    }
+  };
+
+  const uploadImage = async (file: File) => {
+    const storageRef = ref(storage, `avatars/${currentUser?.id}_${file.name}`);
+    console.log("Storage reference created:", storageRef);
+  
+    await uploadBytes(storageRef, file).then(() => {
+      console.log("File uploaded successfully:", file.name);
+    }).catch((error) => {
+      console.error("Error uploading file:", error);
+    });
+  
+    const downloadURL = await getDownloadURL(storageRef).catch((error) => {
+      console.error("Error getting download URL:", error);
+      return undefined; // handle error
+    });
+  
+    console.log("Download URL:", downloadURL);
+    return downloadURL;
+  };
+  
+
   const formik = useFormik({
     initialValues: data,
     enableReinitialize: true,  // This ensures the form picks up changes in `data`
@@ -54,17 +97,43 @@ const ProfileDetails: FC = () => {
         setSubmitting(false);
         return;
       }
+      console.log("Firebase Config:", firebaseConfig);
       setLoading(true);
       setSubmitting(true);
 
       try {
+        let avatarUrl = currentUser.avatar; // Default to existing avatar
+        if (selectedFile) {
+          // Upload the selected file to Firebase Storage
+          const uploadedAvatarUrl = await uploadImage(selectedFile);
+          if (uploadedAvatarUrl) {
+            avatarUrl = uploadedAvatarUrl; // Only set avatarUrl if upload is successful
+          } else {
+            console.error("Image upload failed, keeping the old avatar");
+          }
+        }
         console.log('Submitting profile update:', values);
-        const updatedProfile = await updateProfile(values, currentUser.id, token || '');
+        // const updatedProfile = await updateProfile(values, currentUser.id, token || '');
+        const updatedProfile = await updateProfile(
+          { ...values, avatar: avatarUrl }, // Include avatar URL
+          currentUser.id,
+          token || ''
+        );
         console.log('Profile updated successfully:', updatedProfile);
 
-        // // Optionally update the local state with the updated profile
-        // setCurrentUser({ ...currentUser, ...updatedProfile });
-        // setData(values);
+        // Optionally update the local state with the updated profile
+        const updatedUser = {
+          ...currentUser,
+          ...values,
+          avatar: avatarUrl,
+          agency: typeof values.agency === 'number'
+            ? currentUser.agency  // Keep the existing agency if values.agency is just a number
+            : values.agency,       // Otherwise, use the full agency object if provided
+        };
+        
+        setCurrentUser(updatedUser);
+        
+        setData(values);
         
       } catch (error) {
         console.error('Error updating profile:', error);
@@ -93,12 +162,20 @@ const ProfileDetails: FC = () => {
                 <div
                   className="image-input image-input-outline"
                   data-kt-image-input="true"
-                  style={{ backgroundImage: `url(${toAbsoluteUrl('media/avatars/blank.png')})` }}
+                  style={{ backgroundImage: `url(${previewUrl || data.avatar || toAbsoluteUrl('media/avatars/blank.png')})` }}  // Show previewUrl if available
                 >
-                  {/* <div
+                  <div
                     className="image-input-wrapper w-125px h-125px"
-                    style={{ backgroundImage: `url(${toAbsoluteUrl(data.avatar)})` }}
-                  ></div> */}
+                    style={{ backgroundImage: `url(${previewUrl || data.avatar})` }}  // Show previewUrl for the image preview
+                  ></div>
+
+                  {/* Input for file */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="form-control form-control-lg form-control-solid"
+                  />
                 </div>
               </div>
             </div>

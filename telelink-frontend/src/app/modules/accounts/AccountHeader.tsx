@@ -22,7 +22,7 @@ const AccountHeader: FC = () => {
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                  <img alt='Avatar' src={toAbsoluteUrl('media/avatars/avatar.jpg')} />
+                  <img alt='Avatar' src={currentUser?.avatar} />
                   <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
                 </div>
               </div>

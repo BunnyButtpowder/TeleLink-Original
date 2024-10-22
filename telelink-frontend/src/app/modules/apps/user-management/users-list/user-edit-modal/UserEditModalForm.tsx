@@ -126,7 +126,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   }
 
   const blankImg = toAbsoluteUrl('media/svg/avatars/blank.svg')
-  const userAvatarImg = toAbsoluteUrl(`media/${userForEdit.avatar}`)
+  const userAvatarImg = toAbsoluteUrl(`${userForEdit.avatar}`)
 
   // Salesman formik form
   const salemanFormik = useFormik<User>({
