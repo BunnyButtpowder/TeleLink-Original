@@ -21,6 +21,12 @@ const SidebarMenuMain = () => {
         fontIcon='bi-app-indicator'
       />
       <SidebarMenuItem
+        to='/packages'
+        icon='ocean'
+        title={intl.formatMessage({id: 'ECOMMERCE.CELLPHONE.PLAN'})}
+        fontIcon='bi-app-indicator'
+      />
+      <SidebarMenuItem
         to='/customers'
         icon='profile-user'
         title={intl.formatMessage({id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS'})}
