@@ -2,21 +2,52 @@ import { useIntl } from 'react-intl'
 import { MenuItem } from './MenuItem'
 import { MenuInnerWithSub } from './MenuInnerWithSub'
 import { MegaMenu } from './MegaMenu'
+import { useAuth } from '../../../../../app/modules/auth'
 
 export function MenuInner() {
   const intl = useIntl()
+  const { currentUser } = useAuth()
+
+  const userRole = currentUser?.auth.role
+
   return (
     <>
+      {/* All users access */}
       <MenuItem title={intl.formatMessage({ id: 'MENU.DASHBOARD' })} to='/dashboard' />
-      <MenuItem title='Sửa bố cục' to='/builder' />
-      <MenuInnerWithSub
-        title='Cá Nhân'
-        to='/crafted'
-        menuPlacement='bottom-start'
-        menuTrigger='click'
-      >
-        {/* PAGES */}
-        <MenuInnerWithSub
+      {/* <MenuItem title='Sửa bố cục' to='/builder' /> */}
+
+      {/* Admin access */}
+      {userRole === 1 && (
+        <>
+          <MenuItem title={intl.formatMessage({ id: 'DATA' })} to='/data' />
+          <MenuItem title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })} to='/customers' />
+          <MenuInnerWithSub
+            title='Báo cáo'
+            to='/reports'
+            menuPlacement='bottom-start'
+            menuTrigger='click'
+          >
+            {/* ACCOUNT */}
+            <MenuInnerWithSub
+              title='Báo cáo'
+              to='/reports/revenue'
+              fontIcon='bi-person'
+              hasArrow={true}
+              menuPlacement='right-start'
+              menuTrigger={`{default:'click', lg: 'hover'}`}
+            >
+              <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
+              <MenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
+            </MenuInnerWithSub>
+          </MenuInnerWithSub>
+          <MenuInnerWithSub
+            title='Cá Nhân'
+            to='/crafted'
+            menuPlacement='bottom-start'
+            menuTrigger='click'
+          >
+            {/* PAGES */}
+            {/* <MenuInnerWithSub
           title='Pages'
           to='/crafted/pages'
           fontIcon='bi-archive'
@@ -42,7 +73,7 @@ export function MenuInner() {
               hasBullet={true}
             />
           </MenuInnerWithSub>
-          {/* <MenuInnerWithSub
+          <MenuInnerWithSub
             title='Wizards'
             to='/crafted/pages/wizards'
             hasArrow={true}
@@ -52,24 +83,24 @@ export function MenuInner() {
           >
             <MenuItem to='/crafted/pages/wizards/horizontal' title='Horizontal' hasBullet={true} />
             <MenuItem to='/crafted/pages/wizards/vertical' title='Vertical' hasBullet={true} />
-          </MenuInnerWithSub> */}
-        </MenuInnerWithSub>
+          </MenuInnerWithSub>
+        </MenuInnerWithSub> */}
 
-        {/* ACCOUNT */}
-        <MenuInnerWithSub
-          title='Tài khoản'
-          to='/crafted/accounts'
-          fontIcon='bi-person'
-          hasArrow={true}
-          menuPlacement='right-start'
-          menuTrigger={`{default:'click', lg: 'hover'}`}
-        >
-          <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
-          <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
-        </MenuInnerWithSub>
+            {/* ACCOUNT */}
+            <MenuInnerWithSub
+              title='Tài khoản'
+              to='/crafted/accounts'
+              fontIcon='bi-person'
+              hasArrow={true}
+              menuPlacement='right-start'
+              menuTrigger={`{default:'click', lg: 'hover'}`}
+            >
+              <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
+              <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
+            </MenuInnerWithSub>
 
-        {/* ERRORS */}
-        {/* <MenuInnerWithSub
+            {/* ERRORS */}
+            {/* <MenuInnerWithSub
           title='Errors'
           to='/error'
           fontIcon='bi-sticky'
@@ -81,8 +112,8 @@ export function MenuInner() {
           <MenuItem to='/error/500' title='Error 500' hasBullet={true} />
         </MenuInnerWithSub> */}
 
-        {/* Widgets */}
-        {/* <MenuInnerWithSub
+            {/* Widgets */}
+            {/* <MenuInnerWithSub
           title='Widgets'
           to='/crafted/widgets'
           fontIcon='bi-layers'
@@ -97,11 +128,13 @@ export function MenuInner() {
           <MenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
           <MenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
         </MenuInnerWithSub> */}
-      </MenuInnerWithSub>
+          </MenuInnerWithSub>
 
-      <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger='click'>
-        {/* PAGES */}
-        {/* <MenuInnerWithSub
+          <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger='click'>
+            <MenuItem icon='abstract-28' to='/apps/user-management/users' title='Quản lý tài khoản' />
+          </MenuInnerWithSub>
+          {/* PAGES */}
+          {/* <MenuInnerWithSub
           title='Chat'
           to='/apps/chat'
           icon='message-text-2'
@@ -113,10 +146,106 @@ export function MenuInner() {
           <MenuItem to='/apps/chat/group-chat' title='Group Chart' hasBullet={true} />
           <MenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet={true} />
         </MenuInnerWithSub> */}
-        <MenuItem icon='abstract-28' to='/apps/user-management/users' title='User management' />
-      </MenuInnerWithSub>
 
-      <MenuInnerWithSub
+        </>
+      )}
+
+      {/* Agency access */}
+      {userRole === 2 && (
+        <>
+          <MenuItem title={intl.formatMessage({ id: 'DATA' })} to='/data' />
+          <MenuItem title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })} to='/customers' />
+          <MenuInnerWithSub
+            title='Báo cáo'
+            to='/reports'
+            menuPlacement='bottom-start'
+            menuTrigger='click'
+          >
+            {/* ACCOUNT */}
+            <MenuInnerWithSub
+              title='Báo cáo'
+              to='/reports/revenue'
+              fontIcon='bi-person'
+              hasArrow={true}
+              menuPlacement='right-start'
+              menuTrigger={`{default:'click', lg: 'hover'}`}
+            >
+              <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
+              <MenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
+            </MenuInnerWithSub>
+          </MenuInnerWithSub>
+          <MenuInnerWithSub
+            title='Cá Nhân'
+            to='/crafted'
+            menuPlacement='bottom-start'
+            menuTrigger='click'
+          >
+            {/* ACCOUNT */}
+            <MenuInnerWithSub
+              title='Tài khoản'
+              to='/crafted/accounts'
+              fontIcon='bi-person'
+              hasArrow={true}
+              menuPlacement='right-start'
+              menuTrigger={`{default:'click', lg: 'hover'}`}
+            >
+              <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
+              <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
+            </MenuInnerWithSub>
+          </MenuInnerWithSub>
+          {/* MANAGEMENT */}
+          <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger='click'>
+            <MenuItem icon='abstract-28' to='/apps/user-management/users' title='Quản lý tài khoản' />
+          </MenuInnerWithSub>
+        </>
+      )}
+
+      {/* Salesman access */}
+      {userRole === 3 && (
+        <>
+          <MenuItem title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })} to='/customers' />
+          <MenuInnerWithSub
+            title='Báo cáo'
+            to='/reports'
+            menuPlacement='bottom-start'
+            menuTrigger='click'
+          >
+            {/* ACCOUNT */}
+            <MenuInnerWithSub
+              title='Báo cáo'
+              to='/reports/revenue'
+              fontIcon='bi-person'
+              hasArrow={true}
+              menuPlacement='right-start'
+              menuTrigger={`{default:'click', lg: 'hover'}`}
+            >
+              <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
+              <MenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
+            </MenuInnerWithSub>
+          </MenuInnerWithSub>
+          <MenuInnerWithSub
+            title='Cá Nhân'
+            to='/crafted'
+            menuPlacement='bottom-start'
+            menuTrigger='click'
+          >
+            {/* ACCOUNT */}
+            <MenuInnerWithSub
+              title='Tài khoản'
+              to='/crafted/accounts'
+              fontIcon='bi-person'
+              hasArrow={true}
+              menuPlacement='right-start'
+              menuTrigger={`{default:'click', lg: 'hover'}`}
+            >
+              <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
+              <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
+            </MenuInnerWithSub>
+          </MenuInnerWithSub>
+        </>
+      )}
+
+      {/* <MenuInnerWithSub
         isMega={true}
         title='Bố cục'
         to='/mega-menu'
@@ -124,7 +253,7 @@ export function MenuInner() {
         menuTrigger='click'
       >
         <MegaMenu />
-      </MenuInnerWithSub>
+      </MenuInnerWithSub> */}
     </>
   )
 }
