@@ -20,7 +20,7 @@ const HeaderNotificationsMenu: FC = () => (
       style={{backgroundImage: `url('${toAbsoluteUrl('media/misc/menu-header-bg.jpg')}')`}}
     >
       <h3 className='text-white fw-bold px-9 mt-10 mb-6'>
-        Notifications <span className='fs-8 opacity-75 ps-3'>24 reports</span>
+        Thông báo <span className='fs-8 opacity-75 ps-3'>24 reports</span>
       </h3>
 
       <ul className='nav nav-line-tabs nav-line-tabs-2x nav-stretch fw-bold px-9'>
