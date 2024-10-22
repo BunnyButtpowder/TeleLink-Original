@@ -37,7 +37,7 @@ export function Overview() {
             <label className='col-lg-4 fw-bold text-muted'>Chi nhánh</label>
 
             <div className='col-lg-8 fv-row'>
-              <span className='fw-bold fs-6'>{currentUser?.agency}</span>
+              <span className='fw-bold fs-6'>{currentUser?.agency?.name}</span>
             </div>
           </div>
 
