@@ -108,35 +108,5 @@ module.exports = {
       
     },
 
-   // Kết quả cuộc gọi
-    callResults: {    
-      type: 'json',  
-      defaultsTo: [],   //2 cái attribute này bỏ đi anh nhé
-      
-    },
-
-    rejectionCount: {
-      type: 'number',
-      defaultsTo: 0, 
-    },
-  },
-
-
-  afterUpdate: async function (data, proceed) {
-    
-    if (data.callResults && data.callResults.includes("không nghe máy")) {
-      data.rejectionCount += 1;
-      if (data.rejectionCount >= 3) {
-        await Data.destroyOne({ id: data.id }); // Xóa bản ghi nếu rejectionCount >= 3
-      }
-    }
-    
-    // const rejection = await Result.count({data_id: data.id, result: "Không Bắt Máy"})
-    // if(rejection >= 3){
-    //   await Data.destroyOne({ id: data.id }); // Xóa bản ghi nếu rejection >= 3
-    // }
-    
-
-    return proceed();
   },
 };
