@@ -1,12 +1,3 @@
-
-/**
- * Agency.js
- *
- * @description :: A model definition represents a database table/collection.
- * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
- */
-
-
 // api/models/Agency.js
 
 module.exports = {
@@ -21,5 +12,3 @@ module.exports = {
       },
     },
   };
-  
-

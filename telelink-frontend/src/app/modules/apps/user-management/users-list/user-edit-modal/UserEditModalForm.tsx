@@ -82,16 +82,22 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
 
   useEffect(() => {
     axios.get(`${API_URL}/agency`).then((response) => {
-      setAgencies(response.data);
+      const agenciesData = response.data.data;
+      if (Array.isArray(agenciesData)) {
+        setAgencies(agenciesData);
+      } else {
+        console.error('Unexpected data format:', agenciesData);
+        setAgencies([]);
+      }
     }).catch((error) => {
       console.error('Error fetching agencies: ', error);
+      setAgencies([]);
     });
   }, []);
 
   const [userForEdit, setUserForEdit] = useState<User>({
     ...user,
-    avatar: user.avatar || initialUser.avatar,
-    fullName: user.fullName || initialUser.fullName,
+    // avatar: user.avatar || initialUser.avatar,
     auth: {
       ...user.auth,
       email: user.auth?.email || initialUser.auth?.email,
@@ -99,14 +105,16 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
       status: user.auth?.status || initialUser.auth?.status,
       role: user.auth?.role || initialUser.auth?.role,
     },
-    agency: {
-      ...user.agency,
-      id: user.agency?.id || null,
-      name: user.agency?.name || initialUser.agency?.name,
-    },
+    fullName: user.fullName || initialUser.fullName,
+    phoneNumber: user.phoneNumber || initialUser.phoneNumber,
     address: user.address || initialUser.address,
     dob: user.dob || initialUser.dob,
     gender: user.gender || initialUser.gender,
+    agency: {
+      ...user.agency,
+      id: user.agency?.id || initialUser.agency?.id,
+      name: user.agency?.name || initialUser.agency?.name,
+    },
   });
 
 
@@ -569,11 +577,20 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                 disabled={salemanFormik.isSubmitting || isUserLoading}
               >
                 <option value='' disabled>{intl.formatMessage({ id: 'SELECT.AGENCY' })}</option>
-                {agencies.map((agency) => (
+                {agencies.length > 0 ? (
+                  agencies.map((agency) => (
+                    <option key={agency.id} value={agency.id ?? ''}>
+                      {agency.name}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>{intl.formatMessage({ id: 'NO.AGENCY' })}</option>
+                )}
+                {/* {agencies.map((agency) => (
                   <option key={agency.id} value={agency.id ?? ''}>
                     {agency.name}
                   </option>
-                ))}
+                ))} */}
               </select>
               {salemanFormik.touched.agency && salemanFormik.errors.agency && (
                 <div className='fv-plugins-message-container'>
