@@ -108,5 +108,12 @@
   "AGENCY.NAME": "Tên chi nhánh",
   "SELECT.AGENCY": "Chọn chi nhánh",
   "SALESMAN": "Nhân viên",
-  "DATA": "Dữ liệu"
+  "DATA": "Dữ liệu",
+  "CODE": "Mã số",
+  "PACKAGE.MANAGEMENT.ADD_PACKAGE": "Tạo gói cước",
+  "PACKAGE.MANAGEMENT.EDIT_PACKAGE": "Sửa gói cước",
+  "PACKAGE.CODE": "Mã gói",
+  "NETWORK": "Nhà mạng",
+  "CLASSIFY": "Phân loại",
+  "UNIT.PRICE": "Đơn giá"
 }

@@ -11,6 +11,7 @@ import { CustomersPage } from '../pages/customer/CustomersPage'
 import { DataPage } from '../pages/data/DataPage'
 import { RevenuePage } from '../pages/reportRevenue/RevenuePage'
 import { ResultPage } from '../pages/reportCallResults/ResultPage'
+import { PackagePage } from '../pages/package/PackagePage'
 // import { PlanPage } from '../pages/plan/PlanPage'
 
 const PrivateRoutes = () => {
@@ -41,6 +42,14 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <CustomersPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='packages/*'
+          element={
+            <SuspensedView>
+              <PackagePage />
             </SuspensedView>
           }
         />
