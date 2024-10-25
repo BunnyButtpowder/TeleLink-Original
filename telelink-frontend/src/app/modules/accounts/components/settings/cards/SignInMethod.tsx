@@ -108,7 +108,7 @@ const SignInMethod: FC = () => {
 
       <div id='kt_account_signin_method' className='collapse show'>
         <div className='card-body border-top p-9'>
-          <div className='d-flex flex-wrap align-items-center'>
+          {/* <div className='d-flex flex-wrap align-items-center'>
             <div id='kt_signin_email' className={' ' + (showEmailForm && 'd-none')}>
               <div className='fs-6 fw-bolder mb-1'>Email</div>
               <div className='fw-bold text-gray-600'>support@keenthemes.com</div>
@@ -204,9 +204,9 @@ const SignInMethod: FC = () => {
                 Change Email
               </button>
             </div>
-          </div>
+          </div>  */}
 
-          <div className='separator separator-dashed my-6'></div>
+          {/* <div className='separator separator-dashed my-6'></div> */}
 
           <div className='d-flex flex-wrap align-items-center mb-10'>
             <div id='kt_signin_password' className={' ' + (showPasswordForm && 'd-none')}>
@@ -330,7 +330,7 @@ const SignInMethod: FC = () => {
             </div>
           </div>
 
-          <div className='notice d-flex bg-light-primary rounded border-primary border border-dashed p-6'>
+          {/* <div className='notice d-flex bg-light-primary rounded border-primary border border-dashed p-6'>
             <KTIcon iconName='shield-tick' className='fs-2tx text-primary me-4' />
             <div className='d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap'>
               <div className='mb-3 mb-md-0 fw-bold'>
@@ -349,7 +349,7 @@ const SignInMethod: FC = () => {
                 Enable
               </a>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

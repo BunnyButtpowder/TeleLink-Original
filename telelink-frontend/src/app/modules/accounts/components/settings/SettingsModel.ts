@@ -1,23 +1,31 @@
 export interface IProfileDetails {
   avatar: string;
   fullName: string;
-  company: string;
-  contactPhone: string;
-  companySite: string;
-  country: string;
-  language: string;
-  timeZone: string;
-  currency: string;
-  communications: {
-    email: boolean;
-    phone: boolean;
-  };
-  allowMarketing: boolean;
+  phoneNumber: string;
+  dob?: string;
+  address: string;
+  agency: string; 
+  gender: string;
+  role: number;
 }
 
 export interface IUpdateEmail {
   newEmail: string;
   confirmPassword: string;
+}
+
+export type User = {
+  fullName?: string
+  phoneNumber?: string
+  dob?: string | null
+  address?: string | null
+  agency?: number
+  avatar?: string
+  gender?: string
+  dataType?: string
+  isDelete?: boolean
+  createdAt?: number
+  updatedAt?: number
 }
 
 export interface IUpdatePassword {
@@ -31,6 +39,8 @@ export interface IConnectedAccounts {
   github: boolean;
   stack: boolean;
 }
+
+
 
 export interface IEmailPreferences {
   successfulPayments: boolean;
@@ -69,22 +79,15 @@ export interface IDeactivateAccount {
   confirm: boolean;
 }
 
-export const profileDetailsInitValues: IProfileDetails = {
-  avatar: "media/avatars/avatar.jpg",
-  fullName: "Minh Vu",
-  company: "Keenthemes",
-  contactPhone: "123456789",
-  companySite: "keenthemes.com",
-  country: "",
-  language: "",
-  timeZone: "",
-  currency: "",
-  communications: {
-    email: false,
-    phone: false,
-  },
-  allowMarketing: false,
-};
+// export const profileDetailsInitValues: IProfileDetails = {
+//   avatar: "media/avatars/avatar.jpg",
+//   fullName: "Minh Vu",
+//   agency: "Keenthemes",
+//   phoneNumber: "123456789",
+//   address: "123 Main St", // Replaced `companySite` with `address`
+//   gender: "Male", // Added gender
+//   role: 1, // Added role
+// };
 
 export const updateEmail: IUpdateEmail = {
   newEmail: "support@keenthemes.com",
@@ -139,3 +142,11 @@ export const notifications: INotifications = {
 export const deactivateAccount: IDeactivateAccount = {
   confirm: false,
 };
+
+export const initialUser: User = {
+  avatar: "media/avatars/avatar.jpg",
+  fullName: "Minh Vu",
+  phoneNumber: "123456789",
+  address: "123 Main St", // Replaced `companySite` with `address`
+  gender: "Male", // Added gender
+}

@@ -22,7 +22,7 @@ const AccountHeader: FC = () => {
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                  <img alt='Avatar' src={toAbsoluteUrl('media/avatars/avatar.jpg')} />
+                  <img alt='Avatar' src={currentUser?.avatar} />
                   <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
                 </div>
               </div>
@@ -37,14 +37,14 @@ const AccountHeader: FC = () => {
                       <a href='#'>
                         <KTIcon iconName='verify' className='fs-1 text-primary' />
                       </a>
-                      <a
+                      {/* <a
                         href='#'
                         className='btn btn-sm btn-light-success fw-bolder ms-2 fs-8 py-1 px-3'
                         data-bs-toggle='modal'
                         data-bs-target='#kt_modal_upgrade_plan'
                       >
                         Upgrade to Pro
-                      </a>
+                      </a> */}
                     </div>
 
                     <div className='d-flex flex-wrap fw-bold fs-6 mb-4 pe-2'>
@@ -75,21 +75,19 @@ const AccountHeader: FC = () => {
                   <div className='d-flex my-4'>
                     <a href='#' className='btn btn-sm btn-light me-2' id='kt_user_follow_button'>
                       <KTIcon iconName='check' className='fs-3 d-none' />
-
-                      <span className='indicator-label'>Follow</span>
                       <span className='indicator-progress'>
                         Vui lòng đợi...
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
                     </a>
-                    <a
+                    {/* <a
                       href='#'
                       className='btn btn-sm btn-primary me-3'
                       data-bs-toggle='modal'
                       data-bs-target='#kt_modal_offer_a_deal'
                     >
                       Hire Me
-                    </a>
+                    </a> */}
                     <div className='me-0'>
                       <button
                         className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
@@ -97,9 +95,7 @@ const AccountHeader: FC = () => {
                         data-kt-menu-placement='bottom-end'
                         data-kt-menu-flip='top-end'
                       >
-                        <i className='bi bi-three-dots fs-3'></i>
                       </button>
-                      <Dropdown1 />
                     </div>
                   </div>
                 </div>
