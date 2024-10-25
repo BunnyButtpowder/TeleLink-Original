@@ -8,23 +8,31 @@ module.exports = {
   description: '',
 
 
-  
-    inputs: {
-      count: {
-        type: 'number',
-        required: true,
-        min: 1,
-      },
-      userId: {
-        type: 'number',
-        required: true,
-      },
-      agencyId:
-      {
-        type: 'number',
-        required: true,
-      },
+
+  inputs: {
+    count: {
+      type: 'number',
+      required: true,
+      min: 1,
     },
+    userId: {
+      type: 'number',
+      required: true,
+    },
+    agencyId:
+    {
+      type: 'number',
+      required: true,
+    },
+    network: {
+      type: 'string',
+      required: true
+    },
+    category: {
+      type: 'string',
+      required: true
+    },
+  },
 
 
 
@@ -38,10 +46,12 @@ module.exports = {
 
     let { res } = this;
     try {
-      const { userId, count ,agencyId} = inputs;
+      const { userId, count, agencyId, network,category} = inputs;
       const unassignedData = await Data.find({
         isDelete: false,
-        agency : agencyId
+        agency: agencyId,
+        networkName: network,
+        category: category
       });
 
       if (unassignedData.length === 0) {
