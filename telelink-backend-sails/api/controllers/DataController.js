@@ -108,8 +108,8 @@ module.exports = {
 
 
     } catch (err) {
-      sails.log.error('Error importing data:', err);
-      return res.serverError({ message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.' });
+      
+      return res.serverError({ message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.' ,err});
     }
   },
 };

@@ -7,6 +7,7 @@
 module.exports = {
   attributes: {
 
+
     placeOfIssue: {    // Nơi cấp data 
       type: 'string',
       required: true,
@@ -20,7 +21,7 @@ module.exports = {
       required: true,
     },
     subscriberNumber: {    // Số thuê bao
-      type: 'number',
+      type: 'string',
       required: true,
     },
     currentPackage: {    // Gói hiện tại
@@ -75,6 +76,14 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
+    usageMonth4: {    // Tiêu dùng n4
+      type: 'string',
+      allowNull: true,
+    },
+    Package: {    // Gói cước
+      type: 'string',
+      allowNull: true,
+    },
     totalTKCUsage: {    // Tiêu dùng TKC
       type: 'string',
       allowNull: true,
@@ -104,9 +113,9 @@ module.exports = {
       allowNull: true,
     },
     agency: {
-      model: 'agency', 
-      
+      model: 'agency',
+
     },
 
-  },
-};
+  }
+}
