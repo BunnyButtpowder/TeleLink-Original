@@ -18,10 +18,18 @@ module.exports = {
       min: 1,
       description: 'Số lượng data muốn phân bổ cho chi nhánh',
     },
+    network: {
+      type: 'string', 
+      required: true
+    },
+    category: {
+      type: 'string', 
+      required: true
+    },
   },
 
   fn: async function (inputs) {
-    const { agencyId, quantity } = inputs;
+    const { agencyId, quantity,network,category } = inputs;
 
     // // Kiểm tra quyền admin
     // if (!this.req.me.isAdmin) {
@@ -34,7 +42,7 @@ module.exports = {
       return this.res.notFound({ message: 'Chi nhánh không tồn tại.' });
     }
 
-    const availableData = await Data.find({ agency: null });
+    const availableData = await Data.find({ agency: null,networkName:network ,category:category });
     if (availableData.length === 0) {
       return this.res.notFound({ message: 'Không có data nào sẵn có.' });
     }

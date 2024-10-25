@@ -22,12 +22,17 @@ module.exports = {
         complete:false
       });
 
+      const employee = await User.findOne({id:id}).populate('auth')
+      console.log(employee)
+
+      if (!employee || !employee.auth || employee.auth.role !== 3) {
+        return res.status(404).json({ message: 'Không tìm thấy nhân viên hợp lệ.' });
+      }
+
       
       if (assignedData.length === 0) {
         return res.status(404).json({ message: 'Không có dữ liệu nào được phân công cho nhân viên này.' });
       }
-
-     
       const randomAssignedData = _.sample(assignedData);
 
      
