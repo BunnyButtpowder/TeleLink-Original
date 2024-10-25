@@ -30,7 +30,8 @@ module.exports.security = {
     allowOrigins: [
       'http://localhost:5173',
       'https://didongtelecom.com',
-      'http://didongtelecom.com'
+      'http://didongtelecom.com',
+      'https://be.didongtelecom.com',
     ],
     allowRequestHeaders: 'Authorization, Content-Type',
     allRoutes: true,
