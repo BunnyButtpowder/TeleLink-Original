@@ -61,6 +61,13 @@ module.exports = {
 
       const newResult = await Result.create({data_id: dataId, agency: user.agency, saleman: user.id, subscriberNumber: data.subscriberNumber,revenue: package.price, ...callResult})
 
+      if(callResult.result == "Không Bắt Máy"){
+        const rejection = await Result.count({data_id: dataId,Result: "Không Bắt Máy"})
+        if(rejection>=3){
+          await Data.destroyOne({id: dataId});
+        }
+      }
+
       return this.res.ok({
         message: "Tạo kết quả cuộc gọi thành công.",
         callResult: newResult,
