@@ -1,91 +1,80 @@
-const _ = require('lodash');
+const _ = require("lodash");
 
 module.exports = {
-  friendlyName: 'Update assigned data',
+  friendlyName: "Update assigned data",
 
-  description: 'Allow employees to update their assigned data',
+  description: "Allow employees to update their assigned data",
 
   inputs: {
     dataId: {
-      type: 'number',
+      type: "number",
       required: true,
-      description: 'ID of the data to be updated.'
+      description: "ID of the data to be updated.",
     },
     userId: {
-      type: 'number',
+      type: "number",
       required: true,
-      description: 'ID of the employee updating the data.'
+      description: "ID of the employee updating the data.",
     },
-    updates: {
-      type: 'json',
+    callResult: {
+      type: "json",
       required: true,
-      description: 'Data to update. Should include callResults if needed.',
+      description: "Call Result",
     },
   },
 
   fn: async function (inputs) {
-    const { dataId, userId, updates } = inputs;
+    const { dataId, userId, callResult } = inputs;
 
     try {
-      // Tìm dữ liệu theo ID
-      const dataToUpdate = await Data.findOne({ id: dataId });
+      const user = await User.findOne({ id: userId });
 
-      if (!dataToUpdate) {
-        return this.res.notFound({ message: 'Dữ liệu không tìm thấy.' });
+      if (!user) {
+        return this.res.notFound({ message: "Người dùng không hợp lệ" });
+      }
+
+      // Tìm dữ liệu theo ID
+      const data = await Data.findOne({ id: dataId });
+
+      if (!data) {
+        return this.res.notFound({ message: "Dữ liệu không tìm thấy." });
       }
 
       // Kiểm tra xem nhân viên có quyền cập nhật dữ liệu này hay không
-      const assignment = await DataAssignment.findOne({ data: dataId, user: userId });
-
-      if (!assignment) {
-        return this.res.forbidden({ message: 'Bạn không có quyền cập nhật dữ liệu này.' });
-      }
-
-
-      if (updates.callResults && Array.isArray(updates.callResults)) {
-
-        const currentCallResults = dataToUpdate.callResults || [];
-
-
-        const newCallResults = _.uniq([...currentCallResults, ...updates.callResults]);
-
-
-        await Data.updateOne({ id: dataId }).set({
-          ...updates,
-          callResults: newCallResults,
-        });
-        await DataAssignment.updateOne({ data: dataId }).set({ complete: true });
-
-
-        if (newCallResults.includes("Không đồng ý")) {
-          dataToUpdate.rejectionCount += 1;
-          if (dataToUpdate.rejectionCount >= 3) {
-            await Data.destroyOne({ id: dataId });
-            await DataAssignment.destroyOne({ data: dataId })
-          } else {
-            await Data.updateOne({ id: dataId }).set({ rejectionCount: dataToUpdate.rejectionCount });
-          }
-        } else if (newCallResults.includes("Đồng ý")) {
-          await Data.destroyOne({ id: dataId });
-          await DataAssignment.destroyOne({ data: dataId });
-        }
-        else if (newCallResults.includes("Mất đơn")) {
-          await Data.destroyOne({ id: dataId });
-          await DataAssignment.destroyOne({ data: dataId });
-        } else {
-          await Data.updateOne({ id: dataId }).set(updates);
-        }
-      }
-
-
-      return this.res.ok({
-        message: 'Cập nhật dữ liệu thành công.',
-        updatedData: updates,
+      const assignment = await DataAssignment.findOne({
+        data: dataId,
+        user: userId,
       });
 
+      if (!assignment) {
+        return this.res.forbidden({
+          message: "Bạn không có quyền cập nhật dữ liệu này.",
+        });
+      }
+
+      const package = await Package.findOne({ id: callResult.dataPackage });
+      if (!package) {
+        return this.res.notFound({ message: "Không tìm thấy gói data." });
+      }
+      console.log(data.subscriberNumber);
+      
+
+      const newResult = await Result.create({data_id: dataId, agency: user.agency, saleman: user.id, subscriberNumber: data.subscriberNumber,revenue: package.price, ...callResult})
+
+      if(callResult.result == "Không Bắt Máy"){
+        const rejection = await Result.count({data_id: dataId,Result: "Không Bắt Máy"})
+        if(rejection>=3){
+          await Data.destroyOne({id: dataId});
+        }
+      }
+
+      return this.res.ok({
+        message: "Tạo kết quả cuộc gọi thành công.",
+        callResult: newResult,
+      });
     } catch (error) {
       return this.res.serverError({
-        message: 'Lỗi khi cập nhật dữ liệu.',
+        message: "Lỗi khi tạo kết quả cuộc gọi",
         error: error.message,
       });
     }
