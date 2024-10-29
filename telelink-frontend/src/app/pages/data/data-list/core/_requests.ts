@@ -29,6 +29,12 @@ const getAllData = (): Promise<DataQueryResponse> => {
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 };
 
+const getDataByAgency = async (agencyId: ID): Promise<DataQueryResponse> => {
+  return axios
+    .get(`${API_URL}/data/agency`, {params: {agencyId}})
+    .then((response: AxiosResponse<DataQueryResponse>) => response.data);
+}
+
 const dataAssign = async (values: any): Promise<any> => {
   try {
     const response = await axios.post(`${API_URL}/data-assign/agency`, values);
@@ -85,6 +91,7 @@ const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
 export {
   importData,
   getAllData,
+  getDataByAgency,
   deleteUser,
   deleteSelectedUsers,
   getUserById,
