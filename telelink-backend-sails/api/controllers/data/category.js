@@ -9,7 +9,9 @@ module.exports = {
     const { res } = this;
 
     try {
-      const allData = await Data.find();
+      const allData = await Data.find({
+        agency: null
+      });
       const categorizedData = _.groupBy(allData, 'category');
 
       const categorizedWithCounts = _.mapValues(categorizedData, (items) => ({

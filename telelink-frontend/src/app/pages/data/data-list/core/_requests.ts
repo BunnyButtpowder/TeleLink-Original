@@ -29,6 +29,36 @@ const getAllData = (): Promise<DataQueryResponse> => {
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 };
 
+const dataAssign = async (values: any): Promise<any> => {
+  try {
+    const response = await axios.post(`${API_URL}/data-assign/agency`, values);
+    return response.data;
+  } catch (error) {
+    console.error('Error distributing data:', error);
+    throw error;
+  }
+}
+
+const getAllAgencies = async() => {
+  try{
+    const response = await axios.get(`${API_URL}/agency`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch agencies:', error);
+    throw error;
+  }
+}
+
+const getAllDataCategories = async() => {
+  try{
+    const response = await axios.get(`${API_URL}/data/category`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch data categories:', error);
+    throw error;
+  }
+}
+
 const getUserById = (id: ID): Promise<Data | undefined> => {
   return axios
     .get(`${USER_URL}/${id}`)
@@ -59,4 +89,7 @@ export {
   deleteSelectedUsers,
   getUserById,
   updateUser,
+  dataAssign,
+  getAllAgencies,
+  getAllDataCategories
 };

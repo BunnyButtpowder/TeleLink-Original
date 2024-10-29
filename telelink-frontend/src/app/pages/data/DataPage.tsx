@@ -1,7 +1,8 @@
 import {Route, Routes, Outlet, Navigate} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
-import {UsersListWrapper} from './data-list/DataList'
+import {DataListWrapper} from './data-list/DataList'
 import {useIntl} from 'react-intl'
+import { ToastContainer } from 'react-bootstrap'
 
 const DataPage = () => {
   const intl = useIntl()
@@ -13,7 +14,7 @@ const DataPage = () => {
           element={
             <>
               <PageTitle>{intl.formatMessage({id: 'DATA'})}</PageTitle>
-              <UsersListWrapper />
+              <DataListWrapper />
             </>
           }
         />
