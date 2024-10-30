@@ -5,9 +5,11 @@ import { useListView } from '../../core/ListViewProvider'
 import { UsersListFilter } from './UsersListFilter'
 import { useIntl } from 'react-intl'
 import { Data } from '../../core/_models'
+import { DataDistributionModal } from '../../data-distribution-modal/DataDistributionModal'
 
 const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = ({ onUploadComplete }) => {
   const intl = useIntl()
+  const [isDistributionModalOpen, setDistributionModalOpen] = useState(false)
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input element
 
@@ -35,33 +37,51 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
     }
   }
 
-  return (
-    <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-      <UsersListFilter />
+  const openDataDistributionModal = () => {
+    setDistributionModalOpen(true);
+  }
 
-      {/* begin::Upload data */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".xlsx, .xls"
-        onChange={handleFileChange}
-        id="fileInput"
-        style={{ display: 'none' }}
-        disabled={uploading}
-      />
-      <label htmlFor="fileInput">
-        <button
-          type="button"
-          className="btn btn-light-primary me-3"
+  const closeDataDistributionModal = () => {
+    setDistributionModalOpen(false);
+  }
+
+  return (
+    <>
+      <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
+        <UsersListFilter />
+
+        {/* begin::Upload data */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".xlsx, .xls"
+          onChange={handleFileChange}
+          id="fileInput"
+          style={{ display: 'none' }}
           disabled={uploading}
-          onClick={triggerFileUpload}
-        >
-          <KTIcon iconName="exit-up" className="fs-2" />
-          {uploading ? 'Đang tải lên...' : 'Upload dữ liệu'}
+        />
+        <label htmlFor="fileInput">
+          <button
+            type="button"
+            className="btn btn-light-primary me-3"
+            disabled={uploading}
+            onClick={triggerFileUpload}
+          >
+            <KTIcon iconName="exit-up" className="fs-2" />
+            {uploading ? 'Đang tải lên...' : 'Upload dữ liệu'}
+          </button>
+        </label>
+        {/* end::Upload data */}
+
+        {/* begin::Distribute Data */}
+        <button type='button' className='btn btn-primary' onClick={openDataDistributionModal}>
+          <KTIcon iconName='share' className='fs-2' />
+          {intl.formatMessage({ id: 'DATA.DISTRIBUTION' })}
         </button>
-      </label>
-      {/* end::Upload data */}
-    </div>
+        {/* end::Distribute Data */}
+      </div>
+      {isDistributionModalOpen && <DataDistributionModal onClose={closeDataDistributionModal} />}
+    </>
   )
 }
 

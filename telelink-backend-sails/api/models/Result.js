@@ -20,7 +20,7 @@ module.exports = {
       model: 'User'
     },
     subscriberNumber:{
-      type: 'number',
+      type: 'string',
       required: true
     },
     result:{

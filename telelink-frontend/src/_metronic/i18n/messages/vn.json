@@ -107,13 +107,17 @@
   "AGENCY": "Chi nhánh",
   "AGENCY.NAME": "Tên chi nhánh",
   "SELECT.AGENCY": "Chọn chi nhánh",
+  "SELECT.DATA_CLASSIFY": "Chọn phân loại data",
   "SALESMAN": "Nhân viên",
   "DATA": "Dữ liệu",
+  "DATA.DISTRIBUTION": "Phân phối dữ liệu",
   "CODE": "Mã số",
   "PACKAGE.MANAGEMENT.ADD_PACKAGE": "Tạo gói cước",
   "PACKAGE.MANAGEMENT.EDIT_PACKAGE": "Sửa gói cước",
   "PACKAGE.CODE": "Mã gói",
   "NETWORK": "Nhà mạng",
   "CLASSIFY": "Phân loại",
-  "UNIT.PRICE": "Đơn giá"
+  "DATA_CLASSIFY": "Phân loại data",
+  "UNIT.PRICE": "Đơn giá",
+  "QUANTITY": "Số lượng"
 }

@@ -8,6 +8,8 @@ import { ToolbarWrapper } from '../../../../_metronic/layout/components/toolbar'
 import { Content } from '../../../../_metronic/layout/components/content'
 import { useState } from 'react'
 import { Data } from './core/_models'
+import { ToastContainer } from 'react-toastify' // Import ToastContainer
+import 'react-toastify/dist/ReactToastify.css'
 
 const DataList = () => {
   const {itemIdForUpdate} = useListView()
@@ -23,11 +25,12 @@ const DataList = () => {
         <DataListHeader onUploadComplete = {handleUploadComplete}/>
         <DataTable/>
       </KTCard>
+      <ToastContainer />
     </>
   )
 }
 
-const UsersListWrapper = () => (
+const DataListWrapper = () => (
   <QueryRequestProvider>
     <QueryResponseProvider>
       <ListViewProvider>
@@ -40,4 +43,4 @@ const UsersListWrapper = () => (
   </QueryRequestProvider>
 )
 
-export {UsersListWrapper}
+export {DataListWrapper}
