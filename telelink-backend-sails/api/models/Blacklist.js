@@ -12,6 +12,15 @@ module.exports = {
         type: 'string',
         required: true
       },
+      note:{
+        type: 'string',
+        allowNull: true,
+      },
+      user: {
+        model: 'user',
+  
+      },
+
     },
   
   };
