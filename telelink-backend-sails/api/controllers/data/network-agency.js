@@ -1,9 +1,9 @@
 const _ = require('lodash');
 
 module.exports = {
-  friendlyName: 'Get all data and categorize with counts by agency',
+  friendlyName: 'Get all network and categorize with counts by agency',
 
-  description: 'Lấy tất cả dữ liệu, phân loại theo loại và đếm số lượng trong mỗi loại của chi nhánh',
+  description: 'Lấy tất cả dữ liệu, phân loại theo nhà mạng và đếm số lượng trong mỗi loại.',
 
   inputs: {
     agencyId: {
@@ -28,8 +28,7 @@ module.exports = {
       if (allData.length === 0) {
         return res.notFound({ message: "Không có dữ liệu." });
       }
-
-      const categorizedData = _.groupBy(allData, 'category');
+      const categorizedData = _.groupBy(allData, 'networkName');
 
       const categorizedWithCounts = _.mapValues(categorizedData, (items) => ({
         count: items.length,
