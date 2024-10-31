@@ -32,7 +32,20 @@ module.exports = {
                 return res.badRequest({ message: "Không tìm thấy người dùng liên quan" });
             }
             const token = jwt.sign({ id: auth.id, username: auth.username }, process.env.JWT_SECRET, { expiresIn: '365d' });
-            return res.json({  message: "Đăng nhập thành công" , user: { id: user.id, fullname: user.fullName }, token });
+            
+            // if (auth.role === 2) {
+            //     req.session.user = {
+            //         id: auth.id,
+            //         role: auth.role,
+            //         agencyId: user.id 
+            //     };
+            // } else {
+            //     req.session.user = {
+            //         id: auth.id,
+            //         role: auth.role
+            //     };
+            // }
+            return res.json({  message: "Đăng nhập thành công" , user: { id: user.id, fullname: user.fullName, agencyId: user.agency }, token });
     
             
         } catch (err) {
