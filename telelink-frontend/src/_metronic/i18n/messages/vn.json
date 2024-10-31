@@ -108,6 +108,8 @@
   "AGENCY.NAME": "Tên chi nhánh",
   "SELECT.AGENCY": "Chọn chi nhánh",
   "SELECT.DATA_CLASSIFY": "Chọn phân loại data",
+  "SELECT.SALESMAN": "Chọn nhân viên",
+  "SELECT.NETWORK": "Chọn nhà mạng",
   "SALESMAN": "Nhân viên",
   "DATA": "Dữ liệu",
   "DATA.DISTRIBUTION": "Phân phối dữ liệu",

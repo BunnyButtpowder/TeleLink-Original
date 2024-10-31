@@ -11,6 +11,7 @@ module.exports = {
         role : {type : 'number', require: true},
         gender : {type : 'string', require : true },
         name : {type : 'string'},
+        agency :{type : 'number'}
     },
   
    
@@ -18,10 +19,13 @@ module.exports = {
     fn: async function (inputs) {
       let { req ,res } = this;
       try {
-        const { fullName, phoneNumber, dob, address, email, username, password , role , gender ,name } = inputs;
+        const { fullName, phoneNumber, dob, address, email, username, password , role , gender ,name,agency} = inputs;
         const existingEmail =await Auth.findOne({ email });
         if (existingEmail) {
             return res.conflict({ message: "Email đã tồn tại" });
+        }
+        if (role === 2 && !name) {
+          return res.badRequest({ message: "Name là bắt buộc khi role là 2" });
         }
         const exitstingUsername = await Auth.findOne({ username });
         if (exitstingUsername) {
@@ -43,6 +47,7 @@ module.exports = {
           address,
           gender,
           auth: newAuth.id,
+          // agency
           
         }).fetch();
         if (newAuth.role === 2) {
@@ -51,6 +56,7 @@ module.exports = {
             user: newUser.id 
           }).fetch();
           await User.update({ id: newUser.id }).set({ agency: newAgency.id });
+          const newReport = await Report.create({agency: newAgency.id})
         };
         return res.status(201).json({ message: "Đăng ký thành công" , newUser });
       } catch (err) {
