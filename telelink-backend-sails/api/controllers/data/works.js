@@ -57,14 +57,41 @@ module.exports = {
         return this.res.notFound({ message: "Không tìm thấy gói data." });
       }
       console.log(data.subscriberNumber);
-      
 
-      const newResult = await Result.create({data_id: dataId, agency: user.agency, saleman: user.id, subscriberNumber: data.subscriberNumber,revenue: package.price, ...callResult})
+      const newResult = await Result.create({
+        data_id: dataId,
+        agency: user.agency,
+        saleman: user.id,
+        subscriberNumber: data.subscriberNumber,
+        revenue: package.price,
+        ...callResult,
+      });
 
-      if(callResult.result == "Không Bắt Máy"){
-        const rejection = await Result.count({data_id: dataId,Result: "Không Bắt Máy"})
-        if(rejection>=3){
-          await Data.destroyOne({id: dataId});
+      if (callResult.result != "Xử Lý Lại") {
+        if (callResult.result == "Không Bắt Máy") {
+          const rejection = await Result.count({
+            data_id: dataId,
+            result: "Không Bắt Máy",
+          });
+          if (rejection < 3) {
+            await Data.updateOne({ id: dataId }).set({ isDelete: false });
+          }
+        }
+        await DataAssignment.updateOne({
+          data: dataId,
+          user: userId,
+        }).set({complete: true});
+      } else {
+        const rehandle = await Result.count({
+          data_id: dataId,
+          result: "Xử Lý Lại"
+        });
+        if(rehandle > 2){
+          await Data.updateOne({ id: dataId }).set({ isDelete: false });
+          await DataAssignment.updateOne({
+            data: dataId,
+            user: userId,
+          }).set({complete: true});
         }
       }
 
