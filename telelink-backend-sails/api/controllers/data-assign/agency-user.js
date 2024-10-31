@@ -10,7 +10,7 @@ module.exports = {
 
 
   inputs: {
-    count: {
+    quantity: {
       type: 'number',
       required: true,
       min: 1,
@@ -46,7 +46,7 @@ module.exports = {
 
     let { res } = this;
     try {
-      const { userId, count, agencyId, network,category} = inputs;
+      const { userId, quantity, agencyId, network,category} = inputs;
       const unassignedData = await Data.find({
         isDelete: false,
         agency: agencyId,
@@ -64,12 +64,12 @@ module.exports = {
       if (!employee || !employee.auth || employee.auth.role !== 3) {
         return res.status(404).json({ message: 'Không tìm thấy nhân viên hợp lệ.' });
       }
-      if (count > unassignedData.length) {
+      if (quantity > unassignedData.length) {
         return this.res.badRequest({ message: `Chỉ có ${unassignedData.length} data sẵn có. Không đủ để phân bổ số lượng yêu cầu.` });
       }
 
 
-      const randomData = _.sampleSize(unassignedData, Math.min(count, unassignedData.length));
+      const randomData = _.sampleSize(unassignedData, Math.min(quantity, unassignedData.length));
 
       await Promise.all(randomData.map(async (data) => {
         await DataAssignment.create({

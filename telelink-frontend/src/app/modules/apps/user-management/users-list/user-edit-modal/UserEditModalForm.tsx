@@ -205,24 +205,26 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
       <div className='mb-7'>
         <label className='required fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.ROLE' })}</label>
         <div className='d-flex'>
-          <label className='form-check form-check-custom form-check-solid me-5'>
+          <label className='form-check form-check-custom form-check-solid me-5' style={{ cursor: 'pointer' }}>
             <input
               className='form-check-input'
               type='radio'
               name='role'
               value='agency'
               checked={selectedRole === 'agency'}
+              style={{ cursor: 'pointer' }}
               onChange={handleRoleChange}
             />
             <span className='form-check-label'>{intl.formatMessage({ id: 'AGENCY' })}</span>
           </label>
-          <label className='form-check form-check-custom form-check-solid'>
+          <label className='form-check form-check-custom form-check-solid' style={{ cursor: 'pointer' }}>
             <input
               className='form-check-input'
               type='radio'
               name='role'
               value='salesman'
               checked={selectedRole === 'salesman'}
+              style={{ cursor: 'pointer' }}
               onChange={handleRoleChange}
             />
             <span className='form-check-label'>{intl.formatMessage({ id: 'SALESMAN' })}</span>

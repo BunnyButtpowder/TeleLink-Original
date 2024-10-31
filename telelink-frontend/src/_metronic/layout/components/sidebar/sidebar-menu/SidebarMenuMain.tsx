@@ -179,6 +179,11 @@ const SidebarMenuMain = () => {
             <SidebarMenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
             <SidebarMenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
           </SidebarMenuItemWithSub>
+          <div className='menu-item'>
+            <div className='menu-content pt-8 pb-2'>
+              <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{intl.formatMessage({ id: 'SIDEBAR.ADMINISTRATION' })}</span>
+            </div>
+          </div>
           <SidebarMenuItem
             to='/apps/user-management/users'
             icon='abstract-28'

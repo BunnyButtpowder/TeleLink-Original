@@ -29,18 +29,67 @@ const getAllData = (): Promise<DataQueryResponse> => {
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 };
 
+const getAllNetworks = (): Promise<any> => {
+  return axios
+    .get(`${API_URL}/data/network`)
+    .then((response: AxiosResponse<any>) => response.data);
+}
+
 const getDataByAgency = async (agencyId: ID): Promise<DataQueryResponse> => {
   return axios
     .get(`${API_URL}/data/agency`, {params: {agencyId}})
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 }
 
-const dataAssign = async (values: any): Promise<any> => {
+const getSalesmenByAgency = async (agencyId: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/users/agency`, {params: {agencyId}});
+    return response.data.employees.map((employee: any) => ({
+      id: employee.id,
+      fullName: employee.fullName,
+    }));
+  } catch (error) {
+    console.error('Failed to fetch salesmen by agency:', error);
+    throw error;
+  }
+}
+
+const getNetworksByAgency = async (agencyId: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/data/network-agency`, {params: {agencyId}});
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch networks by agency:', error);
+    throw error;
+  }
+}
+
+const getCategoriesByAgency = async (agencyId: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/data/category-agency`, {params: {agencyId}});
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch categories by agency:', error);
+    throw error;
+  }
+}
+
+const dataAssignAgency = async (values: any): Promise<any> => {
   try {
     const response = await axios.post(`${API_URL}/data-assign/agency`, values);
     return response.data;
   } catch (error) {
-    console.error('Error distributing data:', error);
+    console.error('Error distributing data to agency:', error);
+    throw error;
+  }
+}
+
+const dataAssignSalesman = async (values: any): Promise<any> => {
+  try {
+    const response = await axios.post(`${API_URL}/data-assign/agency-user`, values);
+    return response.data;
+  } catch (error) {
+    console.error('Error distributing data to saleman:', error);
     throw error;
   }
 }
@@ -92,11 +141,16 @@ export {
   importData,
   getAllData,
   getDataByAgency,
+  dataAssignSalesman,
   deleteUser,
   deleteSelectedUsers,
   getUserById,
   updateUser,
-  dataAssign,
+  dataAssignAgency,
   getAllAgencies,
-  getAllDataCategories
+  getAllDataCategories,
+  getSalesmenByAgency,
+  getAllNetworks,
+  getNetworksByAgency,
+  getCategoriesByAgency
 };
