@@ -13,7 +13,7 @@ module.exports = {
   fn: async function (inputs) {
     let { res } = this;
     try {
-      const users = await User.find().populate('auth');
+      const users = await User.find().populate('auth').populate("agency");
       
 
       if (!users || users.length === 0) {
@@ -23,6 +23,7 @@ module.exports = {
       const allUsers = users.map(user => {
         return {
           ...user,
+          agency: user.agency ? { name: user.agency.name } : null,
           auth: {
             email: user.auth.email,
             role: user.auth.role,
@@ -35,8 +36,8 @@ module.exports = {
 
       return res.json({ data: allUsers , count: allUsers.length });
     } catch (err) {
-      sails.log.error('Error fetching users or auth info:', err);
-      return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách người dùng hoặc thông tin xác thực.' });
+      console.log(err)
+      return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách người dùng hoặc thông tin xác thực.'});
     }
   }
 };
