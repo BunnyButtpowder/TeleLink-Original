@@ -1,3 +1,5 @@
+import { Customer } from '../../../pages/customer/customers-list/core/_models'
+
 export interface AuthModel {
   api_token: string
   // refreshToken?: string
@@ -74,4 +76,5 @@ export interface UserModel {
   isDelete?: boolean
   createdAt?: number
   updatedAt?: number
+  dataDetails?: Customer
 }

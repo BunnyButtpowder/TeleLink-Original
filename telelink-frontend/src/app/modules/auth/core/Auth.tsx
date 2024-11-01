@@ -11,6 +11,7 @@ type AuthContextProps = {
   saveAuth: (auth: AuthModel | undefined) => void
   currentUser: UserModel | undefined
   setCurrentUser: Dispatch<SetStateAction<UserModel | undefined>>
+  setCurrentUserData: (data: Partial<UserModel>) => void;
   logout: () => void
 }
 
@@ -19,6 +20,7 @@ const initAuthContextPropsState = {
   saveAuth: () => { },
   currentUser: undefined,
   setCurrentUser: () => { },
+  setCurrentUserData: () => { },
   logout: () => { },
 }
 
@@ -34,9 +36,13 @@ const useAuth = () => {
 
 const AuthProvider: FC<WithChildren> = ({ children }) => {
   const [auth, setAuth] = useState<AuthModel | undefined>(authHelper.getAuth())
-  const [currentUser, setCurrentUser] = useState<UserModel | undefined>(
-    () => JSON.parse(localStorage.getItem('currentUser') || 'null') // Retrieve current user from local storage
-  )
+  const [currentUser, setCurrentUser] = useState<UserModel | undefined>(() => {
+    const storedUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (storedUser && storedUser.id) {
+      storedUser.dataDetails = JSON.parse(localStorage.getItem(`dataDetails_${storedUser.id}`) || 'null');
+    }
+    return storedUser;
+  });
 
   const saveAuth = (auth: AuthModel | undefined) => {
     setAuth(auth)
@@ -47,13 +53,29 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
     }
   }
 
+  const setCurrentUserData = (data: Partial<UserModel>) => {
+    setCurrentUser((prevUser) => {
+      const updatedUser: UserModel = { ...prevUser, ...data } as UserModel;
+      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+      return updatedUser;
+    });
+  };
+
   useEffect(() => {
+    const userId = currentUser?.id;
+  
     if (currentUser) {
-      localStorage.setItem('currentUser', JSON.stringify(currentUser))
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      if (currentUser.dataDetails) {
+        localStorage.setItem(`dataDetails_${userId}`, JSON.stringify(currentUser.dataDetails));
+      }
     } else {
-      localStorage.removeItem('currentUser')
+      localStorage.removeItem('currentUser');
+      if (userId) {
+        localStorage.removeItem(`dataDetails_${userId}`);
+      }
     }
-  }, [currentUser])
+  }, [currentUser]);
 
   const logout = () => {
     saveAuth(undefined)
@@ -61,7 +83,7 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ auth, saveAuth, currentUser, setCurrentUser, logout }}>
+    <AuthContext.Provider value={{ auth, saveAuth, currentUser, setCurrentUser, setCurrentUserData, logout }}>
       {children}
     </AuthContext.Provider>
   )

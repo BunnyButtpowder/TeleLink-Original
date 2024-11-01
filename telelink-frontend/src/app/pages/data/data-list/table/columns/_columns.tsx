@@ -63,8 +63,16 @@ const usersColumns: ReadonlyArray<Column<Data>> = [
       const timestamp = props.data[props.row.index].registrationDate
 
       if (timestamp) {
-        const date = new Date(timestamp)
-        return <span>{date.toLocaleDateString('vi-VN')}</span>
+        const date = new Date(timestamp);
+        const formattedDate = date.toLocaleString('vi-VN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+        return <span>{formattedDate}</span>
       }
       return <span></span> // return empty span if `registrationDate` is null or undefined
     }
@@ -78,8 +86,16 @@ const usersColumns: ReadonlyArray<Column<Data>> = [
       const timestamp = props.data[props.row.index].expirationDate
 
       if (timestamp) {
-        const date = new Date(timestamp)
-        return <span>{date.toLocaleDateString('vi-VN')}</span>
+        const date = new Date(timestamp);
+        const formattedDate = date.toLocaleString('vi-VN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+        return <span>{formattedDate}</span>
       }
       return <span></span> // return empty span if `registrationDate` is null or undefined
     }

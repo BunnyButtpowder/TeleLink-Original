@@ -27,8 +27,6 @@ export type Data = {
   other2 ? : string
   other3 ? : string
   agency?: Agency
-  callResults?: string[]
-  rejectionCount?: number
 }
 
 export type DataQueryResponse = Response<Array<Data>>
@@ -59,7 +57,5 @@ export const initialData: Data = {
   agency: {
     id: 0,
     name: '',
-  },
-  callResults: [],
-  rejectionCount: 0
+  }
 }

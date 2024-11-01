@@ -45,7 +45,7 @@ const SidebarMenuMain = () => {
             to='/reports'
             title='Báo cáo'
             fontIcon='bi-chat-left'
-            icon='graph-4'
+            icon='chart-simple'
           >
             <SidebarMenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
             <SidebarMenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
@@ -160,7 +160,7 @@ const SidebarMenuMain = () => {
             to='/reports'
             title='Báo cáo'
             fontIcon='bi-chat-left'
-            icon='graph-4'
+            icon='chart-simple'
           >
             <SidebarMenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
             <SidebarMenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
@@ -206,7 +206,7 @@ const SidebarMenuMain = () => {
             to='/reports'
             title='Báo cáo'
             fontIcon='bi-chat-left'
-            icon='graph-4'
+            icon='chart-simple'
           >
             <SidebarMenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
             <SidebarMenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />

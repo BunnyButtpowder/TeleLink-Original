@@ -3,17 +3,16 @@ import {useTable, ColumnInstance, Row} from 'react-table'
 import {CustomHeaderColumn} from './columns/CustomHeaderColumn'
 import {CustomRow} from './columns/CustomRow'
 import {useQueryResponseData, useQueryResponseLoading} from '../core/QueryResponseProvider'
-import {usersColumns} from './columns/_columns'
+import {customersColumns} from './columns/_columns'
 import {Customer} from '../core/_models'
 import {UsersListLoading} from '../components/loading/UsersListLoading'
-import {UsersListPagination} from '../components/pagination/UsersListPagination'
 import {KTCardBody} from '../../../../../_metronic/helpers'
 
-const UsersTable = () => {
-  const users = useQueryResponseData()
-  const isLoading = useQueryResponseLoading()
-  const data = useMemo(() => users, [users])
-  const columns = useMemo(() => usersColumns, [])
+const CustomersTable = () => {
+  const customer = useQueryResponseData();
+  const isLoading = useQueryResponseLoading();
+  const data = useMemo(() => customer as Customer[], [customer]);
+  const columns = useMemo(() => customersColumns, [])
   const {getTableProps, getTableBodyProps, headers, rows, prepareRow} = useTable({
     columns,
     data,
@@ -53,10 +52,9 @@ const UsersTable = () => {
           </tbody>
         </table>
       </div>
-      <UsersListPagination />
       {isLoading && <UsersListLoading />}
     </KTCardBody>
   )
 }
 
-export {UsersTable}
+export {CustomersTable}

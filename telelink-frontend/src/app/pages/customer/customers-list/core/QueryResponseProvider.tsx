@@ -1,46 +1,51 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {FC, useContext, useState, useEffect, useMemo} from 'react'
-import {useQuery} from 'react-query'
+import { FC, useContext, useState, useEffect, useMemo } from 'react'
+import { useQuery } from 'react-query'
 import {
   createResponseContext,
+  createSingleResponseContext,
   initialQueryResponse,
   initialQueryState,
   PaginationState,
   QUERIES,
+  SingleObjectQueryResponseContextProps,
+  QueryResponseContextProps,
   stringifyRequestQuery,
   WithChildren,
 } from '../../../../../_metronic/helpers'
-import {getUsers} from './_requests'
-import {Customer} from './_models'
-import {useQueryRequest} from './QueryRequestProvider'
+import { Customer } from './_models'
+import { useAuth } from '../../../../../app/modules/auth'
 
-const QueryResponseContext = createResponseContext<Customer>(initialQueryResponse)
-const QueryResponseProvider: FC<WithChildren> = ({children}) => {
-  const {state} = useQueryRequest()
-  const [query, setQuery] = useState<string>(stringifyRequestQuery(state))
-  const updatedQuery = useMemo(() => stringifyRequestQuery(state), [state])
+const QueryResponseContext = createSingleResponseContext<Customer>({
+  response: undefined,
+  refetch: () => { },
+  isLoading: false,
+  setDataDetails: (data: Customer | undefined) => { },
+});
+
+const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
+  const { currentUser } = useAuth();
+  const [dataDetails, setDataDetails] = useState<Customer | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (query !== updatedQuery) {
-      setQuery(updatedQuery)
+    if (currentUser) {
+      const storedDataDetails = localStorage.getItem(`dataDetails_${currentUser.id}`);
+      setDataDetails(storedDataDetails ? JSON.parse(storedDataDetails) : undefined);
     }
-  }, [updatedQuery])
+    setIsLoading(false);
+  }, [currentUser]);
 
-  const {
-    isFetching,
-    refetch,
-    data: response,
-  } = useQuery(
-    `${QUERIES.USERS_LIST}-${query}`,
-    () => {
-      return getUsers(query)
-    },
-    {cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false}
-  )
+  const handleSetDataDetails = (data: Customer | undefined) => {
+    setDataDetails(data);
+    if (currentUser) {
+      localStorage.setItem(`dataDetails_${currentUser.id}`, JSON.stringify(data));
+    }
+  };
 
   return (
-    <QueryResponseContext.Provider value={{isLoading: isFetching, refetch, response, query}}>
+    <QueryResponseContext.Provider value={{ isLoading, refetch: () => { }, response: dataDetails, setDataDetails: handleSetDataDetails }}>
       {children}
     </QueryResponseContext.Provider>
   )
@@ -49,30 +54,13 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
 const useQueryResponse = () => useContext(QueryResponseContext)
 
 const useQueryResponseData = () => {
-  const {response} = useQueryResponse()
-  if (!response) {
-    return []
-  }
+  const { response } = useQueryResponse()
 
-  return response?.data || []
-}
-
-const useQueryResponsePagination = () => {
-  const defaultPaginationState: PaginationState = {
-    links: [],
-    ...initialQueryState,
-  }
-
-  const {response} = useQueryResponse()
-  if (!response || !response.payload || !response.payload.pagination) {
-    return defaultPaginationState
-  }
-
-  return response.payload.pagination
+  return response ? [response] : [];
 }
 
 const useQueryResponseLoading = (): boolean => {
-  const {isLoading} = useQueryResponse()
+  const { isLoading } = useQueryResponse()
   return isLoading
 }
 
@@ -80,6 +68,5 @@ export {
   QueryResponseProvider,
   useQueryResponse,
   useQueryResponseData,
-  useQueryResponsePagination,
   useQueryResponseLoading,
 }
