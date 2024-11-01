@@ -1,8 +1,12 @@
 import {createContext, Dispatch, SetStateAction, useEffect, useState} from 'react'
 import qs from 'qs'
-import {ID, QueryResponseContextProps, QueryState} from './models'
+import {ID, QueryResponseContextProps, SingleObjectQueryResponseContextProps, QueryState} from './models'
 
 function createResponseContext<T>(initialState: QueryResponseContextProps<T>) {
+  return createContext(initialState)
+}
+
+function createSingleResponseContext<T>(initialState: SingleObjectQueryResponseContextProps<T>) {
   return createContext(initialState)
 }
 
@@ -113,6 +117,7 @@ function useDebounce(value: string | undefined, delay: number) {
 
 export {
   createResponseContext,
+  createSingleResponseContext,
   stringifyRequestQuery,
   parseRequestQuery,
   calculatedGroupingIsDisabled,

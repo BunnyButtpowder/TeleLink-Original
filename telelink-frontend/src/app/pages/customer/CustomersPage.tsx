@@ -1,6 +1,6 @@
 import {Route, Routes, Outlet, Navigate} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
-import {UsersListWrapper} from './customers-list/UsersList'
+import {CustomersListWrapper} from './customers-list/CustomersList'
 import {useIntl} from 'react-intl'
 
 const usersBreadcrumbs: Array<PageLink> = [
@@ -28,7 +28,7 @@ const CustomersPage = () => {
           element={
             <>
               <PageTitle>{intl.formatMessage({id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS'})}</PageTitle>
-              <UsersListWrapper />
+              <CustomersListWrapper />
             </>
           }
         />

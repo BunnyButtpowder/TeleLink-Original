@@ -1,157 +1,173 @@
-import {Column} from 'react-table'
-import {UserInfoCell} from './UserInfoCell'
-import {UserLastLoginCell} from './UserLastLoginCell'
-import {UserTwoStepsCell} from './UserTwoStepsCell'
-import {UserActionsCell} from './UserActionsCell'
-import {UserSelectionCell} from './UserSelectionCell'
-import {UserCustomHeader} from './UserCustomHeader'
-import {UserSelectionHeader} from './UserSelectionHeader'
-import {Customer} from '../../core/_models'
+import { Column } from 'react-table'
+import { UserInfoCell } from './UserInfoCell'
+import { UserLastLoginCell } from './UserLastLoginCell'
+import { UserTwoStepsCell } from './UserTwoStepsCell'
+import { UserActionsCell } from './UserActionsCell'
+import { UserSelectionCell } from './UserSelectionCell'
+import { CustomerCustomHeader } from './CustomerCustomHeader'
+import { UserSelectionHeader } from './UserSelectionHeader'
+import { Customer } from '../../core/_models'
 
-const usersColumns: ReadonlyArray<Column<Customer>> = [
+const customersColumns: ReadonlyArray<Column<Customer>> = [
   {
-    Header: (props) => <UserSelectionHeader tableProps={props} />,
-    id: 'selection',
-    Cell: ({...props}) => <UserSelectionCell id={props.data[props.row.index].id} />,
+    Header: (props) => <CustomerCustomHeader tableProps={props} title='Số thuê bao' className='min-w-125px' />,
+    accessor: 'subscriberNumber',
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='Số thuê bao' className='min-w-125px' />,
-    id: 'phoneNum',
-    Cell: ({...props}) => <UserInfoCell customer={props.data[props.row.index]} />,
-  },
-  {
-    Header: (props) => <UserCustomHeader tableProps={props} title='Gói hiện tại' className='min-w-125px' />,
-    accessor: 'currentPack',
+    Header: (props) => <CustomerCustomHeader tableProps={props} title='Gói hiện tại' className='min-w-125px' />,
+    accessor: 'currentPackage',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Gói đặc biệt (ưu tiên 1)' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Gói đặc biệt (ưu tiên 1)' className='min-w-125px' />
     ),
-    id: 'last_login',
+    accessor: 'priorityPackage1',
     // Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].last_login} />,
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Gói cước gán (ưu tiên 2)' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Gói cước gán (ưu tiên 2)' className='min-w-125px' />
     ),
-    id: 'two_steps',
-    // Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].two_steps} />,
+    accessor: 'priorityPackage2',
+  },
+  {
+    Header: (props) => <CustomerCustomHeader tableProps={props} title='Ngày đăng ký' className='min-w-125px' />,
+    accessor: 'registrationDate',
+    Cell: ({ ...props }) => {
+      const timestamp = props.data[props.row.index].registrationDate
+
+      if (timestamp) {
+        const date = new Date(timestamp);
+        const formattedDate = date.toLocaleString('vi-VN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+        return <span>{formattedDate}</span>
+      }
+      return <span></span>
+    }
+  },
+  {
+    Header: (props) => <CustomerCustomHeader tableProps={props} title='Ngày hết hạn' className='min-w-125px' />,
+    accessor: 'expirationDate',
+    Cell: ({ ...props }) => {
+      const timestamp = props.data[props.row.index].expirationDate
+
+      if (timestamp) {
+        const date = new Date(timestamp);
+        const formattedDate = date.toLocaleString('vi-VN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+        return <span>{formattedDate}</span>
+      }
+      return <span></span>
+    }
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Ngày đăng ký' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Ghi chú' className='min-w-125px' />
     ),
-    accessor: 'regisDate',
+    accessor: 'notes',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Ngày hết hạn' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='TKC' className='min-w-125px' />
     ),
-    accessor: 'expDate',
+    accessor: 'TKC',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Ghi chú' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='APRU 3 tháng' className='min-w-125px' />
     ),
-    accessor: 'note',
+    accessor: 'ARPU3Months',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='TKC' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Tiêu dùng n-1' className='min-w-125px' />
     ),
-    accessor: 'mainAccount',
+    accessor: 'usageMonth1',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='APRU 3 tháng' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Tiêu dùng n-2' className='min-w-125px' />
     ),
-    accessor: 'avg',
+    accessor: 'usageMonth2',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tiêu dùng n-1' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Tiêu dùng n-3' className='min-w-125px' />
     ),
-    accessor: 'consump_n1',
+    accessor: 'usageMonth3',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tiêu dùng n-2' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Tiêu dùng n-4' className='min-w-125px' />
     ),
-    accessor: 'consump_n2',
+    accessor: 'usageMonth4',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tiêu dùng n-3' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Gói cước tư vấn' className='min-w-125px' />
     ),
-    accessor: 'consump_n3',
+    accessor: 'Package',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tiêu dùng n-4' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Nơi cấp data' className='min-w-125px' />
     ),
-    accessor: 'consump_n4',
+    accessor: 'placeOfIssue',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Gói cước tư vấn' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Tiêu dùng TKC' className='min-w-125px' />
     ),
-    accessor: 'consultingPackage',
+    accessor: 'totalTKCUsage',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Nơi cấp data' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Tiêu dùng thoại' className='min-w-125px' />
     ),
-    accessor: 'dataSrc',
+    accessor: 'voiceUsage',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tiêu dùng TKC' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Tiêu dùng data' className='min-w-125px' />
     ),
-    accessor: 'mainAcc_consump',
+    accessor: 'dataUsage',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tiêu dùng thoại' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Dùng data ngoài gói' className='min-w-125px' />
     ),
-    accessor: 'voice_consump',
+    accessor: 'outOfPackageDataUsage',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tiêu dùng data' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Khac 1' className='min-w-125px' />
     ),
-    accessor: 'data_consump',
+    accessor: 'other1',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Dùng data ngoài gói' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Khac 2' className='min-w-125px' />
     ),
-    accessor: 'outPackage_consump',
+    accessor: 'other2',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Khac 1' className='min-w-125px' />
+      <CustomerCustomHeader tableProps={props} title='Khac 3' className='min-w-125px' />
     ),
-    accessor: 'khac1',
-  },
-  {
-    Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Khac 2' className='min-w-125px' />
-    ),
-    accessor: 'khac2',
-  },
-  {
-    Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Khac 3' className='min-w-125px' />
-    ),
-    accessor: 'khac3',
-  },
-  {
-    Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tác vụ' className='text-end min-w-100px' />
-    ),
-    id: 'actions',
-    Cell: ({...props}) => <UserActionsCell id={props.data[props.row.index].id} />,
-  },
+    accessor: 'other3',
+  }
 ]
 
-export {usersColumns}
+export { customersColumns }

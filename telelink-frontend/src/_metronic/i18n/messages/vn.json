@@ -121,5 +121,6 @@
   "CLASSIFY": "Phân loại",
   "DATA_CLASSIFY": "Phân loại data",
   "UNIT.PRICE": "Đơn giá",
-  "QUANTITY": "Số lượng"
+  "QUANTITY": "Số lượng",
+  "CREATE.REPORT": "Tạo báo cáo"
 }

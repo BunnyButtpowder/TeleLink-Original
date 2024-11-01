@@ -49,6 +49,13 @@ export const initialQueryRequest: QueryRequestContextProps = {
   updateState: () => {},
 }
 
+export type SingleObjectQueryResponseContextProps<T> = {
+  response?: T | undefined;
+  refetch: () => void;
+  isLoading: boolean;
+  setDataDetails: (data: T | undefined) => void;
+};
+
 export type QueryResponseContextProps<T> = {
   response?: Response<Array<T>> | undefined
   refetch: () => void
