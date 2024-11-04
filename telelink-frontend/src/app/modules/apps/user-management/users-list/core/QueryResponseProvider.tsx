@@ -11,13 +11,18 @@ import {
   stringifyRequestQuery,
   WithChildren,
 } from '../../../../../../_metronic/helpers'
-import {getUsers} from './_requests'
+import {getUsers, getSalesmenByAgency} from './_requests'
 import {User} from './_models'
 import {useQueryRequest} from './QueryRequestProvider'
+import { useAuth } from '../../../../../../app/modules/auth'
+// import {getSalesmenByAgency} from '../../../../../pages/data/data-list/core/_requests'
 
 const QueryResponseContext = createResponseContext<User>(initialQueryResponse)
 const QueryResponseProvider: FC<WithChildren> = ({children}) => {
   const {state} = useQueryRequest()
+  const { currentUser } = useAuth();
+  const userRole = currentUser?.auth.role;
+  const agencyId = currentUser?.agency?.id;
   const [query, setQuery] = useState<string>(stringifyRequestQuery(state))
   const updatedQuery = useMemo(() => stringifyRequestQuery(state), [state])
 
@@ -27,15 +32,26 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
     }
   }, [updatedQuery])
 
+  const fetchUsers = () => {
+    // Admin gets all users
+    if (userRole === 1) {
+      return getUsers(query);
+    } else if (userRole === 2 && agencyId) {
+      // Agency gets data by agency id
+      return getSalesmenByAgency(agencyId.toString());
+    } else {
+      // Undefined role gets empty data
+      return Promise.resolve({ data: [] });
+    }
+  }
+
   const {
     isFetching,
     refetch,
     data: response,
   } = useQuery(
     `${QUERIES.USERS_LIST}-${query}`,
-    () => {
-      return getUsers(query)
-    },
+    fetchUsers,
     {cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false}
   )
 

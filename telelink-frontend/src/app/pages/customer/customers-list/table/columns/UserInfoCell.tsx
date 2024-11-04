@@ -28,7 +28,7 @@ const UserInfoCell: FC<Props> = ({customer}) => (
             {customer.initials?.label}
           </div>
         )} */}
-        {customer.phoneNum}
+        {customer.subscriberNumber}
       </a>
     </div>
     {/* <div className='d-flex flex-column'>

@@ -16,6 +16,12 @@ const getUsers = (query: string): Promise<UsersQueryResponse> => {
     .then((response: AxiosResponse<UsersQueryResponse>) => response.data);
 };
 
+const getSalesmenByAgency = (agencyId: string) : Promise<UsersQueryResponse> => {
+  return axios
+    .get(`${API_URL}/users/agency`, {params: {agencyId}})
+    .then((response: AxiosResponse<UsersQueryResponse>) => response.data);
+}
+
 const getUserById = async (id: ID) => {
   const response = await axios.get(`${USER_URL}/${id}`);
   return response.data;
@@ -110,6 +116,7 @@ const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
 
 export {
   getUsers,
+  getSalesmenByAgency,
   deleteUser,
   deleteSelectedUsers,
   getUserById,

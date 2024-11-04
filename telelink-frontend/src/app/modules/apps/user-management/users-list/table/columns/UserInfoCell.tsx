@@ -2,7 +2,7 @@
 import clsx from 'clsx'
 import {FC} from 'react'
 import {toAbsoluteUrl} from '../../../../../../../_metronic/helpers'
-import {User} from '../../core/_models'
+import {User, initialUser} from '../../core/_models'
 
 type Props = {
   user: User
@@ -20,12 +20,10 @@ const UserInfoCell: FC<Props> = ({user}) => (
         ) : (
           <div
             className={clsx(
-              'symbol-label fs-3',
-              // `bg-light-${user.initials?.state}`,
-              // `text-${user.initials?.state}`
+              'symbol-label fs-3'
             )}
           >
-            {/* {user.initials?.label} */}
+            <img src={(`${initialUser.avatar}`)} alt={user.fullName} className='w-100' />
           </div>
         )}
       </a>
