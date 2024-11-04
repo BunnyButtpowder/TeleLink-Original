@@ -1,6 +1,8 @@
 {
 	"403": "403",
+	"404": "404",
 	"Welcome": "Welcome",
 	"A brand new app.": "A brand new app.",
-	"Cập nhật thành công": "Cập nhật thành công"
+	"Cập nhật thành công": "Cập nhật thành công",
+	"API not found!": "API not found!"
 }
