@@ -22,7 +22,8 @@ const AccountHeader: FC = () => {
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                  <img alt='Avatar' src={currentUser?.avatar} />
+                <img alt="Avatar" src={currentUser?.avatar || 'https://as2.ftcdn.net/v2/jpg/03/31/69/91/1000_F_331699188_lRpvqxO5QRtwOM05gR50ImaaJgBx68vi.jpg'} />
+
                   <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
                 </div>
               </div>
