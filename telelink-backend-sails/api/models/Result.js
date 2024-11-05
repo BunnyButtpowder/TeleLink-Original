@@ -34,12 +34,6 @@ module.exports = {
     customerName:{
       type: 'string',
     },
-    city:{
-      type:'string'
-    },
-    district:{
-      type:'string',
-    },
     address:{
       type: 'string',
     },
@@ -49,7 +43,7 @@ module.exports = {
     revenue:{
       type: 'number'   //doanh thu
     }
-
+    
 
   },
 
