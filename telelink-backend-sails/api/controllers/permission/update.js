@@ -8,18 +8,6 @@ module.exports = {
     permissions: {
       type: "json", // Use `json` for complex data structures like an array of objects
       required: true,
-      custom: function (value) {
-        return (
-          Array.isArray(value) &&
-          value.every((permission) => {
-            return (
-              permission.module &&
-              Array.isArray(permission.action) &&
-              permission.action.every((p) => typeof p === "number")
-            );
-          })
-        );
-      },
     },
   },
 
@@ -29,32 +17,10 @@ module.exports = {
     let { req, res, next } = this;
     const { role_id, permissions } = inputs;
     try {
-      await Permission.destroy({ role_id });
-      try {
-        for (const i in permissions) {
-          console.log(permissions[i]);
-          
-          for (const a in permissions[i].action) {
-              await Permission.create({
-              role_id,
-              action: permissions[i].action[a],
-              module: permissions[i].module,
-            }).fetch();            
-          }
-        }
-      } catch (err) {
-        return res.serverError({
-          error: "Xảy ra lỗi trong quá trình thêm phân quyền",
-          details: err.message,
-        });
-      }
-
-      return res.ok(permissions);
-    } catch (err) {
-      return res.serverError({
-        error: "Xảy ra lỗi trong quá trình cập nhật phân quyền",
-        details: err.message,
-      });
+      const result = await Role.updateOne({id: role_id}).set({permissions})
+      return res.ok(result)
+    } catch (error) {
+      return res.status(500).json({ message: 'Lỗi khi cập nhật quyền hạn.', error });
     }
-  },
+  }
 };
