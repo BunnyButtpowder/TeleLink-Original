@@ -69,6 +69,7 @@ module.exports = {
         if (existingData) {
 
           await Data.destroy({ id: existingData.id });
+          await DataAssignment.destroy({data:existingData.id})
         }
 
 
