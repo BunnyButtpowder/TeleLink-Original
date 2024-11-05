@@ -45,73 +45,74 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
   const [selectedTarget, setSelectedTarget] = useState(isAdmin ? 'agency' : 'salesman');
   const [agencyId] = useState(isAdmin ? '' : currentUser?.agency?.id);
 
+  const fetchAgencies = async () => {
+    setIsLoadingAgencies(true);
+    try {
+      const agencies = await getAllAgencies();
+      setAgencies(agencies.data);
+    } catch (error) {
+      console.error('Failed to fetch data categories:', error);
+    } finally {
+      setIsLoadingAgencies(false);
+    }
+  }
+
+  const fetchNetworks = async () => {
+    setIsLoadingNetworks(true);
+    try {
+      if (isAdmin) {
+        const networks = await getAllNetworks();
+        setNetworks(networks);
+      } else {
+        const networks = await getNetworksByAgency(agencyId?.toString() || '');
+        setNetworks(networks);
+      }
+    } catch (error) {
+      console.error('Failed to fetch data networks:', error);
+    } finally {
+      setIsLoadingNetworks(false);
+    }
+  }
+
+  const fetchSalesmen = async () => {
+    try {
+      if (!isAdmin) {
+        const salesmen = await getSalesmenByAgency(agencyId?.toString() || '');
+        setSalesman(salesmen);
+      }
+    } catch (error) {
+      console.error('Failed to fetch agency salesmen:', error);
+    } finally {
+      setIsLoadingNetworks(false);
+    }
+  }
+
+  const fetchCategories = async () => {
+    setIsLoadingCategories(true);
+    try {
+      if (isAdmin) {
+        const categories = await getAllDataCategories();
+        setCategories(categories);
+      } else {
+        const categories = await getCategoriesByAgency(agencyId?.toString() || '');
+        setCategories(categories);
+      }
+    } catch (error) {
+      console.error('Failed to fetch data categories:', error);
+    } finally {
+      setIsLoadingCategories(false);
+    }
+  }
+
   // Fetch agencies only if logged in user is admin
   useEffect(() => {
     if (isAdmin) {
-      const fetchAgencies = async () => {
-        setIsLoadingAgencies(true);
-        try {
-          const agencies = await getAllAgencies();
-          setAgencies(agencies.data);
-        } catch (error) {
-          console.error('Failed to fetch data categories:', error);
-        } finally {
-          setIsLoadingAgencies(false);
-        }
-      }
-
       fetchAgencies();
     }
 
     // Fetch salesmen, networks and categories
-    const fetchSalesmen = async () => {
-      try {
-        if (!isAdmin){
-          const salesmen = await getSalesmenByAgency(agencyId?.toString() || '');
-          setSalesman(salesmen);
-        }
-      } catch (error) {
-        console.error('Failed to fetch agency salesmen:', error);
-      } finally {
-        setIsLoadingNetworks(false);
-      }
-    }
     fetchSalesmen();
-
-    const fetchNetworks = async () => {
-      setIsLoadingNetworks(true);
-      try {
-        if (isAdmin){
-          const networks = await getAllNetworks();
-          setNetworks(networks);
-        } else {
-          const networks = await getNetworksByAgency(agencyId?.toString() || '');
-          setNetworks(networks);
-        }
-      } catch (error) {
-        console.error('Failed to fetch data networks:', error);
-      } finally {
-        setIsLoadingNetworks(false);
-      }
-    }
     fetchNetworks();
-
-    const fetchCategories = async () => {
-      setIsLoadingCategories(true);
-      try {
-        if (isAdmin){
-          const categories = await getAllDataCategories();
-          setCategories(categories);
-        } else {
-          const categories = await getCategoriesByAgency(agencyId?.toString() || '');
-          setCategories(categories);
-        }
-      } catch (error) {
-        console.error('Failed to fetch data categories:', error);
-      } finally {
-        setIsLoadingCategories(false);
-      }
-    }
     fetchCategories();
   }, [isAdmin])
 
@@ -161,6 +162,8 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
         console.log('Data distribution response:', response.message)
         toast.success(response.message || 'Phân phối dữ liệu thành công!');
         resetForm();
+        fetchNetworks();
+        fetchCategories();
         // onClose();
       } catch (error) {
         const errorMessage = (error as any).response?.data?.message || 'Phân phối dữ liệu thất bại!';
@@ -283,25 +286,6 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
           {/* End:: Salesman Selection */}
 
           {/* Begin::Network Input */}
-          {/* <div className='fv-row mb-7'>
-            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NETWORK' })}</label>
-            <input
-              type='text'
-              {...formik.getFieldProps('network')}
-              className={clsx(
-                'form-control form-control-solid mb-3 mb-lg-0',
-                { 'is-invalid': formik.touched.network && formik.errors.network },
-                { 'is-valid': formik.touched.network && !formik.errors.network }
-              )}
-              placeholder='Tên mạng'
-              autoComplete='off'
-            />
-            {formik.touched.network && formik.errors.network && (
-              <div className='fv-plugins-message-container'>
-                <span role='alert'>{formik.errors.network}</span>
-              </div>
-            )}
-          </div> */}
           <div className='fv-row mb-7'>
             <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NETWORK' })}</label>
             <select
@@ -317,7 +301,7 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
               {isLoadingNetworks ? (
                 <option>Loading networks...</option>
               ) : (
-                Object.entries(networks).map(([network]) => (
+                networks && Object.entries(networks).map(([network]) => (
                   <option key={network} value={network}>
                     {network}
                   </option>
@@ -348,7 +332,7 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
               {isLoadingCategories ? (
                 <option>Loading categories...</option>
               ) : (
-                Object.entries(categories).map(([category, { count }]) => (
+                categories && Object.entries(categories).map(([category, { count }]) => (
                   <option key={category} value={category}>
                     {category} (Số lượng còn lại: {count})
                   </option>

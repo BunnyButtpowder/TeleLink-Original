@@ -15,7 +15,7 @@ const UserInfoCell: FC<Props> = ({user}) => (
       <a href='#'>
         {user.avatar ? (
           <div className='symbol-label'>
-            <img src={(`${user.avatar}`)} alt={user.fullName} className='w-100' />
+            <img src={(`${user.avatar}`)} alt='avatar' className='w-100' />
           </div>
         ) : (
           <div
@@ -23,7 +23,7 @@ const UserInfoCell: FC<Props> = ({user}) => (
               'symbol-label fs-3'
             )}
           >
-            <img src={(`${initialUser.avatar}`)} alt={user.fullName} className='w-100' />
+            <img src={(`${initialUser.avatar}`)} alt='avatar' className='w-100' />
           </div>
         )}
       </a>
@@ -33,6 +33,7 @@ const UserInfoCell: FC<Props> = ({user}) => (
         {user.fullName}
       </a>
       {user.auth && <span>{user.auth.email}</span>}
+      {/* {user.auth?  (<span>{user.auth.email}</span>) : (<span>{user.email}</span>)} */}
     </div>
   </div>
 )
