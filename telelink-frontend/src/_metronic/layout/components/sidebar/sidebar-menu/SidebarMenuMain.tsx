@@ -42,6 +42,16 @@ const SidebarMenuMain = () => {
             fontIcon='bi-app-indicator'
           />
           <SidebarMenuItemWithSub
+            to='/blacklist'
+            icon='black-list'
+            title={intl.formatMessage({ id: 'ECOMMERCE.BLACKLIST' })}
+            fontIcon='bi-app-indicator'
+          >
+            <SidebarMenuItem to ='/blacklist/list' title={'Danh sách số chặn'} hasBullet={true} />
+            <SidebarMenuItem to ='/blacklist/report' title={'Báo cáo số chặn của nhân viên '} hasBullet={true} />
+            
+          </SidebarMenuItemWithSub>
+          <SidebarMenuItemWithSub
             to='/reports'
             title='Báo cáo'
             fontIcon='bi-chat-left'
@@ -156,6 +166,17 @@ const SidebarMenuMain = () => {
             title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })}
             fontIcon='bi-app-indicator'
           />
+
+          <SidebarMenuItemWithSub
+            to='/blacklist'
+            icon='black-list'
+            title={intl.formatMessage({ id: 'ECOMMERCE.BLACKLIST' })}
+            fontIcon='bi-app-indicator'
+          >
+            <SidebarMenuItem to ='/blacklist/list' title={'Danh sách số chặn'} hasBullet={true} />
+            <SidebarMenuItem to ='/blacklist/report' title={'Báo cáo số chặn của nhân viên '} hasBullet={true} />
+            
+          </SidebarMenuItemWithSub>
           <SidebarMenuItemWithSub
             to='/reports'
             title='Báo cáo'

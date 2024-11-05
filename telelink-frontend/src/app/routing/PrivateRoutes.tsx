@@ -12,6 +12,7 @@ import { DataPage } from '../pages/data/DataPage'
 import { RevenuePage } from '../pages/reportRevenue/RevenuePage'
 import { ResultPage } from '../pages/reportCallResults/ResultPage'
 import { PackagePage } from '../pages/package/PackagePage'
+import { BlackListPage } from '../pages/blacklist/BlackListPage'
 // import { PlanPage } from '../pages/plan/PlanPage'
 
 const PrivateRoutes = () => {
@@ -117,6 +118,22 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <UsersPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='blacklist/list'
+          element={
+            <SuspensedView>
+              <BlackListPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='blacklist/report'
+          element={
+            <SuspensedView>
+              {/* <BlackListReportPage /> */}
             </SuspensedView>
           }
         />
