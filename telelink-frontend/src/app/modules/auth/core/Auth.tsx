@@ -37,9 +37,13 @@ const useAuth = () => {
 const AuthProvider: FC<WithChildren> = ({ children }) => {
   const [auth, setAuth] = useState<AuthModel | undefined>(authHelper.getAuth())
   const [currentUser, setCurrentUser] = useState<UserModel | undefined>(() => {
-    const storedUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-    if (storedUser && storedUser.id) {
-      storedUser.dataDetails = JSON.parse(localStorage.getItem(`dataDetails_${storedUser.id}`) || 'null');
+    // const storedUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    const storedUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')!) : null;
+    // if (storedUser && storedUser.id) {
+    //   storedUser.dataDetails = JSON.parse(localStorage.getItem(`dataDetails_${storedUser.id}`) || 'null');
+    // }
+    if (storedUser && storedUser.id && localStorage.getItem(`dataDetails_${storedUser.id}`)) {
+      storedUser.dataDetails = JSON.parse(localStorage.getItem(`dataDetails_${storedUser.id}`)!);
     }
     return storedUser;
   });

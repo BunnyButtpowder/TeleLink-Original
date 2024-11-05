@@ -2,7 +2,7 @@ import {FC, useState} from 'react'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
 import {isNotEmpty, toAbsoluteUrl} from '../../../../../_metronic/helpers'
-import {initialUser, Customer} from '../core/_models'
+import {initialCustomer, Customer} from '../core/_models'
 import clsx from 'clsx'
 import {useListView} from '../core/ListViewProvider'
 import {UsersListLoading} from '../components/loading/UsersListLoading'
@@ -38,12 +38,8 @@ const UserEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
 
   const [userForEdit] = useState<Customer>({
     ...customer,
-    phoneNum: customer.phoneNum || initialUser.phoneNum,
-    currentPack: customer.currentPack || initialUser.currentPack,
-    specialPack: customer.specialPack || initialUser.specialPack,
-    assignedPack: customer.assignedPack || initialUser.assignedPack,
-    regisDate: customer.regisDate || initialUser.regisDate,
-    expDate: customer.expDate || initialUser.expDate,
+    subscriberNumber: customer.subscriberNumber || initialCustomer.subscriberNumber,
+    
   })
 
   const cancel = (withRefresh?: boolean) => {
