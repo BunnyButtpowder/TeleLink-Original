@@ -10,21 +10,21 @@ module.exports = {
     agencyId: {
       type: 'string',
       required: true,
-      custom: async (value) => {
-        // Kiểm tra xem agencyId có tồn tại trong hệ thống hay không
-        const agency = await Agency.findOne({ id: value });
-        return !!agency; 
-      }
+     
     }
   },
 
   fn: async function (inputs) {
     const { agencyId } = inputs;
 
+    const AgencyExit = await Agency.findOne({ id: agencyId });
 
+    if (!AgencyExit) {
+      return this.res.notFound({ message: "không tìm thấy chi nhánh." });
+    }
     const branchData = await Data.find({ agency: agencyId });
 
-    return this.res.json({
+    return this.res.ok({
       message: `Đây là danh sách data của agency với ID ${agencyId}`,
       data: branchData,
     });
