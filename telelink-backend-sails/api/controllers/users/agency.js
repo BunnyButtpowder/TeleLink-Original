@@ -30,7 +30,7 @@ module.exports = {
                     role: user.auth.role 
                 }));
 
-            return res.json({ employees: staffMembers });
+            return res.ok({ employees: staffMembers });
       } catch (err) {
           
           return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách nhân viên.',err });
