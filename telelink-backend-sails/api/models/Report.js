@@ -36,6 +36,10 @@ module.exports = {
     rehandle: {
       type: "number",  //không liên lạc được
       defaultsTo: 0
+    },
+    revenue: {
+      type: "number",
+      defaultsTo: 0
     }
   },
 

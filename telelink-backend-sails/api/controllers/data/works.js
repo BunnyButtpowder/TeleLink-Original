@@ -11,20 +11,21 @@ module.exports = {
       required: true,
       description: "ID of the data to be updated.",
     },
-    userId: {
-      type: "number",
-      required: true,
-      description: "ID of the employee updating the data.",
-    },
     callResult: {
       type: "json",
       required: true,
       description: "Call Result",
     },
+    date: {
+      type: "string",
+      required: false,
+      description: "Thời gian hẹn gọi lại",
+    },
   },
 
   fn: async function (inputs) {
-    const { dataId, userId, callResult } = inputs;
+    let { dataId, callResult, date } = inputs;
+    const userId = this.req.user.id;
 
     try {
       const user = await User.findOne({ id: userId });
@@ -44,6 +45,7 @@ module.exports = {
       const assignment = await DataAssignment.findOne({
         data: dataId,
         user: userId,
+        complete: false
       });
 
       if (!assignment) {
@@ -51,13 +53,94 @@ module.exports = {
           message: "Bạn không có quyền cập nhật dữ liệu này.",
         });
       }
-
-      const package = await Package.findOne({ id: callResult.dataPackage });
-      if (!package) {
-        return this.res.notFound({ message: "Không tìm thấy gói data." });
+      let package = null
+      if (callResult.dataPackage) {
+        package = await Package.findOne({ id: callResult.dataPackage });
+        callResult.dataPackage = package.title
+        if (!package) {
+          return this.res.notFound({ message: "Không tìm thấy gói data." });
+        }
       }
-      console.log(data.subscriberNumber);
+      
 
+      const report = await Report.findOne({ agency: user.agency });
+
+      switch (callResult.result) {
+        case 1: //dong y
+          await Report.updateOne({ agency: user.agency }).set({
+            accept: report.accept + 1, revenue: report.revenue + package.price
+          });
+          break;
+        case 2: //tu choi
+          callResult.dataPackage = null;
+          package.price = 0;
+          const rejection = await Result.count({
+            data_id: dataId,
+            result: 2,
+          });
+          if (rejection < 2) {
+            await Data.updateOne({ id: dataId }).set({ isDelete: false });
+          } else {
+            await Report.updateOne({ agency: user.agency }).set({
+              reject: report.reject + 1,
+            });
+          }
+          break;
+        case 3: //khong nghe may
+          package.price = 0;
+          callResult.dataPackage = null;
+          const unanswered = await Result.count({
+            data_id: dataId,
+            result: 3,
+          });
+          if (unanswered < 2) {
+            await Data.updateOne({ id: dataId }).set({ isDelete: false });
+          } else {
+            await Report.updateOne({ agency: user.agency }).set({
+              unanswered: report.unanswered + 1,
+            });
+          }
+          break;
+        case 4: //khong lien lac duoc
+          package.price = 0;
+          callResult.dataPackage = null;
+          const unavailable = await Result.count({
+            data_id: dataId,
+            result: 4,
+          });
+          if (unavailable < 2) {
+            await Data.updateOne({ id: dataId }).set({ isDelete: false });
+          } else {
+            await Report.updateOne({ agency: user.agency }).set({
+              unavailable: report.unavailable + 1,
+            });
+          }
+          break;
+        case 5: //xu ly lai
+        case 6:
+        case 7:
+          if(!date){
+            return this.res.badRequest({message:"Thiếu ngày hẹn gọi lại!."})
+          }
+          package.price = 0;
+          callResult.dataPackage = null;
+          const rehandle = await DataRehandle.create({
+            user: userId,
+            data: user.agency,
+            complete: false,
+            latestResult: callResult.result,
+            dateToCall: date,
+            note: callResult.note
+          });
+          await Report.updateOne({ agency: user.agency }).set({
+            rehandle: report.rehandle + 1,
+          });
+          break;
+        case 8:   //mat don
+          break;
+        default:
+          return this.res.badRequest("Kết quả cuộc gọi không hợp lệ");
+      }
       const newResult = await Result.create({
         data_id: dataId,
         agency: user.agency,
@@ -66,34 +149,10 @@ module.exports = {
         revenue: package.price,
         ...callResult,
       });
-
-      if (callResult.result != "Xử Lý Lại") {
-        if (callResult.result == "Không Bắt Máy") {
-          const rejection = await Result.count({
-            data_id: dataId,
-            result: "Không Bắt Máy",
-          });
-          if (rejection < 3) {
-            await Data.updateOne({ id: dataId }).set({ isDelete: false });
-          }
-        }
-        await DataAssignment.updateOne({
-          data: dataId,
-          user: userId,
-        }).set({complete: true});
-      } else {
-        const rehandle = await Result.count({
-          data_id: dataId,
-          result: "Xử Lý Lại"
-        });
-        if(rehandle > 2){
-          await Data.updateOne({ id: dataId }).set({ isDelete: false });
-          await DataAssignment.updateOne({
-            data: dataId,
-            user: userId,
-          }).set({complete: true});
-        }
-      }
+      await DataAssignment.updateOne({
+        data: dataId,
+        user: userId,
+      }).set({ complete: true });
 
       return this.res.ok({
         message: "Tạo kết quả cuộc gọi thành công.",

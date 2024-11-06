@@ -24,12 +24,13 @@ module.exports = {
       required: true
     },
     result:{
-      type: 'string',   //ket qua cuoc goi
+      type: 'number',   //ket qua cuoc goi
       required: true,
-      isIn: ["Đồng Ý","Không Đồng Ý","Không Bắt Máy","Không Liên Lạc Được","Xử Lý Lại"]
+      isIn: [1,2,3,4,5,6,7,8]
     },
     dataPackage:{    
-      model: 'Package'   //id goi cuoc
+      type: "string",   //id goi cuoc
+      allowNull: true
     },
     customerName:{
       type: 'string',
