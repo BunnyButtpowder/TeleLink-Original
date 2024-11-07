@@ -10,7 +10,8 @@ module.exports = {
 
     try {
       const allData = await Data.find({
-        agency: null
+        agency: null,
+        // networkName:"Viettel"
       });
 
       // Kiểm tra xem có dữ liệu không

@@ -58,6 +58,13 @@ module.exports = {
     await Promise.all(randomDataToAssign.map(async (data) => {
       await Data.updateOne({ id: data.id }).set({ agency: agencyId });
     }));
+    sails.sockets.broadcast(
+      agencyId,
+      'newDataAssigned',
+      {
+        message: `Đã phân bổ thành công ${quantity} data mới.`,
+      }
+    );
 
     return this.res.ok({
       message: `Đã phân bổ thành công ${quantity} data ngẫu nhiên cho chi nhánh ${branch.name}.`,
