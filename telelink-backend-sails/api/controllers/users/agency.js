@@ -33,10 +33,10 @@ module.exports = {
                     },
                 }));
 
-            return res.json({ employees: staffMembers, count: staffMembers.length });
-        } catch (err) {
-            console.log(err)
-            return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách nhân viên.', err });
-        }
-    },
+            return res.ok({ employees: staffMembers });
+      } catch (err) {
+          
+          return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách nhân viên.',err });
+      }
+  },
 };
