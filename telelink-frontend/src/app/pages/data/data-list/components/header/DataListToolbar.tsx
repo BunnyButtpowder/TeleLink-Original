@@ -1,17 +1,28 @@
 import React, { useState, useRef } from 'react'
-import { importData } from '../../core/_requests'
+import { importData, getAllData} from '../../core/_requests'
 import { KTIcon } from '../../../../../../_metronic/helpers'
-import { useListView } from '../../core/ListViewProvider'
 import { UsersListFilter } from './UsersListFilter'
 import { useIntl } from 'react-intl'
 import { Data } from '../../core/_models'
 import { DataDistributionModal } from '../../data-distribution-modal/DataDistributionModal'
+import { Modal, Button } from 'react-bootstrap' 
+
+
+
+
 
 const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = ({ onUploadComplete }) => {
   const intl = useIntl()
   const [isDistributionModalOpen, setDistributionModalOpen] = useState(false)
+  const [isAlertModalOpen, setAlertModalOpen] = useState(false) // State for Alert Modal
+  const [alertMessage, setAlertMessage] = useState('') // State for the alert message
   const [uploading, setUploading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input element
+
+
+ 
+  
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files?.[0];
@@ -21,10 +32,15 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
       try {
         const response = await importData(files);
         onUploadComplete(response.data);
-        alert('Upload data thành công!');
+        setAlertMessage("Upload data thành công");
+        setIsSuccess(true)
+        setAlertModalOpen(true);
+       
       } catch (error) {
         console.error('Error uploading the file: ', error);
-        alert('Upload data thất bại!');
+        setAlertMessage("Upload data thất bại");
+        setIsSuccess(false)
+        setAlertModalOpen(true); 
       } finally {
         setUploading(false);
       }
@@ -43,6 +59,10 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
 
   const closeDataDistributionModal = () => {
     setDistributionModalOpen(false);
+  }
+
+  const closeAlertModal = () => {
+    setAlertModalOpen(false);
   }
 
   return (
@@ -80,6 +100,30 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
         </button>
         {/* end::Distribute Data */}
       </div>
+
+      {/* Alert Modal */}
+      <Modal show={isAlertModalOpen} onHide={closeAlertModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Thông báo</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="modal-body-custom text-center">
+          {isSuccess ? (
+            <>
+              <div>{alertMessage}</div>
+            </>
+          ) : (
+            <div>{alertMessage}</div>
+          )}
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={closeAlertModal}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Data Distribution Modal */}
       {isDistributionModalOpen && <DataDistributionModal onClose={closeDataDistributionModal} />}
     </>
   )

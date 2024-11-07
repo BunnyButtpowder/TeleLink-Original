@@ -38,7 +38,7 @@ const createUser = (user: User): Promise<User | undefined> => {
     password: user.auth.password,
     role: user.auth.role,
     gender: user.gender,
-    agency: user.agency?.id || null,
+    // agency: user.agency?.id || null,
     name: user.auth.role === 2 ? user.agency?.name : undefined,
   };
   return axios

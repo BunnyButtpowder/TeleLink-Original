@@ -32,8 +32,6 @@ module.exports = {
           
         };
       });
-    
-
       return res.ok({ data: allUsers , count: allUsers.length });
     } catch (err) {
       console.log(err)
