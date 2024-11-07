@@ -8,6 +8,7 @@ import { dataAssignAgency, dataAssignSalesman, getAllAgencies, getAllDataCategor
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../../../app/modules/auth'
+import { useQueryResponse } from '../core/QueryResponseProvider'
 
 // Define the schemas for form validation
 const dataDistributionSchema = Yup.object().shape({
@@ -44,6 +45,7 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
   const [isAdmin] = useState(currentUser?.auth?.role === 1);
   const [selectedTarget, setSelectedTarget] = useState(isAdmin ? 'agency' : 'salesman');
   const [agencyId] = useState(isAdmin ? '' : currentUser?.agency?.id);
+  const { refetch } = useQueryResponse()
 
   const fetchAgencies = async () => {
     setIsLoadingAgencies(true);
@@ -51,7 +53,7 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
       const agencies = await getAllAgencies();
       setAgencies(agencies.data);
     } catch (error) {
-      console.error('Failed to fetch data categories:', error);
+      console.error('Failed to fetch agencies:', error);
     } finally {
       setIsLoadingAgencies(false);
     }
@@ -159,12 +161,12 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
         } else {
           response = await dataAssignSalesman(values);
         }
-        console.log('Data distribution response:', response.message)
         toast.success(response.message || 'Phân phối dữ liệu thành công!');
-        resetForm();
-        fetchNetworks();
-        fetchCategories();
-        // onClose();
+        //resetForm();
+        // fetchNetworks();
+        // fetchCategories();
+        refetch();
+        onClose();
       } catch (error) {
         const errorMessage = (error as any).response?.data?.message || 'Phân phối dữ liệu thất bại!';
         console.error('Error distributing data:', errorMessage)

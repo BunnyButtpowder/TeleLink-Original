@@ -14,11 +14,11 @@ const loginSchema = Yup.object().shape({
   username: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Username is required'),
+    .required('Yêu cầu tên đăng nhập'),
   password: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Password is required'),
+    .required('Yêu cầu mật khẩu'),
 })
 
 // Set initial values

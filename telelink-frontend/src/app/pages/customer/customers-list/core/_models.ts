@@ -1,8 +1,9 @@
-import {ID, Response} from '../../../../../_metronic/helpers'
+import { subscribe } from 'diagnostics_channel'
+import { ID, Response } from '../../../../../_metronic/helpers'
 import { Agency } from '../../../../modules/apps/user-management/users-list/core/_models'
 export type Customer = {
   id?: ID
-  placeOfIssue ?: string
+  placeOfIssue?: string
   networkName?: string
   category?: string
   subscriberNumber?: string
@@ -19,13 +20,13 @@ export type Customer = {
   usageMonth3?: string
   usageMonth4?: string
   Package?: string
-  totalTKCUsage ?: string
-  voiceUsage ?: string
-  dataUsage ?: string
-  outOfPackageDataUsage ?: string
-  other1 ? : string
-  other2 ? : string
-  other3 ? : string
+  totalTKCUsage?: string
+  voiceUsage?: string
+  dataUsage?: string
+  outOfPackageDataUsage?: string
+  other1?: string
+  other2?: string
+  other3?: string
   agency?: Agency
 }
 export type CustomersQuerySingleResponse = Response<Customer>
@@ -47,15 +48,40 @@ export const initialCustomer: Customer = {
   usageMonth4: '',
   Package: '',
   placeOfIssue: '',
-  totalTKCUsage : '',
-  voiceUsage : '',
-  dataUsage : '',
+  totalTKCUsage: '',
+  voiceUsage: '',
+  dataUsage: '',
   outOfPackageDataUsage: '',
-  other1  : '',
-  other2  : '',
-  other3  : '',
+  other1: '',
+  other2: '',
+  other3: '',
   agency: {
     id: 0,
     name: '',
   }
+}
+
+export type Result = {
+  id?: number;
+  data_id: number;
+  agency?: number;
+  saleman?: number;
+  subscriberNumber: string;
+  result: number;
+  dataPackage?: string;
+  customerName: string;
+  address?: string;
+  note?: string;
+  revenue?: number;
+  createdAt?: number;
+  updatedAt?: number;
+}
+
+export const initialResult: Result = {
+  data_id: 0,
+  subscriberNumber: '',
+  result: 1,
+  dataPackage: '',
+  customerName: '',
+  address: '',
 }

@@ -25,7 +25,6 @@ const DataList = () => {
         <DataListHeader onUploadComplete = {handleUploadComplete}/>
         <DataTable/>
       </KTCard>
-      <ToastContainer />
     </>
   )
 }
