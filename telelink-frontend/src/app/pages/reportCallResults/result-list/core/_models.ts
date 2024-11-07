@@ -1,5 +1,5 @@
 import {ID, Response} from '../../../../../_metronic/helpers'
-export type Customer = {
+export type Report = {
   id?: ID
   phoneNum?: string
   currentPack?: string
@@ -23,9 +23,9 @@ export type Customer = {
   khac3 ? : string
 }
 
-export type UsersQueryResponse = Response<Array<Customer>>
+export type UsersQueryResponse = Response<Array<Report>>
 
-export const initialUser: Customer = {
+export const initialResult: Report = {
   phoneNum: '80981128185',
   currentPack: 'ST15K',
   specialPack: ',,V200X,',

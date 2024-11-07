@@ -6,12 +6,16 @@ import { UsersListFilter } from './UsersListFilter'
 import { useIntl } from 'react-intl'
 import { Data } from '../../core/_models'
 import { DataDistributionModal } from '../../data-distribution-modal/DataDistributionModal'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useQueryResponse } from '../../core/QueryResponseProvider'
 
 const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = ({ onUploadComplete }) => {
   const intl = useIntl()
   const [isDistributionModalOpen, setDistributionModalOpen] = useState(false)
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input element
+  const { refetch } = useQueryResponse()
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files?.[0];
@@ -21,10 +25,11 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
       try {
         const response = await importData(files);
         onUploadComplete(response.data);
-        alert('Upload data thành công!');
+        refetch();
+        toast.success('Upload data thành công!');
       } catch (error) {
         console.error('Error uploading the file: ', error);
-        alert('Upload data thất bại!');
+        toast.error('Upload data thất bại!');
       } finally {
         setUploading(false);
       }
@@ -47,6 +52,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
 
   return (
     <>
+      <ToastContainer />
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
         <UsersListFilter />
 

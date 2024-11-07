@@ -32,13 +32,14 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
     }
   }, [updatedQuery])
 
-  const fetchUsers = () => {
+  const fetchUsers = async () => {
     // Admin gets all users
     if (userRole === 1) {
       return getUsers(query);
     } else if (userRole === 2 && agencyId) {
       // Agency gets data by agency id
-      return getSalesmenByAgency(agencyId.toString());
+      const response = await getSalesmenByAgency(agencyId.toString());
+      return {data: response.employees};
     } else {
       // Undefined role gets empty data
       return Promise.resolve({ data: [] });

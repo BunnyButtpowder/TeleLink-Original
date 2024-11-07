@@ -10,18 +10,25 @@ module.exports = {
 
     try {
       const allData = await Data.find({
-        agency: null
+        agency: null,
+        // networkName:"Viettel"
       });
-      const categorizedData = _.groupBy(allData, 'category');
 
+      // Kiểm tra xem có dữ liệu không
+      if (!allData || allData.length === 0) {
+        return res.ok({ message: 'Không có dữ liệu nào được tìm thấy.' });
+      }
+
+      const categorizedData = _.groupBy(allData, 'category');
       const categorizedWithCounts = _.mapValues(categorizedData, (items) => ({
         count: items.length,
-        // items,
       }));
 
-      return res.status(200).json(categorizedWithCounts);
+      return res.ok(categorizedWithCounts);
     } catch (error) {
-      return res.status(500).json({ message: 'Lỗi khi lấy dữ liệu.', error });
+      // Ghi lại lỗi để theo dõi
+      console.log('Error fetching data:', error);
+      return res.serverError({ message: 'Lỗi khi lấy dữ liệu.', error });
     }
   },
 };

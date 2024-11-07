@@ -96,7 +96,7 @@ const dataAssignSalesman = async (values: any): Promise<any> => {
 
 const getAllAgencies = async() => {
   try{
-    const response = await axios.get(`${API_URL}/agency`);
+    const response = await axios.get(`${API_URL}/agencys/getall`);
     return response.data;
   } catch (error) {
     console.error('Failed to fetch agencies:', error);

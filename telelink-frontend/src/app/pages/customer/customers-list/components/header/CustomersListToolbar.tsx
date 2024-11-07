@@ -1,25 +1,33 @@
-import {KTIcon} from '../../../../../../_metronic/helpers'
+import { KTIcon } from '../../../../../../_metronic/helpers'
 import { useState, useEffect } from 'react';
-import {useListView} from '../../core/ListViewProvider'
-import {UsersListFilter} from './UsersListFilter'
-import {useIntl} from 'react-intl'
+import { useListView } from '../../core/ListViewProvider'
+import { UsersListFilter } from './UsersListFilter'
+import { useIntl } from 'react-intl'
 import { useAuth } from '../../../../../../app/modules/auth'
 import { getData } from '../../core/_requests'
 import { useQueryResponse } from '../../core/QueryResponseProvider';
+import { AddReportModal } from '../../add-report-modal/AddReportModal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CustomersListToolbar = () => {
   const intl = useIntl()
-  const {setItemIdForUpdate} = useListView();
-  const {currentUser, setCurrentUserData} = useAuth();
+  const { currentUser, setCurrentUserData } = useAuth();
+  const [isAddReportModalOpen, setAddReportModalOpen] = useState(false)
   const { setDataDetails } = useQueryResponse();
   const [cooldown, setCooldown] = useState(false);
   const salesmanId = currentUser?.id;
-  const openAddUserModal = () => {
-    setItemIdForUpdate(null)
+
+  const openAddReportModal = () => {
+    setAddReportModalOpen(true);
+  }
+
+  const closeAddReportModal = () => {
+    setAddReportModalOpen(false);
   }
 
   const fetchData = async () => {
-    if(!salesmanId) return;
+    if (!salesmanId) return;
 
     try {
       const dataDetails = await getData(salesmanId);
@@ -40,24 +48,28 @@ const CustomersListToolbar = () => {
   }
 
   return (
-    <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-      <UsersListFilter />
+    <>
+      <ToastContainer />
+      <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
+        <UsersListFilter />
 
-      {/* begin::Get Data */}
-      <button type='button' className='btn btn-light-primary me-3' onClick={handleGetData} disabled={cooldown}>
-        <KTIcon iconName='exit-up' className='fs-2' />
-        Lấy số
-      </button>
-      {/* end::Get Data */}
+        {/* begin::Get Data */}
+        <button type='button' className='btn btn-light-primary me-3' onClick={handleGetData} disabled={cooldown}>
+          <KTIcon iconName='exit-up' className='fs-2' />
+          Lấy số
+        </button>
+        {/* end::Get Data */}
 
-      {/* begin::Add user */}
-      <button type='button' className='btn btn-primary' onClick={openAddUserModal}>
-        <KTIcon iconName='plus' className='fs-2' />
-        {intl.formatMessage({id: 'CREATE.REPORT'})}
-      </button>
-      {/* end::Add user */}
-    </div>
+        {/* begin::Add user */}
+        <button type='button' className='btn btn-primary' onClick={openAddReportModal}>
+          <KTIcon iconName='plus' className='fs-2' />
+          {intl.formatMessage({ id: 'CREATE.REPORT' })}
+        </button>
+        {/* end::Add user */}
+      </div>
+      {isAddReportModalOpen && <AddReportModal onClose={closeAddReportModal} />}
+    </>
   )
 }
 
-export {CustomersListToolbar}
+export { CustomersListToolbar }

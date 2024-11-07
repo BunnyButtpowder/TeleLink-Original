@@ -29,16 +29,23 @@ module.exports = {
         return res.notFound({ message: "Không có dữ liệu." });
       }
 
-      const categorizedData = _.groupBy(allData, 'category');
+      const assignData = await DataAssignment.find({});
+      const assignDataIds = assignData.map(item => item.data); 
+      // console.log(assignDataIds)
+
+      const filteredData = allData.filter(item => !assignDataIds.includes(item.id));
+
+      const categorizedData = _.groupBy(filteredData, 'category');
 
       const categorizedWithCounts = _.mapValues(categorizedData, (items) => ({
         count: items.length,
         // items,
       }));
 
-      return res.status(200).json(categorizedWithCounts);
+      return res.ok(categorizedWithCounts);
     } catch (error) {
-      return res.status(500).json({ message: 'Lỗi khi lấy dữ liệu.', error });
+      console.log(error)
+      return res.serverError({ message: 'Lỗi khi lấy dữ liệu.', error });
     }
   },
 };

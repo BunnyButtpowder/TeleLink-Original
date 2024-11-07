@@ -1,51 +1,50 @@
 import axios, { AxiosResponse } from "axios";
 import { ID, Response } from "../../../../../_metronic/helpers";
-import { Customer, CustomersQueryResponse } from "./_models";
+import { Customer, Result } from "./_models";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
-const USER_URL = `${API_URL}/user`;
-const GET_USERS_URL = `${API_URL}/users/query`;
+const token = localStorage.getItem("auth_token");
 
 const getData = async (salesmanId: ID): Promise<Customer> => {
   const response = await axios.get(`${API_URL}/data-assign/salesman?id=${salesmanId}`);
   return response.data.dataDetails;
 };
 
-const getUserById = (id: ID): Promise<Customer | undefined> => {
-  return axios
-    .get(`${USER_URL}/${id}`)
-    .then((response: AxiosResponse<Response<Customer>>) => response.data)
-    .then((response: Response<Customer>) => response.data);
-};
+const getAllPackages = async() => {
+  try{
+    const response = await axios.get(`${API_URL}/packages/getall`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch packages: ', error);
+    throw error;
+  }
+}
 
-const createUser = (customer: Customer): Promise<Customer | undefined> => {
-  return axios
-    .put(USER_URL, customer)
-    .then((response: AxiosResponse<Response<Customer>>) => response.data)
-    .then((response: Response<Customer>) => response.data);
-};
+const createCallResult = async (result: Result, dataId: string, date: string) => {
+  const response = await axios.post(`${API_URL}/data/works?dataId=${dataId}`,
+    {
+      callResult: {
+        result: result.result,
+        dataPackage: result.dataPackage,
+        customerName: result.customerName,
+        address: result.address,
+        note: result.note,
+      },
+      date: date
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": 'application/json',
+      },
+    }
+  )
+  return response.data;
+}
 
-const updateUser = (customer: Customer): Promise<Customer | undefined> => {
-  return axios
-    .post(`${USER_URL}/${customer.id}`, customer)
-    .then((response: AxiosResponse<Response<Customer>>) => response.data)
-    .then((response: Response<Customer>) => response.data);
-};
-
-const deleteUser = (userId: ID): Promise<void> => {
-  return axios.delete(`${USER_URL}/${userId}`).then(() => {});
-};
-
-const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
-  const requests = userIds.map((id) => axios.delete(`${USER_URL}/${id}`));
-  return axios.all(requests).then(() => {});
-};
 
 export {
   getData,
-  deleteUser,
-  deleteSelectedUsers,
-  getUserById,
-  createUser,
-  updateUser,
+  createCallResult,
+  getAllPackages
 };

@@ -9,7 +9,7 @@ const DELETE_PACKAGE_URL = `${API_URL}/package?id=`;
 
 const getPackages = (query: string): Promise<PackageQueryResponse> => {
   return axios
-    .get(PACKAGE_URL)
+    .get(`${API_URL}/packages/getall`)
     .then((response: AxiosResponse<PackageQueryResponse>) => response.data);
 };
 

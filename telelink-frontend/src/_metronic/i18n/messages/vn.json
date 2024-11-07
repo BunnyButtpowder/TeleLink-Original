@@ -13,6 +13,8 @@
   "MENU.DASHBOARD": "Bảng điều khiển",
   "MENU.REPORTS.REVENUE": "Doanh thu",
   "MENU.REPORTS.CALL_RESULTS": "Báo cáo cuộc gọi",
+  "CALL_RESULT": "Kết quả cuộc gọi",
+  "CHOOSE_CALL_RESULT": "Chọn kết quả cuộc gọi",
   "AUTH.OTP" : "Mã OTP",
   "AUTH.GENERAL.OR": "Or",
   "AUTH.GENERAL.SUBMIT_BUTTON": "Submit",
@@ -68,6 +70,8 @@
   "ECOMMERCE.COMMON.IN_ALL_FIELDS": "in all fields",
   "ECOMMERCE.ECOMMERCE": "eCommerce",
   "ECOMMERCE.CELLPHONE.PLAN" : "Gói cước",
+  "CUSTOMER.NAME": "Tên khách hàng",
+  "CUSTOMER.ADDRESS": "Địa chỉ khách hàng",
   "ECOMMERCE.CUSTOMERS.CUSTOMERS": "Khách hàng",
   "ECOMMERCE.CUSTOMERS.CUSTOMERS_LIST": "Danh sách khách hàng",
   "ECOMMERCE.CUSTOMERS.NEW_CUSTOMER": "New Customer",
@@ -117,10 +121,14 @@
   "PACKAGE.MANAGEMENT.ADD_PACKAGE": "Tạo gói cước",
   "PACKAGE.MANAGEMENT.EDIT_PACKAGE": "Sửa gói cước",
   "PACKAGE.CODE": "Mã gói",
+  "PACKAGE": "Gói cước",
+  "CHOOSE_PACKAGE": "Chọn gói cước",
   "NETWORK": "Nhà mạng",
   "CLASSIFY": "Phân loại",
   "DATA_CLASSIFY": "Phân loại data",
   "UNIT.PRICE": "Đơn giá",
   "QUANTITY": "Số lượng",
-  "CREATE.REPORT": "Tạo báo cáo"
+  "CREATE.REPORT": "Tạo báo cáo",
+  "NOTE": "Ghi chú",
+  "CALLBACK_DATE": "Ngày gọi lại"
 }

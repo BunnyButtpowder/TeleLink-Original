@@ -1,24 +1,24 @@
 
-import {useState} from 'react'
+import { useState } from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {Link} from 'react-router-dom'
-import {useFormik} from 'formik'
-import {getUserByToken, login, getUserById} from '../core/_requests'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
-import {useAuth} from '../core/Auth'
-import {useIntl} from 'react-intl'
+import { Link } from 'react-router-dom'
+import { useFormik } from 'formik'
+import { getUserByToken, login, getUserById } from '../core/_requests'
+import { toAbsoluteUrl } from '../../../../_metronic/helpers'
+import { useAuth } from '../core/Auth'
+import { useIntl } from 'react-intl'
 import axios from 'axios'
 
 const loginSchema = Yup.object().shape({
   username: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Username is required'),
+    .required('Yêu cầu tên đăng nhập'),
   password: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Password is required'),
+    .required('Yêu cầu mật khẩu'),
 })
 
 // Set initial values
@@ -35,34 +35,37 @@ const initialValues = {
 
 export function Login() {
   const [loading, setLoading] = useState(false)
-  const {saveAuth, setCurrentUser} = useAuth()
+  const { saveAuth, setCurrentUser } = useAuth()
   const intl = useIntl()
 
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
-    onSubmit: async (values, {setStatus, setSubmitting}) => {
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true)
       try {
         const response = await login(values.username, values.password)
-        const {user, token} = response.data
-        saveAuth({api_token: token})
-        // const {data: user} = await getUserByToken(auth.api_token)
+        const { user, token } = response.data
+        saveAuth({ api_token: token })
         localStorage.setItem('auth_token', token);
         const userResponse = await getUserById(user.id)
-        const safeUser = {...userResponse.data, auth: {...userResponse.data.auth, password: undefined}}
-        
+        const safeUser = { ...userResponse.data, auth: { ...userResponse.data.auth, password: undefined } }
+
         setCurrentUser(safeUser)
-        console.log('user', safeUser)
         setLoading(false)
       } catch (error) {
-        console.error(error)
         saveAuth(undefined)
-        setStatus('The login details are incorrect')
+        if (axios.isAxiosError(error) && error.response && error.response.data) {
+          setStatus(error.response.data.message || 'An unexpected error occurred')
+          // console.log(error.response.data.message)
+        } else {
+          setStatus('An unexpected error occurred')
+        }
         setSubmitting(false)
         setLoading(false)
       }
-    },
+    }
+
   })
 
   return (
@@ -79,7 +82,7 @@ export function Login() {
           <img alt='Logo' src={toAbsoluteUrl('media/logos/telecom-custom.svg')} className='h-75px mb-10' />
         </Link>
         {/* end::Logo */}
-        <h1 className='mt-10 text-gray-900 fw-bolder mb-3'>{intl.formatMessage({id: 'AUTH.LOGIN.BUTTON'})}</h1>
+        <h1 className='mt-10 text-gray-900 fw-bolder mb-3'>{intl.formatMessage({ id: 'AUTH.LOGIN.BUTTON' })}</h1>
         {/* <div className='text-gray-500 fw-semibold fs-6'>{intl.formatMessage({id: 'APP.DESCRIPTION'})}</div> */}
       </div>
       {/* begin::Heading */}
@@ -100,6 +103,11 @@ export function Login() {
       )} */}
 
       {/* begin::Form group */}
+      {formik.status && (
+        <div className='mb-3 alert alert-danger'>
+          <div className='alert-text font-weight-bold'>{formik.status}</div>
+        </div>
+      )}
       <div className='fv-row mb-8'>
         <label className='form-label fs-6 fw-bolder text-gray-900'>Tên đăng nhập</label>
         <input
@@ -107,7 +115,7 @@ export function Login() {
           {...formik.getFieldProps('username')}
           className={clsx(
             'form-control bg-transparent',
-            {'is-invalid': formik.touched.username && formik.errors.username},
+            { 'is-invalid': formik.touched.username && formik.errors.username },
             {
               'is-valid': formik.touched.username && !formik.errors.username,
             }
@@ -126,7 +134,7 @@ export function Login() {
 
       {/* begin::Form group */}
       <div className='fv-row mb-3'>
-        <label className='form-label fw-bolder text-gray-900 fs-6 mb-0'>{intl.formatMessage({id: 'AUTH.INPUT.PASSWORD'})}</label>
+        <label className='form-label fw-bolder text-gray-900 fs-6 mb-0'>{intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}</label>
         <input
           type='password'
           placeholder='Password'
@@ -158,7 +166,7 @@ export function Login() {
 
         {/* begin::Link */}
         <Link to='/auth/forgot-password' className='link-dark'>
-          {intl.formatMessage({id: 'AUTH.GENERAL.FORGOT_BUTTON'})}
+          {intl.formatMessage({ id: 'AUTH.GENERAL.FORGOT_BUTTON' })}
         </Link>
         {/* end::Link */}
       </div>
@@ -172,9 +180,9 @@ export function Login() {
           className='btn btn-danger'
           disabled={formik.isSubmitting || !formik.isValid}
         >
-          {!loading && <span className='indicator-label'>{intl.formatMessage({id: 'AUTH.LOGIN.BUTTON'})}</span>}
+          {!loading && <span className='indicator-label'>{intl.formatMessage({ id: 'AUTH.LOGIN.BUTTON' })}</span>}
           {loading && (
-            <span className='indicator-progress' style={{display: 'block'}}>
+            <span className='indicator-progress' style={{ display: 'block' }}>
               Please wait...
               <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
             </span>

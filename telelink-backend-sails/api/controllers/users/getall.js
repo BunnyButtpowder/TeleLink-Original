@@ -32,9 +32,7 @@ module.exports = {
           
         };
       });
-    
-
-      return res.json({ data: allUsers , count: allUsers.length });
+      return res.ok({ data: allUsers , count: allUsers.length });
     } catch (err) {
       console.log(err)
       return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách người dùng hoặc thông tin xác thực.'});
