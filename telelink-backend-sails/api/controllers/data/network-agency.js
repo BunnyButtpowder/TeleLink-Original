@@ -28,7 +28,14 @@ module.exports = {
       if (allData.length === 0) {
         return res.notFound({ message: "Không có dữ liệu." });
       }
-      const categorizedData = _.groupBy(allData, 'networkName');
+
+      const assignData = await DataAssignment.find({});
+      const assignDataIds = assignData.map(item => item.data); 
+      // console.log(assignDataIds)
+
+      const filteredData = allData.filter(item => !assignDataIds.includes(item.id));
+      
+      const categorizedData = _.groupBy(filteredData, 'networkName');
 
       const categorizedWithCounts = _.mapValues(categorizedData, (items) => ({
         count: items.length,
