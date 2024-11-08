@@ -11,7 +11,7 @@ module.exports = {
     try {
       const allData = await Data.find({
         agency: null,
-        // networkName:"Viettel"
+        isDelete : false
       });
 
       // Kiểm tra xem có dữ liệu không
