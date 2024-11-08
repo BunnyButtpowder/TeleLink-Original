@@ -33,9 +33,10 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   }, [updatedQuery])
 
   const fetchData = () => {
+    const searchTerm = state.search || '';
     // Admin gets all data
     if (userRole === 1) {
-      return getAllData();
+      return getAllData(searchTerm);
     } else if (userRole === 2 && agencyId) {
       // Agency gets data by agency id
       return getDataByAgency(agencyId);
@@ -46,7 +47,7 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   };
   
   const { isFetching, refetch, data: response } = useQuery(
-    `${QUERIES.USERS_LIST}-${query}`,
+    [`${QUERIES.USERS_LIST}-${query}`, state.search],
     fetchData,
     { cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false }
   )

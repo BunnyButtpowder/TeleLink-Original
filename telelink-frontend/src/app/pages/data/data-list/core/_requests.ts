@@ -23,9 +23,11 @@ const importData = async (file: File): Promise<any> => {
   }
 };
 
-const getAllData = (): Promise<DataQueryResponse> => {
+const getAllData = (searchTerm: string = ''): Promise<DataQueryResponse> => {
   return axios
-    .get(GET_ALL_DATA_URL)
+    .get(GET_ALL_DATA_URL, {
+      params: { searchTerm }
+    })
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 };
 
@@ -37,13 +39,13 @@ const getAllNetworks = (): Promise<any> => {
 
 const getDataByAgency = async (agencyId: ID): Promise<DataQueryResponse> => {
   return axios
-    .get(`${API_URL}/data/agency`, {params: {agencyId}})
+    .get(`${API_URL}/data/agency`, { params: { agencyId } })
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 }
 
 const getSalesmenByAgency = async (agencyId: string) => {
   try {
-    const response = await axios.get(`${API_URL}/users/agency`, {params: {agencyId}});
+    const response = await axios.get(`${API_URL}/users/agency`, { params: { agencyId } });
     return response.data.employees.map((employee: any) => ({
       id: employee.id,
       fullName: employee.fullName,
@@ -56,7 +58,7 @@ const getSalesmenByAgency = async (agencyId: string) => {
 
 const getNetworksByAgency = async (agencyId: string) => {
   try {
-    const response = await axios.get(`${API_URL}/data/network-agency`, {params: {agencyId}});
+    const response = await axios.get(`${API_URL}/data/network-agency`, { params: { agencyId } });
     return response.data;
   } catch (error) {
     console.error('Failed to fetch networks by agency:', error);
@@ -66,7 +68,7 @@ const getNetworksByAgency = async (agencyId: string) => {
 
 const getCategoriesByAgency = async (agencyId: string) => {
   try {
-    const response = await axios.get(`${API_URL}/data/category-agency`, {params: {agencyId}});
+    const response = await axios.get(`${API_URL}/data/category-agency`, { params: { agencyId } });
     return response.data;
   } catch (error) {
     console.error('Failed to fetch categories by agency:', error);
@@ -94,8 +96,8 @@ const dataAssignSalesman = async (values: any): Promise<any> => {
   }
 }
 
-const getAllAgencies = async() => {
-  try{
+const getAllAgencies = async () => {
+  try {
     const response = await axios.get(`${API_URL}/agencys/getall`);
     return response.data;
   } catch (error) {
@@ -104,8 +106,8 @@ const getAllAgencies = async() => {
   }
 }
 
-const getAllDataCategories = async() => {
-  try{
+const getAllDataCategories = async () => {
+  try {
     const response = await axios.get(`${API_URL}/data/category`);
     return response.data;
   } catch (error) {
