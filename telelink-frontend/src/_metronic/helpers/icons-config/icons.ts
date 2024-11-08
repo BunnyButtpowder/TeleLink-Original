@@ -213,6 +213,7 @@ const icons: IIcons = {
   'telephone-geolocation': 3,
   satellite: 6,
   flag: 2,
+  'black-list': 2,
   focus: 2,
   pointers: 3,
   compass: 2,
