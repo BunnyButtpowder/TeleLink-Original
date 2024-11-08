@@ -28,7 +28,7 @@ module.exports = {
 
     try {
       const { searchTerm, sort, order } = inputs;
-      console.log(searchTerm)
+      // console.log(searchTerm)
       if (searchTerm) {
         const data = await Data.find({
           isDelete: false,

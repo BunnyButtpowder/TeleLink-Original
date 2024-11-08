@@ -10,7 +10,8 @@ module.exports = {
 
     try {
       const allData = await Data.find({
-        agency: null
+        agency: null,
+        isDelete : false
       });
       const categorizedData = _.groupBy(allData, 'networkName');
 
