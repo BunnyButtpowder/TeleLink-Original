@@ -8,7 +8,7 @@ module.exports = {
     searchTerm: {
       type: 'string',
       description: 'Từ khóa tìm kiếm',
-      required: false, 
+      required: false,
     },
     sort: {
       type: 'string',
@@ -18,6 +18,14 @@ module.exports = {
       type: 'string',
       required: false,
       isIn: ['asc', 'desc'],
+    },
+    placeOfIssue: {
+      type: 'string',
+      required: false,
+    },
+    networkName: {
+      type: 'string',
+      required: false,
     }
   },
 
@@ -27,8 +35,18 @@ module.exports = {
     let { res } = this;
 
     try {
-      const { searchTerm, sort, order } = inputs;
-      // console.log(searchTerm)
+      const { searchTerm, sort, order, placeOfIssue, networkName } = inputs;
+      let filters = { isDelete: false };
+
+      if (placeOfIssue) {
+        filters.placeOfIssue = { contains: placeOfIssue };
+      }
+      if (networkName) {
+        filters.networkName = { contains: networkName };
+      }
+
+      let dataQuery = Data.find(filters);
+
       if (searchTerm) {
         const data = await Data.find({
           isDelete: false,
@@ -44,22 +62,19 @@ module.exports = {
         }
 
         return res.ok({ data: data, count: data.length });
-      } else {
-
-        // const data = await Data.find({
-        //   isDelete: false
-        // });
-
-        let dataQuery = Data.find({isDelete: false});
-
-        if (sort && order) {
-          dataQuery.sort(`${sort} ${order}`);
-        }
-
-        const data = await dataQuery;
-
-        return res.ok({ data: data, count: data.length });
       }
+
+      // const data = await Data.find({
+      //   isDelete: false
+      // });
+      
+      if (sort && order) {
+        dataQuery.sort(`${sort} ${order}`);
+      }
+
+      const data = await dataQuery;
+
+      return res.ok({ data: data, count: data.length });
 
     } catch (err) {
       console.log(err)

@@ -4,7 +4,7 @@ import { useFormik } from 'formik'
 import clsx from 'clsx'
 import axios from 'axios'
 import { useIntl } from 'react-intl'
-import { dataAssignAgency, dataAssignSalesman, getAllAgencies, getAllDataCategories, getSalesmenByAgency, getAllNetworks, getNetworksByAgency, getCategoriesByAgency } from '../core/_requests'
+import { dataAssignAgency, dataAssignSalesman, dataAssignAdminToSaleman, getAllAgencies, getAllDataCategories, getSalesmenByAgency, getAllNetworks, getNetworksByAgency, getCategoriesByAgency } from '../core/_requests'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../../../app/modules/auth'
@@ -158,7 +158,11 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
         let response;
         if (isAdmin && selectedTarget === 'agency') {
           response = await dataAssignAgency(values);
-        } else {
+        }
+        else if (isAdmin && selectedTarget === 'salesman') {
+          response = await dataAssignAdminToSaleman(values);
+        } 
+        else {
           response = await dataAssignSalesman(values);
         }
         toast.success(response.message || 'Phân phối dữ liệu thành công!');

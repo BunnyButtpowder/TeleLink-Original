@@ -23,7 +23,7 @@ const importData = async (file: File): Promise<any> => {
   }
 };
 
-const getAllData = (params: {searchTerm?: string, sort?: string, order?: string}): Promise<DataQueryResponse> => {
+const getAllData = (params: {searchTerm?: string, sort?: string, order?: string, placeOfIssue?: string, networkName?: string}): Promise<DataQueryResponse> => {
   return axios
     .get(GET_ALL_DATA_URL, { params })
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
@@ -80,6 +80,16 @@ const dataAssignAgency = async (values: any): Promise<any> => {
     return response.data;
   } catch (error) {
     console.error('Error distributing data to agency:', error);
+    throw error;
+  }
+}
+
+const dataAssignAdminToSaleman = async (values: any): Promise<any> => {
+  try{
+    const response = await axios.post(`${API_URL}/data-assign/admin-user`, values);
+    return response.data;
+  } catch (error) {
+    console.error('Error distributing data from admin to saleman:', error);
     throw error;
   }
 }
@@ -152,5 +162,6 @@ export {
   getSalesmenByAgency,
   getAllNetworks,
   getNetworksByAgency,
-  getCategoriesByAgency
+  getCategoriesByAgency,
+  dataAssignAdminToSaleman
 };
