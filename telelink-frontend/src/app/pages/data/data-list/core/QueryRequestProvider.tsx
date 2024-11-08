@@ -6,16 +6,21 @@ import {
   initialQueryRequest,
   WithChildren,
 } from '../../../../../_metronic/helpers'
+import axios from 'axios'
+import { getAllData, getDataByAgency } from './_requests'
 
+const API_URL = import.meta.env.VITE_APP_API_URL;
 const QueryRequestContext = createContext<QueryRequestContextProps>(initialQueryRequest)
 
 const QueryRequestProvider: FC<WithChildren> = ({children}) => {
   const [state, setState] = useState<QueryState>(initialQueryRequest.state)
 
   const updateState = (updates: Partial<QueryState>) => {
-    const updatedState = {...state, ...updates} as QueryState
-    setState(updatedState)
-  }
+    const updatedState = { ...state, ...updates };
+    if (JSON.stringify(state) !== JSON.stringify(updatedState)) {
+      setState(updatedState);
+    }
+  };
 
   return (
     <QueryRequestContext.Provider value={{state, updateState}}>

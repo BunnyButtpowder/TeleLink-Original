@@ -9,6 +9,15 @@ module.exports = {
       type: 'string',
       description: 'Từ khóa tìm kiếm',
       required: false, 
+    },
+    sort: {
+      type: 'string',
+      required: false,
+    },
+    order: {
+      type: 'string',
+      required: false,
+      isIn: ['asc', 'desc'],
     }
   },
 
@@ -18,7 +27,7 @@ module.exports = {
     let { res } = this;
 
     try {
-      const { searchTerm } = inputs;
+      const { searchTerm, sort, order } = inputs;
       console.log(searchTerm)
       if (searchTerm) {
         const data = await Data.find({
@@ -37,9 +46,17 @@ module.exports = {
         return res.ok({ data: data, count: data.length });
       } else {
 
-        const data = await Data.find({
-          isDelete: false
-        });
+        // const data = await Data.find({
+        //   isDelete: false
+        // });
+
+        let dataQuery = Data.find({isDelete: false});
+
+        if (sort && order) {
+          dataQuery.sort(`${sort} ${order}`);
+        }
+
+        const data = await dataQuery;
 
         return res.ok({ data: data, count: data.length });
       }

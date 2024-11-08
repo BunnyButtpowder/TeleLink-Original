@@ -1,7 +1,7 @@
 import {useListView} from '../../core/ListViewProvider'
 import {DataListToolbar} from './DataListToolbar'
 import {UsersListGrouping} from './UsersListGrouping'
-import {UsersListSearchComponent} from './UsersListSearchComponent'
+import {DataListSearchComponent} from './DataListSearchComponent'
 import {Data} from '../../core/_models'
 
 type DataListHeaderProps = {
@@ -12,7 +12,7 @@ const DataListHeader: React.FC <DataListHeaderProps> = ({ onUploadComplete }) =>
   const {selected} = useListView()
   return (
     <div className='card-header border-0 pt-6'>
-      <UsersListSearchComponent />
+      <DataListSearchComponent />
       {/* begin::Card toolbar */}
       <div className='card-toolbar'>
         {/* begin::Group actions */}
