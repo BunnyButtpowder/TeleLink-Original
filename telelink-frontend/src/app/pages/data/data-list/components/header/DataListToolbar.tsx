@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { importData } from '../../core/_requests'
 import { KTIcon } from '../../../../../../_metronic/helpers'
 import { useListView } from '../../core/ListViewProvider'
-import { UsersListFilter } from './UsersListFilter'
+import { DataListFilter } from './DataListFilter'
 import { useIntl } from 'react-intl'
 import { Data } from '../../core/_models'
 import { DataDistributionModal } from '../../data-distribution-modal/DataDistributionModal'
@@ -32,6 +32,9 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
         toast.error('Upload data thất bại!');
       } finally {
         setUploading(false);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
       }
     }
   };
@@ -54,7 +57,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
     <>
       <ToastContainer />
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-        <UsersListFilter />
+        <DataListFilter />
 
         {/* begin::Upload data */}
         <input

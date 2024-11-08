@@ -33,23 +33,21 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   }, [updatedQuery])
 
   const fetchData = () => {
-    const searchTerm = state.search || '';
-    const sort = state.sort || '';
-    const order = state.order || '';
+    const { search = '', sort = '', order = '', filter = {} } = state;
+  
+    const { placeOfIssue, networkName } = filter;
     // Admin gets all data
     if (userRole === 1) {
-      return getAllData({searchTerm, sort, order});
+      return getAllData({ searchTerm: search, sort, order, placeOfIssue, networkName });
     } else if (userRole === 2 && agencyId) {
-      // Agency gets data by agency id
       return getDataByAgency(agencyId);
     } else {
-      // Undefined role gets empty data
       return Promise.resolve({ data: [], count: 0 });
     }
   };
   
   const { isFetching, refetch, data: response } = useQuery(
-    [`${QUERIES.USERS_LIST}-${query}`, state.search, state.sort, state.order],
+    [`${QUERIES.USERS_LIST}-${query}`, state.filter],
     fetchData,
     { cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false }
   )

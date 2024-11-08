@@ -1,31 +1,43 @@
-import {useEffect, useState} from 'react'
-import {MenuComponent} from '../../../../../../_metronic/assets/ts/components'
-import {initialQueryState, KTIcon} from '../../../../../../_metronic/helpers'
-import {useQueryRequest} from '../../core/QueryRequestProvider'
-import {useQueryResponse} from '../../core/QueryResponseProvider'
-import {useIntl} from 'react-intl'
+import { useEffect, useState } from 'react'
+import { MenuComponent } from '../../../../../../_metronic/assets/ts/components'
+import { initialQueryState, KTIcon } from '../../../../../../_metronic/helpers'
+import { useQueryRequest } from '../../core/QueryRequestProvider'
+import { useQueryResponse } from '../../core/QueryResponseProvider'
+import { useIntl } from 'react-intl'
+import { ref } from 'firebase/storage'
 
-const UsersListFilter = () => {
-  const {updateState} = useQueryRequest()
-  const {isLoading} = useQueryResponse()
-  const [role, setRole] = useState<string | undefined>()
-  const [lastLogin, setLastLogin] = useState<string | undefined>()
+const DataListFilter = () => {
+  const { updateState } = useQueryRequest()
+  const { isLoading } = useQueryResponse()
+  const [placeOfIssue, setPlaceOfIssue] = useState<string | undefined>()
+  const [networkName, setNetworkName] = useState<string | undefined>()
   const intl = useIntl()
+  const { refetch } = useQueryResponse();
 
   useEffect(() => {
     MenuComponent.reinitialization()
   }, [])
 
   const resetData = () => {
-    updateState({filter: undefined, ...initialQueryState})
+    setPlaceOfIssue('')
+    setNetworkName('')
+    updateState({
+      filter: {
+        placeOfIssue: '',
+        networkName: '',
+      }, ...initialQueryState
+    })
+    refetch()
   }
 
   const filterData = () => {
+    console.log("Applying filters:", { placeOfIssue, networkName });
     updateState({
-      filter: {role, last_login: lastLogin},
-      ...initialQueryState,
-    })
-  }
+      filter: { placeOfIssue, networkName },
+    });
+
+    refetch();
+  };
 
   return (
     <>
@@ -38,14 +50,14 @@ const UsersListFilter = () => {
         data-kt-menu-placement='bottom-end'
       >
         <KTIcon iconName='filter' className='fs-2' />
-        {intl.formatMessage({id: 'ECOMMERCE.COMMON.FILTER'})}
+        {intl.formatMessage({ id: 'ECOMMERCE.COMMON.FILTER' })}
       </button>
       {/* end::Filter Button */}
       {/* begin::SubMenu */}
       <div className='menu menu-sub menu-sub-dropdown w-300px w-md-325px' data-kt-menu='true'>
         {/* begin::Header */}
         <div className='px-7 py-5'>
-          <div className='fs-5 text-gray-900 fw-bolder'>{intl.formatMessage({id: 'ECOMMERCE.COMMON.FILTER_OPTIONS'})}</div>
+          <div className='fs-5 text-gray-900 fw-bolder'>{intl.formatMessage({ id: 'ECOMMERCE.COMMON.FILTER_OPTIONS' })}</div>
         </div>
         {/* end::Header */}
 
@@ -57,7 +69,7 @@ const UsersListFilter = () => {
         <div className='px-7 py-5' data-kt-user-table-filter='form'>
           {/* begin::Input group */}
           <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Role:</label>
+            <label className='form-label fs-6 fw-bold'>Nơi cấp data:</label>
             <select
               className='form-select form-select-solid fw-bolder'
               data-kt-select2='true'
@@ -65,20 +77,20 @@ const UsersListFilter = () => {
               data-allow-clear='true'
               data-kt-user-table-filter='role'
               data-hide-search='true'
-              onChange={(e) => setRole(e.target.value)}
-              value={role}
+              onChange={(e) => setPlaceOfIssue(e.target.value)}
+              value={placeOfIssue}
             >
               <option value=''></option>
-              <option value='Partner'>Partner</option>
-              <option value='Sub-admin'>Administrator (Sub)</option>
-              <option value='Salesman'>Salesman</option>
+              <option value='Hà Nội'>Hà Nội</option>
+              <option value='Đà Nẵng'>Đà Nẵng</option>
+              <option value='TP Hồ Chí Minh'>TP Hồ Chí Minh</option>
             </select>
           </div>
           {/* end::Input group */}
 
           {/* begin::Input group */}
           <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Last login:</label>
+            <label className='form-label fs-6 fw-bold'>Nhà mạng:</label>
             <select
               className='form-select form-select-solid fw-bolder'
               data-kt-select2='true'
@@ -86,14 +98,14 @@ const UsersListFilter = () => {
               data-allow-clear='true'
               data-kt-user-table-filter='two-step'
               data-hide-search='true'
-              onChange={(e) => setLastLogin(e.target.value)}
-              value={lastLogin}
+              onChange={(e) => setNetworkName(e.target.value)}
+              value={networkName}
             >
               <option value=''></option>
-              <option value='Yesterday'>Yesterday</option>
-              <option value='20 mins ago'>20 mins ago</option>
-              <option value='5 hours ago'>5 hours ago</option>
-              <option value='2 days ago'>2 days ago</option>
+              <option value='Viettel'>Viettel</option>
+              <option value='Vinaphone'>Vinaphone</option>
+              <option value='Mobifone'>Mobifone</option>
+              <option value='Vietnamobile'>Vietnamobile</option>
             </select>
           </div>
           {/* end::Input group */}
@@ -103,22 +115,22 @@ const UsersListFilter = () => {
             <button
               type='button'
               disabled={isLoading}
-              onClick={filterData}
+              onClick={resetData}
               className='btn btn-light btn-active-light-primary fw-bold me-2 px-6'
               data-kt-menu-dismiss='true'
               data-kt-user-table-filter='reset'
             >
-              Reset
+              Đặt lại
             </button>
             <button
               disabled={isLoading}
               type='button'
-              onClick={resetData}
+              onClick={filterData}
               className='btn btn-primary fw-bold px-6'
               data-kt-menu-dismiss='true'
               data-kt-user-table-filter='filter'
             >
-              Apply
+              Áp dụng
             </button>
           </div>
           {/* end::Actions */}
@@ -130,4 +142,4 @@ const UsersListFilter = () => {
   )
 }
 
-export {UsersListFilter}
+export { DataListFilter }

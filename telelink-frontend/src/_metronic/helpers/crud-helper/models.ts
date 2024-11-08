@@ -14,7 +14,10 @@ export type SortState = {
 }
 
 export type FilterState = {
-  filter?: unknown
+  filter?: {
+    placeOfIssue?: string
+    networkName?: string
+  }
 }
 
 export type SearchState = {
@@ -42,6 +45,10 @@ export type QueryRequestContextProps = {
 export const initialQueryState: QueryState = {
   page: 1,
   items_per_page: 10,
+  filter: {
+    placeOfIssue: '',
+    networkName: '',
+  },
 }
 
 export const initialQueryRequest: QueryRequestContextProps = {
