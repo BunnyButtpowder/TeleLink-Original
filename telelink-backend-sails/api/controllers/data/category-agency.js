@@ -29,9 +29,11 @@ module.exports = {
         return res.notFound({ message: "Không có dữ liệu." });
       }
 
-      const assignData = await DataAssignment.find({});
+      const assignData = await DataAssignment.find({
+        complete: false
+      });
       const assignDataIds = assignData.map(item => item.data); 
-      // console.log(assignDataIds)
+      console.log(assignDataIds)
 
       const filteredData = allData.filter(item => !assignDataIds.includes(item.id));
 
