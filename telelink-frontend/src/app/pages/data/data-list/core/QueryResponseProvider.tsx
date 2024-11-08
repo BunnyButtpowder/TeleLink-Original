@@ -34,20 +34,22 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
 
   const fetchData = () => {
     const searchTerm = state.search || '';
+    const sort = state.sort || '';
+    const order = state.order || '';
     // Admin gets all data
     if (userRole === 1) {
-      return getAllData(searchTerm);
+      return getAllData({searchTerm, sort, order});
     } else if (userRole === 2 && agencyId) {
       // Agency gets data by agency id
       return getDataByAgency(agencyId);
     } else {
       // Undefined role gets empty data
-      return Promise.resolve({ data: [] });
+      return Promise.resolve({ data: [], count: 0 });
     }
   };
   
   const { isFetching, refetch, data: response } = useQuery(
-    [`${QUERIES.USERS_LIST}-${query}`, state.search],
+    [`${QUERIES.USERS_LIST}-${query}`, state.search, state.sort, state.order],
     fetchData,
     { cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false }
   )

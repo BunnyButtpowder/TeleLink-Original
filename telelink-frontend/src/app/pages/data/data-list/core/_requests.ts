@@ -23,11 +23,9 @@ const importData = async (file: File): Promise<any> => {
   }
 };
 
-const getAllData = (searchTerm: string = ''): Promise<DataQueryResponse> => {
+const getAllData = (params: {searchTerm?: string, sort?: string, order?: string}): Promise<DataQueryResponse> => {
   return axios
-    .get(GET_ALL_DATA_URL, {
-      params: { searchTerm }
-    })
+    .get(GET_ALL_DATA_URL, { params })
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 };
 
