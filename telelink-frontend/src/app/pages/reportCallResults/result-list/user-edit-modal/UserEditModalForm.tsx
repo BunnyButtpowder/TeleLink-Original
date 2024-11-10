@@ -2,7 +2,7 @@ import {FC, useState} from 'react'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
 import {isNotEmpty, toAbsoluteUrl} from '../../../../../_metronic/helpers'
-import {initialUser, Customer} from '../core/_models'
+import {initialReport, Report} from '../core/_models'
 import clsx from 'clsx'
 import {useListView} from '../core/ListViewProvider'
 import {UsersListLoading} from '../components/loading/UsersListLoading'
@@ -12,7 +12,7 @@ import {useIntl} from 'react-intl'
 
 type Props = {
   isUserLoading: boolean
-  customer: Customer
+  customer: Report
 }
 
 const editUserSchema = Yup.object().shape({
@@ -36,14 +36,14 @@ const UserEditModalForm: FC<Props> = ({customer, isUserLoading}) => {
   const {setItemIdForUpdate} = useListView()
   const {refetch} = useQueryResponse()
 
-  const [userForEdit] = useState<Customer>({
+  const [userForEdit] = useState<Report>({
     ...customer,
-    phoneNum: customer.phoneNum || initialUser.phoneNum,
-    currentPack: customer.currentPack || initialUser.currentPack,
-    specialPack: customer.specialPack || initialUser.specialPack,
-    assignedPack: customer.assignedPack || initialUser.assignedPack,
-    regisDate: customer.regisDate || initialUser.regisDate,
-    expDate: customer.expDate || initialUser.expDate,
+    phoneNum: customer.phoneNum || initialReport.phoneNum,
+    currentPack: customer.currentPack || initialReport.currentPack,
+    specialPack: customer.specialPack || initialReport.specialPack,
+    assignedPack: customer.assignedPack || initialReport.assignedPack,
+    regisDate: customer.regisDate || initialReport.regisDate,
+    expDate: customer.expDate || initialReport.expDate,
   })
 
   const cancel = (withRefresh?: boolean) => {

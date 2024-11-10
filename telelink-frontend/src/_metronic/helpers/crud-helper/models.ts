@@ -15,6 +15,8 @@ export type SortState = {
 
 export type FilterState = {
   filter?: {
+    role?: string
+    last_login?: string
     placeOfIssue?: string
     networkName?: string
   }

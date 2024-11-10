@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { ID, Response } from "../../../../../_metronic/helpers";
-import { Customer, UsersQueryResponse } from "./_models";
+import { Report, UsersQueryResponse } from "./_models";
 
 const API_URL = import.meta.env.VITE_APP_THEME_API_URL;
 const USER_URL = `${API_URL}/user`;
@@ -12,25 +12,25 @@ const getUsers = (query: string): Promise<UsersQueryResponse> => {
     .then((d: AxiosResponse<UsersQueryResponse>) => d.data);
 };
 
-const getUserById = (id: ID): Promise<Customer | undefined> => {
+const getUserById = (id: ID): Promise<Report | undefined> => {
   return axios
     .get(`${USER_URL}/${id}`)
-    .then((response: AxiosResponse<Response<Customer>>) => response.data)
-    .then((response: Response<Customer>) => response.data);
+    .then((response: AxiosResponse<Response<Report>>) => response.data)
+    .then((response: Response<Report>) => response.data);
 };
 
-const createUser = (customer: Customer): Promise<Customer | undefined> => {
+const createUser = (customer: Report): Promise<Report | undefined> => {
   return axios
     .put(USER_URL, customer)
-    .then((response: AxiosResponse<Response<Customer>>) => response.data)
-    .then((response: Response<Customer>) => response.data);
+    .then((response: AxiosResponse<Response<Report>>) => response.data)
+    .then((response: Response<Report>) => response.data);
 };
 
-const updateUser = (customer: Customer): Promise<Customer | undefined> => {
+const updateUser = (customer: Report): Promise<Report | undefined> => {
   return axios
     .post(`${USER_URL}/${customer.id}`, customer)
-    .then((response: AxiosResponse<Response<Customer>>) => response.data)
-    .then((response: Response<Customer>) => response.data);
+    .then((response: AxiosResponse<Response<Report>>) => response.data)
+    .then((response: Response<Report>) => response.data);
 };
 
 const deleteUser = (userId: ID): Promise<void> => {

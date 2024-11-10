@@ -25,7 +25,7 @@ export type Report = {
 
 export type UsersQueryResponse = Response<Array<Report>>
 
-export const initialResult: Report = {
+export const initialReport: Report = {
   phoneNum: '80981128185',
   currentPack: 'ST15K',
   specialPack: ',,V200X,',

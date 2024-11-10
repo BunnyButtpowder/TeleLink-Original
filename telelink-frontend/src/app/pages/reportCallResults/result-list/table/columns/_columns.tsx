@@ -6,9 +6,9 @@ import {ResultActionsCell} from './ResultActionsCell'
 import {UserSelectionCell} from './UserSelectionCell'
 import {UserCustomHeader} from './UserCustomHeader'
 import {UserSelectionHeader} from './UserSelectionHeader'
-import {Customer} from '../../core/_models'
+import {Report} from '../../core/_models'
 
-const resultsColumns: ReadonlyArray<Column<Customer>> = [
+const resultsColumns: ReadonlyArray<Column<Report>> = [
   {
     Header: (props) => <UserSelectionHeader tableProps={props} />,
     id: 'selection',

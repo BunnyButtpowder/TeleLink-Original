@@ -2,10 +2,10 @@
 import clsx from 'clsx'
 import {FC} from 'react'
 import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
-import {Customer} from '../../core/_models'
+import {Report} from '../../core/_models'
 
 type Props = {
-  customer: Customer
+  customer: Report
 }
 
 const UserInfoCell: FC<Props> = ({customer}) => (
