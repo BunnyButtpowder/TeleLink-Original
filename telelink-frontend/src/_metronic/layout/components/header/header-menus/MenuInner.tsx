@@ -20,13 +20,12 @@ export function MenuInner() {
       {userRole === 1 && (
         <>
           <MenuItem title={intl.formatMessage({ id: 'DATA' })} to='/data' />
-          <MenuItem title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })} to='/customers' />
 
           <MenuInnerWithSub
             title='Báo cáo'
             to='/reports'
             menuPlacement='bottom-start'
-            menuTrigger='click'
+            menuTrigger={`{default:'click', lg: 'hover'}`}
           >
             <MenuItem title={intl.formatMessage({ id: 'MENU.REPORTS.REVENUE' })} to='/reports/revenue' hasBullet={true} />
             <MenuItem title={intl.formatMessage({ id: 'MENU.REPORTS.CALL_RESULTS' })} to='/reports/call-results' hasBullet={true} />
@@ -35,7 +34,7 @@ export function MenuInner() {
             title='Cá Nhân'
             to='/crafted'
             menuPlacement='bottom-start'
-            menuTrigger='click'
+            menuTrigger={`{default:'click', lg: 'hover'}`}
           >
             {/* PAGES */}
             {/* <MenuInnerWithSub
@@ -112,7 +111,7 @@ export function MenuInner() {
         </MenuInnerWithSub> */}
           </MenuInnerWithSub>
 
-          <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger='click'>
+          <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger={`{default:'click', lg: 'hover'}`}>
             <MenuItem icon='abstract-28' to='/apps/user-management/users' title='Quản lý tài khoản' />
           </MenuInnerWithSub>
           {/* PAGES */}
@@ -136,47 +135,28 @@ export function MenuInner() {
       {userRole === 2 && (
         <>
           <MenuItem title={intl.formatMessage({ id: 'DATA' })} to='/data' />
-          <MenuItem title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })} to='/customers' />
           <MenuInnerWithSub
             title='Báo cáo'
             to='/reports'
             menuPlacement='bottom-start'
-            menuTrigger='click'
+            menuTrigger={`{default:'click', lg: 'hover'}`}
           >
             {/* ACCOUNT */}
-            <MenuInnerWithSub
-              title='Báo cáo'
-              to='/reports/revenue'
-              fontIcon='bi-person'
-              hasArrow={true}
-              menuPlacement='right-start'
-              menuTrigger={`{default:'click', lg: 'hover'}`}
-            >
-              <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
-              <MenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
-            </MenuInnerWithSub>
+            <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
+            <MenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
           </MenuInnerWithSub>
           <MenuInnerWithSub
             title='Cá Nhân'
             to='/crafted'
             menuPlacement='bottom-start'
-            menuTrigger='click'
+            menuTrigger={`{default:'click', lg: 'hover'}`}
           >
             {/* ACCOUNT */}
-            <MenuInnerWithSub
-              title='Tài khoản'
-              to='/crafted/accounts'
-              fontIcon='bi-person'
-              hasArrow={true}
-              menuPlacement='right-start'
-              menuTrigger={`{default:'click', lg: 'hover'}`}
-            >
-              <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
-              <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
-            </MenuInnerWithSub>
+            <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
+            <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
           </MenuInnerWithSub>
           {/* MANAGEMENT */}
-          <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger='click'>
+          <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger={`{default:'click', lg: 'hover'}`}>
             <MenuItem icon='abstract-28' to='/apps/user-management/users' title='Quản lý tài khoản' />
           </MenuInnerWithSub>
         </>
@@ -190,39 +170,21 @@ export function MenuInner() {
             title='Báo cáo'
             to='/reports'
             menuPlacement='bottom-start'
-            menuTrigger='click'
+            menuTrigger={`{default:'click', lg: 'hover'}`}
           >
             {/* ACCOUNT */}
-            <MenuInnerWithSub
-              title='Báo cáo'
-              to='/reports/revenue'
-              fontIcon='bi-person'
-              hasArrow={true}
-              menuPlacement='right-start'
-              menuTrigger={`{default:'click', lg: 'hover'}`}
-            >
-              <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
-              <MenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
-            </MenuInnerWithSub>
+            <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
+            <MenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
           </MenuInnerWithSub>
           <MenuInnerWithSub
             title='Cá Nhân'
             to='/crafted'
             menuPlacement='bottom-start'
-            menuTrigger='click'
+            menuTrigger={`{default:'click', lg: 'hover'}`}
           >
             {/* ACCOUNT */}
-            <MenuInnerWithSub
-              title='Tài khoản'
-              to='/crafted/accounts'
-              fontIcon='bi-person'
-              hasArrow={true}
-              menuPlacement='right-start'
-              menuTrigger={`{default:'click', lg: 'hover'}`}
-            >
-              <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
-              <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
-            </MenuInnerWithSub>
+            <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
+            <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
           </MenuInnerWithSub>
         </>
       )}

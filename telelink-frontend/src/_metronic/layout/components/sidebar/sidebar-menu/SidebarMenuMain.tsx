@@ -35,12 +35,12 @@ const SidebarMenuMain = () => {
             title={intl.formatMessage({ id: 'ECOMMERCE.CELLPHONE.PLAN' })}
             fontIcon='bi-app-indicator'
           />
-          <SidebarMenuItem
+          {/* <SidebarMenuItem
             to='/customers'
             icon='profile-user'
             title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })}
             fontIcon='bi-app-indicator'
-          />
+          /> */}
           <SidebarMenuItem
             to='/blacklist'
             title={intl.formatMessage({ id: 'BLACKLIST' })}
