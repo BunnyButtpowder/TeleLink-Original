@@ -1,3 +1,6 @@
+import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { FC, useState, useEffect } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
@@ -9,9 +12,7 @@ import { UsersListLoading } from '../loading/UsersListLoading'
 import { createBlacklistNumber, updateBlacklistNumber } from '../../core/_requests'
 import { useQueryResponse } from '../../core/QueryResponseProvider'
 import { useIntl } from 'react-intl'
-import axios from 'axios'
-
-const API_URL = import.meta.env.VITE_APP_API_URL;
+import { useAuth } from '../../../../../../app/modules/auth'
 
 type Props = {
   isUserLoading: boolean
@@ -23,8 +24,8 @@ const vietnamesePhoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
 
 const BlacklistSchema = Yup.object().shape({
   SDT: Yup.string()
-  .matches(vietnamesePhoneRegExp, 'Phone number is not valid')
-  .required('Phone number is required'),
+    .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
+    .required('Vui lòng điền số muốn chặn'),
   note: Yup.string().nullable(),
 })
 
@@ -32,12 +33,13 @@ const BlacklistEditModalForm: FC<Props> = ({ number, isUserLoading }) => {
   const intl = useIntl();
   const { setItemIdForUpdate } = useListView()
   const { refetch } = useQueryResponse()
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id;
 
   const [blacklistForEdit, setBlacklistForEdit] = useState<Blacklist>({
     ...number,
     SDT: number.SDT || initialBlacklist.SDT,
     note: number.note || initialBlacklist.note,
-
   });
 
 
@@ -57,8 +59,10 @@ const BlacklistEditModalForm: FC<Props> = ({ number, isUserLoading }) => {
       try {
         if (isNotEmpty(values.id)) {
           await updateBlacklistNumber(values, token || '')
+          toast.success('Cập nhật thành công')
         } else {
-          await createBlacklistNumber(values)
+          await createBlacklistNumber(values, userId?.toString() || '')
+          toast.success('Thêm số chặn thành công')
         }
       } catch (ex) {
         console.error(ex)
@@ -89,7 +93,7 @@ const BlacklistEditModalForm: FC<Props> = ({ number, isUserLoading }) => {
             {/* begin::Input group */}
             <div className='fv-row mb-7'>
               {/* begin::Label */}
-              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'CODE' })}</label>
+              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.PHONE' })}</label>
               {/* end::Label */}
 
               {/* begin::Input */}
@@ -122,7 +126,7 @@ const BlacklistEditModalForm: FC<Props> = ({ number, isUserLoading }) => {
             {/* begin::Input group */}
             <div className='fv-row mb-7'>
               {/* begin::Label */}
-              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NOTE' })}</label>
+              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NOTE' })}</label>
               {/* end::Label */}
 
               {/* begin::Input */}
@@ -150,7 +154,7 @@ const BlacklistEditModalForm: FC<Props> = ({ number, isUserLoading }) => {
             </div>
             {/* end::Input group */}
 
-          
+
           </div>
           {/* end::Scroll */}
 

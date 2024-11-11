@@ -2,7 +2,7 @@ import {useEffect} from 'react'
 import {UserEditModalHeader} from './BlacklistEditModalHeader'
 import {BlacklistEditModalFormWrapper} from './BlacklistEditModalFormWrapper'
 
-const UserEditModal = () => {
+const BlacklistEditModal = () => {
   useEffect(() => {
     document.body.classList.add('modal-open')
     return () => {
@@ -41,4 +41,4 @@ const UserEditModal = () => {
   )
 }
 
-export {UserEditModal}
+export {BlacklistEditModal}

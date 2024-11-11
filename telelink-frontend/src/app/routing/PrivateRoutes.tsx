@@ -122,7 +122,7 @@ const PrivateRoutes = () => {
           }
         />
         <Route
-          path='blacklist/list'
+          path='blacklist'
           element={
             <SuspensedView>
               <BlackListPage />

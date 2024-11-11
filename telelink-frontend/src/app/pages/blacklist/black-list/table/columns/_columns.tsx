@@ -1,9 +1,9 @@
-import {Column} from 'react-table'
-import {BlacklistActionsCell} from './BlacklistActionsCell'
-import {UserSelectionCell} from './UserSelectionCell'
-import {BlacklistCustomHeader} from './BlacklistCustomHeader'
-import {UserSelectionHeader} from './UserSelectionHeader'
-import {Blacklist} from '../../core/_models'
+import { Column } from 'react-table'
+import { BlacklistActionsCell } from './BlacklistActionsCell'
+import { UserSelectionCell } from './UserSelectionCell'
+import { BlacklistCustomHeader } from './BlacklistCustomHeader'
+import { UserSelectionHeader } from './UserSelectionHeader'
+import { Blacklist } from '../../core/_models'
 
 
 const usersColumns: ReadonlyArray<Column<Blacklist>> = [
@@ -35,14 +35,14 @@ const usersColumns: ReadonlyArray<Column<Blacklist>> = [
       <BlacklistCustomHeader tableProps={props} title='Ngày thêm' className='min-w-125px' />
     ),
     accessor: 'createdAt',
-    Cell: ({...props}) => {
+    Cell: ({ ...props }) => {
       const timestamp = props.data[props.row.index].createdAt
 
       if (timestamp) {
         const date = new Date(timestamp)
         return <span>{date.toLocaleDateString('vi-VN')}</span>
       }
-      return <span></span> // return empty span if `registrationDate` is null or undefined
+      return <span></span>
     }
   },
 
@@ -51,10 +51,11 @@ const usersColumns: ReadonlyArray<Column<Blacklist>> = [
       <BlacklistCustomHeader tableProps={props} title='Người thêm' className='min-w-125px' />
     ),
     accessor: 'user',
-    Cell: ({...props}) => {
-      const user = props.data[props.row.index].user
-      return <span>{user?.fullName || ''}</span> // Display full name if available, otherwise empty
-    },
+    Cell: ({ ...props }) =>
+      // const user = props.data[props.row.index].user
+      // return <span>{user?.fullName || ''}</span>
+      <span>{props.data[props.row.index].user?.fullName}</span>
+    ,
   },
 
   {
@@ -62,8 +63,8 @@ const usersColumns: ReadonlyArray<Column<Blacklist>> = [
       <BlacklistCustomHeader tableProps={props} title='Tác vụ' className='text-end min-w-100px' />
     ),
     id: 'actions',
-    Cell: ({...props}) => <BlacklistActionsCell id={props.data[props.row.index].id} />,
+    Cell: ({ ...props }) => <BlacklistActionsCell id={props.data[props.row.index].id} />,
   },
 ]
 
-export {usersColumns}
+export { usersColumns }

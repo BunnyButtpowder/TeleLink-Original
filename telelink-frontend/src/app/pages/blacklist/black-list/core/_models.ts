@@ -8,7 +8,7 @@ export type Blacklist = {
   createdAt?: number,
 }
 
-export type DataQueryResponse = Response<Array<Blacklist>>
+export type BlacklistQueryResponse = Response<Array<Blacklist>>
 
 export const initialUser: User = {
   avatar: 'avatars/blank.png',

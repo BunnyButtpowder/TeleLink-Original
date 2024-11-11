@@ -11,7 +11,7 @@ import {
   stringifyRequestQuery,
   WithChildren,
 } from '../../../../../_metronic/helpers'
-import { getAllBlackList } from './_requests'
+import { getAllBlackList, getSalesmanBlacklist, getAgencyBlacklist } from './_requests'
 import { Blacklist } from './_models'
 import { useQueryRequest } from './QueryRequestProvider'
 import { useAuth } from '../../../../../app/modules/auth'
@@ -21,6 +21,7 @@ const QueryResponseContext = createResponseContext<Blacklist>(initialQueryRespon
 const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   const { state } = useQueryRequest();
   const { currentUser } = useAuth();
+  const userId = currentUser?.id;
   const userRole = currentUser?.auth.role;
   const agencyId = currentUser?.agency?.id;
   const [query, setQuery] = useState<string>(stringifyRequestQuery(state))
@@ -33,15 +34,19 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   }, [updatedQuery])
 
   const fetchBlacklist = () => {
-    // Admin gets all data
-    if (userRole === 1 || userRole === 2 && agencyId) {
+    if (userRole === 1) {
       return getAllBlackList();
-    } else {
+    } else if (userRole === 2 && agencyId) {
+      return getAgencyBlacklist(agencyId);
+    } else if (userRole === 3 && userId) {
+      return getSalesmanBlacklist(userId);
+    }
+    else {
       // Undefined role gets empty data
       return Promise.resolve({ data: [] });
     }
   };
-  
+
   const { isFetching, refetch, data: response } = useQuery(
     `${QUERIES.USERS_LIST}-${query}`,
     fetchBlacklist,
@@ -55,40 +60,40 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   )
 }
 
-  const useQueryResponse = () => useContext(QueryResponseContext)
+const useQueryResponse = () => useContext(QueryResponseContext)
 
-  const useQueryResponseData = () => {
-    const { response } = useQueryResponse()
-    if (!response) {
-      return []
-    }
-
-    return response?.data || []
+const useQueryResponseData = () => {
+  const { response } = useQueryResponse()
+  if (!response) {
+    return []
   }
 
-  const useQueryResponsePagination = () => {
-    const defaultPaginationState: PaginationState = {
-      links: [],
-      ...initialQueryState,
-    }
+  return response?.data || []
+}
 
-    const { response } = useQueryResponse()
-    if (!response || !response.payload || !response.payload.pagination) {
-      return defaultPaginationState
-    }
-
-    return response.payload.pagination
+const useQueryResponsePagination = () => {
+  const defaultPaginationState: PaginationState = {
+    links: [],
+    ...initialQueryState,
   }
 
-  const useQueryResponseLoading = (): boolean => {
-    const { isLoading } = useQueryResponse()
-    return isLoading
+  const { response } = useQueryResponse()
+  if (!response || !response.payload || !response.payload.pagination) {
+    return defaultPaginationState
   }
 
-  export {
-    QueryResponseProvider,
-    useQueryResponse,
-    useQueryResponseData,
-    useQueryResponsePagination,
-    useQueryResponseLoading,
-  }
+  return response.payload.pagination
+}
+
+const useQueryResponseLoading = (): boolean => {
+  const { isLoading } = useQueryResponse()
+  return isLoading
+}
+
+export {
+  QueryResponseProvider,
+  useQueryResponse,
+  useQueryResponseData,
+  useQueryResponsePagination,
+  useQueryResponseLoading,
+}

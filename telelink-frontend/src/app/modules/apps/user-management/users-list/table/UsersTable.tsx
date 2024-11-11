@@ -44,7 +44,7 @@ const UsersTable = () => {
               <tr>
                 <td colSpan={7}>
                   <div className='d-flex text-center w-100 align-content-center justify-content-center'>
-                    No matching records found
+                    Không có dữ liệu
                   </div>
                 </td>
               </tr>

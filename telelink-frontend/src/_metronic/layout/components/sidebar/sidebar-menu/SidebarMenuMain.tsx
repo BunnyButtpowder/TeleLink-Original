@@ -41,16 +41,11 @@ const SidebarMenuMain = () => {
             title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })}
             fontIcon='bi-app-indicator'
           />
-          <SidebarMenuItemWithSub
+          <SidebarMenuItem
             to='/blacklist'
-            icon='black-list'
-            title={intl.formatMessage({ id: 'ECOMMERCE.BLACKLIST' })}
-            fontIcon='bi-app-indicator'
-          >
-            <SidebarMenuItem to ='/blacklist/list' title={'Danh sách số chặn'} hasBullet={true} />
-            <SidebarMenuItem to ='/blacklist/report' title={'Báo cáo số chặn của nhân viên '} hasBullet={true} />
-            
-          </SidebarMenuItemWithSub>
+            title={intl.formatMessage({ id: 'BLACKLIST' })}
+            icon='abstract-11'
+          />
           <SidebarMenuItemWithSub
             to='/reports'
             title='Báo cáo'
@@ -167,16 +162,12 @@ const SidebarMenuMain = () => {
             fontIcon='bi-app-indicator'
           />
 
-          <SidebarMenuItemWithSub
+          <SidebarMenuItem
             to='/blacklist'
-            icon='black-list'
-            title={intl.formatMessage({ id: 'ECOMMERCE.BLACKLIST' })}
-            fontIcon='bi-app-indicator'
-          >
-            <SidebarMenuItem to ='/blacklist/list' title={'Danh sách số chặn'} hasBullet={true} />
-            <SidebarMenuItem to ='/blacklist/report' title={'Báo cáo số chặn của nhân viên '} hasBullet={true} />
-            
-          </SidebarMenuItemWithSub>
+            title={intl.formatMessage({ id: 'BLACKLIST' })}
+            icon='abstract-11'
+          />
+
           <SidebarMenuItemWithSub
             to='/reports'
             title='Báo cáo'
@@ -222,6 +213,11 @@ const SidebarMenuMain = () => {
             icon='profile-user'
             title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })}
             fontIcon='bi-app-indicator'
+          />
+          <SidebarMenuItem
+            to='/blacklist'
+            title={intl.formatMessage({ id: 'BLACKLIST' })}
+            icon='abstract-11'
           />
           <SidebarMenuItemWithSub
             to='/reports'

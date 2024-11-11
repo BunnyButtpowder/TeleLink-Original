@@ -21,24 +21,15 @@ export function MenuInner() {
         <>
           <MenuItem title={intl.formatMessage({ id: 'DATA' })} to='/data' />
           <MenuItem title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })} to='/customers' />
+
           <MenuInnerWithSub
             title='Báo cáo'
             to='/reports'
             menuPlacement='bottom-start'
             menuTrigger='click'
           >
-            {/* ACCOUNT */}
-            <MenuInnerWithSub
-              title='Báo cáo'
-              to='/reports/revenue'
-              fontIcon='bi-person'
-              hasArrow={true}
-              menuPlacement='right-start'
-              menuTrigger={`{default:'click', lg: 'hover'}`}
-            >
-              <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
-              <MenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
-            </MenuInnerWithSub>
+            <MenuItem title={intl.formatMessage({ id: 'MENU.REPORTS.REVENUE' })} to='/reports/revenue' hasBullet={true} />
+            <MenuItem title={intl.formatMessage({ id: 'MENU.REPORTS.CALL_RESULTS' })} to='/reports/call-results' hasBullet={true} />
           </MenuInnerWithSub>
           <MenuInnerWithSub
             title='Cá Nhân'
@@ -87,17 +78,8 @@ export function MenuInner() {
         </MenuInnerWithSub> */}
 
             {/* ACCOUNT */}
-            <MenuInnerWithSub
-              title='Tài khoản'
-              to='/crafted/accounts'
-              fontIcon='bi-person'
-              hasArrow={true}
-              menuPlacement='right-start'
-              menuTrigger={`{default:'click', lg: 'hover'}`}
-            >
-              <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
-              <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
-            </MenuInnerWithSub>
+            <MenuItem to='/crafted/account/overview' title='Tổng quan' hasBullet={true} />
+            <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
 
             {/* ERRORS */}
             {/* <MenuInnerWithSub
