@@ -1,20 +1,20 @@
-import {useMemo} from 'react'
-import {useTable, ColumnInstance, Row} from 'react-table'
-import {CustomHeaderColumn} from './columns/CustomHeaderColumn'
-import {CustomRow} from './columns/CustomRow'
-import {useQueryResponseData, useQueryResponseLoading} from '../core/QueryResponseProvider'
-import {usersColumns} from './columns/_columns'
-import {Package} from '../core/_models'
-import {UsersListLoading} from '../components/loading/UsersListLoading'
-import {UsersListPagination} from '../components/pagination/UsersListPagination'
-import {KTCardBody} from '../../../../../_metronic/helpers'
+import { useMemo } from 'react'
+import { useTable, ColumnInstance, Row } from 'react-table'
+import { CustomHeaderColumn } from './columns/CustomHeaderColumn'
+import { CustomRow } from './columns/CustomRow'
+import { useQueryResponseData, useQueryResponseLoading } from '../core/QueryResponseProvider'
+import { usersColumns } from './columns/_columns'
+import { Package } from '../core/_models'
+import { UsersListLoading } from '../components/loading/UsersListLoading'
+import { UsersListPagination } from '../components/pagination/UsersListPagination'
+import { KTCardBody } from '../../../../../_metronic/helpers'
 
 const PackageTable = () => {
   const users = useQueryResponseData()
   const isLoading = useQueryResponseLoading()
   const data = useMemo(() => users, [users])
   const columns = useMemo(() => usersColumns, [])
-  const {getTableProps, getTableBodyProps, headers, rows, prepareRow} = useTable({
+  const { getTableProps, getTableBodyProps, headers, rows, prepareRow } = useTable({
     columns,
     data,
   })
@@ -44,7 +44,7 @@ const PackageTable = () => {
               <tr>
                 <td colSpan={7}>
                   <div className='d-flex text-center w-100 align-content-center justify-content-center'>
-                    No matching records found
+                    Không có dữ liệu
                   </div>
                 </td>
               </tr>
@@ -58,4 +58,4 @@ const PackageTable = () => {
   )
 }
 
-export {PackageTable}
+export { PackageTable }

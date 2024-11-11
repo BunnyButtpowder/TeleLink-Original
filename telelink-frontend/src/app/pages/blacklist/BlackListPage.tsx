@@ -2,7 +2,6 @@ import {Route, Routes, Outlet, Navigate} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
 import {BlackListWrapper} from './black-list/BlackList'
 import {useIntl} from 'react-intl'
-import { ToastContainer } from 'react-bootstrap'
 
 const blacklistBreadcrumbs: Array<PageLink> = [
   {
@@ -28,7 +27,7 @@ const BlackListPage = () => {
           index
           element={
             <>
-              <PageTitle  breadcrumbs={blacklistBreadcrumbs}>{intl.formatMessage({id: 'ECOMMERCE.BLACKLIST'})}</PageTitle>
+              <PageTitle>{intl.formatMessage({id: 'BLACKLIST'})}</PageTitle>
               <BlackListWrapper />
             </>
           }

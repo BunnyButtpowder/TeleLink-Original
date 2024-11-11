@@ -14,6 +14,7 @@ import {
 import {getPackages} from './_requests'
 import {Package} from './_models'
 import {useQueryRequest} from './QueryRequestProvider'
+import { useAuth } from '../../../../../app/modules/auth'
 
 const QueryResponseContext = createResponseContext<Package>(initialQueryResponse)
 const QueryResponseProvider: FC<WithChildren> = ({children}) => {
@@ -27,25 +28,24 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
     }
   }, [updatedQuery])
 
-  const {
-    isFetching,
-    refetch,
-    data: response,
-  } = useQuery(
-    `${QUERIES.USERS_LIST}-${query}`,
-    () => {
-      return getPackages(query)
-    },
-    {cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false}
+  const fetchData = () => {
+    const {search = '', sort = '', order = '', filter = {}} = state;
+
+    const {provider, type } = filter;
+    return getPackages({ searchTerm: search, sort, order, provider, type });
+  }
+  const { isFetching, refetch, data: response } = useQuery(
+    [`${QUERIES.USERS_LIST}-${query}`, state.filter],
+    fetchData,
+    { cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false }
   )
 
   return (
-    <QueryResponseContext.Provider value={{isLoading: isFetching, refetch, response, query}}>
+    <QueryResponseContext.Provider value={{ isLoading: isFetching, refetch, response, query }}>
       {children}
     </QueryResponseContext.Provider>
   )
 }
-
 const useQueryResponse = () => useContext(QueryResponseContext)
 
 const useQueryResponseData = () => {

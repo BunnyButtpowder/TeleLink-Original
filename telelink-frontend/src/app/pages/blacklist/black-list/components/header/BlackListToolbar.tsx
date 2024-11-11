@@ -5,6 +5,8 @@ import { useListView } from '../../core/ListViewProvider'
 import { UsersListFilter } from './UsersListFilter'
 import { useIntl } from 'react-intl'
 import { Blacklist } from '../../core/_models'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DataListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void }> = ({ onUploadComplete }) => {
   const intl = useIntl()
@@ -41,6 +43,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void 
 
   return (
     <>
+      <ToastContainer />
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
         <UsersListFilter />
 
@@ -66,6 +69,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void 
           </button>
         </label>
         {/* end::Upload data */}
+        
         {/* begin::Add user */}
           <button type='button' className='btn btn-primary' onClick={openAddBlacklistModal}>
             <KTIcon iconName='plus' className='fs-2' />

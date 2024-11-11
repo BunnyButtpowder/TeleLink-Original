@@ -2,14 +2,14 @@ const bcrypt = require('bcrypt');
 module.exports = {
     inputs: {
         fullName : {type:'string', required: true},
-        phoneNumber : { type:'string' , required: true },
+        phoneNumber : { type:'string'},
         dob : {type:'string'},
-        address :{type: 'string', require : true},
+        address :{type: 'string'},
         email : { type : 'string' , require: true},
         username: {type : 'string' , require : true},
         password : { type : "string", require : true},
         role : {type : 'number', require: true},
-        gender : {type : 'string', require : true },
+        gender : {type : 'string'},
         name : {type : 'string'},
         agency :{type : 'number'}
     },

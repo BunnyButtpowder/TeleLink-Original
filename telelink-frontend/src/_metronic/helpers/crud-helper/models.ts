@@ -19,6 +19,8 @@ export type FilterState = {
     last_login?: string
     placeOfIssue?: string
     networkName?: string
+    type?: string
+    provider?: string
   }
 }
 

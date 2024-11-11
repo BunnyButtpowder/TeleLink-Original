@@ -1,11 +1,10 @@
 import axios, { AxiosResponse } from "axios";
 import { ID, Response } from "../../../../../_metronic/helpers";
-import { Blacklist, DataQueryResponse } from "./_models";
+import { Blacklist, BlacklistQueryResponse } from "./_models";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
-const USER_URL = `${API_URL}/user`;
-const BLACKLIST_URL= `${API_URL}/blacklist`;
-const GET_ALL_BLACKLIST_URL = `${API_URL}/blacklist`;
+const BLACKLIST_URL= `${API_URL}/blacklists`;
+
 
 const importData = async (file: File): Promise<any> => {
   const formData = new FormData();
@@ -24,24 +23,36 @@ const importData = async (file: File): Promise<any> => {
   }
 };
 
-const getAllBlackList = (): Promise<DataQueryResponse> => {
+const getAllBlackList = (): Promise<BlacklistQueryResponse> => {
   return axios
-    .get(GET_ALL_BLACKLIST_URL)
-    .then((response: AxiosResponse<DataQueryResponse>) => response.data);
+    .get(`${BLACKLIST_URL}/getall`)
+    .then((response: AxiosResponse<BlacklistQueryResponse>) => response.data);
 };
+
+const getSalesmanBlacklist = (userId: ID): Promise<BlacklistQueryResponse> => {
+  return axios
+    .get(`${BLACKLIST_URL}/salesman?userID=${userId}`)
+    .then((response: AxiosResponse<BlacklistQueryResponse>) => response.data);
+}
+
+const getAgencyBlacklist = (agencyId: ID): Promise<BlacklistQueryResponse> => {
+  return axios
+    .get(`${BLACKLIST_URL}/agency?agencyID=${agencyId}`)
+    .then((response: AxiosResponse<BlacklistQueryResponse>) => response.data);
+}
 
 const getBlacklistById = async (id: ID) => {
   const response = await axios.get(`${BLACKLIST_URL}/${id}`);
   return response.data;
 };
 
-const createBlacklistNumber = (number: Blacklist): Promise<Blacklist | undefined> => {
-  const transformedPackage = {
+const createBlacklistNumber = (number: Blacklist, userId: string): Promise<Blacklist | undefined> => {
+  const transformedBlacklist = {
     SDT: number.SDT,
     note: number.note,
   };
   return axios
-    .post(BLACKLIST_URL, transformedPackage)
+    .post(`${BLACKLIST_URL}/create?userID=${userId}`, transformedBlacklist)
     .then((response: AxiosResponse<Response<Blacklist>>) => response.data)
     .then((response: Response<Blacklist>) => response.data);
 };
@@ -110,8 +121,8 @@ export {
   importData,
   deleteNumber,
   deleteSelectedNumber,
-  // getUserById,
-  // updateUser,
+  getSalesmanBlacklist,
+  getAgencyBlacklist,
   getAllUsers,
   getAllBlackList,
   getBlacklistById,

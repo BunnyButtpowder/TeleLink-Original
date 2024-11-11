@@ -11,7 +11,7 @@
   "MENU.FEATURES": "Features",
   "MENU.APPS": "Apps",
   "MENU.DASHBOARD": "Bảng điều khiển",
-  "MENU.REPORTS.REVENUE": "Doanh thu",
+  "MENU.REPORTS.REVENUE": "Báo cáo doanh thu",
   "MENU.REPORTS.CALL_RESULTS": "Báo cáo cuộc gọi",
   "CALL_RESULT": "Kết quả cuộc gọi",
   "CHOOSE_CALL_RESULT": "Chọn kết quả cuộc gọi",
@@ -92,8 +92,7 @@
   "USERS.USER_LIST": "Danh sách tài khoản",
   "USERS.MANAGEMENT.ADD_USER": "Tạo tài khoản",
   "USERS.MANAGEMENT.EDIT_USER": "Sửa tài khoản",
-  "ECOMMERCE.BLACKLIST": "Danh sách số chặn",
-  "ECOMMERCE.BLACKLIST.REPORT": "Báo cáo số chặn của nhân viên",
+  "BLACKLIST": "Danh sách chặn số",
   "USERS.AVATAR": "Ảnh đại diện",
   "USERS.FULLNAME": "Tên đầy đủ",
   "USERS.USERNAME": "Tên đăng nhập",
@@ -135,6 +134,7 @@
   "UNIT.PRICE": "Đơn giá",
   "QUANTITY": "Số lượng",
   "CREATE.REPORT": "Tạo báo cáo",
-  "NOTE": "Ghi chú",
-  "CALLBACK_DATE": "Ngày gọi lại"
+  "CALLBACK_DATE": "Ngày gọi lại",
+  "REVENUE": "Doanh thu",
+  "NO.AGENCY": "Không có chi nhánh"
 }

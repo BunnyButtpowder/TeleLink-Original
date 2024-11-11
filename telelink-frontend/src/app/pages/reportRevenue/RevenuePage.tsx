@@ -27,7 +27,7 @@ const RevenuePage = () => {
           index
           element={
             <>
-              <PageTitle breadcrumbs={reportsBreadcrumbs}>{intl.formatMessage({id: 'MENU.REPORTS.REVENUE'})}</PageTitle>
+              <PageTitle breadcrumbs={reportsBreadcrumbs}>{intl.formatMessage({id: 'REVENUE'})}</PageTitle>
               <RevenueListWrapper />
             </>
           }
