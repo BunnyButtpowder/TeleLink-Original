@@ -38,21 +38,29 @@ module.exports = {
             or: [
               { SDT: { like: `%${searchTerm}%` } },
               { note: { like: `%${searchTerm}%` } },
+              {}
             ],
           },
           sort: sortOrder,
-        });
+        }).populate('user');
+        blacklistData = blacklistData.filter(item =>
+          item.user && item.user.fullName && item.user.fullName.includes(searchTerm)
+        );
       } else {
 
         blacklistData = await Blacklist.find({
 
           sort: sortOrder,
-        });
+        }).populate('user');
       }
 
       if (blacklistData.length === 0) {
         return res.ok({ message: searchTerm ? 'Không tìm thấy dữ liệu phù hợp.' : 'Không có dữ liệu' });
       }
+      blacklistData = blacklistData.map(item => ({
+        ...item,
+        user: item.user ? { fullName: item.user.fullName, role: item.user.auth } : null
+      }));
 
       return res.ok({
         data: blacklistData,
