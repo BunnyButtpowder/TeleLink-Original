@@ -26,6 +26,7 @@ module.exports = {
                     dob: user.dob,
                     avatar: user.avatar,
                     gender: user.gender,
+                    createdAt: user.createdAt,
                     auth: {
                         email: user.auth.email,
                         role: user.auth.role,
