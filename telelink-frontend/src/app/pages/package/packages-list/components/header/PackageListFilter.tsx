@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {MenuComponent} from '../../../../../../_metronic/assets/ts/components'
-import {initialQueryState, KTIcon} from '../../../../../../_metronic/helpers'
+import {initialPackageQueryState, KTIcon} from '../../../../../../_metronic/helpers'
 import {useQueryRequest} from '../../core/QueryRequestProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
 import {useIntl} from 'react-intl'
@@ -24,7 +24,7 @@ const PackageListFilter = () => {
     updateState({filter: {
       provider: '', 
       type: '',
-    }, ...initialQueryState})
+    }, ...initialPackageQueryState})
     refetch()
   }
 

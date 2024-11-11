@@ -25,10 +25,10 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void 
       try {
         const response = await importData(files);
         onUploadComplete(response.data);
-        alert('Upload blacklist thành công!');
+        toast.success('Upload danh sách thành công!');
       } catch (error) {
         console.error('Error uploading the file: ', error);
-        alert('Upload blacklist thất bại!');
+        toast.error('Upload danh sách thất bại!');
       } finally {
         setUploading(false);
       }

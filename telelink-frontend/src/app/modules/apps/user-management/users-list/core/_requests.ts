@@ -38,7 +38,8 @@ const createUser = (user: User): Promise<User | undefined> => {
     password: user.auth.password,
     role: user.auth.role,
     gender: user.gender,
-    // agency: user.agency?.id || null,
+    agency: user.agency?.id || undefined,
+    avatar: user.avatar || '',
     name: user.auth.role === 2 ? user.agency?.name : undefined,
   };
   return axios
@@ -86,6 +87,7 @@ const updateUser = async (user: User, token: string): Promise<User | undefined> 
         avatar: user.avatar || '',
         gender: user.gender,
         dataType: user.dataType || '',
+        isActive: user.auth.isActive || false,
       }),
     });
 

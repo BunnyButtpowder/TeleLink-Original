@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { ID, isNotEmpty, toAbsoluteUrl } from '../../../../../../_metronic/helpers'
@@ -10,6 +10,11 @@ import { createUser, updateUser } from '../core/_requests'
 import { useQueryResponse } from '../core/QueryResponseProvider'
 import { useIntl } from 'react-intl'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { initializeApp } from 'firebase/app'
+import { firebaseConfig } from '../../../../accounts/components/core/firebaseConfig'
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -19,6 +24,7 @@ type Props = {
 }
 
 const token = localStorage.getItem('auth_token');
+const firebaseApp = initializeApp(firebaseConfig);
 
 const salesmanSchema = Yup.object().shape({
   auth: Yup.object().shape({
@@ -29,7 +35,7 @@ const salesmanSchema = Yup.object().shape({
       .max(50, 'Maximum 50 symbols')
       .required('Vui lòng điền vào trường này'),
     password: Yup.string().required('Vui lòng nhập mật khẩu'),
-    status: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
+    isActive: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
     role: Yup.number().required('Vui lòng chọn quyền'),
   }),
   fullName: Yup.string().min(3, 'Minimum 3 symbols').required('Vui lòng điền vào trường này'),
@@ -40,6 +46,7 @@ const salesmanSchema = Yup.object().shape({
   agency: Yup.object().shape({
     id: Yup.number().nullable(),
   }),
+  avatar: Yup.string().nullable(),
 })
 
 const agencySchema = Yup.object().shape({
@@ -51,7 +58,7 @@ const agencySchema = Yup.object().shape({
       .max(50, 'Maximum 50 symbols')
       .required('Vui lòng điền vào trường này'),
     password: Yup.string().required('Vui lòng nhập mật khẩu'),
-    status: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
+    isActive: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
     role: Yup.number().required('Vui lòng chọn quyền'),
   }),
   fullName: Yup.string().min(3, 'Minimum 3 symbols').required('Vui lòng điền vào trường này'),
@@ -63,6 +70,7 @@ const agencySchema = Yup.object().shape({
     id: Yup.number().nullable(),
     name: Yup.string().nullable().required('Vui lòng điền vào trường này'),
   }),
+  avatar: Yup.string().nullable(),
 })
 
 const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
@@ -81,7 +89,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   const [agencies, setAgencies] = useState<Array<{ id: ID; name: string }>>([]);
 
   useEffect(() => {
-    axios.get(`${API_URL}/agency`).then((response) => {
+    axios.get(`${API_URL}/agencys/getall`).then((response) => {
       const agenciesData = response.data.data;
       if (Array.isArray(agenciesData)) {
         setAgencies(agenciesData);
@@ -97,12 +105,12 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
 
   const [userForEdit, setUserForEdit] = useState<User>({
     ...user,
-    // avatar: user.avatar || initialUser.avatar,
+    avatar: user.avatar || initialUser.avatar,
     auth: {
       ...user.auth,
       email: user.auth?.email || initialUser.auth?.email,
       username: user.auth?.username || initialUser.auth?.username,
-      status: user.auth?.status || initialUser.auth?.status,
+      isActive: user.auth?.isActive || initialUser.auth?.isActive,
       role: user.auth?.role || initialUser.auth?.role,
     },
     fullName: user.fullName || initialUser.fullName,
@@ -125,8 +133,38 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
     setItemIdForUpdate(undefined)
   }
 
-  const blankImg = toAbsoluteUrl('media/svg/avatars/blank.svg')
-  const userAvatarImg = toAbsoluteUrl(`${userForEdit.avatar}`)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const storage = getStorage(firebaseApp);
+
+  const userAvatarImg = userForEdit.avatar
+
+  // Handling image file change
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    setSelectedFile(file);
+
+    if (file) {
+      const preview = URL.createObjectURL(file);
+      setPreviewUrl(preview);
+    }
+  }
+
+  const uploadImage = async (file: File) => {
+    const storageRef = ref(storage, `avatars/${userForEdit?.id || 'new_user'}_${file.name}`);
+    console.log("Storage reference created:", storageRef);
+    try {
+      await uploadBytes(storageRef, file);
+      console.log("File uploaded successfully!", file.name);
+
+      const downloadURL = await getDownloadURL(storageRef);
+      console.log("Download URL: ", downloadURL);
+      return downloadURL;
+    } catch (error) {
+      console.error("Error uploading file: ", error);
+      return null;
+    }
+  };
 
   // Salesman formik form
   const salemanFormik = useFormik<User>({
@@ -136,13 +174,29 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
       try {
-        if (isNotEmpty(values.id)) {
-          await updateUser(values, token || '')
-        } else {
-          await createUser(values)
+        let avatarUrl = values.avatar;
+        if (selectedFile) {
+          const uploadedAvatarUrl = await uploadImage(selectedFile);
+          if (uploadedAvatarUrl) {
+            avatarUrl = uploadedAvatarUrl;
+          } else {
+            toast.error('Lỗi tải ảnh lên, vui lòng thử lại sau!');
+          }
         }
-      } catch (ex) {
-        console.error(ex)
+        values.avatar = avatarUrl;
+
+        let response;
+        if (isNotEmpty(values.id)) {
+          response = await updateUser(values, token || '')
+          toast.success('Cập nhật thành công!')
+        } else {
+          response = await createUser(values)
+          toast.success('Tạo tài khoản thành công!')
+        }
+      } catch (error) {
+        const errorMessage = (error as any).response?.data?.message
+        toast.error(errorMessage);
+        console.error("From UserEditModalForm: ", errorMessage)
       } finally {
         setSubmitting(false)
         cancel(true)
@@ -169,13 +223,29 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
       try {
-        if (isNotEmpty(values.id)) {
-          await updateUser(values, token || '')
-        } else {
-          await createUser(values)
+        let avatarUrl = values.avatar;
+        if (selectedFile) {
+          const uploadedAvatarUrl = await uploadImage(selectedFile);
+          if (uploadedAvatarUrl) {
+            avatarUrl = uploadedAvatarUrl;
+          } else {
+            toast.error('Lỗi tải ảnh lên, vui lòng thử lại sau!');
+          }
         }
-      } catch (ex) {
-        console.error(ex)
+        values.avatar = avatarUrl;
+
+        let response;
+        if (isNotEmpty(values.id)) {
+          response = await updateUser(values, token || '')
+          toast.success('Cập nhật thành công!')
+        } else {
+          response = await createUser(values)
+          toast.success('Tạo tài khoản thành công!')
+        }
+      } catch (error) {
+        const errorMessage = (error as any).response?.data?.message
+        toast.error(errorMessage);
+        console.error("From UserEditModalForm: ", errorMessage)
       } finally {
         setSubmitting(false)
         cancel(true)
@@ -248,36 +318,30 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
           >
             {/* begin::Input group */}
             <div className='fv-row mb-7'>
-              {/* begin::Label */}
               <label className='d-block fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.AVATAR' })}</label>
-              {/* end::Label */}
 
               {/* begin::Image input */}
               <div
                 className='image-input image-input-outline'
                 data-kt-image-input='true'
-                style={{ backgroundImage: `url('${blankImg}')` }}
+                style={{ backgroundImage: `url('${previewUrl || userAvatarImg || toAbsoluteUrl('https://as2.ftcdn.net/v2/jpg/03/31/69/91/1000_F_331699188_lRpvqxO5QRtwOM05gR50ImaaJgBx68vi.jpg')}')` }}
               >
                 {/* begin::Preview existing avatar */}
                 <div
                   className='image-input-wrapper w-125px h-125px'
-                  style={{ backgroundImage: `url('${userAvatarImg}')` }}
+                  style={{ backgroundImage: `url('${previewUrl || userAvatarImg}')` }}
                 ></div>
                 {/* end::Preview existing avatar */}
 
-                {/* begin::Label */}
                 <label
                   className='btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow'
                   data-kt-image-input-action='change'
-                  data-bs-toggle='tooltip'
                   title='Change avatar'
                 >
                   <i className='bi bi-pencil-fill fs-7'></i>
-
-                  <input type='file' name='avatar' accept='.png, .jpg, .jpeg' />
+                  <input type='file' name='avatar' accept='.png, .jpg, .jpeg' onChange={handleFileChange} />
                   <input type='hidden' name='avatar_remove' />
                 </label>
-                {/* end::Label */}
 
                 {/* begin::Cancel */}
                 {/* <span
@@ -304,7 +368,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               {/* end::Image input */}
 
               {/* begin::Hint */}
-              {/* <div className='form-text'>Allowed file types: png, jpg, jpeg.</div> */}
+              <div className='form-text'>Chấp nhận ảnh dạng: png, jpg, jpeg.</div>
               {/* end::Hint */}
             </div>
             {/* end::Input group */}
@@ -567,9 +631,14 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               <label className=' fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AGENCY' })}</label>
               {/* end::Label */}
 
-              {/* begin::Input */}
+              {/* begin::Dropdown */}
               <select
-                {...salemanFormik.getFieldProps('agency.id')}
+                // {...salemanFormik.getFieldProps('agency.id')}
+                value={salemanFormik.values.agency?.id || ''}
+                onChange={(e) => {
+                  const selectedAgencyId = e.target.value ? parseInt(e.target.value) : null;
+                  salemanFormik.setFieldValue('agency.id', selectedAgencyId);
+                }}
                 className={clsx(
                   'form-control form-control-solid mb-3 mb-lg-0',
                   { 'is-invalid': salemanFormik.touched.agency && salemanFormik.errors.agency },
@@ -588,18 +657,13 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                 ) : (
                   <option disabled>{intl.formatMessage({ id: 'NO.AGENCY' })}</option>
                 )}
-                {/* {agencies.map((agency) => (
-                  <option key={agency.id} value={agency.id ?? ''}>
-                    {agency.name}
-                  </option>
-                ))} */}
               </select>
               {salemanFormik.touched.agency && salemanFormik.errors.agency && (
                 <div className='fv-plugins-message-container'>
                   <span role='alert'>{salemanFormik.errors.agency}</span>
                 </div>
               )}
-              {/* end::Input */}
+              {/* end::Dropdown */}
             </div>
             {/* end::Input group */}
 
@@ -615,13 +679,13 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                   {/* begin::Input */}
                   <input
                     className='form-check-input me-3'
-                    {...salemanFormik.getFieldProps('auth.status')}
-                    name='auth.status'
+                    {...salemanFormik.getFieldProps('auth.isActive')}
+                    name='auth.isActive'
                     type='radio'
                     value="true"
                     id='kt_modal_update_role_option_0'
-                    checked={salemanFormik.values.auth?.status === true}
-                    onChange={() => salemanFormik.setFieldValue('auth.status', true)} // Ensure correct update
+                    checked={salemanFormik.values.auth?.isActive === true}
+                    onChange={() => salemanFormik.setFieldValue('auth.isActive', true)}
                     disabled={salemanFormik.isSubmitting || isUserLoading}
                   />
                   {/* end::Input */}
@@ -642,13 +706,13 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                   {/* begin::Input */}
                   <input
                     className='form-check-input me-3'
-                    {...salemanFormik.getFieldProps('auth.status')}
-                    name='auth.status'
+                    {...salemanFormik.getFieldProps('auth.isActive')}
+                    name='auth.isActive'
                     type='radio'
                     value="false"
                     id='kt_modal_update_role_option_1'
-                    checked={salemanFormik.values.auth?.status === false}
-                    onChange={() => salemanFormik.setFieldValue('auth.status', false)}
+                    checked={salemanFormik.values.auth?.isActive === false}
+                    onChange={() => salemanFormik.setFieldValue('auth.isActive', false)}
                     disabled={salemanFormik.isSubmitting || isUserLoading}
                   />
                   {/* end::Input */}
@@ -711,6 +775,61 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
               data-kt-scroll-offset='300px'
             >
+              <div className='fv-row mb-7'>
+                <label className='d-block fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.AVATAR' })}</label>
+
+                {/* begin::Image input */}
+                <div
+                  className='image-input image-input-outline'
+                  data-kt-image-input='true'
+                  style={{ backgroundImage: `url('${previewUrl || userAvatarImg || toAbsoluteUrl('https://as2.ftcdn.net/v2/jpg/03/31/69/91/1000_F_331699188_lRpvqxO5QRtwOM05gR50ImaaJgBx68vi.jpg')}')` }}
+                >
+                  {/* begin::Preview existing avatar */}
+                  <div
+                    className='image-input-wrapper w-125px h-125px'
+                    style={{ backgroundImage: `url('${previewUrl || userAvatarImg}')` }}
+                  ></div>
+                  {/* end::Preview existing avatar */}
+
+                  <label
+                    className='btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow'
+                    data-kt-image-input-action='change'
+                    title='Change avatar'
+                  >
+                    <i className='bi bi-pencil-fill fs-7'></i>
+                    <input type='file' name='avatar' accept='.png, .jpg, .jpeg' onChange={handleFileChange} />
+                    <input type='hidden' name='avatar_remove' />
+                  </label>
+
+                  {/* begin::Cancel */}
+                  {/* <span
+              className='btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow'
+              data-kt-image-input-action='cancel'
+              data-bs-toggle='tooltip'
+              title='Cancel avatar'
+            >
+              <i className='bi bi-x fs-2'></i>
+            </span> */}
+                  {/* end::Cancel */}
+
+                  {/* begin::Remove */}
+                  {/* <span
+              className='btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow'
+              data-kt-image-input-action='remove'
+              data-bs-toggle='tooltip'
+              title='Remove avatar'
+            >
+              <i className='bi bi-x fs-2'></i>
+            </span> */}
+                  {/* end::Remove */}
+                </div>
+                {/* end::Image input */}
+
+                {/* begin::Hint */}
+                <div className='form-text'>Chấp nhận ảnh dạng: png, jpg, jpeg.</div>
+                {/* end::Hint */}
+              </div>
+              {/* end::Input group */}
               {/* begin::Input group */}
               <div className='fv-row mb-7'>
                 {/* begin::Label */}
@@ -1008,13 +1127,13 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                     {/* begin::Input */}
                     <input
                       className='form-check-input me-3'
-                      {...agencyFormik.getFieldProps('auth.status')}
-                      name='auth.status'
+                      {...agencyFormik.getFieldProps('auth.isActive')}
+                      name='auth.isActive'
                       type='radio'
                       value="true"
                       id='kt_modal_update_role_option_0'
-                      checked={agencyFormik.values.auth?.status === true}
-                      onChange={() => agencyFormik.setFieldValue('auth.status', true)}
+                      checked={agencyFormik.values.auth?.isActive === true}
+                      onChange={() => agencyFormik.setFieldValue('auth.isActive', true)}
                       disabled={agencyFormik.isSubmitting || isUserLoading}
                     />
 
@@ -1036,13 +1155,13 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                     {/* begin::Input */}
                     <input
                       className='form-check-input me-3'
-                      {...agencyFormik.getFieldProps('auth.status')}
-                      name='auth.status'
+                      {...agencyFormik.getFieldProps('auth.isActive')}
+                      name='auth.isActive'
                       type='radio'
                       value="false"
                       id='kt_modal_update_role_option_1'
-                      checked={agencyFormik.values.auth?.status === false}
-                      onChange={() => agencyFormik.setFieldValue('auth.status', false)}
+                      checked={agencyFormik.values.auth?.isActive === false}
+                      onChange={() => agencyFormik.setFieldValue('auth.isActive', false)}
                       disabled={agencyFormik.isSubmitting || isUserLoading}
                     />
                     {/* end::Input */}

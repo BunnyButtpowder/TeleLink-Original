@@ -4,7 +4,7 @@ export type AuthInfo = {
   email?: string
   username: string
   password: string
-  status?: boolean
+  isActive?: boolean
   role: number
 }
 
@@ -40,14 +40,13 @@ export const initialUser: User = {
   dob: '',
   address: '',
   agency: {
-    id: 0,
     name: '',
   },
   gender: '',
   dataType: '',
   auth: {
     email: '',
-    status: false,
+    isActive: false,
     username: '',
     password: '',
     role: 3,

@@ -55,6 +55,15 @@ export const initialQueryState: QueryState = {
   },
 }
 
+export const initialPackageQueryState: QueryState = {
+  page: 1,
+  items_per_page: 10,
+  filter: {
+    provider: '',
+    type: '',
+  },
+}
+
 export const initialQueryRequest: QueryRequestContextProps = {
   state: initialQueryState,
   updateState: () => {},

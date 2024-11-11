@@ -89,7 +89,7 @@ const ProfileDetails: FC = () => {
 
   const formik = useFormik({
     initialValues: data,
-    enableReinitialize: true,  // This ensures the form picks up changes in `data`
+    enableReinitialize: true,
     validationSchema: profileDetailsSchema,
     onSubmit: async (values, { setSubmitting }) => {
       if (!currentUser) {
@@ -102,7 +102,7 @@ const ProfileDetails: FC = () => {
       setSubmitting(true);
 
       try {
-        let avatarUrl = currentUser.avatar; // Default to existing avatar
+        let avatarUrl = currentUser.avatar;
         if (selectedFile) {
           // Upload the selected file to Firebase Storage
           const uploadedAvatarUrl = await uploadImage(selectedFile);
@@ -162,7 +162,7 @@ const ProfileDetails: FC = () => {
                 <div
                   className="image-input image-input-outline"
                   data-kt-image-input="true"
-                  style={{ backgroundImage: `url(${previewUrl || data.avatar || toAbsoluteUrl('media/avatars/blank.png')})` }}  // Show previewUrl if available
+                  style={{ backgroundImage: `url(${previewUrl || data.avatar || toAbsoluteUrl('https://as2.ftcdn.net/v2/jpg/03/31/69/91/1000_F_331699188_lRpvqxO5QRtwOM05gR50ImaaJgBx68vi.jpg')})` }}  // Show previewUrl if available
                 >
                   <div
                     className="image-input-wrapper w-125px h-125px"

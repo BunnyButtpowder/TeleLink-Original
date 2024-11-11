@@ -73,8 +73,9 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
       try {
+        let response;
         if (dataId) {
-          await createCallResult(values, dataId, date);
+          response = await createCallResult(values, dataId, date);
           toast.success('Gửi báo cáo thành công!')
           localStorage.removeItem(`dataDetails_${currentUser?.id}`);
           setDataDetails(undefined);
@@ -86,8 +87,9 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
           toast.error('Hãy lấy số trước khi gửi kết quả cuộc gọi!')
         }
       } catch (error) {
-        toast.error('Gửi kết quả cuộc gọi thất bại!')
-        console.error('Failed to submit report:', error)
+        const errorMessage = (error as any).response?.data?.message || 'Gửi kết quả cuộc gọi thất bại!'
+        toast.error(errorMessage)
+        console.error('Failed to submit report:', errorMessage)
       } finally {
         setSubmitting(false)
       }

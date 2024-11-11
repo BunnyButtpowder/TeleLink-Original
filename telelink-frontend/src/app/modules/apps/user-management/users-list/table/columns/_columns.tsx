@@ -91,7 +91,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Trạng thái' className='min-w-125px' />,
     id: 'status',
-    Cell: ({ ...props }) => <UserStatusCell status={props.data[props.row.index].auth?.status ? 0 : 1}></UserStatusCell>,
+    Cell: ({ ...props }) => <UserStatusCell status={props.data[props.row.index].auth?.isActive ? 0 : 1}></UserStatusCell>,
   },
   {
     Header: (props) => (

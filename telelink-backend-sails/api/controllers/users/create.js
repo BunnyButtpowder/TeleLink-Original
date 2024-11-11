@@ -11,7 +11,8 @@ module.exports = {
         role : {type : 'number', require: true},
         gender : {type : 'string'},
         name : {type : 'string'},
-        agency :{type : 'number'}
+        agency :{type : 'number'},
+        avatar: {type: 'string'}
     },
   
    
@@ -19,7 +20,7 @@ module.exports = {
     fn: async function (inputs) {
       let { req ,res } = this;
       try {
-        const { fullName, phoneNumber, dob, address, email, username, password , role , gender ,name,agency} = inputs;
+        const { fullName, phoneNumber, dob, address, email, username, password , role , gender ,name,agency, avatar} = inputs;
         const existingEmail =await Auth.findOne({ email });
         if (existingEmail) {
             return res.conflict({ message: "Email đã tồn tại" });
@@ -47,7 +48,8 @@ module.exports = {
           address,
           gender,
           auth: newAuth.id,
-          // agency
+          agency: agency || null,
+          avatar,
           
         }).fetch();
         if (newAuth.role === 2) {
