@@ -43,9 +43,14 @@ module.exports = {
           },
           sort: sortOrder,
         }).populate('user');
+
         blacklistData = blacklistData.filter(item =>
-          item.user && item.user.fullName && item.user.fullName.includes(searchTerm)
+          (item.user && item.user.fullName && item.user.fullName.includes(searchTerm)) ||
+          (item.SDT.includes(searchTerm)) ||
+          (item.note.includes(searchTerm))
         );
+
+
       } else {
 
         blacklistData = await Blacklist.find({
