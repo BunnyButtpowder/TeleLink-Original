@@ -5,26 +5,37 @@ import {useQueryRequest} from '../../core/QueryRequestProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
 import {useIntl} from 'react-intl'
 
-const UsersListFilter = () => {
+const PackageListFilter = () => {
   const {updateState} = useQueryRequest()
   const {isLoading} = useQueryResponse()
-  const [role, setRole] = useState<string | undefined>()
-  const [lastLogin, setLastLogin] = useState<string | undefined>()
+  const [provider, setProvider] = useState<string | undefined>()
+  const [type, setType] = useState<string | undefined>()
   const intl = useIntl()
+  const { refetch } = useQueryResponse();
+
 
   useEffect(() => {
     MenuComponent.reinitialization()
   }, [])
 
   const resetData = () => {
-    updateState({filter: undefined, ...initialQueryState})
+    setProvider('')
+    setType('')
+    updateState({filter: {
+      provider: '', 
+      type: '',
+    }, ...initialQueryState})
+    refetch()
   }
 
-  const filterData = () => {
+  const filterPackage = () => {
+    console.log("Applying filters:", { provider, type });
     updateState({
-      filter: {role, last_login: lastLogin},
-      ...initialQueryState,
+      filter: {provider, type},
+      // ...initialQueryState,
+      
     })
+    refetch();
   }
 
   return (
@@ -57,7 +68,7 @@ const UsersListFilter = () => {
         <div className='px-7 py-5' data-kt-user-table-filter='form'>
           {/* begin::Input group */}
           <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Loại tài khoản:</label>
+            <label className='form-label fs-6 fw-bold'>Nhà mạng:</label>
             <select
               className='form-select form-select-solid fw-bolder'
               data-kt-select2='true'
@@ -65,20 +76,21 @@ const UsersListFilter = () => {
               data-allow-clear='true'
               data-kt-user-table-filter='role'
               data-hide-search='true'
-              onChange={(e) => setRole(e.target.value)}
-              value={role}
+              onChange={(e) => setProvider(e.target.value)}
+              value={provider}
             >
               <option value=''></option>
-              <option value='Partner'>Admin</option>
-              <option value='Sub-admin'>Chi nhánh</option>
-              <option value='Salesman'>Salesman</option>
+              <option value='Viettel'>Viettel</option>
+              <option value='Vinaphone'>Vinaphone</option>
+              <option value='Mobifone'>Mobifone</option>
+              <option value='Vietnamobile'>Vietnamobile</option>
             </select>
           </div>
           {/* end::Input group */}
 
           {/* begin::Input group */}
           <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Last login:</label>
+            <label className='form-label fs-6 fw-bold'>Loại:</label>
             <select
               className='form-select form-select-solid fw-bolder'
               data-kt-select2='true'
@@ -86,14 +98,13 @@ const UsersListFilter = () => {
               data-allow-clear='true'
               data-kt-user-table-filter='two-step'
               data-hide-search='true'
-              onChange={(e) => setLastLogin(e.target.value)}
-              value={lastLogin}
+              onChange={(e) => setType(e.target.value)}
+              value={type}
             >
               <option value=''></option>
-              <option value='Yesterday'>Yesterday</option>
-              <option value='20 mins ago'>20 mins ago</option>
-              <option value='5 hours ago'>5 hours ago</option>
-              <option value='2 days ago'>2 days ago</option>
+              <option value='TT'>Trả trước</option>
+              <option value='TS'>Trả sau</option>
+              
             </select>
           </div>
           {/* end::Input group */}
@@ -103,22 +114,22 @@ const UsersListFilter = () => {
             <button
               type='button'
               disabled={isLoading}
-              onClick={filterData}
+              onClick={resetData}
               className='btn btn-light btn-active-light-primary fw-bold me-2 px-6'
               data-kt-menu-dismiss='true'
               data-kt-user-table-filter='reset'
             >
-              Reset
+              Đặt lại
             </button>
             <button
               disabled={isLoading}
               type='button'
-              onClick={resetData}
+              onClick={filterPackage}
               className='btn btn-primary fw-bold px-6'
               data-kt-menu-dismiss='true'
               data-kt-user-table-filter='filter'
             >
-              Apply
+              Áp dụng
             </button>
           </div>
           {/* end::Actions */}
@@ -130,4 +141,4 @@ const UsersListFilter = () => {
   )
 }
 
-export {UsersListFilter}
+export {PackageListFilter}

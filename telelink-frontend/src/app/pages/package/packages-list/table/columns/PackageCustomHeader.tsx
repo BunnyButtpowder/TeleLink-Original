@@ -10,13 +10,11 @@ type Props = {
   title?: string
   tableProps: PropsWithChildren<HeaderProps<Package>>
 }
-const UserCustomHeader: FC<Props> = ({className, title, tableProps}) => {
+const PackageCustomHeader: FC<Props> = ({className, title, tableProps}) => {
   const id = tableProps.column.id
   const {state, updateState} = useQueryRequest()
 
-  const isSelectedForSorting = useMemo(() => {
-    return state.sort && state.sort === id
-  }, [state, id])
+  const isSelectedForSorting = useMemo(() => state.sort === id, [state, id])
   const order: 'asc' | 'desc' | undefined = useMemo(() => state.order, [state])
 
   const sortColumn = () => {
@@ -58,4 +56,4 @@ const UserCustomHeader: FC<Props> = ({className, title, tableProps}) => {
   )
 }
 
-export {UserCustomHeader}
+export {PackageCustomHeader}

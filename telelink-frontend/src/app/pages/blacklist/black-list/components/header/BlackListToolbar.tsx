@@ -66,6 +66,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void 
           </button>
         </label>
         {/* end::Upload data */}
+        
         {/* begin::Add user */}
           <button type='button' className='btn btn-primary' onClick={openAddBlacklistModal}>
             <KTIcon iconName='plus' className='fs-2' />
