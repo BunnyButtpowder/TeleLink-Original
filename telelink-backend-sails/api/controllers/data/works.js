@@ -1,9 +1,9 @@
 const _ = require("lodash");
 
 module.exports = {
-  friendlyName: "Update assigned data",
+  friendlyName: "Create call's result",
 
-  description: "Allow employees to update their assigned data",
+  description: "Allow employees to create call's result",
 
   inputs: {
     dataId: {
