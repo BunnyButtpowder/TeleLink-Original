@@ -22,23 +22,24 @@ const importData = async (file: File): Promise<any> => {
   }
 };
 
-const getAllBlackList = (): Promise<BlacklistQueryResponse> => {
+const getAllBlackList = (params: { searchTerm?: string; sort?: string; order?: string }): Promise<BlacklistQueryResponse> => {
   return axios
-    .get(`${BLACKLIST_URL}/getall`)
+    .get(`${BLACKLIST_URL}/getall`, { params })
     .then((response: AxiosResponse<BlacklistQueryResponse>) => response.data);
 };
 
-const getSalesmanBlacklist = (userId: ID): Promise<BlacklistQueryResponse> => {
+const getSalesmanBlacklist = (userId: ID, params: { searchTerm?: string; sort?: string; order?: string } = {}): Promise<BlacklistQueryResponse> => {
   return axios
-    .get(`${BLACKLIST_URL}/salesman?userID=${userId}`)
+    .get(`${BLACKLIST_URL}/salesman`, { params: { userID: userId, ...params } })
     .then((response: AxiosResponse<BlacklistQueryResponse>) => response.data);
-}
+};
 
-const getAgencyBlacklist = (agencyId: ID): Promise<BlacklistQueryResponse> => {
+const getAgencyBlacklist = (agencyId: ID, params: { searchTerm?: string; sort?: string; order?: string } = {}): Promise<BlacklistQueryResponse> => {
   return axios
-    .get(`${BLACKLIST_URL}/agency?agencyID=${agencyId}`)
+    .get(`${BLACKLIST_URL}/agency`, { params: { agencyID: agencyId, ...params } })
     .then((response: AxiosResponse<BlacklistQueryResponse>) => response.data);
-}
+};
+
 
 const getBlacklistById = async (id: ID) => {
   const response = await axios.get(`${API_URL}/blacklist/${id}`);
