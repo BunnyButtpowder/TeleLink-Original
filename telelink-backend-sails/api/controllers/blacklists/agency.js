@@ -47,36 +47,34 @@ module.exports = {
           where: {
             user: { in: userIds },
             or: [
-              { SDT: { like: `%${searchTerm || ''}%` } },
-              { note: { like: `%${searchTerm || ''}%` } },
-              {}
-            ]
+              { SDT: { contains: searchTerm } },
+              { note: { contains: searchTerm } },
+            ],
           },
           sort: sortOrder,
         }).populate('user');
 
-        console.log(blacklistData)
-
-
-
-        blacklistData = blacklistData.filter(item =>
-          (item.user && item.user.fullName && item.user.fullName.includes(searchTerm)) ||
-          (item.SDT.includes(searchTerm)) ||
-          (item.note.includes(searchTerm))
-        );
+        // If no results found in SDT or note, search in user.fullName
+        if (blacklistData.length === 0) {
+          blacklistData = await Blacklist.find({
+            where: {
+              user: { in: userIds }
+            },
+            sort: sortOrder,
+          }).populate('user');
+      
+          // Filter results where user.fullName matches the searchTerm
+          blacklistData = blacklistData.filter(item =>
+            item.user && item.user.fullName && item.user.fullName.includes(searchTerm)
+          );
+        }
       } else {
         blacklistData = await Blacklist.find({
           where: {
-            user: { in: userIds },
-            or: [
-              { SDT: { like: `%${searchTerm || ''}%` } },
-              { note: { like: `%${searchTerm || ''}%` } },
-
-            ]
+            user: { in: userIds }
           },
           sort: sortOrder,
         }).populate('user');
-
       }
 
 
