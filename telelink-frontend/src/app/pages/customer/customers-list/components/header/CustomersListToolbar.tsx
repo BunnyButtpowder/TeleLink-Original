@@ -7,6 +7,7 @@ import { useAuth } from '../../../../../../app/modules/auth'
 import { getData } from '../../core/_requests'
 import { useQueryResponse } from '../../core/QueryResponseProvider';
 import { AddReportModal } from '../../add-report-modal/AddReportModal';
+import React from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,6 +18,24 @@ const CustomersListToolbar = () => {
   const { setDataDetails } = useQueryResponse();
   const [cooldown, setCooldown] = useState(false);
   const salesmanId = currentUser?.id;
+  const COOLDOWN_TIME = 15000;
+
+  const getRemainingCooldown = (): number => {
+    const savedTimestamp = localStorage.getItem(`cooldown_${salesmanId}`);
+    if (savedTimestamp) {
+      const elapsedTime = Date.now() - parseInt(savedTimestamp);
+      return COOLDOWN_TIME - elapsedTime;
+    }
+    return 0;
+  }
+
+  useEffect(() => {
+    const remainingCooldown = getRemainingCooldown();
+    if (remainingCooldown > 0) {
+      setCooldown(true);
+      setTimeout(() => setCooldown(false), remainingCooldown);
+    }
+  }, [salesmanId]);
 
   const openAddReportModal = () => {
     setAddReportModalOpen(true);
@@ -44,7 +63,13 @@ const CustomersListToolbar = () => {
   const handleGetData = () => {
     fetchData();
     setCooldown(true);
-    setTimeout(() => setCooldown(false), 15000); // 15 seconds cooldown
+    const timestamp = Date.now();
+    localStorage.setItem(`cooldown_${salesmanId}`, timestamp.toString());
+
+    setTimeout(() => {
+      setCooldown(false),
+      localStorage.removeItem(`cooldown_${salesmanId}`);
+    }, COOLDOWN_TIME); // 15 seconds cooldown
   }
 
   return (

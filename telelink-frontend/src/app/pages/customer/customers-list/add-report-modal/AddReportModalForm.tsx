@@ -8,6 +8,7 @@ import { UsersListLoading } from '../components/loading/UsersListLoading'
 import { createCallResult, getAllPackages } from '../core/_requests'
 import { useQueryResponse } from '../core/QueryResponseProvider'
 import { useIntl } from 'react-intl'
+import React from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../../../app/modules/auth'
@@ -76,11 +77,11 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
         let response;
         if (dataId) {
           response = await createCallResult(values, dataId, date);
-          toast.success('Gửi báo cáo thành công!')
           localStorage.removeItem(`dataDetails_${currentUser?.id}`);
           setDataDetails(undefined);
           refetch()
           onClose()
+          toast.success('Gửi báo cáo thành công!')
         }
         else {
           console.log('Data ID: ', dataId);

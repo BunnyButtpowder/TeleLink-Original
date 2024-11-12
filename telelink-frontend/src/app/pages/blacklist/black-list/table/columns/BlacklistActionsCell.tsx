@@ -7,6 +7,9 @@ import { useListView } from '../../core/ListViewProvider'
 import { useQueryResponse } from '../../core/QueryResponseProvider'
 import { deleteNumber } from '../../core/_requests'
 import { useIntl } from 'react-intl'
+import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type Props = {
   id: ID
@@ -29,6 +32,7 @@ const BlacklistActionsCell: FC<Props> = ({ id }) => {
   const deleteItem = useMutation(() => deleteNumber(id), {
     // 💡 response of the mutation is passed to onSuccess
     onSuccess: () => {
+      toast.success('Đã xoá thành công');
       // ✅ update detail view directly
       queryClient.invalidateQueries([`${QUERIES.USERS_LIST}-${query}`])
     },

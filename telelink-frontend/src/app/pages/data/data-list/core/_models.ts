@@ -32,10 +32,10 @@ export type Data = {
 export type DataQueryResponse = Response<Array<Data>>
 
 export const initialData: Data = {
-  subscriberNumber: '80981128185',
-  currentPackage: 'ST15K',
-  priorityPackage1: ',,V200X,',
-  priorityPackage2: 'B2000',
+  subscriberNumber: '',
+  currentPackage: '',
+  priorityPackage1: '',
+  priorityPackage2: '',
   registrationDate: new Date(),
   expirationDate: new Date(),
   notes: '',

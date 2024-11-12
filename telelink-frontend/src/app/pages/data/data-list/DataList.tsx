@@ -8,8 +8,6 @@ import { ToolbarWrapper } from '../../../../_metronic/layout/components/toolbar'
 import { Content } from '../../../../_metronic/layout/components/content'
 import { useState } from 'react'
 import { Data } from './core/_models'
-import { ToastContainer } from 'react-toastify' // Import ToastContainer
-import 'react-toastify/dist/ReactToastify.css'
 
 const DataList = () => {
   const {itemIdForUpdate} = useListView()

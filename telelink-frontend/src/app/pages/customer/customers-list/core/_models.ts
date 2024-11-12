@@ -33,10 +33,10 @@ export type CustomersQuerySingleResponse = Response<Customer>
 export type CustomersQueryResponse = Response<Array<Customer>>
 
 export const initialCustomer: Customer = {
-  subscriberNumber: '80981128185',
-  currentPackage: 'ST15K',
-  priorityPackage1: ',,V200X,',
-  priorityPackage2: 'B2000',
+  subscriberNumber: '',
+  currentPackage: '',
+  priorityPackage1: '',
+  priorityPackage2: '',
   registrationDate: new Date(),
   expirationDate: new Date(),
   notes: '',

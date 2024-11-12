@@ -24,7 +24,7 @@ export const initialUser: User = {
   dataType: '',
   auth: {
     email: '',
-    status: false,
+    isActive: false,
     username: '',
     password: '',
     role: 3,

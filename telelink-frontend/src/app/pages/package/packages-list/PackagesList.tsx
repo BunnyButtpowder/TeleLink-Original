@@ -7,13 +7,20 @@ import {UserEditModal} from './package-edit-modal/PackageEditModal'
 import {KTCard} from '../../../../_metronic/helpers'
 import { ToolbarWrapper } from '../../../../_metronic/layout/components/toolbar'
 import { Content } from '../../../../_metronic/layout/components/content'
+import { Package} from './core/_models'
+import { useState } from 'react'
 
 const PackageList = () => {
   const {itemIdForUpdate} = useListView()
+  const [tableData, setTableData] = useState<Package[]>([]); // Manage table data.
+
+  const handleUploadComplete = (uploadedData: Package[]) => {
+    setTableData(uploadedData);
+  };
   return (
     <>
       <KTCard>
-        <PackageListHeader />
+        <PackageListHeader onUploadComplete={handleUploadComplete}/>
         <PackageTable />
       </KTCard>
       {itemIdForUpdate !== undefined && <UserEditModal />}

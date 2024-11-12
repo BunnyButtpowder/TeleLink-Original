@@ -12,6 +12,10 @@ module.exports = {
       type: "string",
       required: false,
     },
+    result:{
+      type: "number",
+      require: false,
+    },
     searchTerm: {
       type: "string",
       description: "Từ khóa tìm kiếm",
@@ -32,7 +36,7 @@ module.exports = {
 
   fn: async function (inputs) {
     let { res } = this;
-    let { saleman, agencyId, searchTerm, sort, order } = inputs;
+    let { saleman, agencyId, searchTerm, result,  sort, order } = inputs;
 
     if (agencyId) {
       const AgencyExist = await Agency.findOne({ id: agencyId });
@@ -53,6 +57,7 @@ module.exports = {
     else{
       saleman = undefined
     }
+    const resultInput = result ? result : undefined
     const sortOrder = sort && order ? `${sort} ${order}` : undefined;
 
 
@@ -62,6 +67,7 @@ module.exports = {
         where: {
           saleman: saleman,
           agency: agencyId,
+          result: resultInput,
           or: [
             { subscriberNumber: { like: `%${searchTerm.toLowerCase()}%` } },
             { customerName: { like: `%${searchTerm.toLowerCase()}%` } },
@@ -76,7 +82,7 @@ module.exports = {
       
     } else {
       branchData = await Result.find({
-        where: {saleman: saleman, agency: agencyId },
+        where: {saleman: saleman, agency: agencyId, result: resultInput },
         sort: sortOrder,
       });
       console.log(searchTerm);
@@ -89,6 +95,7 @@ module.exports = {
     return this.res.ok({
       message: `list of result: `,
       data: branchData,
+      count: branchData.length
     });
     // All done.
 
