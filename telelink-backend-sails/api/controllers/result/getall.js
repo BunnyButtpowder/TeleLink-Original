@@ -4,6 +4,10 @@ module.exports = {
   description: "Getall result.",
 
   inputs: {
+    saleman:{
+      type: "string",
+      required: false,
+    },
     agencyId: {
       type: "string",
       required: false,
@@ -28,7 +32,7 @@ module.exports = {
 
   fn: async function (inputs) {
     let { res } = this;
-    let { agencyId, searchTerm, sort, order } = inputs;
+    let { saleman, agencyId, searchTerm, sort, order } = inputs;
 
     if (agencyId) {
       const AgencyExist = await Agency.findOne({ id: agencyId });
@@ -39,6 +43,16 @@ module.exports = {
     else{
       agencyId = undefined
     }
+
+    if (saleman) {
+      const salemanExist = await User.findOne({ id: saleman });
+      if (!salemanExist ) {
+        return this.res.notFound({ message: "không tìm thấy saleman." });
+      }
+    }
+    else{
+      saleman = undefined
+    }
     const sortOrder = sort && order ? `${sort} ${order}` : undefined;
 
 
@@ -46,6 +60,7 @@ module.exports = {
     if (searchTerm) {
       branchData = await Result.find({
         where: {
+          saleman: saleman,
           agency: agencyId,
           or: [
             { subscriberNumber: { like: `%${searchTerm.toLowerCase()}%` } },
@@ -61,7 +76,7 @@ module.exports = {
       
     } else {
       branchData = await Result.find({
-        where: { agency: agencyId },
+        where: {saleman: saleman, agency: agencyId },
         sort: sortOrder,
       });
       console.log(searchTerm);
