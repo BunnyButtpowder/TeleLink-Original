@@ -95,6 +95,7 @@ module.exports = {
     return this.res.ok({
       message: `list of result: `,
       data: branchData,
+      count: branchData.length
     });
     // All done.
 

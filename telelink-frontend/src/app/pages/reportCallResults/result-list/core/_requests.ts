@@ -1,52 +1,43 @@
 import axios, { AxiosResponse } from "axios";
 import { ID, Response } from "../../../../../_metronic/helpers";
-import { Report, UsersQueryResponse } from "./_models";
+import { CallResult, CallResultQueryResponse } from "./_models";
 
-const API_URL = import.meta.env.VITE_APP_THEME_API_URL;
-const USER_URL = `${API_URL}/user`;
-const GET_USERS_URL = `${API_URL}/users/query`;
+const API_URL = import.meta.env.VITE_APP_API_URL;
+const RESULT_URL = `${API_URL}/result/getall`;
 
-const getUsers = (query: string): Promise<UsersQueryResponse> => {
+const getAllCallResults = (params: {saleman?: number, agencyId?: number, result?: number, searchTerm?: string, sort?: string, order?: string}): Promise<CallResultQueryResponse> => {
   return axios
-    .get(`${GET_USERS_URL}?${query}`)
-    .then((d: AxiosResponse<UsersQueryResponse>) => d.data);
+    .get(RESULT_URL, { params })
+    .then((response: AxiosResponse<CallResultQueryResponse>) => response.data);
 };
 
-const getUserById = (id: ID): Promise<Report | undefined> => {
+const getUserById = (id: ID): Promise<CallResult | undefined> => {
   return axios
-    .get(`${USER_URL}/${id}`)
-    .then((response: AxiosResponse<Response<Report>>) => response.data)
-    .then((response: Response<Report>) => response.data);
+    .get(`${RESULT_URL}/${id}`)
+    .then((response: AxiosResponse<Response<CallResult>>) => response.data)
+    .then((response: Response<CallResult>) => response.data);
 };
 
-const createUser = (customer: Report): Promise<Report | undefined> => {
+const updateUser = (customer: CallResult): Promise<CallResult | undefined> => {
   return axios
-    .put(USER_URL, customer)
-    .then((response: AxiosResponse<Response<Report>>) => response.data)
-    .then((response: Response<Report>) => response.data);
-};
-
-const updateUser = (customer: Report): Promise<Report | undefined> => {
-  return axios
-    .post(`${USER_URL}/${customer.id}`, customer)
-    .then((response: AxiosResponse<Response<Report>>) => response.data)
-    .then((response: Response<Report>) => response.data);
+    .post(`${RESULT_URL}/${customer.id}`, customer)
+    .then((response: AxiosResponse<Response<CallResult>>) => response.data)
+    .then((response: Response<CallResult>) => response.data);
 };
 
 const deleteUser = (userId: ID): Promise<void> => {
-  return axios.delete(`${USER_URL}/${userId}`).then(() => {});
+  return axios.delete(`${RESULT_URL}/${userId}`).then(() => {});
 };
 
 const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
-  const requests = userIds.map((id) => axios.delete(`${USER_URL}/${id}`));
+  const requests = userIds.map((id) => axios.delete(`${RESULT_URL}/${id}`));
   return axios.all(requests).then(() => {});
 };
 
 export {
-  getUsers,
+  getAllCallResults,
   deleteUser,
   deleteSelectedUsers,
   getUserById,
-  createUser,
   updateUser,
 };

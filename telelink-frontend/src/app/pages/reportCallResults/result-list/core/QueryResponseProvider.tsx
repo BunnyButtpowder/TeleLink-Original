@@ -11,13 +11,18 @@ import {
   stringifyRequestQuery,
   WithChildren,
 } from '../../../../../_metronic/helpers'
-import {getUsers} from './_requests'
-import {Report} from './_models'
+import {getAllCallResults} from './_requests'
+import {CallResult} from './_models'
 import {useQueryRequest} from './QueryRequestProvider'
+import { useAuth } from '../../../../../app/modules/auth'
 
-const QueryResponseContext = createResponseContext<Report>(initialQueryResponse)
+const QueryResponseContext = createResponseContext<CallResult>(initialQueryResponse)
 const QueryResponseProvider: FC<WithChildren> = ({children}) => {
   const {state} = useQueryRequest()
+  const { currentUser } = useAuth();
+  const userRole = currentUser?.auth.role;
+  const agencyID = currentUser?.agency?.id;
+  const userId = currentUser?.id;
   const [query, setQuery] = useState<string>(stringifyRequestQuery(state))
   const updatedQuery = useMemo(() => stringifyRequestQuery(state), [state])
 
@@ -27,15 +32,25 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
     }
   }, [updatedQuery])
 
-  const {
-    isFetching,
-    refetch,
-    data: response,
-  } = useQuery(
-    `${QUERIES.USERS_LIST}-${query}`,
-    () => {
-      return getUsers(query)
-    },
+  const fetchResults = () => {
+    const { search = '', sort = '', order = '', filter = {} } = state;
+
+    const { saleman, agencyId, result } = filter;
+    // Admin gets all results
+    if (userRole === 1) {
+      return getAllCallResults({ saleman, agencyId, result, searchTerm: search, sort, order });
+    } else if (userRole === 2) {
+      return getAllCallResults({ saleman, agencyId: agencyID, result, searchTerm: search, sort, order });
+    } else if (userRole === 3) {
+      return getAllCallResults({ saleman: userId, agencyId: agencyID, result, searchTerm: search, sort, order });
+    } else {
+      return Promise.resolve({data: [], count: 0});
+    }
+  }
+
+  const { isFetching, refetch, data: response} = useQuery(
+    [`${QUERIES.USERS_LIST}-${query}`, state.filter],
+    fetchResults,
     {cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false}
   )
 

@@ -57,7 +57,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
         const date = new Date(timestamp);
         return <span>{date.toLocaleDateString('vi-VN')}</span>
       }
-      return <span></span>; // return empty span if `dob` is null or undefined
+      return <span></span>;
     }
   },
   {

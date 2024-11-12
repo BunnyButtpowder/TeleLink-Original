@@ -5,7 +5,6 @@ import { Blacklist, BlacklistQueryResponse } from "./_models";
 const API_URL = import.meta.env.VITE_APP_API_URL;
 const BLACKLIST_URL= `${API_URL}/blacklists`;
 
-
 const importData = async (file: File): Promise<any> => {
   const formData = new FormData();
   formData.append('file', file);
@@ -42,7 +41,7 @@ const getAgencyBlacklist = (agencyId: ID): Promise<BlacklistQueryResponse> => {
 }
 
 const getBlacklistById = async (id: ID) => {
-  const response = await axios.get(`${BLACKLIST_URL}/${id}`);
+  const response = await axios.get(`${API_URL}/blacklist/${id}`);
   return response.data;
 };
 
@@ -58,7 +57,7 @@ const createBlacklistNumber = (number: Blacklist, userId: string): Promise<Black
 };
 const updateBlacklistNumber = async (number: Blacklist, token: string): Promise<Blacklist | undefined> => {
   try {
-    const response = await fetch(`${BLACKLIST_URL}/${number.id}`, {
+    const response = await fetch(`${API_URL}/blacklist/${number.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -109,7 +108,7 @@ const getAllUsers = async() => {
 
 
 const deleteNumber = (sdt: ID): Promise<void> => {
-  return axios.delete(`${BLACKLIST_URL}/${sdt}`).then(() => { });
+  return axios.delete(`${API_URL}/blacklist/${sdt}`).then(() => { });
 };
 
 const deleteSelectedNumber = (sdt: Array<ID>): Promise<void> => {

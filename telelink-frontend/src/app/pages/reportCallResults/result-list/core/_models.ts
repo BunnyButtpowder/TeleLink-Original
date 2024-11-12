@@ -1,34 +1,35 @@
 import {ID, Response} from '../../../../../_metronic/helpers'
-export type Report = {
+import { Agency, User, initialUser } from '../../../../modules/apps/user-management/users-list/core/_models'
+import { Data, initialData } from '../../../data/data-list/core/_models'
+export type CallResult = {
   id?: ID
-  phoneNum?: string
-  currentPack?: string
-  specialPack?: string
-  assignedPack?: string
-  regisDate?: Date
-  expDate?: Date
+  data_id: Data
+  agency?: Agency
+  saleman?: User
+  subscriberNumber: string
+  result: number
+  dataPackage?: string | null
+  customerName?: string
+  address?: string
   note?: string
-  mainAccount?: string
-  avg?: string
-  consump_n1?: string
-  consump_n2?: string
-  consump_n3?: string
-  dataSrc ?: string
-  mainAcc_consump ?: string
-  voice_consump ?: string
-  data_consump ?: string
-  outPackage_consump ?: string
-  khac1 ? : string
-  khac2 ? : string
-  khac3 ? : string
+  revenue?: number
+  createdAt?: number
+  updatedAt?: number
 }
 
-export type UsersQueryResponse = Response<Array<Report>>
+export type CallResultQueryResponse = Response<Array<CallResult>>
 
-export const initialReport: Report = {
-  phoneNum: '80981128185',
-  currentPack: 'ST15K',
-  specialPack: ',,V200X,',
-  assignedPack: 'B2000',
-  regisDate: new Date(),
+export const initialCallResult: CallResult = {
+  data_id: initialData,
+  agency: {
+    name: '',
+  },
+  saleman: initialUser,
+  subscriberNumber: '',
+  result: 1,
+  dataPackage: '',
+  customerName: '',
+  address: '',
+  note: '',
+  revenue: 0,
 }
