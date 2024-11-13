@@ -109,11 +109,11 @@ const getAllUsers = async() => {
 
 
 const deleteNumber = (sdt: ID): Promise<void> => {
-  return axios.delete(`${BLACKLIST_URL}/${sdt}`).then(() => { });
+  return axios.delete(`${API_URL}/blacklist/${sdt}`).then(() => { });
 };
 
 const deleteSelectedNumber = (sdt: Array<ID>): Promise<void> => {
-  const requests = sdt.map((id) => axios.delete(`${API_URL}/blacklist/${sdt}`));
+  const requests = sdt.map((id) => axios.delete(`${BLACKLIST_URL}/${sdt}`));
   return axios.all(requests).then(() => { });
 };
 
