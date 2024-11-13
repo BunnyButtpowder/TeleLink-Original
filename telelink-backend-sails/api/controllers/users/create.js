@@ -62,7 +62,7 @@ module.exports = {
         };
         return res.status(201).json({ message: "Đăng ký thành công" , newUser });
       } catch (err) {
-        sails.log.error('Error fetching users or auth info:', err);
+        console.log(err);
         return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách người dùng hoặc thông tin xác thực.'  });
       }
     },

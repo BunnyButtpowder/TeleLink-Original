@@ -9,7 +9,7 @@ module.exports = {
         email: { type: 'string', required: true },
         username: { type: 'string', required: true },
         password: { type: 'string', required: true },
-        role: { type: 'number', required: true }, // Giả sử role = 3 là nhân viên
+        role: { type: 'number', required: true }, 
         gender: { type: 'string', required: true },
         agencyId: { type: 'number', required: true }, 
     },
@@ -59,7 +59,7 @@ module.exports = {
                 address,
                 gender,
                 auth: newAuth.id,
-                agency: agencyId // Liên kết với chi nhánh
+                agency: agencyId 
             }).fetch();
 
             return res.status(201).json({ message: "Đăng ký nhân viên thành công", newUser });
