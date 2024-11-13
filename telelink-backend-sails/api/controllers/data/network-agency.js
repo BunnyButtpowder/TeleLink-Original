@@ -23,19 +23,20 @@ module.exports = {
         return res.notFound({ message: "Chi nhánh không tồn tại." });
       }
       const allData = await Data.find({
-        agency: agencyId
+        agency: agencyId,
+        isDelete: false,
       });
       if (allData.length === 0) {
         return res.notFound({ message: "Không có dữ liệu." });
       }
 
-      const assignData = await DataAssignment.find({});
-      const assignDataIds = assignData.map(item => item.data); 
-      // console.log(assignDataIds)
+      // const assignData = await DataAssignment.find({});
+      // const assignDataIds = assignData.map(item => item.data); 
+      // // console.log(assignDataIds)
 
-      const filteredData = allData.filter(item => !assignDataIds.includes(item.id));
+      // const filteredData = allData.filter(item => !assignDataIds.includes(item.id));
       
-      const categorizedData = _.groupBy(filteredData, 'networkName');
+      const categorizedData = _.groupBy(allData, 'networkName');
 
       const categorizedWithCounts = _.mapValues(categorizedData, (items) => ({
         count: items.length,
