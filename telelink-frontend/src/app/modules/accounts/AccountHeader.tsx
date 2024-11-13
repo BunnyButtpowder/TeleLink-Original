@@ -74,13 +74,14 @@ const AccountHeader: FC = () => {
                   </div>
 
                   <div className='d-flex my-4'>
-                    <a href='#' className='btn btn-sm btn-light me-2' id='kt_user_follow_button'>
+                    {/* <a href='#' className='btn btn-sm btn-light me-2' id='kt_user_follow_button'>
                       <KTIcon iconName='check' className='fs-3 d-none' />
+                      <span className="indicator-label">Follow</span>
                       <span className='indicator-progress'>
                         Vui lòng đợi...
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
-                    </a>
+                    </a> */}
                     {/* <a
                       href='#'
                       className='btn btn-sm btn-primary me-3'
@@ -96,6 +97,7 @@ const AccountHeader: FC = () => {
                         data-kt-menu-placement='bottom-end'
                         data-kt-menu-flip='top-end'
                       >
+                        <i className="bi bi-three-dots fs-3"></i>
                       </button>
                     </div>
                   </div>
@@ -132,8 +134,19 @@ const AccountHeader: FC = () => {
                       </div>
                     </div>
                   </div>
-
-                  
+                  {/* <div className='d-flex align-items-center w-200px w-sm-300px flex-column mt-3'>
+                    <div className='d-flex justify-content-between w-100 mt-auto mb-2'>
+                      <span className='fw-bold fs-6 text-gray-500'>Hoàn thiện hồ sơ</span>
+                      <span className='fw-bolder fs-6'>50%</span>
+                    </div>
+                    <div className='h-5px mx-3 w-100 bg-light mb-3'>
+                      <div
+                        className='bg-success rounded h-5px'
+                        role='progressbar'
+                        style={{width: '50%'}}
+                      ></div>
+                    </div>
+                  </div> */}
                 </div>
               </div>
             </div>

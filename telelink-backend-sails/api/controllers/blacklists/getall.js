@@ -33,7 +33,6 @@ module.exports = {
 
       let blacklistData;
       if (searchTerm) {
-        // First, try searching only in SDT and note fields
         blacklistData = await Blacklist.find({
           where: {
             or: [

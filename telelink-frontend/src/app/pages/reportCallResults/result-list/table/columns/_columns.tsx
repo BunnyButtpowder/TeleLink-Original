@@ -17,7 +17,7 @@ const resultsColumns: ReadonlyArray<Column<CallResult>> = [
   {
     Header: (props) => <ResultCustomHeader tableProps={props} title='#' className='min-w-30px' />,
     accessor: 'id',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index].id}</span>,
+    Cell: ({ row }) => <span>{row.index + 1}</span>,
   },
   {
     Header: (props) => <ResultCustomHeader tableProps={props} title='Kết quả' className='min-w-125px' />,
