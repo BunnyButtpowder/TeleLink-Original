@@ -113,7 +113,7 @@ const deleteNumber = (sdt: ID): Promise<void> => {
 };
 
 const deleteSelectedNumber = (sdt: Array<ID>): Promise<void> => {
-  const requests = sdt.map((id) => axios.delete(`${BLACKLIST_URL}/${sdt}`));
+  const requests = sdt.map((id) => axios.delete(`${API_URL}/blacklist/${sdt}`));
   return axios.all(requests).then(() => { });
 };
 
