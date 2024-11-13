@@ -43,6 +43,10 @@ module.exports = {
     },
     revenue:{
       type: 'number'   //doanh thu
+    },
+    dateToCall:{
+      type: 'string',  //ngay goi lai
+      required: false
     }
     
 
