@@ -3,7 +3,7 @@ import { ID, Response } from "../../../../../_metronic/helpers";
 import { Blacklist, BlacklistQueryResponse } from "./_models";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
-const BLACKLIST_URL= `${API_URL}/blacklist`;
+const BLACKLIST_URL= `${API_URL}/blacklists`;
 
 
 const importData = async (file: File): Promise<any> => {
@@ -42,7 +42,7 @@ const getAgencyBlacklist = (agencyId: ID, params: { searchTerm?: string; sort?: 
 };
 
 const getBlacklistById = async (id: ID) => {
-  const response = await axios.get(`${BLACKLIST_URL}/${id}`);
+  const response = await axios.get(`${API_URL}/blacklist/${id}`);
   return response.data;
 };
 
@@ -58,7 +58,7 @@ const createBlacklistNumber = (number: Blacklist, userId: string): Promise<Black
 };
 const updateBlacklistNumber = async (number: Blacklist, token: string): Promise<Blacklist | undefined> => {
   try {
-    const response = await fetch(`${BLACKLIST_URL}/${number.id}`, {
+    const response = await fetch(`${API_URL}/blacklist/${number.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ const deleteNumber = (sdt: ID): Promise<void> => {
 };
 
 const deleteSelectedNumber = (sdt: Array<ID>): Promise<void> => {
-  const requests = sdt.map((id) => axios.delete(`${BLACKLIST_URL}/${sdt}`));
+  const requests = sdt.map((id) => axios.delete(`${API_URL}/blacklist/${sdt}`));
   return axios.all(requests).then(() => { });
 };
 
