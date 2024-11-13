@@ -72,7 +72,7 @@ module.exports = {
           data: data.id,
           assignedAt: new Date(),
         });
-        await Data.updateOne({ id: data.id }).set({ isDelete: true });
+        await Data.updateOne({ id: data.id }).set({ isDelete: true ,agency: employee.agency});
       }));
 
       return res.status(200).json({
