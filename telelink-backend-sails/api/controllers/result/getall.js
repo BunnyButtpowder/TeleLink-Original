@@ -65,7 +65,6 @@ module.exports = {
       const [month, year] = date.split("-");
       startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
       endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59));
-      console.log(startDate);
       
     }
 
