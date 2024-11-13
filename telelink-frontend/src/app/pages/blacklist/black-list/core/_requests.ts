@@ -3,7 +3,7 @@ import { ID, Response } from "../../../../../_metronic/helpers";
 import { Blacklist, BlacklistQueryResponse } from "./_models";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
-const BLACKLIST_URL= `${API_URL}/blacklists`;
+const BLACKLIST_URL= `${API_URL}/blacklist`;
 
 
 const importData = async (file: File): Promise<any> => {
