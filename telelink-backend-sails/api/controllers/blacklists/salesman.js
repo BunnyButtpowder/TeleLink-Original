@@ -37,14 +37,25 @@ module.exports = {
           where: {
             user: userID,
             or: [
-              { SDT: { like: `%${searchTerm}%` } },
-              { note: { like: `%${searchTerm}%` } },
-              
+              { SDT: { contains: searchTerm } },
+              { note: { contains: searchTerm } },
             ],
           },
           sort: sortOrder,
         }).populate('user');
-        console.log(blacklistData)
+
+        if (blacklistData.length === 0) {
+          blacklistData = await Blacklist.find({
+            where: {
+              user: userID,
+            },
+            sort: sortOrder,
+          }).populate('user');
+
+          blacklistData = blacklistData.filter(item =>
+            item.user && item.user.fullName && item.user.fullName.includes(searchTerm)
+          );
+        }
       } else {
         blacklistData = await Blacklist.find({
           where: {
