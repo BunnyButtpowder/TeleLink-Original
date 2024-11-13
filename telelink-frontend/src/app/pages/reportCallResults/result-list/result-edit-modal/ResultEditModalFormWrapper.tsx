@@ -1,18 +1,19 @@
 import {useQuery} from 'react-query'
-import {UserEditModalForm} from './UserEditModalForm'
+import {ResultEditModalForm} from './ResultEditModalForm'
 import {isNotEmpty, QUERIES} from '../../../../../_metronic/helpers'
 import {useListView} from '../core/ListViewProvider'
 import {getUserById} from '../core/_requests'
+import { initialCallResult } from '../core/_models'
 
-const UserEditModalFormWrapper = () => {
+const ResultEditModalFormWrapper = () => {
   const {itemIdForUpdate, setItemIdForUpdate} = useListView()
   const enabledQuery: boolean = isNotEmpty(itemIdForUpdate)
   const {
     isLoading,
-    data: user,
+    data: result,
     error,
   } = useQuery(
-    `${QUERIES.USERS_LIST}-user-${itemIdForUpdate}`,
+    `${QUERIES.USERS_LIST}-result-${itemIdForUpdate}`,
     () => {
       return getUserById(itemIdForUpdate)
     },
@@ -26,15 +27,22 @@ const UserEditModalFormWrapper = () => {
     }
   )
 
-  // if (!itemIdForUpdate) {
-  //   return <UserEditModalForm isUserLoading={isLoading} user={{id: undefined}} />
-  // }
-
-  // if (!isLoading && !error && user) {
-  //   return <UserEditModalForm isUserLoading={isLoading} user={user} />
-  // }
-
-  return null
+  if (isLoading) {
+    console.log("Still loading no data yet...");
+    return <div>Đang tải...</div>;
+  }
+  
+  if (error) {
+    return <div>Error loading result</div>;
+  }
+  
+  return (
+    <ResultEditModalForm
+      isUserLoading={isLoading}
+      result={result || initialCallResult}
+    />
+  );
+  
 }
 
-export {UserEditModalFormWrapper}
+export {ResultEditModalFormWrapper}
