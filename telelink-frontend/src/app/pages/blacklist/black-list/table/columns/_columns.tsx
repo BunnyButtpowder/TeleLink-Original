@@ -16,7 +16,8 @@ const usersColumns: ReadonlyArray<Column<Blacklist>> = [
   {
     Header: (props) => <BlacklistCustomHeader tableProps={props} title='#' className='min-w-30px' />,
     accessor: 'id',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index].id}</span>,
+    // Cell: ({ ...props }) => <span>{props.data[props.row.index].id}</span>,
+    Cell: ({ row }) => <span>{row.index + 1}</span>,
   },
   {
     Header: (props) => (
@@ -52,8 +53,6 @@ const usersColumns: ReadonlyArray<Column<Blacklist>> = [
     ),
     accessor: 'user',
     Cell: ({ ...props }) =>
-      // const user = props.data[props.row.index].user
-      // return <span>{user?.fullName || ''}</span>
       <span>{props.data[props.row.index].user?.fullName}</span>
     ,
   },

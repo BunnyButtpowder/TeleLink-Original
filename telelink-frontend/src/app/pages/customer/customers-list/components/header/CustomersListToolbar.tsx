@@ -55,8 +55,11 @@ const CustomersListToolbar = () => {
       // setCurrentUserData({dataDetails});
       setDataDetails(dataDetails);
       console.log('Fetched data details:', dataDetails);
-    } catch (error) {
+      toast.success('Lấy số thành công');
+    } catch (error: any) {
       console.error('Failed to fetch data details:', error);
+      const errorMessage = error.response?.data?.message
+      toast.error(errorMessage);
     }
   };
 

@@ -125,7 +125,7 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
                 {...formik.getFieldProps('result')}
                 onChange={(e) => formik.setFieldValue('result', parseInt(e.target.value))}
                 className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
+                  'cursor-pointer form-control form-control-solid mb-3 mb-lg-0',
                   { 'is-invalid': formik.touched.result && formik.errors.result },
                   { 'is-valid': formik.touched.result && !formik.errors.result }
                 )}
@@ -209,7 +209,7 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
               <select
                 {...formik.getFieldProps('dataPackage')}
                 className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
+                  'cursor-pointer form-control form-control-solid mb-3 mb-lg-0',
                   { 'is-invalid': formik.touched.dataPackage && formik.errors.dataPackage },
                   { 'is-valid': formik.touched.dataPackage && !formik.errors.dataPackage }
                 )}
@@ -235,6 +235,31 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
               )}
             </div>
             {/* end::Package Selection */}
+
+            <div className='fv-row mb-7'>
+              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NOTE' })}</label>
+
+              <input
+                placeholder='Nhập ghi chú'
+                {...formik.getFieldProps('note')}
+                type='text'
+                name='note'
+                className={clsx(
+                  'form-control form-control-solid mb-3 mb-lg-0',
+                  { 'is-invalid': formik.touched.note && formik.errors.note },
+                  { 'is-valid': formik.touched.note && !formik.errors.note }
+                )}
+                autoComplete='off'
+                disabled={formik.isSubmitting}
+              />
+              {formik.touched.note && formik.errors.note && (
+                <div className='fv-plugins-message-container'>
+                  <div className='fv-help-block'>
+                    <span role='alert'>{formik.errors.note}</span>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* begin::Callback Date */}
             {showCallbackDate && (
