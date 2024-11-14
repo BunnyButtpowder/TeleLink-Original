@@ -12,13 +12,17 @@ module.exports = {
       type: "string",
       required: false,
     },
+    search: {
+      type: "string",
+      required: false,
+    },
   },
 
   exits: {},
 
   fn: async function (inputs) {
     let { res } = this;
-    let { agencyId, date } = inputs;
+    let { agencyId, date, search } = inputs;
     let result = [];
     let AgencyList = [];
 
@@ -30,8 +34,16 @@ module.exports = {
         return this.res.notFound({ message: "không tìm thấy chi nhánh." });
       }
     } else {
-      AgencyList = await Agency.find({});
-      agencyId = undefined;
+      if(search){
+        AgencyList = await Agency.find({
+          where: { name: { like: `%${search.toLowerCase()}%` } },
+        });
+        agencyId = undefined;
+      }
+      else{
+        AgencyList = await Agency.find({});
+      }
+      
     }
 
     //định nghĩa tháng cần tìm
@@ -43,10 +55,9 @@ module.exports = {
       endDate = Date.parse(new Date(Date.UTC(year, month, 0, 23, 59, 59)));
     }
 
-
     for (const i in AgencyList) {
       let rawQuery, groupedResults;
-      if(date){
+      if (date) {
         rawQuery = `
         SELECT data_id, result, revenue
         FROM result
@@ -54,10 +65,11 @@ module.exports = {
         GROUP BY data_id, result, revenue
         `;
         groupedResults = await sails.sendNativeQuery(rawQuery, [
-          AgencyList[i].id, startDate, endDate
+          AgencyList[i].id,
+          startDate,
+          endDate,
         ]);
-      }
-      else{
+      } else {
         rawQuery = `
         SELECT data_id, result, revenue
         FROM result
@@ -68,9 +80,7 @@ module.exports = {
           AgencyList[i].id,
         ]);
       }
-      
 
-      
       const accept = groupedResults.rows.filter((x) => x.result == 1).length;
       const reject = groupedResults.rows.filter((x) => x.result == 2).length;
       const unanswered = groupedResults.rows.filter(
@@ -79,13 +89,15 @@ module.exports = {
       const unreachable = groupedResults.rows.filter(
         (x) => x.result == 4
       ).length;
-      const rehandle = groupedResults.rows.filter(
-        (x) => [5, 6, 7].includes(x.result)
+      const rehandle = groupedResults.rows.filter((x) =>
+        [5, 6, 7].includes(x.result)
       ).length;
       const lost = groupedResults.rows.filter((x) => x.result == 8).length;
 
-      const revenue = groupedResults.rows.reduce((sum, item) => sum + item.revenue, 0);
-
+      const revenue = groupedResults.rows.reduce(
+        (sum, item) => sum + item.revenue,
+        0
+      );
 
       result.push({
         agency: AgencyList[i].name,
@@ -104,7 +116,7 @@ module.exports = {
     // All done.
     return this.res.ok({
       message: `Revenue report:`,
-      result
+      result,
     });
   },
 };
