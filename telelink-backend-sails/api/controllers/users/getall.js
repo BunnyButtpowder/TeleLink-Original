@@ -47,15 +47,14 @@ module.exports = {
       }
 
       let users;
-      if (searchTerm) {
+      if (['username', 'email'].includes(sort)) {
         users = await User.find({
           where: whereClause,
-          sort: sortOrder,
+
         })
           .populate('auth')
           .populate('agency');
       } else {
-
         users = await User.find({
           where: whereClause,
           sort: sortOrder,
@@ -72,6 +71,7 @@ module.exports = {
               { email: { like: `%${searchTermAuth}%` } },
             ],
           },
+
         });
 
         const authUserIds = authUsers.map(authUser => authUser.id);
@@ -79,6 +79,29 @@ module.exports = {
       }
       if (role) {
         users = users.filter(user => user.auth && user.auth.role === role);
+      }
+      const sortOrder1 = sort && order ? order : 'asc';
+      if (sort === 'username') {
+        users.sort((a, b) => {
+          const nameA = a.auth.username.toLowerCase();
+          const nameB = b.auth.username.toLowerCase();
+          if (sortOrder1 === 'asc') {
+            return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+          } else {
+            return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
+          }
+        });
+      }
+      if (sort === 'email') {
+        users.sort((a, b) => {
+          const nameA = a.auth.email.toLowerCase();
+          const nameB = b.auth.email.toLowerCase();
+          if (sortOrder1 === 'asc') {
+            return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+          } else {
+            return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
+          }
+        });
       }
 
       if (!users || users.length === 0) {
