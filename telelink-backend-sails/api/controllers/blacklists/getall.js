@@ -36,28 +36,31 @@ module.exports = {
         blacklistData = await Blacklist.find({
           where: {
             or: [
-              { SDT: { like: `%${searchTerm}%` } },
-              { note: { like: `%${searchTerm}%` } },
-              {}
+              { SDT: { contains: searchTerm } },
+              { note: { contains: searchTerm } },
             ],
           },
           sort: sortOrder,
         }).populate('user');
-
-        blacklistData = blacklistData.filter(item =>
-          (item.user && item.user.fullName && item.user.fullName.includes(searchTerm)) ||
-          (item.SDT.includes(searchTerm)) ||
-          (item.note.includes(searchTerm))
-        );
-
-
+      
+        // If no results found in SDT or note, search in user.fullName
+        if (blacklistData.length === 0) {
+          blacklistData = await Blacklist.find({
+            sort: sortOrder,
+          }).populate('user');
+      
+          // Filter results where user.fullName matches the searchTerm
+          blacklistData = blacklistData.filter(item =>
+            item.user && item.user.fullName && item.user.fullName.includes(searchTerm)
+          );
+        }
       } else {
-
+        // No search term, just get all blacklist data
         blacklistData = await Blacklist.find({
-
           sort: sortOrder,
         }).populate('user');
       }
+      
 
       if (blacklistData.length === 0) {
         return res.ok({ message: searchTerm ? 'Không tìm thấy dữ liệu phù hợp.' : 'Không có dữ liệu' });

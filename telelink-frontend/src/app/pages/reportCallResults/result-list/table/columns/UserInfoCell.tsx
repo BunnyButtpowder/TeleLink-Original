@@ -2,13 +2,13 @@
 import clsx from 'clsx'
 import {FC} from 'react'
 import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
-import {Report} from '../../core/_models'
+import {CallResult} from '../../core/_models'
 
 type Props = {
-  customer: Report
+  result: CallResult
 }
 
-const UserInfoCell: FC<Props> = ({customer}) => (
+const UserInfoCell: FC<Props> = ({result}) => (
   <div className='d-flex align-items-center'>
     {/* begin:: Avatar */}
     <div className='symbol symbol-circle symbol-50px overflow-hidden me-3'>
@@ -28,7 +28,7 @@ const UserInfoCell: FC<Props> = ({customer}) => (
             {customer.initials?.label}
           </div>
         )} */}
-        {customer.phoneNum}
+        {result.result}
       </a>
     </div>
     {/* <div className='d-flex flex-column'>

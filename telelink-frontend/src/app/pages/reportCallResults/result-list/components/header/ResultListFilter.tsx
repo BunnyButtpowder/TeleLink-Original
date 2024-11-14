@@ -5,7 +5,7 @@ import {useQueryRequest} from '../../core/QueryRequestProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
 import {useIntl} from 'react-intl'
 
-const UsersListFilter = () => {
+const ResultListFilter = () => {
   const {updateState} = useQueryRequest()
   const {isLoading} = useQueryResponse()
   const [role, setRole] = useState<string | undefined>()
@@ -130,4 +130,4 @@ const UsersListFilter = () => {
   )
 }
 
-export {UsersListFilter}
+export {ResultListFilter}

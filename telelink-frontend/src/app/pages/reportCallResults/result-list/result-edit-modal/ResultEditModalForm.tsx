@@ -1,35 +1,41 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, {FC, useState, useEffect} from 'react'
 import * as Yup from 'yup'
-import { useFormik } from 'formik'
-import { initialResult, Result } from '../core/_models'
+import {useFormik} from 'formik'
+import {isNotEmpty, toAbsoluteUrl} from '../../../../../_metronic/helpers'
+import {initialCallResult, CallResult} from '../core/_models'
 import clsx from 'clsx'
-import { useListView } from '../core/ListViewProvider'
-import { UsersListLoading } from '../components/loading/UsersListLoading'
-import { createCallResult, getAllPackages } from '../core/_requests'
-import { useQueryResponse } from '../core/QueryResponseProvider'
-import { useIntl } from 'react-intl'
+import {useListView} from '../core/ListViewProvider'
+import {UsersListLoading} from '../components/loading/UsersListLoading'
+import {updateCallResult} from '../core/_requests'
+import {useQueryResponse} from '../core/QueryResponseProvider'
+import {useIntl} from 'react-intl'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '../../../../../app/modules/auth'
+import { getAllPackages } from '../../../customer/customers-list/core/_requests'
 
 type Props = {
-  onClose: () => void
+  isUserLoading: boolean
+  result: CallResult
 }
 
-const resultSchema = Yup.object().shape({
+const vietnamesePhoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+
+const editResultSchema = Yup.object().shape({
   result: Yup.number().required('Vui lòng chọn kết quả cuộc gọi'),
   dataPackage: Yup.string().nullable(),
   customerName: Yup.string().required('Vui lòng nhập tên khách hàng'),
   address: Yup.string().nullable(),
   note: Yup.string().nullable(),
+  subscriberNumber: Yup.string()
+  .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
+  .required('Vui lòng điền số điện thoại'),
+  revenue: Yup.number().nullable(),
 })
 
-const AddReportModalForm: FC<Props> = ({ onClose }) => {
+const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
   const intl = useIntl();
-  const { currentUser } = useAuth();
-  const dataDetails = localStorage.getItem(`dataDetails_${currentUser?.id}`) || ''
-  const dataId = dataDetails ? JSON.parse(dataDetails).id : ''
-  const { setDataDetails, refetch } = useQueryResponse()
+  const {setItemIdForUpdate} = useListView()
+  const {refetch} = useQueryResponse()
   const [date, setDate] = useState<string>('')
   const [packages, setPackages] = useState<Array<{ id: number, title: string }>>([]);
   const [isLoadingPackages, setIsLoadingPackages] = useState(false);
@@ -66,32 +72,47 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
     formik.setFieldValue('dataPackage', selectedPackage);
   }
 
-  const formik = useFormik<Result>({
-    initialValues: initialResult,
-    enableReinitialize: true,
-    validationSchema: resultSchema,
-    onSubmit: async (values, { setSubmitting }) => {
+  const [resultForEdit] = useState<CallResult>({
+    ...result,
+    result: result.result || initialCallResult.result,
+    dataPackage: result.dataPackage || initialCallResult.dataPackage,
+    customerName: result.customerName || initialCallResult.customerName,
+    address: result.address || initialCallResult.address,
+    note: result.note || initialCallResult.note,
+    subscriberNumber: result.subscriberNumber || initialCallResult.subscriberNumber,
+    revenue: result.revenue || initialCallResult.revenue,
+  })
+
+  const cancel = (withRefresh?: boolean) => {
+    if (withRefresh) {
+      refetch()
+    }
+    setItemIdForUpdate(undefined)
+  }
+
+  console.log('resultForEdit:', resultForEdit);
+
+  const formik = useFormik({
+    initialValues: resultForEdit,
+    validationSchema: editResultSchema,
+    onSubmit: async (values, {setSubmitting}) => {
       setSubmitting(true)
       try {
-        let response;
-        if (dataId) {
-          response = await createCallResult(values, dataId, date);
-          localStorage.removeItem(`dataDetails_${currentUser?.id}`);
-          setDataDetails(undefined);
+        if (values.id) {
+          let response;
+          response = await updateCallResult(values.id, values);
+          toast.success('Cập nhật kết quả thành công');
           refetch()
-          onClose()
-          toast.success('Gửi báo cáo thành công!')
+        } else {
+          toast.error('Không tìm thấy ID của kết quả cuộc gọi')
         }
-        else {
-          console.log('Data ID: ', dataId);
-          toast.error('Hãy lấy số trước khi gửi kết quả cuộc gọi!')
-        }
-      } catch (error) {
-        const errorMessage = (error as any).response?.data?.message || 'Gửi kết quả cuộc gọi thất bại!'
-        toast.error(errorMessage)
-        console.error('Failed to submit report:', errorMessage)
+      } catch (error: any) {
+        console.error('Error updating call result:', error);
+        const errorMessage = error.response?.data?.message || 'Cập nhật thất bại';
+        toast.error(errorMessage);
       } finally {
-        setSubmitting(false)
+        setSubmitting(true)
+        cancel(true)
       }
     },
   })
@@ -281,7 +302,7 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
 
           {/* begin::Actions */}
           <div className='text-center pt-5'>
-            <button type='button' onClick={onClose} className='btn btn-light me-3' disabled={formik.isSubmitting}>
+            <button type='button' onClick={() => cancel()} className='btn btn-light me-3' disabled={formik.isSubmitting}>
               {intl.formatMessage({ id: 'FORM.CANCEL' })}
             </button>
             <button
@@ -306,4 +327,4 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
   )
 }
 
-export { AddReportModalForm }
+export {ResultEditModalForm}

@@ -2,18 +2,20 @@ import React, { useState, useRef } from 'react'
 import { importData } from '../../core/_requests'
 import { KTIcon } from '../../../../../../_metronic/helpers'
 import { useListView } from '../../core/ListViewProvider'
-import { UsersListFilter } from './UsersListFilter'
 import { useIntl } from 'react-intl'
 import { Blacklist } from '../../core/_models'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useQueryResponse } from '../../core/QueryResponseProvider'
 
-const DataListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void }> = ({ onUploadComplete }) => {
+
+const BlackListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void }> = ({ onUploadComplete }) => {
   const intl = useIntl()
-  const [isDistributionModalOpen, setDistributionModalOpen] = useState(false)
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input element
   const {setItemIdForUpdate} = useListView()
+
+  const { refetch } = useQueryResponse()
   const openAddBlacklistModal = () => {
     setItemIdForUpdate(null)
   }
@@ -25,12 +27,16 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void 
       try {
         const response = await importData(files);
         onUploadComplete(response.data);
+        refetch();
         toast.success('Upload danh sách thành công!');
       } catch (error) {
         console.error('Error uploading the file: ', error);
         toast.error('Upload danh sách thất bại!');
       } finally {
         setUploading(false);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
       }
     }
   };
@@ -45,8 +51,6 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void 
     <>
       <ToastContainer />
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-        <UsersListFilter />
-
         {/* begin::Upload data */}
         <input
           ref={fileInputRef}
@@ -83,4 +87,4 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void 
   )
 }
 
-export { DataListToolbar }
+export { BlackListToolbar }

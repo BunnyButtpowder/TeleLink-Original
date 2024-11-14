@@ -21,6 +21,9 @@ export type FilterState = {
     networkName?: string
     type?: string
     provider?: string
+    saleman?: number
+    agencyId?: number
+    result?: number
   }
 }
 

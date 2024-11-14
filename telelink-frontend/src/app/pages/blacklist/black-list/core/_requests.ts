@@ -5,7 +5,6 @@ import { Blacklist, BlacklistQueryResponse } from "./_models";
 const API_URL = import.meta.env.VITE_APP_API_URL;
 const BLACKLIST_URL= `${API_URL}/blacklists`;
 
-
 const importData = async (file: File): Promise<any> => {
   const formData = new FormData();
   formData.append('file', file);
@@ -23,26 +22,27 @@ const importData = async (file: File): Promise<any> => {
   }
 };
 
-const getAllBlackList = (): Promise<BlacklistQueryResponse> => {
+const getAllBlackList = (params: { searchTerm?: string; sort?: string; order?: string }): Promise<BlacklistQueryResponse> => {
   return axios
-    .get(`${BLACKLIST_URL}/getall`)
+    .get(`${BLACKLIST_URL}/getall`, { params })
     .then((response: AxiosResponse<BlacklistQueryResponse>) => response.data);
 };
 
-const getSalesmanBlacklist = (userId: ID): Promise<BlacklistQueryResponse> => {
+const getSalesmanBlacklist = (userId: ID, params: { searchTerm?: string; sort?: string; order?: string } = {}): Promise<BlacklistQueryResponse> => {
   return axios
-    .get(`${BLACKLIST_URL}/salesman?userID=${userId}`)
+    .get(`${BLACKLIST_URL}/salesman`, { params: { userID: userId, ...params } })
     .then((response: AxiosResponse<BlacklistQueryResponse>) => response.data);
-}
+};
 
-const getAgencyBlacklist = (agencyId: ID): Promise<BlacklistQueryResponse> => {
+const getAgencyBlacklist = (agencyId: ID, params: { searchTerm?: string; sort?: string; order?: string } = {}): Promise<BlacklistQueryResponse> => {
   return axios
-    .get(`${BLACKLIST_URL}/agency?agencyID=${agencyId}`)
+    .get(`${BLACKLIST_URL}/agency`, { params: { agencyID: agencyId, ...params } })
     .then((response: AxiosResponse<BlacklistQueryResponse>) => response.data);
-}
+};
+
 
 const getBlacklistById = async (id: ID) => {
-  const response = await axios.get(`${BLACKLIST_URL}/${id}`);
+  const response = await axios.get(`${API_URL}/blacklist/${id}`);
   return response.data;
 };
 
@@ -58,7 +58,7 @@ const createBlacklistNumber = (number: Blacklist, userId: string): Promise<Black
 };
 const updateBlacklistNumber = async (number: Blacklist, token: string): Promise<Blacklist | undefined> => {
   try {
-    const response = await fetch(`${BLACKLIST_URL}/${number.id}`, {
+    const response = await fetch(`${API_URL}/blacklist/${number.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -109,11 +109,11 @@ const getAllUsers = async() => {
 
 
 const deleteNumber = (sdt: ID): Promise<void> => {
-  return axios.delete(`${BLACKLIST_URL}/${sdt}`).then(() => { });
+  return axios.delete(`${API_URL}/blacklist/${sdt}`).then(() => { });
 };
 
 const deleteSelectedNumber = (sdt: Array<ID>): Promise<void> => {
-  const requests = sdt.map((id) => axios.delete(`${BLACKLIST_URL}/${sdt}`));
+  const requests = sdt.map((id) => axios.delete(`${API_URL}/blacklist/${sdt}`));
   return axios.all(requests).then(() => { });
 };
 

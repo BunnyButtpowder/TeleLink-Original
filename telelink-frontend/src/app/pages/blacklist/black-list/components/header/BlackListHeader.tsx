@@ -1,5 +1,5 @@
 import {useListView} from '../../core/ListViewProvider'
-import {DataListToolbar} from './BlackListToolbar'
+import {BlackListToolbar} from './BlackListToolbar'
 import {UsersListGrouping} from './UsersListGrouping'
 import {UsersListSearchComponent} from './UsersListSearchComponent'
 import {Blacklist} from '../../core/_models'
@@ -16,7 +16,7 @@ const BlackListHeader: React.FC <BlackListHeaderProps> = ({ onUploadComplete }) 
       {/* begin::Card toolbar */}
       <div className='card-toolbar'>
         {/* begin::Group actions */}
-        {selected.length > 0 ? <UsersListGrouping /> : <DataListToolbar onUploadComplete={onUploadComplete}/>}
+        {selected.length > 0 ? <UsersListGrouping /> : <BlackListToolbar onUploadComplete={onUploadComplete}/>}
         {/* end::Group actions */}
       </div>
       {/* end::Card toolbar */}

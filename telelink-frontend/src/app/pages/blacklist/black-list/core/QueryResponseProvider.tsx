@@ -34,18 +34,20 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   }, [updatedQuery])
 
   const fetchBlacklist = () => {
+    const { search = '', sort = '', order = '' } = state;
+  
     if (userRole === 1) {
-      return getAllBlackList();
+      return getAllBlackList({ searchTerm: search, sort, order });
     } else if (userRole === 2 && agencyId) {
-      return getAgencyBlacklist(agencyId);
+      return getAgencyBlacklist(agencyId, { searchTerm: search, sort, order });
     } else if (userRole === 3 && userId) {
-      return getSalesmanBlacklist(userId);
-    }
-    else {
+      return getSalesmanBlacklist(userId, { searchTerm: search, sort, order });
+    } else {
       // Undefined role gets empty data
       return Promise.resolve({ data: [] });
     }
   };
+  
 
   const { isFetching, refetch, data: response } = useQuery(
     `${QUERIES.USERS_LIST}-${query}`,

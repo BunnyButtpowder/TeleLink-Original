@@ -13,9 +13,14 @@ const QueryRequestProvider: FC<WithChildren> = ({children}) => {
   const [state, setState] = useState<QueryState>(initialQueryRequest.state)
 
   const updateState = (updates: Partial<QueryState>) => {
-    const updatedState = {...state, ...updates} as QueryState
-    setState(updatedState)
-  }
+    setState((prevState) => {
+      const newState = {
+        ...prevState,
+        ...updates,       
+      };
+      return newState;
+    });
+  };
 
   return (
     <QueryRequestContext.Provider value={{state, updateState}}>

@@ -19,7 +19,8 @@ const usersColumns: ReadonlyArray<Column<User>> = [
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='#' className='min-w-30px' />,
     accessor: 'id',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index].id}</span>,
+    Cell: ({ row }) => <span>{row.index + 1}</span>,
+    // Cell: ({ ...props }) => <span>{props.data[props.row.index].id}</span>,
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Tài khoản' className='min-w-125px' />,
@@ -57,7 +58,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
         const date = new Date(timestamp);
         return <span>{date.toLocaleDateString('vi-VN')}</span>
       }
-      return <span></span>; // return empty span if `dob` is null or undefined
+      return <span></span>;
     }
   },
   {

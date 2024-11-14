@@ -142,18 +142,12 @@ const deleteUser = (userId: ID): Promise<void> => {
   return axios.delete(`${USER_URL}/${userId}`).then(() => { });
 };
 
-const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
-  const requests = userIds.map((id) => axios.delete(`${USER_URL}/${id}`));
-  return axios.all(requests).then(() => { });
-};
-
 export {
   importData,
   getAllData,
   getDataByAgency,
   dataAssignSalesman,
   deleteUser,
-  deleteSelectedUsers,
   getUserById,
   updateUser,
   dataAssignAgency,

@@ -1,6 +1,5 @@
 import {useListView} from '../../core/ListViewProvider'
 import {DataListToolbar} from './DataListToolbar'
-import {UsersListGrouping} from './UsersListGrouping'
 import {DataListSearchComponent} from './DataListSearchComponent'
 import {Data} from '../../core/_models'
 
@@ -16,7 +15,7 @@ const DataListHeader: React.FC <DataListHeaderProps> = ({ onUploadComplete }) =>
       {/* begin::Card toolbar */}
       <div className='card-toolbar'>
         {/* begin::Group actions */}
-        {selected.length > 0 ? <UsersListGrouping /> : <DataListToolbar onUploadComplete={onUploadComplete}/>}
+        <DataListToolbar onUploadComplete={onUploadComplete}/>
         {/* end::Group actions */}
       </div>
       {/* end::Card toolbar */}

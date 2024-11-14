@@ -1,9 +1,9 @@
 const _ = require("lodash");
 
 module.exports = {
-  friendlyName: "Update assigned data",
+  friendlyName: "Create call's result",
 
-  description: "Allow employees to update their assigned data",
+  description: "Allow employees to create call's result",
 
   inputs: {
     dataId: {
@@ -137,9 +137,13 @@ module.exports = {
           });
           break;
         case 8:   //mat don
+          package.price = 0;
           break;
         default:
           return this.res.badRequest("Kết quả cuộc gọi không hợp lệ");
+      }
+      if(!date){
+        date = undefined
       }
       const newResult = await Result.create({
         data_id: dataId,
@@ -147,6 +151,7 @@ module.exports = {
         saleman: user.id,
         subscriberNumber: data.subscriberNumber,
         revenue: package.price,
+        dateToCall: date,
         ...callResult,
       });
       await DataAssignment.updateOne({

@@ -37,13 +37,15 @@ const useAuth = () => {
 const AuthProvider: FC<WithChildren> = ({ children }) => {
   const [auth, setAuth] = useState<AuthModel | undefined>(authHelper.getAuth())
   const [currentUser, setCurrentUser] = useState<UserModel | undefined>(() => {
-    // const storedUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
     const storedUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')!) : null;
-    // if (storedUser && storedUser.id) {
-    //   storedUser.dataDetails = JSON.parse(localStorage.getItem(`dataDetails_${storedUser.id}`) || 'null');
-    // }
-    if (storedUser && storedUser.id && localStorage.getItem(`dataDetails_${storedUser.id}`)) {
-      storedUser.dataDetails = JSON.parse(localStorage.getItem(`dataDetails_${storedUser.id}`)!);
+    if (storedUser && storedUser.id) {
+      try {
+        const dataDetailsKey = localStorage.getItem(`dataDetails_${storedUser.id}`);
+        storedUser.dataDetails = dataDetailsKey ? JSON.parse(dataDetailsKey) : null;
+      } catch (error) {
+        console.error('Error parsing dataDetails:', error);
+        storedUser.dataDetails = null;
+      }
     }
     return storedUser;
   });
@@ -67,11 +69,13 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
 
   useEffect(() => {
     const userId = currentUser?.id;
-  
+
     if (currentUser) {
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
       if (currentUser.dataDetails) {
         localStorage.setItem(`dataDetails_${userId}`, JSON.stringify(currentUser.dataDetails));
+      } else {
+        localStorage.removeItem(`dataDetails_${userId}`);
       }
     } else {
       localStorage.removeItem('currentUser');

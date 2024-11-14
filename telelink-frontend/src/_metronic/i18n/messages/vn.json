@@ -87,6 +87,7 @@
   "ECOMMERCE.CUSTOMERS.UPDATE_STATUS.MESSAGE": "Selected customers status have successfully been updated",
   "ECOMMERCE.CUSTOMERS.EDIT.UPDATE_MESSAGE": "Customer has been updated",
   "ECOMMERCE.CUSTOMERS.EDIT.ADD_MESSAGE": "Customer has been created",
+  "EDIT.REPORT": "Sửa báo cáo",
   "SIDEBAR.ADMINISTRATION":  "Quản trị",
   "SIDEBAR.USER_MANAGEMENT": "Quản lý tài khoản",
   "USERS.USER_LIST": "Danh sách tài khoản",
