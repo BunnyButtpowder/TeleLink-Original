@@ -70,6 +70,7 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
     return response?.data || []
   }
 
+
   const useQueryResponsePagination = () => {
     const defaultPaginationState: PaginationState = {
       links: [],
