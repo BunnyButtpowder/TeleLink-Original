@@ -21,6 +21,10 @@ module.exports = {
       description: "Từ khóa tìm kiếm",
       required: false,
     },
+    date:{
+      type: "number",
+      required: false,
+    },
     sort: {
       type: "string",
       required: false,
@@ -77,14 +81,14 @@ module.exports = {
           ],
         },
         sort: sortOrder, 
-      });
+      }).populate("saleman").populate("agency");
       console.log(searchTerm);
       
     } else {
       branchData = await Result.find({
         where: {saleman: saleman, agency: agencyId, result: resultInput },
         sort: sortOrder,
-      });
+      }).populate("saleman").populate("agency");
       console.log(searchTerm);
       
     }

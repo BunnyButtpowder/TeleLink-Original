@@ -2,13 +2,13 @@ import {KTIcon} from '../../../../../_metronic/helpers'
 import {useListView} from '../core/ListViewProvider'
 import {useIntl} from 'react-intl'
 
-const UserEditModalHeader = () => {
+const ResultEditModalHeader = () => {
   const {setItemIdForUpdate} = useListView()
   const intl = useIntl()
   return (
     <div className='modal-header'>
       {/* begin::Modal title */}
-      <h2 className='fw-bolder'>{intl.formatMessage({id:'USERS.MANAGEMENT.ADD_USER'})}</h2>
+      <h2 className='fw-bolder'>{intl.formatMessage({id:'EDIT.REPORT'})}</h2>
       {/* end::Modal title */}
 
       {/* begin::Close */}
@@ -25,4 +25,4 @@ const UserEditModalHeader = () => {
   )
 }
 
-export {UserEditModalHeader}
+export {ResultEditModalHeader}
