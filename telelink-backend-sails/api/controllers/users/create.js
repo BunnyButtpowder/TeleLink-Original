@@ -58,7 +58,6 @@ module.exports = {
             user: newUser.id 
           }).fetch();
           await User.update({ id: newUser.id }).set({ agency: newAgency.id });
-          const newReport = await Report.create({agency: newAgency.id})
         };
         return res.status(201).json({ message: "Đăng ký thành công" , newUser });
       } catch (err) {
