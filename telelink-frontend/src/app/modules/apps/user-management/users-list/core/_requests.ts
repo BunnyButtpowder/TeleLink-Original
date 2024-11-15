@@ -10,15 +10,15 @@ export const REGISTER_URL = `${API_URL}/users/create`;
 
 
 
-const getUsers = (query: string): Promise<UsersQueryResponse> => {
+const getUsers = (params: {searchTermAuth?: string, sort?: string, order?: string, role?: number, gender?: string, agency?: number}): Promise<UsersQueryResponse> => {
   return axios
-    .get(GET_USERS_URL)
+    .get(GET_USERS_URL, {params})
     .then((response: AxiosResponse<UsersQueryResponse>) => response.data);
 };
 
-const getSalesmenByAgency = (agencyId: string) : Promise<UsersQueryResponse> => {
+const getSalesmenByAgency = (params: {searchTermAuth?: string, sort?: string, order?: string, role?: number, gender?: string, agency?: number}) : Promise<UsersQueryResponse> => {
   return axios
-    .get(`${API_URL}/users/agency`, {params: {agencyId}})
+    .get(`${API_URL}/users/agency`, {params})
     .then((response: AxiosResponse<UsersQueryResponse>) => response.data);
 }
 

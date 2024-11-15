@@ -39,7 +39,6 @@ module.exports = {
 
       const userIds = usersInAgency.map(user => user.id);
 
-      const sortOrder = sort && order ? `${sort} ${order}` : undefined;
 
       let blacklistData
       if (searchTerm) {
@@ -51,7 +50,6 @@ module.exports = {
               { note: { contains: searchTerm } },
             ],
           },
-          sort: sortOrder,
         }).populate('user');
 
         // If no results found in SDT or note, search in user.fullName
@@ -60,7 +58,6 @@ module.exports = {
             where: {
               user: { in: userIds }
             },
-            sort: sortOrder,
           }).populate('user');
       
           // Filter results where user.fullName matches the searchTerm
@@ -73,7 +70,6 @@ module.exports = {
           where: {
             user: { in: userIds }
           },
-          sort: sortOrder,
         }).populate('user');
       }
 
@@ -81,6 +77,25 @@ module.exports = {
 
       if (blacklistData.length === 0) {
         return res.notFound({ message: searchTerm ? 'Không tìm thấy dữ liệu phù hợp.' : 'Không có dữ liệu' });
+      }
+
+      // Sorting logic
+      if (sort === 'user' && order) {
+        // Sort by user.fullName if sort=user
+        blacklistData = blacklistData.sort((a, b) => {
+          const nameA = a.user?.fullName || '';
+          const nameB = b.user?.fullName || '';
+          return order === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+        });
+      } else if (sort) {
+        // Sort by other fields (e.g., createdAt, id)
+        blacklistData = blacklistData.sort((a, b) => {
+          const fieldA = a[sort];
+          const fieldB = b[sort];
+          if (fieldA < fieldB) return order === 'asc' ? -1 : 1;
+          if (fieldA > fieldB) return order === 'asc' ? 1 : -1;
+          return 0;
+        });
       }
 
       blacklistData = blacklistData.map(item => ({

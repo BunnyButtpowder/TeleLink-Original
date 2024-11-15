@@ -5,6 +5,7 @@ import { Blacklist, BlacklistQueryResponse } from "./_models";
 const API_URL = import.meta.env.VITE_APP_API_URL;
 const BLACKLIST_URL= `${API_URL}/blacklists`;
 
+
 const importData = async (file: File): Promise<any> => {
   const formData = new FormData();
   formData.append('file', file);
@@ -39,7 +40,6 @@ const getAgencyBlacklist = (agencyId: ID, params: { searchTerm?: string; sort?: 
     .get(`${BLACKLIST_URL}/agency`, { params: { agencyID: agencyId, ...params } })
     .then((response: AxiosResponse<BlacklistQueryResponse>) => response.data);
 };
-
 
 const getBlacklistById = async (id: ID) => {
   const response = await axios.get(`${API_URL}/blacklist/${id}`);

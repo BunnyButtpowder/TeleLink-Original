@@ -30,7 +30,6 @@ module.exports = {
     try {
       const { userID, searchTerm, sort, order } = inputs;
 
-      const sortOrder = sort && order ? `${sort} ${order}` : undefined;
       let blacklistData
       if (searchTerm) {
         blacklistData = await Blacklist.find({
@@ -41,7 +40,6 @@ module.exports = {
               { note: { contains: searchTerm } },
             ],
           },
-          sort: sortOrder,
         }).populate('user');
 
         if (blacklistData.length === 0) {
@@ -49,7 +47,6 @@ module.exports = {
             where: {
               user: userID,
             },
-            sort: sortOrder,
           }).populate('user');
 
           blacklistData = blacklistData.filter(item =>
@@ -61,8 +58,25 @@ module.exports = {
           where: {
             user: userID,
           },
-          sort: sortOrder,
         }).populate('user');
+      }
+
+      if (sort === 'user' && order) {
+        // Sort by user.fullName if sort=user
+        blacklistData = blacklistData.sort((a, b) => {
+          const nameA = a.user?.fullName || '';
+          const nameB = b.user?.fullName || '';
+          return order === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+        });
+      } else if (sort) {
+        // Sort by other fields (e.g., createdAt, id)
+        blacklistData = blacklistData.sort((a, b) => {
+          const fieldA = a[sort];
+          const fieldB = b[sort];
+          if (fieldA < fieldB) return order === 'asc' ? -1 : 1;
+          if (fieldA > fieldB) return order === 'asc' ? 1 : -1;
+          return 0;
+        });
       }
 
       if (blacklistData.length === 0) {

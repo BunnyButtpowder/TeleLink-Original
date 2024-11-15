@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {MenuComponent} from '../../../../../../../_metronic/assets/ts/components'
-import {initialQueryState, KTIcon} from '../../../../../../../_metronic/helpers'
+import {initialUserQueryState, KTIcon} from '../../../../../../../_metronic/helpers'
 import {useQueryRequest} from '../../core/QueryRequestProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
 import {useIntl} from 'react-intl'
@@ -8,24 +8,61 @@ import {useIntl} from 'react-intl'
 const UsersListFilter = () => {
   const {updateState} = useQueryRequest()
   const {isLoading} = useQueryResponse()
-  const [role, setRole] = useState<string | undefined>()
-  const [lastLogin, setLastLogin] = useState<string | undefined>()
+  const [role, setRole] = useState<number | undefined>()
+  const [agency, setAgency] = useState<number | undefined>()
+  const [agencies, setAgencies] = useState<{ id: number, name: string }[]>([]) // State to hold agency list
   const intl = useIntl()
+  const { refetch } = useQueryResponse();
+
+  const API_URL = import.meta.env.VITE_APP_API_URL;
 
   useEffect(() => {
     MenuComponent.reinitialization()
+
+    const fetchAgencies = async () => {
+      try {
+        const token = localStorage.getItem('auth_token')
+        const response = await fetch(`${API_URL}/agencys/getall`, {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Adjust if a different auth scheme is used
+            'Content-Type': 'application/json'
+          }
+        })
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+  
+        const result = await response.json()
+        if (result && result.data) {
+          setAgencies(result.data)
+        }
+      } catch (error) {
+        console.error('Error fetching agencies:', error)
+      }
+    }
+
+    fetchAgencies()
   }, [])
 
   const resetData = () => {
-    updateState({filter: undefined, ...initialQueryState})
+    setAgency(undefined)
+    setRole(undefined)
+    updateState({filter: {
+      agency: undefined,
+      role: undefined,
+    }, ...initialUserQueryState})
+    refetch()
+
   }
 
   const filterData = () => {
+    console.log("Applying filters:", { agency, role });
     updateState({
-      filter: {role, last_login: lastLogin},
-      ...initialQueryState,
-    })
-  }
+      filter: {role, agency},
+    });
+    refetch();
+  };
 
   return (
     <>
@@ -65,60 +102,59 @@ const UsersListFilter = () => {
               data-allow-clear='true'
               data-kt-user-table-filter='role'
               data-hide-search='true'
-              onChange={(e) => setRole(e.target.value)}
+              onChange={(e) => setRole(e.target.value ? parseInt(e.target.value, 10) : undefined)}
               value={role}
             >
               <option value=''></option>
-              <option value='Partner'>Admin</option>
-              <option value='Sub-admin'>Chi nhánh</option>
-              <option value='Salesman'>Salesman</option>
+              <option value='1'>Admin</option>
+              <option value='2'>Chi nhánh</option>
+              <option value='3'>Salesman</option>
             </select>
           </div>
           {/* end::Input group */}
 
-          {/* begin::Input group */}
+
+          {/* Agency Filter */}
           <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Last login:</label>
+            <label className='form-label fs-6 fw-bold'>Agency:</label>
             <select
               className='form-select form-select-solid fw-bolder'
               data-kt-select2='true'
-              data-placeholder='Select option'
+              data-placeholder='Select an agency'
               data-allow-clear='true'
-              data-kt-user-table-filter='two-step'
+              data-kt-user-table-filter='agency'
               data-hide-search='true'
-              onChange={(e) => setLastLogin(e.target.value)}
-              value={lastLogin}
+              onChange={(e) => setAgency(e.target.value ? parseInt(e.target.value, 10) : undefined)}
+              value={agency}
             >
               <option value=''></option>
-              <option value='Yesterday'>Yesterday</option>
-              <option value='20 mins ago'>20 mins ago</option>
-              <option value='5 hours ago'>5 hours ago</option>
-              <option value='2 days ago'>2 days ago</option>
+              {agencies.map(agency => (
+                <option key={agency.id} value={agency.id}>{agency.name}</option>
+              ))}
             </select>
           </div>
-          {/* end::Input group */}
 
           {/* begin::Actions */}
           <div className='d-flex justify-content-end'>
             <button
               type='button'
               disabled={isLoading}
-              onClick={filterData}
+              onClick={resetData}
               className='btn btn-light btn-active-light-primary fw-bold me-2 px-6'
               data-kt-menu-dismiss='true'
               data-kt-user-table-filter='reset'
             >
-              Reset
+              Đặt lại
             </button>
             <button
               disabled={isLoading}
               type='button'
-              onClick={resetData}
+              onClick={filterData}
               className='btn btn-primary fw-bold px-6'
               data-kt-menu-dismiss='true'
               data-kt-user-table-filter='filter'
             >
-              Apply
+              Áp dụng
             </button>
           </div>
           {/* end::Actions */}

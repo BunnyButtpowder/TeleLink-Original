@@ -33,12 +33,15 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
   }, [updatedQuery])
 
   const fetchUsers = async () => {
+    const { search = '', sort = '', order = '', filter = {} } = state;
+    
+    const {role, gender, agency} = filter;
     // Admin gets all users
     if (userRole === 1) {
-      return getUsers(query);
+      return getUsers({searchTermAuth: search, sort , order, role, gender, agency});
     } else if (userRole === 2 && agencyId) {
       // Agency gets data by agency id
-      const response = await getSalesmenByAgency(agencyId.toString());
+      const response = await getSalesmenByAgency({searchTermAuth: search, sort, order, role, gender, agency});
       return {data: response.employees};
     } else {
       // Undefined role gets empty data
