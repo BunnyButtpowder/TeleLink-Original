@@ -14,18 +14,25 @@ const BlackListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input element
   const {setItemIdForUpdate} = useListView()
-
   const { refetch } = useQueryResponse()
   const openAddBlacklistModal = () => {
     setItemIdForUpdate(null)
   }
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files?.[0];
+    const user = localStorage.getItem('currentUser') || '';
+    const userId = JSON.parse(user).id;
+
+    if (!userId) {
+      toast.error('User ID is missing. Please log in again.');
+      return;
+    }
+
     if (files) {
       setUploading(true);
 
       try {
-        const response = await importData(files);
+        const response = await importData(files, userId);
         onUploadComplete(response.data);
         refetch();
         toast.success('Upload danh sách thành công!');
