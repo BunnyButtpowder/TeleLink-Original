@@ -59,61 +59,60 @@ module.exports = {
     } else {
       saleman = undefined;
     }
-    let startDate,
-      endDate = undefined;
+    let startDate, endDate;
     if (date) {
       const [month, year] = date.split("-");
       startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
       endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59));
-      
+
     }
 
     const resultInput = result ? result : undefined;
     const sortOrder = sort && order ? `${sort} ${order}` : undefined;
 
-    let branchData;
-    if (searchTerm) {
-      branchData = await Result.find({
-        where: {
-          saleman: saleman,
-          agency: agencyId,
-          result: resultInput,
-          or: [
-            { subscriberNumber: { like: `%${searchTerm.toLowerCase()}%` } },
-            { customerName: { like: `%${searchTerm.toLowerCase()}%` } },
-            { note: { like: `%${searchTerm.toLowerCase()}%` } },
-            { address: { like: `%${searchTerm.toLowerCase()}%` } },
-            { dataPackage: { like: `%${searchTerm.toLowerCase()}%` } },
-          ],
-          createdAt: {'>=': startDate, '<=': endDate},
-        },
-        sort: sortOrder,
-      })
-        .populate("saleman")
-        .populate("agency");
-      console.log(searchTerm);
-    } else {
-      branchData = await Result.find({
-        where: { saleman: saleman, agency: agencyId, result: resultInput, createdAt: {'>=': startDate, '<=': endDate} },
-        sort: sortOrder,
-      })
-        .populate("saleman")
-        .populate("agency");
-      console.log(searchTerm);
-    }
-    if (branchData.length === 0) {
-      return res.ok({
-        message: searchTerm
-          ? "Không tìm thấy dữ liệu phù hợp."
-          : "Không có dữ liệu",
-      });
+    const criteria = {
+      saleman: saleman,
+      agency: agencyId,
+      result: resultInput,
+      or: searchTerm ? [
+        { subscriberNumber: { like: `%${searchTerm.toLowerCase()}%` } },
+        { customerName: { like: `%${searchTerm.toLowerCase()}%` } },
+        { note: { like: `%${searchTerm.toLowerCase()}%` } },
+        { address: { like: `%${searchTerm.toLowerCase()}%` } },
+        { dataPackage: { like: `%${searchTerm.toLowerCase()}%` } },
+      ] : undefined,
+    };
+
+    if (startDate && endDate) {
+      criteria.createdAt = { '>=': startDate, '<=': endDate };
     }
 
-    return this.res.ok({
-      message: `list of result: `,
-      data: branchData,
-      count: branchData.length,
-    });
-    // All done.
+    try {
+      let branchData = await Result.find({
+        where: criteria,
+        sort: sortOrder,
+      })
+        .populate("saleman")
+        .populate("agency");
+
+      if (branchData.length === 0) {
+        return res.ok({
+          message: searchTerm
+            ? "Không tìm thấy dữ liệu phù hợp."
+            : "Không có dữ liệu",
+        });
+      }
+
+      return this.res.ok({
+        message: `list of result: `,
+        data: branchData,
+        count: branchData.length,
+      });
+    } catch (error) {
+      return res.serverError({
+        message: "Error fetching call results",
+        error: error.message
+      });
+    }
   },
 };

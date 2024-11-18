@@ -29,7 +29,7 @@ const PackageListGrouping = () => {
         className='btn btn-danger'
         onClick={async () => await deleteSelectedItems.mutateAsync()}
       >
-        Xoá tài khoản đã chọn
+        Xoá gói cước đã chọn
       </button>
     </div>
   )

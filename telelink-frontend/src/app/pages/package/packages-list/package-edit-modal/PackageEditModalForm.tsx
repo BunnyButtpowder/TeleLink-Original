@@ -273,7 +273,6 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
                 />
                 <span className='position-absolute top-50 end-0 translate-middle-y pe-3'>VND</span>
               </div>
-
               {/* end::Input */}
               {packageFormik.touched.price && packageFormik.errors.price && (
                 <div className='fv-plugins-message-container'>

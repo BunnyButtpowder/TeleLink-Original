@@ -26,7 +26,7 @@ export type FilterState = {
     result?: number
     gender?: string
     agency?: number
-    
+    date?: string
   }
 }
 

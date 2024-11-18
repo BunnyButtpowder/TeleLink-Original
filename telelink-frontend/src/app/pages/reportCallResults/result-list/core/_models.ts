@@ -15,6 +15,7 @@ export type CallResult = {
   revenue?: number
   createdAt?: number
   updatedAt?: number
+  dateToCall?: string | null
 }
 
 export type CallResultQueryResponse = Response<Array<CallResult>>
@@ -32,4 +33,5 @@ export const initialCallResult: CallResult = {
   address: '',
   note: '',
   revenue: 0,
+  dateToCall: ''
 }

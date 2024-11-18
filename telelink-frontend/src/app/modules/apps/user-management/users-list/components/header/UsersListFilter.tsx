@@ -53,7 +53,6 @@ const UsersListFilter = () => {
       role: undefined,
     }, ...initialUserQueryState})
     refetch()
-
   }
 
   const filterData = () => {
