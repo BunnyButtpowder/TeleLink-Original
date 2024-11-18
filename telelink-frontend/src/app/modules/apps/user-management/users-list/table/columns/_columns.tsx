@@ -8,6 +8,7 @@ import { UserCustomHeader } from './UserCustomHeader'
 import { UserSelectionHeader } from './UserSelectionHeader'
 import { UsernameCell } from './UsernameCell'
 import { User } from '../../core/_models'
+import { UserGenderCell } from './UserGenderCell'
 
 const usersColumns: ReadonlyArray<Column<User>> = [
   // id, fullname, username, role, createdAt
@@ -34,7 +35,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     Cell: ({ ...props }) => <UsernameCell username={props.data[props.row.index].auth?.username}></UsernameCell>,
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='Loại tài khoản' className='text-end min-w-125px' />,
+    Header: (props) => <UserCustomHeader tableProps={props} title='Loại tài khoản' className=' min-w-125px' />,
     id: 'role',
     Cell: ({ ...props }) => <UserRoleCell role={props.data[props.row.index].auth?.role}></UserRoleCell>,
   },
@@ -64,7 +65,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Giới tính' className='min-w-100px' />,
     accessor: 'gender',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.gender === 'male' ? 'Nam' : 'Nữ'}</span>,
+    Cell: ({ ...props }) => <UserGenderCell gender = {props.data[props.row.index]?.gender}></UserGenderCell>,
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Phân loại data' className='min-w-125px' />,
@@ -72,7 +73,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     Cell: ({ ...props }) => <span>{props.data[props.row.index]?.dataType}</span>,
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='Chi nhánh' className='text-end min-w-125px' />,
+    Header: (props) => <UserCustomHeader tableProps={props} title='Chi nhánh' className=' min-w-125px' />,
     accessor: 'agency',
     Cell: ({ ...props }) => <span>{props.data[props.row.index].agency?.name}</span>,
   },
@@ -86,17 +87,17 @@ const usersColumns: ReadonlyArray<Column<User>> = [
         const date = new Date(timestamp);
         return <span>{date.toLocaleDateString('vi-VN')}</span>
       }
-      return <span></span>; // return empty span if `createdAt` is null or undefined
+      return <span></span>;
     }
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='Trạng thái' className='text-end min-w-125px' />,
+    Header: (props) => <UserCustomHeader tableProps={props} title='Trạng thái' className='min-w-125px' />,
     id: 'status',
     Cell: ({ ...props }) => <UserStatusCell status={props.data[props.row.index].auth?.isActive ? 0 : 1}></UserStatusCell>,
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tác vụ' className='text-end min-w-100px' />
+      <UserCustomHeader tableProps={props} title='Tác vụ' className=' min-w-100px' />
     ),
     id: 'actions',
     Cell: ({ ...props }) => <UserActionsCell id={props.data[props.row.index].id} />,

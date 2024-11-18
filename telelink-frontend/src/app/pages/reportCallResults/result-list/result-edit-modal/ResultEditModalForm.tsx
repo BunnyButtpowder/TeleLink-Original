@@ -30,13 +30,13 @@ const editResultSchema = Yup.object().shape({
   .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
   .required('Vui lòng điền số điện thoại'),
   revenue: Yup.number().nullable(),
+  dateToCall: Yup.string().nullable(),
 })
 
 const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
   const intl = useIntl();
   const {setItemIdForUpdate} = useListView()
   const {refetch} = useQueryResponse()
-  const [date, setDate] = useState<string>('')
   const [packages, setPackages] = useState<Array<{ id: number, title: string }>>([]);
   const [isLoadingPackages, setIsLoadingPackages] = useState(false);
 
@@ -63,10 +63,6 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
     }
   }
 
-  useEffect(() => {
-    fetchPackages();
-  }, [])
-
   const handlePackageChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPackage = e.target.value;
     formik.setFieldValue('dataPackage', selectedPackage);
@@ -81,7 +77,10 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
     note: result.note || initialCallResult.note,
     subscriberNumber: result.subscriberNumber || initialCallResult.subscriberNumber,
     revenue: result.revenue || initialCallResult.revenue,
+    dateToCall: result.dateToCall || initialCallResult.dateToCall,
   })
+
+  // console.log('resultForEdit:', resultForEdit);
 
   const cancel = (withRefresh?: boolean) => {
     if (withRefresh) {
@@ -90,9 +89,8 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
     setItemIdForUpdate(undefined)
   }
 
-  console.log('resultForEdit:', resultForEdit);
-
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: resultForEdit,
     validationSchema: editResultSchema,
     onSubmit: async (values, {setSubmitting}) => {
@@ -117,8 +115,17 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
     },
   })
 
+  useEffect(() => {
+    fetchPackages();
+
+    if (![5, 6, 7].includes(formik.values.result)) {
+      formik.setFieldValue('dateToCall', '');
+    }
+  }, [formik.values.result])
+
   // Show call back field only if the call result case is 5, 6, 7
   const showCallbackDate = [5, 6, 7].includes(formik.values.result)
+  // console.log('Rendering ResultEditModalForm with:', { isUserLoading, result });
 
   return (
     <>
@@ -195,6 +202,33 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
             </div>
             {/* end::Customer Name */}
 
+            {/* begin::Phone Number */}
+            <div className='fv-row mb-7'>
+              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.PHONE' })}</label>
+
+              <input
+                placeholder='Số điện thoại'
+                {...formik.getFieldProps('subscriberNumber')}
+                className={clsx(
+                  'form-control form-control-solid mb-3 mb-lg-0',
+                  { 'is-invalid': formik.touched.subscriberNumber && formik.errors.subscriberNumber },
+                  {
+                    'is-valid': formik.touched.subscriberNumber && !formik.errors.subscriberNumber,
+                  }
+                )}
+                type='text'
+                name='subscriberNumber'
+                autoComplete='off'
+                disabled={formik.isSubmitting || isUserLoading}
+              />
+              {formik.touched.subscriberNumber && formik.errors.subscriberNumber && (
+                <div className='fv-plugins-message-container'>
+                  <span role='alert'>{formik.errors.subscriberNumber}</span>
+                </div>
+              )}
+            </div>
+            {/* end::Phone Number */}
+
             {/* begin::Customer address */}
             <div className='fv-row mb-7'>
               <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'CUSTOMER.ADDRESS' })}</label>
@@ -240,7 +274,7 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
                   <option>Loading packages...</option>
                 ) : (
                   packages.map((pack) => (
-                    <option key={pack.id} value={pack.id}>
+                    <option key={pack.id} value={pack.title}>
                       {pack.title}
                     </option>
                   )))
@@ -255,6 +289,40 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
               )}
             </div>
             {/* end::Package Selection */}
+
+            {/* begin::Input group */}
+            <div className='fv-row mb-7'>
+              {/* begin::Label */}
+              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'PACKAGE_REVENUE' })}</label>
+              {/* end::Label */}
+
+              {/* begin::Input */}
+              <div className='position-relative'>
+                <input
+                  placeholder= '0'
+                  {...formik.getFieldProps('revenue')}
+                  className={clsx(
+                    'form-control form-control-solid mb-3 mb-lg-0',
+                    { 'is-invalid': formik.touched.revenue && formik.errors.revenue },
+                    {
+                      'is-valid': formik.touched.revenue && !formik.errors.revenue,
+                    }
+                  )}
+                  type='number'
+                  name='revenue'
+                  autoComplete='off'
+                  disabled={formik.isSubmitting || isUserLoading}
+                />
+                <span className='position-absolute top-50 end-0 translate-middle-y pe-3'>VND</span>
+              </div>
+              {/* end::Input */}
+              {formik.touched.revenue && formik.errors.revenue && (
+                <div className='fv-plugins-message-container'>
+                  <span role='alert'>{formik.errors.revenue}</span>
+                </div>
+              )}
+            </div>
+            {/* end::Input group */}
 
             <div className='fv-row mb-7'>
               <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NOTE' })}</label>
@@ -288,11 +356,12 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
 
                 <input
                   placeholder='Ngày gọi lại'
+                  {...formik.getFieldProps('dateToCall')}
                   className='form-control form-control-solid mb-3 mb-lg-0'
                   type='date'
-                  value={date}
+                  value={formik.values.dateToCall || ''}
                   autoComplete='off'
-                  onChange={(e) => setDate(e.target.value)}
+                  onChange={(e) => formik.setFieldValue('dateToCall', e.target.value)}
                 />
               </div>
             )}

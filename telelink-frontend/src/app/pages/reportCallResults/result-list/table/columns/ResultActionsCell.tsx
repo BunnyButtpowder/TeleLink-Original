@@ -5,7 +5,7 @@ import { MenuComponent } from '../../../../../../_metronic/assets/ts/components'
 import { ID, KTIcon, QUERIES } from '../../../../../../_metronic/helpers'
 import { useListView } from '../../core/ListViewProvider'
 import { useQueryResponse } from '../../core/QueryResponseProvider'
-import { deleteUser } from '../../core/_requests'
+import { deleteResult } from '../../core/_requests'
 import { useIntl } from 'react-intl'
 
 type Props = {
@@ -26,7 +26,7 @@ const ResultActionsCell: FC<Props> = ({ id }) => {
     setItemIdForUpdate(id)
   }
 
-  const deleteItem = useMutation(() => deleteUser(id), {
+  const deleteItem = useMutation(() => deleteResult(id), {
     // 💡 response of the mutation is passed to onSuccess
     onSuccess: () => {
       // ✅ update detail view directly

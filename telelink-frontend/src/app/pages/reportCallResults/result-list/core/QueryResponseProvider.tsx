@@ -35,27 +35,27 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
   const fetchResults = () => {
     const { search = '', sort = '', order = '', filter = {} } = state;
 
-    const { saleman, agencyId, result } = filter;
+    const { saleman, agencyId, result, date } = filter;
     // Admin gets all results
     if (userRole === 1) {
-      return getAllCallResults({ saleman, agencyId, result, searchTerm: search, sort, order });
+      return getAllCallResults({ saleman, agencyId, result, searchTerm: search, sort, order, date });
     } else if (userRole === 2) {
-      return getAllCallResults({ saleman, agencyId: agencyID, result, searchTerm: search, sort, order });
+      return getAllCallResults({ saleman, agencyId: agencyID, result, searchTerm: search, sort, order, date });
     } else if (userRole === 3) {
-      return getAllCallResults({ saleman: userId, agencyId: agencyID, result, searchTerm: search, sort, order });
+      return getAllCallResults({ saleman: userId, agencyId: agencyID, result, searchTerm: search, sort, order, date });
     } else {
       return Promise.resolve({data: [], count: 0});
     }
   }
 
   const { isFetching, refetch, data: response} = useQuery(
-    [`${QUERIES.USERS_LIST}-${query}`, state.filter],
+    [`${QUERIES.USERS_LIST}-${updatedQuery}`, state.filter],
     fetchResults,
     {cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false}
   )
 
   return (
-    <QueryResponseContext.Provider value={{isLoading: isFetching, refetch, response, query}}>
+    <QueryResponseContext.Provider value={{isLoading: isFetching, refetch, response, query: updatedQuery}}>
       {children}
     </QueryResponseContext.Provider>
   )

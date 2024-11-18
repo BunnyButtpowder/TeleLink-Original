@@ -42,7 +42,7 @@ const PackageEditModalFormWrapper = () => {
     return <PackageEditModalForm isUserLoading={isLoading} pack={pack}/>
   }
 
-  return <div>Lỗi tải thông tin người dùng!</div>
+  return <div>Lỗi tải thông tin gói cước!</div>
 }
 
 export { PackageEditModalFormWrapper }
