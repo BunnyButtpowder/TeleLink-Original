@@ -63,13 +63,9 @@ module.exports = {
       }
       
 
-      const report = await Report.findOne({ agency: user.agency });
 
       switch (callResult.result) {
         case 1: //dong y
-          await Report.updateOne({ agency: user.agency }).set({
-            accept: report.accept + 1, revenue: report.revenue + package.price
-          });
           break;
         case 2: //tu choi
           callResult.dataPackage = null;
@@ -80,10 +76,6 @@ module.exports = {
           });
           if (rejection < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
-          } else {
-            await Report.updateOne({ agency: user.agency }).set({
-              reject: report.reject + 1,
-            });
           }
           break;
         case 3: //khong nghe may
@@ -95,10 +87,6 @@ module.exports = {
           });
           if (unanswered < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
-          } else {
-            await Report.updateOne({ agency: user.agency }).set({
-              unanswered: report.unanswered + 1,
-            });
           }
           break;
         case 4: //khong lien lac duoc
@@ -110,11 +98,7 @@ module.exports = {
           });
           if (unavailable < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
-          } else {
-            await Report.updateOne({ agency: user.agency }).set({
-              unavailable: report.unavailable + 1,
-            });
-          }
+          } 
           break;
         case 5: //xu ly lai
         case 6:
@@ -132,12 +116,10 @@ module.exports = {
             dateToCall: date,
             note: callResult.note
           });
-          await Report.updateOne({ agency: user.agency }).set({
-            rehandle: report.rehandle + 1,
-          });
           break;
         case 8:   //mat don
           package.price = 0;
+          callResult.dataPackage = null;
           break;
         default:
           return this.res.badRequest("Kết quả cuộc gọi không hợp lệ");

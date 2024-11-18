@@ -34,7 +34,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     Cell: ({ ...props }) => <UsernameCell username={props.data[props.row.index].auth?.username}></UsernameCell>,
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='Loại tài khoản' className='min-w-125px' />,
+    Header: (props) => <UserCustomHeader tableProps={props} title='Loại tài khoản' className='text-end min-w-125px' />,
     id: 'role',
     Cell: ({ ...props }) => <UserRoleCell role={props.data[props.row.index].auth?.role}></UserRoleCell>,
   },
@@ -72,7 +72,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     Cell: ({ ...props }) => <span>{props.data[props.row.index]?.dataType}</span>,
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='Chi nhánh' className='min-w-125px' />,
+    Header: (props) => <UserCustomHeader tableProps={props} title='Chi nhánh' className='text-end min-w-125px' />,
     accessor: 'agency',
     Cell: ({ ...props }) => <span>{props.data[props.row.index].agency?.name}</span>,
   },
@@ -90,7 +90,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     }
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='Trạng thái' className='min-w-125px' />,
+    Header: (props) => <UserCustomHeader tableProps={props} title='Trạng thái' className='text-end min-w-125px' />,
     id: 'status',
     Cell: ({ ...props }) => <UserStatusCell status={props.data[props.row.index].auth?.isActive ? 0 : 1}></UserStatusCell>,
   },

@@ -15,7 +15,7 @@ export type SortState = {
 
 export type FilterState = {
   filter?: {
-    role?: string
+    role?: number
     last_login?: string
     placeOfIssue?: string
     networkName?: string
@@ -24,6 +24,9 @@ export type FilterState = {
     saleman?: number
     agencyId?: number
     result?: number
+    gender?: string
+    agency?: number
+    
   }
 }
 
@@ -64,6 +67,15 @@ export const initialPackageQueryState: QueryState = {
   filter: {
     provider: '',
     type: '',
+  },
+}
+
+export const initialUserQueryState: QueryState = {
+  page: 1,
+  items_per_page: 10,
+  filter: {
+    role: undefined,
+    agency: undefined
   },
 }
 
