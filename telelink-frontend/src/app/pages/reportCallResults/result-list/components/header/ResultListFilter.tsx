@@ -11,6 +11,7 @@ const ResultListFilter = () => {
   const [role, setRole] = useState<string | undefined>()
   const [lastLogin, setLastLogin] = useState<string | undefined>()
   const intl = useIntl()
+  const { refetch } = useQueryResponse();
 
   useEffect(() => {
     MenuComponent.reinitialization()

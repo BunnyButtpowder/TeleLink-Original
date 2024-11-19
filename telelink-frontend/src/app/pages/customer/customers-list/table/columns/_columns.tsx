@@ -87,7 +87,7 @@ const customersColumns: ReadonlyArray<Column<Customer>> = [
     Header: (props) => (
       <CustomerCustomHeader tableProps={props} title='APRU 3 tháng' className='min-w-125px' />
     ),
-    accessor: 'ARPU3Months',
+    accessor: 'APRU3Months',
   },
   {
     Header: (props) => (
