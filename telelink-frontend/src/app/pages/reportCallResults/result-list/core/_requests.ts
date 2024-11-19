@@ -7,7 +7,7 @@ const GET_ALL_RESULT_URL = `${API_URL}/result/getall`;
 
 const getAllCallResults = (params: {
   saleman?: number,
-  agencyId?: number,
+  agencyId?: string,
   result?: number,
   searchTerm?: string,
   date?: string,

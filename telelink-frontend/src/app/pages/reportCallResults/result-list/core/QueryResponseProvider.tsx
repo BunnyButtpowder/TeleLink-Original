@@ -21,7 +21,7 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
   const {state} = useQueryRequest()
   const { currentUser } = useAuth();
   const userRole = currentUser?.auth.role;
-  const agencyID = currentUser?.agency?.id;
+  const agencyId = currentUser?.agency?.id;
   const userId = currentUser?.id;
   const [query, setQuery] = useState<string>(stringifyRequestQuery(state))
   const updatedQuery = useMemo(() => stringifyRequestQuery(state), [state])
@@ -34,34 +34,19 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
 
   const fetchResults = () => {
     const { search = '', sort = '', order = '', filter = {} } = state;
-    const { saleman, agencyId, result } = filter;
-  
-    // Build the request payload
-    const requestPayload: any = {
-      searchTerm: search,
-      sort,
-      order,
-    };
-  
-    // Add filter parameters conditionally
-    if (saleman) requestPayload.saleman = saleman;
-    if (agencyId) requestPayload.agency = agencyId;
-    if (result) requestPayload.result = result;
 
-    console.log('Request Payload:', requestPayload);
-  
-    // API call logic based on user role
+    const { saleman, agencyId, result, date } = filter;
+    // Admin gets all results
     if (userRole === 1) {
-      return getAllCallResults(requestPayload);
+      return getAllCallResults({ saleman, agencyId, result, searchTerm: search, sort, order, date });
     } else if (userRole === 2) {
-      return getAllCallResults({ ...requestPayload, agencyId: agencyID });
+      return getAllCallResults({ saleman, agencyId: agencyId, result, searchTerm: search, sort, order, date });
     } else if (userRole === 3) {
-      return getAllCallResults({ ...requestPayload, saleman: userId, agencyId: agencyID });
+      return getAllCallResults({ saleman: userId, agencyId: agencyId, result, searchTerm: search, sort, order, date });
     } else {
-      return Promise.resolve({ data: [], count: 0 });
+      return Promise.resolve({data: [], count: 0});
     }
-  };
-  
+  }
 
   const { isFetching, refetch, data: response} = useQuery(
     [`${QUERIES.USERS_LIST}-${updatedQuery}`, state.filter],
