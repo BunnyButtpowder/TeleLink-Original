@@ -1,13 +1,13 @@
 import {useListView} from '../../core/ListViewProvider'
 import {ResultListToolbar} from './ResultListToolbar'
 import {ResultListGrouping} from './ResultListGrouping'
-import {UsersListSearchComponent} from './UsersListSearchComponent'
+import {ResultListSearchComponent} from './ResultListSearchComponent'
 
 const ResultListHeader = () => {
   const {selected} = useListView()
   return (
     <div className='card-header border-0 pt-6'>
-      <UsersListSearchComponent />
+      <ResultListSearchComponent />
       {/* begin::Card toolbar */}
       <div className='card-toolbar'>
         {/* begin::Group actions */}

@@ -1,14 +1,18 @@
 import {useEffect, useState} from 'react'
 import {MenuComponent} from '../../../../../../_metronic/assets/ts/components'
-import {initialQueryState, KTIcon} from '../../../../../../_metronic/helpers'
+import {initialResultQueryState, KTIcon} from '../../../../../../_metronic/helpers'
 import {useQueryRequest} from '../../core/QueryRequestProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
 import {useIntl} from 'react-intl'
 import { useAuth } from '../../../../../../app/modules/auth'
+
 const ResultListFilter = () => {
-  const {updateState} = useQueryRequest()
-  const {isLoading} = useQueryResponse()
-  const [agency, setAgency] = useState<number | undefined>()
+  const { updateState } = useQueryRequest()
+  const { isLoading } = useQueryResponse()
+  const { currentUser } = useAuth()
+  const [month, setMonth] = useState<string | undefined>('')
+  const [year, setYear] = useState<string | undefined>('')
+  const [agencyId, setAgencyId] = useState<string | undefined>()
   const [agencies, setAgencies] = useState<{ id: number, name: string }[]>([]) // State to hold agency list
   const [salesmen, setSalesmen] = useState<{ id: number, fullName: string }[]>([]) // State to hold salesmen list
   const [result, setResult] = useState<number | undefined>()
@@ -19,11 +23,11 @@ const ResultListFilter = () => {
 
   const API_URL = import.meta.env.VITE_APP_API_URL;
 
-  const { currentUser } = useAuth();
   const userRole = currentUser?.auth.role;
   const agencyID = currentUser?.agency?.id;
 
   useEffect(() => {
+    
     MenuComponent.reinitialization()
     if (userRole !== 3) {
 
@@ -56,18 +60,18 @@ const ResultListFilter = () => {
 
   useEffect(() => {
     const fetchSalesmen = async () => {
-        if (userRole === 3 || !agency) {
+        if (userRole === 3 || !agencyId) {
           setSalesmen([])
           return
         }
-      if (!agency) {
+      if (!agencyId) {
         setSalesmen([]) // Clear the salesmen list if no agency is selected
         return
       }
 
       try {
         const token = localStorage.getItem('auth_token')
-        const response = await fetch(`${API_URL}/users/agency?agencyId=${agency}`, {
+        const response = await fetch(`${API_URL}/users/agency?agencyId=${agencyId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -88,35 +92,39 @@ const ResultListFilter = () => {
     }
 
     fetchSalesmen()
-  }, [agency,userRole]) // Triggered when agency changes
+  }, [agencyId,userRole]) 
 
   useEffect(() => {
     // Automatically fetch salesmen for the current agency when role = 2
     if (userRole === 2 && agencyID) {
-      setAgency(agencyID) // Set agency to current user's agency
+      setAgencyId(agencyId) 
     }
   }, [userRole, agencyID])
 
   const resetData = () => {
-    setAgency(undefined)
+    setMonth(undefined)
+    setYear(undefined)
+    setAgencyId('')
     setResult(undefined)
     setSaleman(undefined)
     updateState({
       filter: {
-        agency: undefined,
+        month: undefined,
+        year: undefined,
+        agencyId: '',
         result: undefined,
         saleman: undefined,
-      }, ...initialQueryState
+      }, ...initialResultQueryState
     })
     refetch()
   }
 
 
   const filterData = () => {
-    console.log("Applying filters:", { agency, result, saleman }),
-
+    const date = month && year ? `${month}-${year}` : '';
+    console.log("Applying filters:", { agencyId, result, saleman, date });
     updateState({
-      filter: {agency, result, saleman},
+      filter: {agencyId, result, saleman, date},
     });
     refetch();
   }
@@ -133,14 +141,14 @@ const ResultListFilter = () => {
         data-kt-menu-placement='bottom-end'
       >
         <KTIcon iconName='filter' className='fs-2' />
-        {intl.formatMessage({id: 'ECOMMERCE.COMMON.FILTER'})}
+        {intl.formatMessage({ id: 'ECOMMERCE.COMMON.FILTER' })}
       </button>
       {/* end::Filter Button */}
       {/* begin::SubMenu */}
       <div className='menu menu-sub menu-sub-dropdown w-300px w-md-325px' data-kt-menu='true'>
         {/* begin::Header */}
         <div className='px-7 py-5'>
-          <div className='fs-5 text-gray-900 fw-bolder'>{intl.formatMessage({id: 'ECOMMERCE.COMMON.FILTER_OPTIONS'})}</div>
+          <div className='fs-5 text-gray-900 fw-bolder'>{intl.formatMessage({ id: 'ECOMMERCE.COMMON.FILTER_OPTIONS' })}</div>
         </div>
         {/* end::Header */}
 
@@ -150,14 +158,49 @@ const ResultListFilter = () => {
 
         {/* begin::Content */}
         <div className='px-7 py-5' data-kt-user-table-filter='form'>
+          {/* Month Selector */}
+          <div className="mb-10 d-flex justify-content-between">
+            <div>
+              <label className="form-label fs-6 fw-bold">Tháng:</label>
+              <select
+                className="form-select form-select-solid fw-bolder"
+                onChange={(e) => setMonth(e.target.value)}
+                value={month}
+              >
+                <option value="">Chọn tháng</option>
+                {[...Array(12)].map((_, i) => (
+                  <option key={i + 1} value={(i + 1).toString().padStart(2, '0')}>
+                    {`Tháng ${i + 1}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="form-label fs-6 fw-bold">Năm:</label>
+              <select
+                className="form-select form-select-solid fw-bolder"
+                onChange={(e) => setYear(e.target.value)}
+                value={year}
+              >
+                <option value="">Chọn năm</option>
+                {[...Array(5)].map((_, i) => (
+                  <option key={i} value={(new Date().getFullYear() - i).toString()}>
+                    {new Date().getFullYear() - i}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {/* begin::Input group */}
           {userRole !== 2 && userRole !== 3 && (
             <div className='mb-10'>
               <label className='form-label fs-6 fw-bold'>Chi nhánh:</label>
               <select
                 className='form-select form-select-solid fw-bolder'
-                onChange={(e) => setAgency(e.target.value ? parseInt(e.target.value, 10) : undefined)}
-                value={agency}
+                onChange={(e) => setAgencyId(e.target.value)}
+                value={agencyId}
               >
                 <option value=''></option>
                 {agencies.map((agency) => (
@@ -176,7 +219,7 @@ const ResultListFilter = () => {
                 className='form-select form-select-solid fw-bolder'
                 onChange={(e) => setSaleman(e.target.value ? parseInt(e.target.value, 10) : undefined)}
                 value={saleman}
-                disabled={!agency}
+                disabled={!agencyId}
               >
                 <option value=''></option>
                 {salesmen.map((salesman) => (
@@ -237,10 +280,10 @@ const ResultListFilter = () => {
           {/* end::Actions */}
         </div>
         {/* end::Content */}
-      </div>
+      </div >
       {/* end::SubMenu */}
     </>
   )
 }
 
-export {ResultListFilter}
+export { ResultListFilter }

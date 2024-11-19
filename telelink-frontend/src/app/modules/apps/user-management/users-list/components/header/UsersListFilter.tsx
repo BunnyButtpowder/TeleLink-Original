@@ -10,7 +10,7 @@ const UsersListFilter = () => {
   const {isLoading} = useQueryResponse()
   const [role, setRole] = useState<number | undefined>()
   const [agency, setAgency] = useState<number | undefined>()
-  const [agencies, setAgencies] = useState<{ id: number, name: string }[]>([]) // State to hold agency list
+  const [agencies, setAgencies] = useState<{ id: number, name: string }[]>([])
   const intl = useIntl()
   const { refetch } = useQueryResponse();
 
@@ -24,7 +24,7 @@ const UsersListFilter = () => {
         const token = localStorage.getItem('auth_token')
         const response = await fetch(`${API_URL}/agencys/getall`, {
           headers: {
-            'Authorization': `Bearer ${token}`, // Adjust if a different auth scheme is used
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         })
@@ -56,7 +56,7 @@ const UsersListFilter = () => {
   }
 
   const filterData = () => {
-    console.log("Applying filters:", { agency, role });
+    // console.log("Applying filters:", { agency, role });
     updateState({
       filter: {role, agency},
     });
@@ -102,7 +102,7 @@ const UsersListFilter = () => {
               data-kt-user-table-filter='role'
               data-hide-search='true'
               onChange={(e) => setRole(e.target.value ? parseInt(e.target.value, 10) : undefined)}
-              value={role}
+              value={role ?? ''}
             >
               <option value=''></option>
               <option value='1'>Admin</option>
@@ -124,7 +124,7 @@ const UsersListFilter = () => {
               data-kt-user-table-filter='agency'
               data-hide-search='true'
               onChange={(e) => setAgency(e.target.value ? parseInt(e.target.value, 10) : undefined)}
-              value={agency}
+              value={agency ?? ''}
             >
               <option value=''></option>
               {agencies.map(agency => (
