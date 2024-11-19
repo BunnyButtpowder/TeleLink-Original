@@ -34,19 +34,34 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
 
   const fetchResults = () => {
     const { search = '', sort = '', order = '', filter = {} } = state;
+    const { saleman, agencyId, result } = filter;
+  
+    // Build the request payload
+    const requestPayload: any = {
+      searchTerm: search,
+      sort,
+      order,
+    };
+  
+    // Add filter parameters conditionally
+    if (saleman) requestPayload.saleman = saleman;
+    if (agencyId) requestPayload.agency = agencyId;
+    if (result) requestPayload.result = result;
 
-    const { saleman, agencyId, result, date } = filter;
-    // Admin gets all results
+    console.log('Request Payload:', requestPayload);
+  
+    // API call logic based on user role
     if (userRole === 1) {
-      return getAllCallResults({ saleman, agencyId, result, searchTerm: search, sort, order, date });
+      return getAllCallResults(requestPayload);
     } else if (userRole === 2) {
-      return getAllCallResults({ saleman, agencyId: agencyID, result, searchTerm: search, sort, order, date });
+      return getAllCallResults({ ...requestPayload, agencyId: agencyID });
     } else if (userRole === 3) {
-      return getAllCallResults({ saleman: userId, agencyId: agencyID, result, searchTerm: search, sort, order, date });
+      return getAllCallResults({ ...requestPayload, saleman: userId, agencyId: agencyID });
     } else {
-      return Promise.resolve({data: [], count: 0});
+      return Promise.resolve({ data: [], count: 0 });
     }
-  }
+  };
+  
 
   const { isFetching, refetch, data: response} = useQuery(
     [`${QUERIES.USERS_LIST}-${updatedQuery}`, state.filter],

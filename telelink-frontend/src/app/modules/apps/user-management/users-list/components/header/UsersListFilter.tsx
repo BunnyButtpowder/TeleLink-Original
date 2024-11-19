@@ -115,7 +115,7 @@ const UsersListFilter = () => {
 
           {/* Agency Filter */}
           <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Agency:</label>
+            <label className='form-label fs-6 fw-bold'>Chi nhánh:</label>
             <select
               className='form-select form-select-solid fw-bolder'
               data-kt-select2='true'

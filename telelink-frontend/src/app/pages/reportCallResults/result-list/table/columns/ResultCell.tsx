@@ -34,7 +34,7 @@ const ResultCell: FC<Props> = ({ result }) => {
       badgeClass = 'badge badge-warning'
       break;
     case 7: // Chờ nạp thẻ, Ckhoan
-      resultLabel = 'Chờ nạp thẻ, Ckhoan'
+      resultLabel = 'Chờ nạp thẻ, chuyển khoản'
       badgeClass = 'badge badge-warning'
       break;
     case 8: // Mất đơn
