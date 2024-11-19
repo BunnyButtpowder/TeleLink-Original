@@ -10,7 +10,7 @@ const ResultListSearchComponent = () => {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const intl = useIntl()
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
-  // Effect for API call
+  
   useEffect(
     () => {
       if (debouncedSearchTerm !== undefined && searchTerm !== undefined) {

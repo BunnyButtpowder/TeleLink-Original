@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_APP_API_URL;
 const USER_URL = `${API_URL}/user`;
 const GET_ALL_DATA_URL = `${API_URL}/data/getall`;
 
-const importData = async (file: File): Promise<any> => {
+const importData = async (file: File, onUploadProgress: (ProgressEvent: any) => void): Promise<any> => {
   const formData = new FormData();
   formData.append('file', file);
 
@@ -15,6 +15,7 @@ const importData = async (file: File): Promise<any> => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      onUploadProgress,
     });
     return response.data;
   } catch (error) {

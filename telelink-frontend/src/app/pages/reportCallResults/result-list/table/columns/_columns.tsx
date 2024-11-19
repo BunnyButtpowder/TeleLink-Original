@@ -9,11 +9,11 @@ import {UserSelectionHeader} from './UserSelectionHeader'
 import {CallResult} from '../../core/_models'
 
 const resultsColumns: ReadonlyArray<Column<CallResult>> = [
-  {
-    Header: (props) => <UserSelectionHeader tableProps={props} />,
-    id: 'selection',
-    Cell: ({...props}) => <UserSelectionCell id={props.data[props.row.index].id} />,
-  },
+  // {
+  //   Header: (props) => <UserSelectionHeader tableProps={props} />,
+  //   id: 'selection',
+  //   Cell: ({...props}) => <UserSelectionCell id={props.data[props.row.index].id} />,
+  // },
   {
     Header: (props) => <ResultCustomHeader tableProps={props} title='#' className='min-w-30px' />,
     accessor: 'id',
