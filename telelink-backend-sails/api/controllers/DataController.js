@@ -72,7 +72,7 @@ module.exports = {
         if (existingData) {
 
           await Data.destroy({ id: existingData.id });
-          await DataAssignment.destroy({data:existingData.id})
+          await DataAssignment.destroy({ data: existingData.id })
         }
 
 
@@ -85,8 +85,8 @@ module.exports = {
           currentPackage: row[headerIndexes['currentPackage']] || '',
           priorityPackage1: row[headerIndexes['priorityPackage1']] || '',
           priorityPackage2: row[headerIndexes['priorityPackage2']] || '',
-          registrationDate: row[headerIndexes['registrationDate']] || '',
-          expirationDate: row[headerIndexes['expirationDate']] || '',
+          registrationDate: row[headerIndexes['registrationDate']] === '' ? null : row[headerIndexes['registrationDate']],
+          expirationDate: row[headerIndexes['expirationDate']] === '' ? null : row[headerIndexes['expirationDate']],
           notes: row[headerIndexes['notes']] || '',
           TKC: row[headerIndexes['TKC']] || '',
           APRU3Months: row[headerIndexes['APRU3Months']] || '',
@@ -94,7 +94,7 @@ module.exports = {
           usageMonth2: row[headerIndexes['usageMonth2']] || '',
           usageMonth3: row[headerIndexes['usageMonth3']] || '',
           usageMonth4: row[headerIndexes['usageMonth4']] || '',
-          Package: row[headerIndexes['Package']]|| '',
+          Package: row[headerIndexes['Package']] || '',
           totalTKCUsage: row[headerIndexes['totalTKCUsage']] || '',
           voiceUsage: row[headerIndexes['voiceUsage']] || '',
           dataUsage: row[headerIndexes['dataUsage']] || '',
@@ -112,8 +112,8 @@ module.exports = {
 
 
     } catch (err) {
-      
-      return res.serverError({ message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.' ,err});
+      console.log(err)
+      return res.serverError({ message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.', err });
     }
   },
 };
