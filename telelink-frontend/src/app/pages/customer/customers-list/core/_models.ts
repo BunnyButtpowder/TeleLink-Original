@@ -14,7 +14,7 @@ export type Customer = {
   expirationDate?: Date
   notes?: string
   TKC?: string
-  ARPU3Months?: string
+  APRU3Months?: string
   usageMonth1?: string
   usageMonth2?: string
   usageMonth3?: string
@@ -41,7 +41,7 @@ export const initialCustomer: Customer = {
   expirationDate: new Date(),
   notes: '',
   TKC: '',
-  ARPU3Months: '',
+  APRU3Months: '',
   usageMonth1: '',
   usageMonth2: '',
   usageMonth3: '',

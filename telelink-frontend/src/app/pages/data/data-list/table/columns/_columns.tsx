@@ -127,8 +127,8 @@ const usersColumns: ReadonlyArray<Column<Data>> = [
     Header: (props) => (
       <DataCustomHeader tableProps={props} title='APRU 3 tháng' className='min-w-125px' />
     ),
-    id: 'ARPU3Months',
-    accessor: 'ARPU3Months',
+    id: 'APRU3Months',
+    accessor: 'APRU3Months',
   },
   {
     Header: (props) => (

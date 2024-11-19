@@ -4,7 +4,7 @@ import { ResultListFilter } from './ResultListFilter'
 import { useIntl } from 'react-intl'
 import React from 'react'
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-bootstrap'
+import { ToastContainer } from 'react-toastify'
 
 const ResultListToolbar = () => {
   const intl = useIntl()
