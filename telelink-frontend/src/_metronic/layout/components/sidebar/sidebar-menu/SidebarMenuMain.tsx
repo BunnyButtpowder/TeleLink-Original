@@ -225,7 +225,6 @@ const SidebarMenuMain = () => {
             fontIcon='bi-chat-left'
             icon='chart-simple'
           >
-            <SidebarMenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
             <SidebarMenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
           </SidebarMenuItemWithSub>
           <div className='menu-item'>
