@@ -5,6 +5,7 @@ import {useQueryRequest} from '../../core/QueryRequestProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
 import {useIntl} from 'react-intl'
 import { useAuth } from '../../../../../../app/modules/auth'
+import { parse } from 'path'
 
 const ResultListFilter = () => {
   const { updateState } = useQueryRequest()
@@ -104,14 +105,14 @@ const ResultListFilter = () => {
   const resetData = () => {
     setMonth(undefined)
     setYear(undefined)
-    setAgencyId('')
+    setAgencyId(undefined)
     setResult(undefined)
     setSaleman(undefined)
     updateState({
       filter: {
         month: undefined,
         year: undefined,
-        agencyId: '',
+        agencyId: undefined,
         result: undefined,
         saleman: undefined,
       }, ...initialResultQueryState

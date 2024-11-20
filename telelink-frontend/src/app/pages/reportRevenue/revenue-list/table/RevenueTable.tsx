@@ -3,17 +3,17 @@ import { useTable, ColumnInstance, Row } from 'react-table'
 import { CustomHeaderColumn } from './columns/CustomHeaderColumn'
 import { CustomRow } from './columns/CustomRow'
 import { useQueryResponseData, useQueryResponseLoading } from '../core/QueryResponseProvider'
-import { usersColumns } from './columns/_columns'
-import { Customer } from '../core/_models'
+import { revenueColumns } from './columns/_columns'
+import { Revenue } from '../core/_models'
 import { UsersListLoading } from '../components/loading/UsersListLoading'
 import { UsersListPagination } from '../components/pagination/UsersListPagination'
 import { KTCardBody } from '../../../../../_metronic/helpers'
 
-const UsersTable = () => {
+const RevenueTable = () => {
   const users = useQueryResponseData()
   const isLoading = useQueryResponseLoading()
   const data = useMemo(() => users, [users])
-  const columns = useMemo(() => usersColumns, [])
+  const columns = useMemo(() => revenueColumns, [])
   const { getTableProps, getTableBodyProps, headers, rows, prepareRow } = useTable({
     columns,
     data,
@@ -30,14 +30,14 @@ const UsersTable = () => {
         >
           <thead>
             <tr className='text-start text-muted fw-bolder fs-7 text-uppercase gs-0'>
-              {headers.map((column: ColumnInstance<Customer>) => (
+              {headers.map((column: ColumnInstance<Revenue>) => (
                 <CustomHeaderColumn key={column.id} column={column} />
               ))}
             </tr>
           </thead>
           <tbody className='text-gray-600 fw-bold' {...getTableBodyProps()}>
             {rows.length > 0 ? (
-              rows.map((row: Row<Customer>, i) => {
+              rows.map((row: Row<Revenue>, i) => {
                 prepareRow(row)
                 return <CustomRow row={row} key={`row-${i}-${row.id}`} />
               })
@@ -59,4 +59,4 @@ const UsersTable = () => {
   )
 }
 
-export { UsersTable }
+export { RevenueTable }
