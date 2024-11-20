@@ -46,9 +46,9 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
   }
 
   const { isFetching, refetch, data: response} = useQuery(
-    [`${QUERIES.USERS_LIST}-${updatedQuery}`, state.filter],
+    [`${QUERIES.USERS_LIST}-${updatedQuery}`, state.filter, userRole, agencyID],
     fetchRevenue,
-    {cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false}
+    {cacheTime: 0, keepPreviousData: false, refetchOnWindowFocus: false}
   )
 
   return (

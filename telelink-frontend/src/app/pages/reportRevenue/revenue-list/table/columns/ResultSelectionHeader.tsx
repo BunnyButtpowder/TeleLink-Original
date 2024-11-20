@@ -1,13 +1,13 @@
 import {FC, PropsWithChildren} from 'react'
 import {HeaderProps} from 'react-table'
 import {useListView} from '../../core/ListViewProvider'
-import {Customer} from '../../core/_models'
+import {Revenue} from '../../core/_models'
 
 type Props = {
-  tableProps: PropsWithChildren<HeaderProps<Customer>>
+  tableProps: PropsWithChildren<HeaderProps<Revenue>>
 }
 
-const UserSelectionHeader: FC<Props> = ({tableProps}) => {
+const RevenueSelectionHeader: FC<Props> = ({tableProps}) => {
   const {isAllSelected, onSelectAll} = useListView()
   return (
     <th {...tableProps.column.getHeaderProps()} className='w-10px pe-2'>
@@ -25,4 +25,4 @@ const UserSelectionHeader: FC<Props> = ({tableProps}) => {
   )
 }
 
-export {UserSelectionHeader}
+export {RevenueSelectionHeader}
