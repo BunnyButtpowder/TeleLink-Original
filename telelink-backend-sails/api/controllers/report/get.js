@@ -112,8 +112,8 @@ module.exports = {
           rehandle: rehandle,
           lost: lost,
           revenue: revenue,
-          successRate: parseFloat((accept / (accept + reject + unanswered + unreachable + rehandle + lost)) * 100).toFixed(2),
-          failRate: parseFloat(((reject + unanswered + unreachable + lost) / (accept + reject + unanswered + unreachable + rehandle + lost)) * 100).toFixed(2),
+          successRate: (accept + reject + unanswered + unreachable + rehandle + lost) > 0 ? Math.round((accept / (accept + reject + unanswered + unreachable + rehandle + lost)) * 100 * 100) / 100 : 0,
+          failRate: (accept + reject + unanswered + unreachable + rehandle + lost) > 0 ? Math.round(((reject + unanswered + unreachable + lost) / (accept + reject + unanswered + unreachable + rehandle + lost)) * 100 * 100) / 100 : 0,
         },
       });
     }
