@@ -39,7 +39,8 @@ module.exports = {
       //kiểm tra thời gian tạo và thời gian update
       const currentMonth = new Date(Date.now()).getMonth();
       const createdMonth = new Date(existingResult.createdAt).getMonth();
-      console.log(currentMonth, createdMonth);
+      const currentYear = new Date(Date.now()).getYear();
+      const createdYear = new Date(existingResult.createdAt).getYear();
 
       let package = null;
       if (dataPackage) {
@@ -48,12 +49,15 @@ module.exports = {
           return this.res.notFound({ message: "Không tìm thấy gói data." });
         }
         if (result != 1) {
+          dataPackage = null
           package.price = 0;
         }
-        dataPackage = package.title;
+        else {
+          dataPackage = package.title;
+        }
       }
 
-      if (currentMonth == createdMonth) {
+      if (currentMonth == createdMonth && createdYear == currentYear) {
         await Result.updateOne(
           { id: resultId },
           { result, dataPackage, customerName, address, note, dateToCall, revenue: package.price }

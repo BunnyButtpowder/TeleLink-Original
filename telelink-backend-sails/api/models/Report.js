@@ -11,7 +11,6 @@ module.exports = {
 
     agency: {
       model: "agency",
-      unique: true
     },
     total: {
       type: "number",  //tổng đơn hàng

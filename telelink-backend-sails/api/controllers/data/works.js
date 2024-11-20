@@ -26,12 +26,18 @@ module.exports = {
   fn: async function (inputs) {
     let { dataId, callResult, date } = inputs;
     const userId = this.req.user.id;
+    let { result, dataPackage, customerName, address, note } = callResult;
 
     try {
       const user = await User.findOne({ id: userId });
 
       if (!user) {
         return this.res.notFound({ message: "Người dùng không hợp lệ" });
+      }
+      if (!user.agency) {
+        return this.res.badRequest({
+          message: "Người dùng chưa thuộc chi nhánh nào.",
+        });
       }
 
       // Tìm dữ liệu theo ID
@@ -45,7 +51,7 @@ module.exports = {
       const assignment = await DataAssignment.findOne({
         data: dataId,
         user: userId,
-        complete: false
+        complete: false,
       });
 
       if (!assignment) {
@@ -53,27 +59,45 @@ module.exports = {
           message: "Bạn không có quyền cập nhật dữ liệu này.",
         });
       }
-      let package = null
-      if (callResult.dataPackage) {
-        package = await Package.findOne({ id: callResult.dataPackage });
-        callResult.dataPackage = package.title
+      let package = null;
+      if (dataPackage) {
+        package = await Package.findOne({ id: dataPackage });
         if (!package) {
           return this.res.notFound({ message: "Không tìm thấy gói data." });
         }
+        if (result != 1) {
+          (dataPackage = null), (package.price = 0);
+        } else {
+          dataPackage = package.title;
+        }
       }
-      
 
-      const report = await Report.findOne({ agency: user.agency });
+      const month = new Date(Date.now()).getMonth();
+      const year = new Date(Date.now()).getFullYear();
+      let startDate = Date.parse(new Date(Date.UTC(year, month, 1, 0, 0, 0)));
+      let endDate = Date.parse(
+        new Date(Date.UTC(year, month + 1, 0, 23, 59, 59))
+      );
 
-      switch (callResult.result) {
+      let report = await Report.findOne({
+        agency: user.agency,
+        createdAt: { ">=": startDate, "<=": endDate },
+      });
+      if (!report) {
+        report = await Report.create({ agency: user.agency }).fetch();
+      }
+      console.log(report);
+      console.log(month, year);
+
+      switch (result) {
         case 1: //dong y
-          await Report.updateOne({ agency: user.agency }).set({
-            accept: report.accept + 1, revenue: report.revenue + package.price
+          await Report.updateOne({ id: report.id }).set({
+            accept: report.accept + 1,
+            revenue: report.revenue + package.price,
+            total: report.total + 1,
           });
           break;
         case 2: //tu choi
-          callResult.dataPackage = null;
-          package.price = 0;
           const rejection = await Result.count({
             data_id: dataId,
             result: 2,
@@ -81,14 +105,13 @@ module.exports = {
           if (rejection < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
           } else {
-            await Report.updateOne({ agency: user.agency }).set({
+            await Report.updateOne({ id: report.id }).set({
               reject: report.reject + 1,
+              total: report.total + 1,
             });
           }
           break;
         case 3: //khong nghe may
-          package.price = 0;
-          callResult.dataPackage = null;
           const unanswered = await Result.count({
             data_id: dataId,
             result: 3,
@@ -96,14 +119,13 @@ module.exports = {
           if (unanswered < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
           } else {
-            await Report.updateOne({ agency: user.agency }).set({
+            await Report.updateOne({ id: report.id }).set({
               unanswered: report.unanswered + 1,
+              total: report.total + 1,
             });
           }
           break;
         case 4: //khong lien lac duoc
-          package.price = 0;
-          callResult.dataPackage = null;
           const unavailable = await Result.count({
             data_id: dataId,
             result: 4,
@@ -111,42 +133,53 @@ module.exports = {
           if (unavailable < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
           } else {
-            await Report.updateOne({ agency: user.agency }).set({
+            await Report.updateOne({ id: report.id }).set({
               unavailable: report.unavailable + 1,
+              total: report.total + 1,
             });
           }
           break;
         case 5: //xu ly lai
         case 6:
         case 7:
-          if(!date){
-            return this.res.badRequest({message:"Thiếu ngày hẹn gọi lại!."})
+          if (!date) {
+            return this.res.badRequest({ message: "Thiếu ngày hẹn gọi lại!." });
           }
-          package.price = 0;
-          callResult.dataPackage = null;
+          const exist = await Result.find({
+            data_id: dataId,
+            result: [5, 6, 7],
+          });
+          console.log(exist);
           const rehandle = await DataRehandle.create({
             user: userId,
-            data: user.agency,
+            data: dataId,
             complete: false,
-            latestResult: callResult.result,
+            latestResult: result,
             dateToCall: date,
-            note: callResult.note
+            note: note,
           });
-          await Report.updateOne({ agency: user.agency }).set({
-            rehandle: report.rehandle + 1,
-          });
+          if (exist.length == 0) {
+            await Report.updateOne({ id: report.id }).set({
+              rehandle: report.rehandle + 1,
+              total: report.total + 1,
+            });
+          }
+
           break;
-        case 8:   //mat don
-          package.price = 0;
+        case 8: //mat don
           break;
         default:
           return this.res.badRequest("Kết quả cuộc gọi không hợp lệ");
       }
-      if(!date){
-        date = undefined
+      if (!date) {
+        date = undefined;
       }
       const newResult = await Result.create({
-        ...callResult,
+        result,
+        dataPackage,
+        customerName,
+        address,
+        note,
         data_id: dataId,
         agency: user.agency,
         saleman: user.id,
