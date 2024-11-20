@@ -146,13 +146,13 @@ module.exports = {
         date = undefined
       }
       const newResult = await Result.create({
+        ...callResult,
         data_id: dataId,
         agency: user.agency,
         saleman: user.id,
         subscriberNumber: data.subscriberNumber,
         revenue: package.price,
         dateToCall: date,
-        ...callResult,
       });
       await DataAssignment.updateOne({
         data: dataId,
