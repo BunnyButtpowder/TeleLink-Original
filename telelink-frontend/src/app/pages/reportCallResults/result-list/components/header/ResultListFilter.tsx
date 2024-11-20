@@ -6,6 +6,7 @@ import { useQueryResponse } from '../../core/QueryResponseProvider'
 import { useIntl } from 'react-intl'
 import { getAllAgencies } from '../../../../data/data-list/core/_requests'
 import { useAuth } from '../../../../../../app/modules/auth'
+import { parse } from 'path'
 
 const ResultListFilter = () => {
   const { updateState } = useQueryRequest()
@@ -13,9 +14,9 @@ const ResultListFilter = () => {
   const { currentUser } = useAuth()
   const [month, setMonth] = useState<string | undefined>('')
   const [year, setYear] = useState<string | undefined>('')
-  const [agencyId, setAgencyId] = useState<string | undefined>()
+  const [agencyId, setAgencyId] = useState<number | undefined>()
   const [result, setResult] = useState<number | undefined>()
-  const [agencies, setAgencies] = useState<{ id: string, name: string }[]>([])
+  const [agencies, setAgencies] = useState<{ id: number, name: string }[]>([])
   const [isAdmin] = useState(currentUser?.auth?.role === 1);
   const intl = useIntl()
   const { refetch } = useQueryResponse();
@@ -39,7 +40,7 @@ const ResultListFilter = () => {
   const resetResult = () => {
     setMonth('')
     setYear('')
-    setAgencyId('')
+    setAgencyId(undefined)
     setResult(undefined)
     updateState({
       ...initialResultQueryState
@@ -156,8 +157,8 @@ const ResultListFilter = () => {
                   data-allow-clear='true'
                   data-kt-user-table-filter='two-step'
                   data-hide-search='true'
-                  onChange={(e) => setAgencyId(e.target.value)}
-                  value={agencyId}
+                  onChange={(e) => setAgencyId(e.target.value ? parseInt(e.target.value, 10) : undefined)}
+                  value={agencyId ?? ''}
                 >
                   <option value=''></option>
                   {agencies.map(agency => (

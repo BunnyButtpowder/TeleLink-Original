@@ -11,12 +11,12 @@
         "NUM_OF_INSTANCE": 5,
         "NODE_ENV": "production",
         "PORT": 9999,
-        "MYSQL_DB": "mysql://acc:pass@localhost:3306/db"
+        "MYSQL_DB": "mysql://telelink_user:G2rJ84iH@@123.25.21.119:33066/telelink_db"
       },
       "env_development": {
         "NODE_ENV": "development",
         "PORT": 1337,
-        "MYSQL_DB": "mysql://acc:pass@localhost:3306/db"
+        "MYSQL_DB": "mysql://telelink_user:G2rJ84iH@@123.25.21.119:33066/telelink_db"
       }
     }
   ]

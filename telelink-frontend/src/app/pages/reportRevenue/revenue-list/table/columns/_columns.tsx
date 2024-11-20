@@ -6,90 +6,86 @@ import {UserActionsCell} from './UserActionsCell'
 import {UserSelectionCell} from './UserSelectionCell'
 import {UserCustomHeader} from './UserCustomHeader'
 import {UserSelectionHeader} from './UserSelectionHeader'
-import {Customer} from '../../core/_models'
+import {Revenue} from '../../core/_models'
 
-const usersColumns: ReadonlyArray<Column<Customer>> = [
+const revenueColumns: ReadonlyArray<Column<Revenue>> = [
   {
     Header: (props) => <UserSelectionHeader tableProps={props} />,
     id: 'selection',
     Cell: ({...props}) => <UserSelectionCell id={props.data[props.row.index].id} />,
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='#' className='min-w-125px' />,
+    Header: (props) => <UserCustomHeader tableProps={props} title='#' className='min-w-40px' />,
     id: 'id',
-    Cell: ({...props}) => <UserInfoCell customer={props.data[props.row.index]} />,
+    Cell: ({ row }) => <span>{row.index + 1}</span>,
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Chi nhánh' className='min-w-125px' />,
-    accessor: 'currentPack',
-  },
-  {
-    Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Mã khu vực cấp data' className='min-w-125px' />
-    ),
-    id: 'last_login',
-    // Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].last_login} />,
+    id: 'agency',
+    accessor: 'agency',
   },
   {
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='Tổng đơn hàng' className='min-w-125px' />
     ),
-    id: 'two_steps',
-    // Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].two_steps} />,
+    id: 'revenue',
+    Cell: ({...props}) => <span>{props.data[props.row.index]?.report?.revenue}</span>,
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Đồng ý' className='min-w-125px' />
+      <UserCustomHeader tableProps={props} title='Đồng ý' className='min-w-100px' />
     ),
-    accessor: 'regisDate',
+    id: 'accept',
+    Cell: ({...props}) => <span>{props.data[props.row.index]?.report?.accept}</span>,
   },
   {
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='Không đồng ý' className='min-w-125px' />
     ),
-    accessor: 'expDate',
+    id: 'reject',
+    Cell: ({...props}) => <span>{props.data[props.row.index]?.report?.reject}</span>,
   },
   {
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='Không bắt máy' className='min-w-125px' />
     ),
-    accessor: 'note',
+    id: 'unanswered',
+    Cell: ({...props}) => <span>{props.data[props.row.index]?.report?.unanswered}</span>,
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Không liên lạc được' className='min-w-125px' />
+      <UserCustomHeader tableProps={props} title='Không liên lạc được' className='min-w-200px' />
     ),
-    accessor: 'mainAccount',
+    id: 'unreachable',
+    Cell: ({...props}) => <span>{props.data[props.row.index]?.report?.unreachable}</span>,
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Đồng ý xử lý lại' className='min-w-125px' />
+      <UserCustomHeader tableProps={props} title='Đồng ý xử lý lại' className='min-w-150px' />
     ),
-    accessor: 'avg',
+    id: 'rehandle',
+    Cell: ({...props}) => <span>{props.data[props.row.index]?.report?.rehandle}</span>,
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tổng Thành công' className='min-w-125px' />
+      <UserCustomHeader tableProps={props} title='Mất đơn' className='min-w-125px' />
     ),
-    accessor: 'consump_n1',
+    id: 'lost',
+    Cell: ({...props}) => <span>{props.data[props.row.index]?.report?.lost}</span>,
   },
   {
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='Tỷ lệ thành công' className='min-w-125px' />
     ),
-    accessor: 'consump_n2',
-  },
-  {
-    Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tổng không thành công' className='min-w-125px' />
-    ),
-    accessor: 'consump_n3',
+    id: 'successRate',
+    Cell: ({...props}) => <span>{props.data[props.row.index]?.report?.successRate}</span>,
   },
   {
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='Tỷ lệ không thành công' className='min-w-125px' />
     ),
-    accessor: 'dataSrc',
+    id: 'failRate',
+    Cell: ({...props}) => <span>{props.data[props.row.index]?.report?.failRate}</span>,
   },
   {
     Header: (props) => (
@@ -100,4 +96,4 @@ const usersColumns: ReadonlyArray<Column<Customer>> = [
   },
 ]
 
-export {usersColumns}
+export {revenueColumns}

@@ -21,7 +21,7 @@ const resultsColumns: ReadonlyArray<Column<CallResult>> = [
   },
   {
     Header: (props) => <ResultCustomHeader tableProps={props} title='Kết quả' className='min-w-125px' />,
-    id: 'role',
+    id: 'result',
     Cell: ({ ...props }) => <ResultCell result={props.data[props.row.index].result}></ResultCell>,
   },
   {

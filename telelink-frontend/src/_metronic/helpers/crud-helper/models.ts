@@ -22,7 +22,7 @@ export type FilterState = {
     type?: string
     provider?: string
     saleman?: number
-    agencyId?: string
+    agencyId?: number
     result?: number
     gender?: string
     agency?: number
@@ -84,7 +84,7 @@ export const initialResultQueryState: QueryState = {
   items_per_page: 10,
   filter: {
     date: '',
-    agencyId: '',
+    agencyId: undefined,
     result: undefined,
   },
 }
