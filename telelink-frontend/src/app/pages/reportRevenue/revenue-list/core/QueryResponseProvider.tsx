@@ -11,13 +11,17 @@ import {
   stringifyRequestQuery,
   WithChildren,
 } from '../../../../../_metronic/helpers'
-import {getUsers} from './_requests'
-import {Customer} from './_models'
+import {getAllRevenue} from './_requests'
+import {Revenue} from './_models'
 import {useQueryRequest} from './QueryRequestProvider'
+import { useAuth } from '../../../../../app/modules/auth'
 
-const QueryResponseContext = createResponseContext<Customer>(initialQueryResponse)
+const QueryResponseContext = createResponseContext<Revenue>(initialQueryResponse)
 const QueryResponseProvider: FC<WithChildren> = ({children}) => {
   const {state} = useQueryRequest()
+  const { currentUser } = useAuth();
+  const userRole = currentUser?.auth.role;
+  const agencyID = currentUser?.agency?.id;
   const [query, setQuery] = useState<string>(stringifyRequestQuery(state))
   const updatedQuery = useMemo(() => stringifyRequestQuery(state), [state])
 
@@ -27,20 +31,28 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
     }
   }, [updatedQuery])
 
-  const {
-    isFetching,
-    refetch,
-    data: response,
-  } = useQuery(
-    `${QUERIES.USERS_LIST}-${query}`,
-    () => {
-      return getUsers(query)
-    },
-    {cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false}
+  const fetchRevenue = () => {
+    const { search = '', filter = {} } = state;
+
+    const { agencyId, date } = filter;
+    // Admin gets all revenue records
+    if (userRole === 1) {
+      return getAllRevenue({ agencyId, searchTerm: search, date });
+    } else if (userRole === 2) {
+      return getAllRevenue({ agencyId: agencyID, searchTerm: search, date });
+    } else {
+      return Promise.resolve({data: [], count: 0});
+    }
+  }
+
+  const { isFetching, refetch, data: response} = useQuery(
+    [`${QUERIES.USERS_LIST}-${updatedQuery}`, state.filter, userRole, agencyID],
+    fetchRevenue,
+    {cacheTime: 0, keepPreviousData: false, refetchOnWindowFocus: false}
   )
 
   return (
-    <QueryResponseContext.Provider value={{isLoading: isFetching, refetch, response, query}}>
+    <QueryResponseContext.Provider value={{isLoading: isFetching, refetch, response, query: updatedQuery}}>
       {children}
     </QueryResponseContext.Provider>
   )

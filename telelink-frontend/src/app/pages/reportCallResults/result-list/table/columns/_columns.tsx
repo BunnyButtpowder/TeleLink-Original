@@ -9,11 +9,11 @@ import {UserSelectionHeader} from './UserSelectionHeader'
 import {CallResult} from '../../core/_models'
 
 const resultsColumns: ReadonlyArray<Column<CallResult>> = [
-  {
-    Header: (props) => <UserSelectionHeader tableProps={props} />,
-    id: 'selection',
-    Cell: ({...props}) => <UserSelectionCell id={props.data[props.row.index].id} />,
-  },
+  // {
+  //   Header: (props) => <UserSelectionHeader tableProps={props} />,
+  //   id: 'selection',
+  //   Cell: ({...props}) => <UserSelectionCell id={props.data[props.row.index].id} />,
+  // },
   {
     Header: (props) => <ResultCustomHeader tableProps={props} title='#' className='min-w-30px' />,
     accessor: 'id',
@@ -21,8 +21,21 @@ const resultsColumns: ReadonlyArray<Column<CallResult>> = [
   },
   {
     Header: (props) => <ResultCustomHeader tableProps={props} title='Kết quả' className='min-w-125px' />,
-    id: 'role',
+    id: 'result',
     Cell: ({ ...props }) => <ResultCell result={props.data[props.row.index].result}></ResultCell>,
+  },
+  {
+    Header: (props) => <ResultCustomHeader tableProps={props} title='Ngày gọi lại' className='min-w-125px' />,
+    accessor: 'dateToCall',
+    Cell: ({ ...props }) => {
+      const timestamp = props.data[props.row.index].dateToCall;
+
+      if (timestamp) {
+        const date = new Date(timestamp);
+        return <span>{date.toLocaleDateString('vi-VN')}</span>
+      }
+      return <span></span>;
+    }
   },
   {
     Header: (props) => <ResultCustomHeader tableProps={props} title='Ngày thực hiện' className='min-w-125px' />,
@@ -42,6 +55,7 @@ const resultsColumns: ReadonlyArray<Column<CallResult>> = [
     Header: (props) => <ResultCustomHeader tableProps={props} title='Chi nhánh sales' className='min-w-125px' />,
     id: 'agency',
     accessor: 'agency',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.agency?.name}</span>,
   },
   {
     Header: (props) => (
@@ -49,7 +63,7 @@ const resultsColumns: ReadonlyArray<Column<CallResult>> = [
     ),
     id: 'saleman',
     accessor: 'saleman',
-    // Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].last_login} />,
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.saleman?.fullName}</span>,
   },
   {
     Header: (props) => (
@@ -108,7 +122,11 @@ const resultsColumns: ReadonlyArray<Column<CallResult>> = [
       <ResultCustomHeader tableProps={props} title='Doanh thu gói' className='min-w-125px' />
     ),
     id: 'revenue',
-    accessor: 'revenue',
+    Cell: ({ ...props }) => {
+      const revenue = props.data[props.row.index].revenue;
+      const formattedPrice = revenue !== undefined ? new Intl.NumberFormat('vi-VN').format(revenue) : '';
+      return <span>{formattedPrice}</span>;
+    },
   },
   {
     Header: (props) => (

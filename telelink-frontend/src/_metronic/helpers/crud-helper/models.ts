@@ -1,11 +1,11 @@
-import {Dispatch, SetStateAction} from 'react'
+import { Dispatch, SetStateAction } from 'react'
 
 export type ID = undefined | null | number
 
 export type PaginationState = {
   page: number
   items_per_page: 10 | 30 | 50 | 100
-  links?: Array<{label: string; active: boolean; url: string | null; page: number | null}>
+  links?: Array<{ label: string; active: boolean; url: string | null; page: number | null }>
 }
 
 export type SortState = {
@@ -26,7 +26,7 @@ export type FilterState = {
     result?: number
     gender?: string
     agency?: number
-    
+    date?: string
   }
 }
 
@@ -79,9 +79,19 @@ export const initialUserQueryState: QueryState = {
   },
 }
 
+export const initialResultQueryState: QueryState = {
+  page: 1,
+  items_per_page: 10,
+  filter: {
+    date: '',
+    agencyId: undefined,
+    result: undefined,
+  },
+}
+
 export const initialQueryRequest: QueryRequestContextProps = {
   state: initialQueryState,
-  updateState: () => {},
+  updateState: () => { },
 }
 
 export type SingleObjectQueryResponseContextProps<T> = {
@@ -98,7 +108,7 @@ export type QueryResponseContextProps<T> = {
   query: string
 }
 
-export const initialQueryResponse = {refetch: () => {}, isLoading: false, query: ''}
+export const initialQueryResponse = { refetch: () => { }, isLoading: false, query: '' }
 
 export type ListViewContextProps = {
   selected: Array<ID>
@@ -116,10 +126,10 @@ export type ListViewContextProps = {
 
 export const initialListView: ListViewContextProps = {
   selected: [],
-  onSelect: () => {},
-  onSelectAll: () => {},
-  clearSelected: () => {},
-  setItemIdForUpdate: () => {},
+  onSelect: () => { },
+  onSelectAll: () => { },
+  clearSelected: () => { },
+  setItemIdForUpdate: () => { },
   isAllSelected: false,
   disabled: false,
 }

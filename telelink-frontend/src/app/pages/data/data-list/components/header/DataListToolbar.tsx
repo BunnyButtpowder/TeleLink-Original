@@ -14,6 +14,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
   const intl = useIntl()
   const [isDistributionModalOpen, setDistributionModalOpen] = useState(false)
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input element
   const { refetch } = useQueryResponse()
 
@@ -21,9 +22,13 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
     const files = event.target.files?.[0];
     if (files) {
       setUploading(true);
-
+      setProgress(0);
       try {
-        const response = await importData(files);
+        const response = await importData(files, (progressEvent: any) => {
+          const total = progressEvent.total || 1;
+          const percentCompleted = Math.round((progressEvent.loaded / total) * 100);
+          setProgress(percentCompleted);
+        });
         onUploadComplete(response.data);
         refetch();
         toast.success('Upload data thành công!');
@@ -45,7 +50,6 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
     }
   }
 
-
   const openDataDistributionModal = () => {
     setDistributionModalOpen(true);
   }
@@ -57,6 +61,20 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
   return (
     <>
       <ToastContainer />
+      {/* Progress bar */}
+      {/* {uploading && (
+        <div className='progress mt-3' style={{ height: '20px' }}>
+          <div className='progress-bar progress-bar-striped progress-bar-animated'
+            role="progressbar"
+            style={{ width: `${progress}%` }}
+            aria-valuenow={progress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            {progress}%
+          </div>
+        </div>
+      )} */}
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
         <DataListFilter />
 

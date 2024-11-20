@@ -1,49 +1,56 @@
 import axios, { AxiosResponse } from "axios";
 import { ID, Response } from "../../../../../_metronic/helpers";
-import { Customer, UsersQueryResponse } from "./_models";
+import { Revenue, RevenueQueryResponse } from "./_models";
 
-const API_URL = import.meta.env.VITE_APP_THEME_API_URL;
-const USER_URL = `${API_URL}/user`;
-const GET_USERS_URL = `${API_URL}/users/query`;
+const API_URL = import.meta.env.VITE_APP_API_URL;
+const REVENUE_URL = `${API_URL}/report`;
 
-const getUsers = (query: string): Promise<UsersQueryResponse> => {
+const getAllRevenue = (params: {
+  date?: string,
+  agencyId?: number,
+  searchTerm?: string,
+}): Promise<RevenueQueryResponse> => {
   return axios
-    .get(`${GET_USERS_URL}?${query}`)
-    .then((d: AxiosResponse<UsersQueryResponse>) => d.data);
+    .get(`${REVENUE_URL}/get`, { params })
+    .then((response: AxiosResponse<RevenueQueryResponse>) => response.data)
+    .catch((error) => {
+      console.error("Error fetching revenues:", error);
+      throw error;
+    });
 };
 
-const getUserById = (id: ID): Promise<Customer | undefined> => {
+const getUserById = (id: ID): Promise<Revenue | undefined> => {
   return axios
-    .get(`${USER_URL}/${id}`)
-    .then((response: AxiosResponse<Response<Customer>>) => response.data)
-    .then((response: Response<Customer>) => response.data);
+    .get(`${REVENUE_URL}/${id}`)
+    .then((response: AxiosResponse<Response<Revenue>>) => response.data)
+    .then((response: Response<Revenue>) => response.data);
 };
 
-const createUser = (customer: Customer): Promise<Customer | undefined> => {
+const createUser = (customer: Revenue): Promise<Revenue | undefined> => {
   return axios
-    .put(USER_URL, customer)
-    .then((response: AxiosResponse<Response<Customer>>) => response.data)
-    .then((response: Response<Customer>) => response.data);
+    .put(REVENUE_URL, customer)
+    .then((response: AxiosResponse<Response<Revenue>>) => response.data)
+    .then((response: Response<Revenue>) => response.data);
 };
 
-const updateUser = (customer: Customer): Promise<Customer | undefined> => {
+const updateUser = (customer: Revenue): Promise<Revenue | undefined> => {
   return axios
-    .post(`${USER_URL}/${customer.id}`, customer)
-    .then((response: AxiosResponse<Response<Customer>>) => response.data)
-    .then((response: Response<Customer>) => response.data);
+    .post(`${REVENUE_URL}/${customer.id}`, customer)
+    .then((response: AxiosResponse<Response<Revenue>>) => response.data)
+    .then((response: Response<Revenue>) => response.data);
 };
 
 const deleteUser = (userId: ID): Promise<void> => {
-  return axios.delete(`${USER_URL}/${userId}`).then(() => {});
+  return axios.delete(`${REVENUE_URL}/${userId}`).then(() => { });
 };
 
 const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
-  const requests = userIds.map((id) => axios.delete(`${USER_URL}/${id}`));
-  return axios.all(requests).then(() => {});
+  const requests = userIds.map((id) => axios.delete(`${REVENUE_URL}/${id}`));
+  return axios.all(requests).then(() => { });
 };
 
 export {
-  getUsers,
+  getAllRevenue,
   deleteUser,
   deleteSelectedUsers,
   getUserById,

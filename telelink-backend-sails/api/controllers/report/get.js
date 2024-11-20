@@ -1,3 +1,5 @@
+const { fail } = require("grunt");
+
 module.exports = {
   friendlyName: "Get revenue report by month",
 
@@ -110,13 +112,16 @@ module.exports = {
           rehandle: rehandle,
           lost: lost,
           revenue: revenue,
+          successRate: (accept + reject + unanswered + unreachable + rehandle + lost) > 0 ? Math.round((accept / (accept + reject + unanswered + unreachable + rehandle + lost)) * 100 * 100) / 100 : 0,
+          failRate: (accept + reject + unanswered + unreachable + rehandle + lost) > 0 ? Math.round(((reject + unanswered + unreachable + lost) / (accept + reject + unanswered + unreachable + rehandle + lost)) * 100 * 100) / 100 : 0,
         },
       });
     }
     // All done.
     return this.res.ok({
       message: `Revenue report:`,
-      result,
+      data: result,
+      count: result.length
     });
   },
 };

@@ -1,9 +1,9 @@
 import {FC} from 'react'
 import {ColumnInstance} from 'react-table'
-import {Customer} from '../../core/_models'
+import {Revenue} from '../../core/_models'
 
 type Props = {
-  column: ColumnInstance<Customer>
+  column: ColumnInstance<Revenue>
 }
 
 const CustomHeaderColumn: FC<Props> = ({column}) => (

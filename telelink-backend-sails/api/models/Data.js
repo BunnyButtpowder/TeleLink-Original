@@ -36,14 +36,16 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
-    registrationDate: {    // Ngày đăng kí
-      type: 'ref',
+    registrationDate: {
+      type: 'string',
       columnType: 'date',
+      allowNull: true,
     },
-    expirationDate: {    // Ngày hết hạn
-      type: 'ref',
+    expirationDate: {
+      type: 'string', 
       columnType: 'date',
-    },
+      allowNull: true,
+    },    
     notes: {    // Ghi chú
       type: 'string',
       allowNull: true,
@@ -52,7 +54,7 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
-    ARPU3Months: {    // APRU 3 tháng
+    APRU3Months: {    // APRU 3 tháng
       type: 'string',
       allowNull: true,
     },

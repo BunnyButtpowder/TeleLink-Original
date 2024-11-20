@@ -13,11 +13,12 @@ module.exports = {
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
           .replace(/\s+/g, '')
+          .replace(/[\n\t\r]/g, '')
           .replace(/đ/g, 'd')
           .toLowerCase();
       }
 
-      const headers = worksheet[0].map(header => normalizeString(header));
+      const headers = worksheet[0].map((header) => normalizeString(header));
 
       console.log('Headers after normalization:', headers);
 
@@ -33,7 +34,7 @@ module.exports = {
         'ngayhethan': 'expirationDate',
         'ghichu': 'notes',
         'tkc': 'TKC',
-        'arpu3thang': 'ARPU3Months',
+        'apru3thang': 'APRU3Months',
         'tieudungn1': 'usageMonth1',
         'tieudungn2': 'usageMonth2',
         'tieudungn3': 'usageMonth3',
@@ -47,6 +48,8 @@ module.exports = {
         'khac2': 'other2',
         'khac3': 'other3',
       };
+
+      console.log('Column Mapping Keys:', Object.keys(columnMapping));
 
       const headerIndexes = {};
       for (const [normalizedHeader, field] of Object.entries(columnMapping)) {
@@ -69,7 +72,7 @@ module.exports = {
         if (existingData) {
 
           await Data.destroy({ id: existingData.id });
-          await DataAssignment.destroy({data:existingData.id})
+          await DataAssignment.destroy({ data: existingData.id })
         }
 
 
@@ -82,16 +85,16 @@ module.exports = {
           currentPackage: row[headerIndexes['currentPackage']] || '',
           priorityPackage1: row[headerIndexes['priorityPackage1']] || '',
           priorityPackage2: row[headerIndexes['priorityPackage2']] || '',
-          registrationDate: row[headerIndexes['registrationDate']] || '',
-          expirationDate: row[headerIndexes['expirationDate']] || '',
+          registrationDate: row[headerIndexes['registrationDate']] === '' ? null : row[headerIndexes['registrationDate']],
+          expirationDate: row[headerIndexes['expirationDate']] === '' ? null : row[headerIndexes['expirationDate']],
           notes: row[headerIndexes['notes']] || '',
           TKC: row[headerIndexes['TKC']] || '',
-          ARPU3Months: row[headerIndexes['ARPU3Months']] || '',
+          APRU3Months: row[headerIndexes['APRU3Months']] || '',
           usageMonth1: row[headerIndexes['usageMonth1']] || '',
           usageMonth2: row[headerIndexes['usageMonth2']] || '',
           usageMonth3: row[headerIndexes['usageMonth3']] || '',
           usageMonth4: row[headerIndexes['usageMonth4']] || '',
-          Package: row[headerIndexes['Package']]|| '',
+          Package: row[headerIndexes['Package']] || '',
           totalTKCUsage: row[headerIndexes['totalTKCUsage']] || '',
           voiceUsage: row[headerIndexes['voiceUsage']] || '',
           dataUsage: row[headerIndexes['dataUsage']] || '',
@@ -109,8 +112,8 @@ module.exports = {
 
 
     } catch (err) {
-      
-      return res.serverError({ message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.' ,err});
+      console.log(err)
+      return res.serverError({ message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.', err });
     }
   },
 };

@@ -6,12 +6,12 @@ const API_URL = import.meta.env.VITE_APP_API_URL;
 const BLACKLIST_URL= `${API_URL}/blacklists`;
 
 
-const importData = async (file: File): Promise<any> => {
+const importData = async (file: File, userID: string): Promise<any> => {
   const formData = new FormData();
   formData.append('file', file);
-
+  formData.append('id', userID);
   try {
-    const response = await axios.post(`${API_URL}/import-data`, formData, {
+    const response = await axios.post(`${API_URL}/import-blacklist`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -112,10 +112,14 @@ const deleteNumber = (sdt: ID): Promise<void> => {
   return axios.delete(`${API_URL}/blacklist/${sdt}`).then(() => { });
 };
 
-const deleteSelectedNumber = (sdt: Array<ID>): Promise<void> => {
-  const requests = sdt.map((id) => axios.delete(`${API_URL}/blacklist/${sdt}`));
-  return axios.all(requests).then(() => { });
+const deleteSelectedNumber = (ids: Array<ID>): Promise<void> => {
+  return axios
+    .delete(`${API_URL}/blacklists/many-delete`, {
+      data: { ids }, // Send the `sdt` array in the request body
+    })
+    .then(() => {});
 };
+
 
 export {
   importData,

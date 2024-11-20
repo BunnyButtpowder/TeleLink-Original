@@ -2,7 +2,7 @@ import {useQuery} from 'react-query'
 import {ResultEditModalForm} from './ResultEditModalForm'
 import {isNotEmpty, QUERIES} from '../../../../../_metronic/helpers'
 import {useListView} from '../core/ListViewProvider'
-import {getUserById} from '../core/_requests'
+import {getResultById} from '../core/_requests'
 import { initialCallResult } from '../core/_models'
 
 const ResultEditModalFormWrapper = () => {
@@ -13,13 +13,14 @@ const ResultEditModalFormWrapper = () => {
     data: result,
     error,
   } = useQuery(
-    `${QUERIES.USERS_LIST}-result-${itemIdForUpdate}`,
+    `${QUERIES.USERS_LIST}-user-${itemIdForUpdate}`,
     () => {
-      return getUserById(itemIdForUpdate)
+      return getResultById(itemIdForUpdate)
     },
     {
       cacheTime: 0,
       enabled: enabledQuery,
+      refetchOnWindowFocus: false,
       onError: (err) => {
         setItemIdForUpdate(undefined)
         console.error(err)
@@ -33,7 +34,7 @@ const ResultEditModalFormWrapper = () => {
   }
   
   if (error) {
-    return <div>Error loading result</div>;
+    return <div>Lỗi tải kết quả cuộc gọi</div>;
   }
   
   return (
@@ -42,7 +43,6 @@ const ResultEditModalFormWrapper = () => {
       result={result || initialCallResult}
     />
   );
-  
 }
 
 export {ResultEditModalFormWrapper}
