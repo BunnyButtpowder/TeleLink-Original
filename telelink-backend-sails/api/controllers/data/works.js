@@ -86,16 +86,9 @@ module.exports = {
       if (!report) {
         report = await Report.create({ agency: user.agency }).fetch();
       }
-      console.log(report);
-      console.log(month, year);
 
       switch (result) {
         case 1: //dong y
-          await Report.updateOne({ id: report.id }).set({
-            accept: report.accept + 1,
-            revenue: report.revenue + package.price,
-            total: report.total + 1,
-          });
           break;
         case 2: //tu choi
           const rejection = await Result.count({
@@ -104,11 +97,6 @@ module.exports = {
           });
           if (rejection < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
-          } else {
-            await Report.updateOne({ id: report.id }).set({
-              reject: report.reject + 1,
-              total: report.total + 1,
-            });
           }
           break;
         case 3: //khong nghe may
@@ -118,11 +106,6 @@ module.exports = {
           });
           if (unanswered < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
-          } else {
-            await Report.updateOne({ id: report.id }).set({
-              unanswered: report.unanswered + 1,
-              total: report.total + 1,
-            });
           }
           break;
         case 4: //khong lien lac duoc
@@ -132,11 +115,6 @@ module.exports = {
           });
           if (unavailable < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
-          } else {
-            await Report.updateOne({ id: report.id }).set({
-              unavailable: report.unavailable + 1,
-              total: report.total + 1,
-            });
           }
           break;
         case 5: //xu ly lai
@@ -145,11 +123,6 @@ module.exports = {
           if (!date) {
             return this.res.badRequest({ message: "Thiếu ngày hẹn gọi lại!." });
           }
-          const exist = await Result.find({
-            data_id: dataId,
-            result: [5, 6, 7],
-          });
-          console.log(exist);
           const rehandle = await DataRehandle.create({
             user: userId,
             data: dataId,
@@ -158,13 +131,6 @@ module.exports = {
             dateToCall: date,
             note: note,
           });
-          if (exist.length == 0) {
-            await Report.updateOne({ id: report.id }).set({
-              rehandle: report.rehandle + 1,
-              total: report.total + 1,
-            });
-          }
-
           break;
         case 8: //mat don
           break;
@@ -192,6 +158,78 @@ module.exports = {
         user: userId,
         complete: false,
       }).set({ complete: true });
+
+      let rawQuery, groupedResults;
+      rawQuery = `
+        SELECT data_id, result, revenue
+        FROM result
+        WHERE agency = $1 AND createdAt > $2 AND createdAt < $3
+        GROUP BY data_id, result, revenue
+        `;
+      groupedResults = await sails.sendNativeQuery(rawQuery, [
+        user.agency,
+        startDate,
+        endDate,
+      ]);
+      const accept = groupedResults.rows.filter((x) => x.result == 1).length;
+      const reject = groupedResults.rows.filter((x) => x.result == 2).length;
+      const unanswered = groupedResults.rows.filter(
+        (x) => x.result == 3
+      ).length;
+      const unavailable = groupedResults.rows.filter(
+        (x) => x.result == 4
+      ).length;
+      const rehandle = groupedResults.rows.filter((x) =>
+        [5, 6, 7].includes(x.result)
+      ).length;
+      const lost = groupedResults.rows.filter((x) => x.result == 8).length;
+
+      const revenue = groupedResults.rows.reduce(
+        (sum, item) => sum + item.revenue,
+        0
+      );
+
+      await Report.updateOne(
+        { id: report.id },
+        {
+          total: accept + reject + unanswered + unavailable + rehandle + lost,
+          accept,
+          reject,
+          unanswered,
+          unavailable,
+          rehandle,
+          lost,
+          revenue,
+          successRate:
+            accept + reject + unanswered + unavailable + rehandle + lost > 0
+              ? Math.round(
+                  (accept /
+                    (accept +
+                      reject +
+                      unanswered +
+                      unavailable +
+                      rehandle +
+                      lost)) *
+                    100 *
+                    100
+                ) / 100
+              : 0,
+          failRate:
+            accept + reject + unanswered + unavailable + rehandle + lost > 0
+              ? Math.round(
+                  ((reject + unanswered + unavailable + lost) /
+                    (accept +
+                      reject +
+                      unanswered +
+                      unavailable +
+                      rehandle +
+                      lost)) *
+                    100 *
+                    100
+                ) / 100
+              : 0,
+        }
+      );
 
       return this.res.ok({
         message: "Tạo kết quả cuộc gọi thành công.",

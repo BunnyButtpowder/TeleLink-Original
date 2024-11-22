@@ -20,7 +20,8 @@ module.exports = {
     let { resultId, update } = inputs;
     try {
       // Tìm dữ liệu theo ID
-      let {result, dataPackage, customerName, address, note, dateToCall} = update
+      let { result, dataPackage, customerName, address, note, dateToCall } =
+        update;
       const existingResult = await Result.findOne({ id: resultId });
       const userId = this.req.user.id;
 
@@ -28,8 +29,10 @@ module.exports = {
       if (!existingUser) {
         return res.unauthorized("Người dùng đăng nhập không tồn tại");
       }
-      if(existingUser.role != 1 && userId != existingResult.saleman){
-        return this.res.forbidden({ message: "Không được phép sửa kết quả cuộc gọi này!" })
+      if (existingUser.role != 1 && userId != existingResult.saleman) {
+        return this.res.forbidden({
+          message: "Không được phép sửa kết quả cuộc gọi này!",
+        });
       }
 
       if (!existingResult) {
@@ -49,18 +52,110 @@ module.exports = {
           return this.res.notFound({ message: "Không tìm thấy gói data." });
         }
         if (result != 1) {
-          dataPackage = null
+          dataPackage = null;
           package.price = 0;
-        }
-        else {
+        } else {
           dataPackage = package.title;
         }
       }
 
       if (currentMonth == createdMonth && createdYear == currentYear) {
+        const month = new Date(Date.now()).getMonth();
+        const year = new Date(Date.now()).getFullYear();
+        let startDate = Date.parse(new Date(Date.UTC(year, month, 1, 0, 0, 0)));
+        let endDate = Date.parse(
+          new Date(Date.UTC(year, month + 1, 0, 23, 59, 59))
+        );
+
+        let report = await Report.findOne({
+          agency: user.agency,
+          createdAt: { ">=": startDate, "<=": endDate },
+        });
+        if (!report) {
+          report = await Report.create({ agency: user.agency }).fetch();
+        }
         await Result.updateOne(
           { id: resultId },
-          { result, dataPackage, customerName, address, note, dateToCall, revenue: package.price }
+          {
+            result,
+            dataPackage,
+            customerName,
+            address,
+            note,
+            dateToCall,
+            revenue: package.price,
+          }
+        );
+        let rawQuery, groupedResults;
+        rawQuery = `
+        SELECT data_id, result, revenue
+        FROM result
+        WHERE agency = $1 AND createdAt > $2 AND createdAt < $3
+        GROUP BY data_id, result, revenue
+        `;
+        groupedResults = await sails.sendNativeQuery(rawQuery, [
+          user.agency,
+          startDate,
+          endDate,
+        ]);
+        const accept = groupedResults.rows.filter((x) => x.result == 1).length;
+        const reject = groupedResults.rows.filter((x) => x.result == 2).length;
+        const unanswered = groupedResults.rows.filter(
+          (x) => x.result == 3
+        ).length;
+        const unavailable = groupedResults.rows.filter(
+          (x) => x.result == 4
+        ).length;
+        const rehandle = groupedResults.rows.filter((x) =>
+          [5, 6, 7].includes(x.result)
+        ).length;
+        const lost = groupedResults.rows.filter((x) => x.result == 8).length;
+
+        const revenue = groupedResults.rows.reduce(
+          (sum, item) => sum + item.revenue,
+          0
+        );
+
+        await Report.updateOne(
+          { id: report.id },
+          {
+            total: accept + reject + unanswered + unavailable + rehandle + lost,
+            accept,
+            reject,
+            unanswered,
+            unavailable,
+            rehandle,
+            lost,
+            revenue,
+            successRate:
+              accept + reject + unanswered + unavailable + rehandle + lost > 0
+                ? Math.round(
+                    (accept /
+                      (accept +
+                        reject +
+                        unanswered +
+                        unavailable +
+                        rehandle +
+                        lost)) *
+                      100 *
+                      100
+                  ) / 100
+                : 0,
+            failRate:
+              accept + reject + unanswered + unavailable + rehandle + lost > 0
+                ? Math.round(
+                    ((reject + unanswered + unavailable + lost) /
+                      (accept +
+                        reject +
+                        unanswered +
+                        unavailable +
+                        rehandle +
+                        lost)) *
+                      100 *
+                      100
+                  ) / 100
+                : 0,
+          }
         );
       } else {
         return this.res.forbidden("This Result is not allowed to be changed!");
