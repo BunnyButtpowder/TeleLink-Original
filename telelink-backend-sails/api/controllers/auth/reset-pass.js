@@ -25,10 +25,15 @@ module.exports = {
  
 
   fn: async function (inputs) {
+    let { res, req } = this;
     const user = await Auth.findOne({ email: inputs.email });
 
-    if (!user || user.otpCode !== inputs.otpCode || user.otpExpiresAt < new Date()) {
+    if (!user || user.otpCode !== inputs.otpCode ) {
       return res.forbidden({ message: "OTP code is invalid" });
+    }
+
+    if ( user.otpExpiresAt < new Date()) {
+      return res.forbidden({ message: "OTP code has expired" });
     }
 
      const hashedPassword = await bcrypt.hash(inputs.newPassword, 10); 
