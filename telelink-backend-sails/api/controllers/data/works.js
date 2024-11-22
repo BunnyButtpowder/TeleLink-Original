@@ -190,6 +190,7 @@ module.exports = {
       await DataAssignment.updateOne({
         data: dataId,
         user: userId,
+        complete: false,
       }).set({ complete: true });
 
       return this.res.ok({
