@@ -33,10 +33,22 @@ module.exports = {
       defaultsTo: 0
     },
     rehandle: {
-      type: "number",  //không liên lạc được
+      type: "number",  //xu li lai
       defaultsTo: 0
     },
+    lost:{
+      type: "number",
+      defaultTo: 0,
+    },
     revenue: {
+      type: "number",
+      defaultsTo: 0
+    },
+    successRate:{
+      type: "number",
+      defaultsTo: 0
+    },
+    failRate:{
       type: "number",
       defaultsTo: 0
     }
