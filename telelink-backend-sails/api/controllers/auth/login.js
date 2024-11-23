@@ -4,20 +4,24 @@ const jwt = require('jsonwebtoken');
 module.exports = {
 
     inputs: {
-        username: {type: "string", required: true},
-        password: {type: "string", required: true},
-       
-      },
+        username: { type: "string", required: true },
+        password: { type: "string", required: true },
 
-    exits: {     
+    },
+
+    exits: {
     },
     fn: async function (inputs) {
         let { res, req } = this;
-    
+
         try {
-            
-            
+
+
             const { username, password } = inputs;
+            
+            if (!username.trim() || !password.trim()) {
+                return res.badRequest({ message: "Username và password không được để trống" });
+            }
 
             const auth = await Auth.findOne({ username });
             if (!auth) {
@@ -27,12 +31,15 @@ module.exports = {
             if (!isMatch) {
                 return res.forbidden({ message: "Mật khẩu không đúng" });
             }
+            if (!auth.isActive) {
+                return res.forbidden({ message: "Tài khoản chưa được actived" });
+            }
             const user = await User.findOne({ auth: auth.id });
             if (!user) {
                 return res.badRequest({ message: "Không tìm thấy người dùng liên quan" });
             }
             const token = jwt.sign({ id: auth.id, username: auth.username }, process.env.JWT_SECRET, { expiresIn: '365d' });
-            
+
             // if (auth.role === 2) {
             //     req.session.user = {
             //         id: auth.id,
@@ -45,9 +52,9 @@ module.exports = {
             //         role: auth.role
             //     };
             // }
-            return res.json({  message: "Đăng nhập thành công" , user: { id: user.id, fullname: user.fullName, agencyId: user.agency }, token });
-    
-            
+            return res.json({ message: "Đăng nhập thành công", user: { id: user.id, fullname: user.fullName, agencyId: user.agency }, token });
+
+
         } catch (err) {
             return res.serverError({ error: "Đã xảy ra lỗi trong quá trình đăng nhập", details: err.message });
         }
