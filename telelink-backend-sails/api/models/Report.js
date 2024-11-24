@@ -38,7 +38,7 @@ module.exports = {
     },
     lost:{
       type: "number",
-      defaultTo: 0,
+      defaultsTo: 0,
     },
     revenue: {
       type: "number",
