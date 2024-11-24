@@ -1,12 +1,16 @@
 const { fail } = require("grunt");
 
 module.exports = {
-  friendlyName: "Get revenue report for 1 year ago",
+  friendlyName: "Get top 10 saleman of the month or all-time",
 
-  description: "A sum up of all call result in a year",
+  description: "Top 10 best selling salemans",
 
   inputs: {
     agencyId: {
+      type: "string",
+      required: false,
+    },
+    date: {
       type: "string",
       required: false,
     },
@@ -16,7 +20,7 @@ module.exports = {
 
   fn: async function (inputs) {
     let { res } = this;
-    let { agencyId } = inputs;
+    let { agencyId, date } = inputs;
 
     if (agencyId) {
       const AgencyExist = await Agency.findOne({ id: agencyId });
@@ -27,17 +31,22 @@ module.exports = {
       agencyId = undefined;
     }
 
+    const criteria = {
+      agency: agencyId
+    }
+
     //định nghĩa tháng cần tìm
-    const month = new Date(Date.now()).getMonth();
-    const year = new Date(Date.now()).getFullYear();
-    let startDate = Date.parse(new Date(Date.UTC(year - 1, month, 1, 0, 0, 0)));
-    let endDate = Date.parse(
-      new Date(Date.UTC(year, month + 1, 0, 23, 59, 59))
-    );
+    let startDate,
+      endDate = undefined;
+    if (date) {
+      const [month, year] = date.split("-");
+      startDate = Date.parse(new Date(Date.UTC(year, month - 1, 1, 0, 0, 0)));
+      endDate = Date.parse(new Date(Date.UTC(year, month, 0, 23, 59, 59)));
+      criteria.createdAt = { '>=': startDate, '<=': endDate };
+    }
 
     const result = await Report.find({
-      createdAt: { ">=": startDate, "<=": endDate },
-      agency: agencyId,
+      where: criteria,
     }).populate("agency");
 
     // All done.
