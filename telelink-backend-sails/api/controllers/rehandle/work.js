@@ -3,7 +3,7 @@ const _ = require("lodash");
 module.exports = {
   friendlyName: "Create call's result",
 
-  description: "Allow employees to create call's result",
+  description: "Allow employees to create call's result of rehandle data",
 
   inputs: {
     dataId: {
@@ -34,11 +34,6 @@ module.exports = {
       if (!user) {
         return this.res.notFound({ message: "Người dùng không hợp lệ" });
       }
-      if (!user.agency) {
-        return this.res.badRequest({
-          message: "Người dùng chưa thuộc chi nhánh nào.",
-        });
-      }
 
       // Tìm dữ liệu theo ID
       const data = await Data.findOne({ id: dataId });
@@ -48,7 +43,7 @@ module.exports = {
       }
 
       // Kiểm tra xem nhân viên có quyền cập nhật dữ liệu này hay không
-      const assignment = await DataAssignment.findOne({
+      const assignment = await DataRehandle.findOne({
         data: dataId,
         user: userId,
         complete: false,
@@ -60,35 +55,36 @@ module.exports = {
         });
       }
       let package = null;
-      if (dataPackage) {
-        package = await Package.findOne({ id: dataPackage });
+      if (callResult.dataPackage) {
+        package = await Package.findOne({ id: callResult.dataPackage });
+        callResult.dataPackage = package.title;
         if (!package) {
           return this.res.notFound({ message: "Không tìm thấy gói data." });
-        }
-        if (result != 1) {
-          (dataPackage = null), (package.price = 0);
-        } else {
-          dataPackage = package.title;
         }
       }
 
       const month = new Date(Date.now()).getMonth();
-      const year = new Date(Date.now()).getFullYear();
-      let startDate = Date.parse(new Date(Date.UTC(year, month, 1, 0, 0, 0)));
-      let endDate = Date.parse(
-        new Date(Date.UTC(year, month + 1, 0, 23, 59, 59))
+      const year = new Date(Date.now()).getYear();
+      let startDate = Date.parse(
+        new Date(Date.UTC(year, month - 1, 1, 0, 0, 0))
       );
+      let endDate = Date.parse(new Date(Date.UTC(year, month, 0, 23, 59, 59)));
 
       let report = await Report.findOne({
         agency: user.agency,
         createdAt: { ">=": startDate, "<=": endDate },
       });
       if (!report) {
-        report = await Report.create({ agency: user.agency }).fetch();
+        report = await Report.create({ agency: user.agency });
       }
 
       switch (result) {
         case 1: //dong y
+          await Report.updateOne({ id: report.id }).set({
+            accept: report.accept + 1,
+            revenue: report.revenue + package.price,
+            total: report.total + 1,
+          });
           break;
         case 2: //tu choi
           const rejection = await Result.count({
@@ -97,6 +93,11 @@ module.exports = {
           });
           if (rejection < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
+          } else {
+            await Report.updateOne({ id: report.id }).set({
+              reject: report.reject + 1,
+              total: report.total + 1,
+            });
           }
           break;
         case 3: //khong nghe may
@@ -106,6 +107,11 @@ module.exports = {
           });
           if (unanswered < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
+          } else {
+            await Report.updateOne({ id: report.id }).set({
+              unanswered: report.unanswered + 1,
+              total: report.total + 1,
+            });
           }
           break;
         case 4: //khong lien lac duoc
@@ -115,6 +121,11 @@ module.exports = {
           });
           if (unavailable < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
+          } else {
+            await Report.updateOne({ id: report.id }).set({
+              unavailable: report.unavailable + 1,
+              total: report.total + 1,
+            });
           }
           break;
         case 5: //xu ly lai
@@ -123,6 +134,10 @@ module.exports = {
           if (!date) {
             return this.res.badRequest({ message: "Thiếu ngày hẹn gọi lại!." });
           }
+          const exist = await Result.find({
+            data_id: dataId,
+            result: [5, 6, 7],
+          });
           const rehandle = await DataRehandle.create({
             user: userId,
             data: dataId,
@@ -131,6 +146,13 @@ module.exports = {
             dateToCall: date,
             note: note,
           });
+          if (!exist) {
+            await Report.updateOne({ id: report.id }).set({
+              rehandle: report.rehandle + 1,
+              total: report.total + 1,
+            });
+          }
+
           break;
         case 8: //mat don
           break;
@@ -141,95 +163,22 @@ module.exports = {
         date = undefined;
       }
       const newResult = await Result.create({
-        result,
-        dataPackage,
-        customerName,
-        address,
-        note,
         data_id: dataId,
         agency: user.agency,
         saleman: user.id,
         subscriberNumber: data.subscriberNumber,
         revenue: package.price,
         dateToCall: date,
+        result,
+        dataPackage,
+        customerName,
+        address,
+        note,
       });
-      await DataAssignment.updateOne({
+      await DataRehandle.updateOne({
         data: dataId,
         user: userId,
-        complete: false,
       }).set({ complete: true });
-
-      let rawQuery, groupedResults;
-      rawQuery = `
-        SELECT data_id, result, revenue
-        FROM result
-        WHERE agency = $1 AND createdAt > $2 AND createdAt < $3
-        GROUP BY data_id, result, revenue
-        `;
-      groupedResults = await sails.sendNativeQuery(rawQuery, [
-        user.agency,
-        startDate,
-        endDate,
-      ]);
-      const accept = groupedResults.rows.filter((x) => x.result == 1).length;
-      const reject = groupedResults.rows.filter((x) => x.result == 2).length;
-      const unanswered = groupedResults.rows.filter(
-        (x) => x.result == 3
-      ).length;
-      const unavailable = groupedResults.rows.filter(
-        (x) => x.result == 4
-      ).length;
-      const rehandle = groupedResults.rows.filter((x) =>
-        [5, 6, 7].includes(x.result)
-      ).length;
-      const lost = groupedResults.rows.filter((x) => x.result == 8).length;
-
-      const revenue = groupedResults.rows.reduce(
-        (sum, item) => sum + item.revenue,
-        0
-      );
-
-      await Report.updateOne(
-        { id: report.id },
-        {
-          total: accept + reject + unanswered + unavailable + rehandle + lost,
-          accept,
-          reject,
-          unanswered,
-          unavailable,
-          rehandle,
-          lost,
-          revenue,
-          successRate:
-            accept + reject + unanswered + unavailable + rehandle + lost > 0
-              ? Math.round(
-                  (accept /
-                    (accept +
-                      reject +
-                      unanswered +
-                      unavailable +
-                      rehandle +
-                      lost)) *
-                    100 *
-                    100
-                ) / 100
-              : 0,
-          failRate:
-            accept + reject + unanswered + unavailable + rehandle + lost > 0
-              ? Math.round(
-                  ((reject + unanswered + unavailable + lost) /
-                    (accept +
-                      reject +
-                      unanswered +
-                      unavailable +
-                      rehandle +
-                      lost)) *
-                    100 *
-                    100
-                ) / 100
-              : 0,
-        }
-      );
 
       return this.res.ok({
         message: "Tạo kết quả cuộc gọi thành công.",

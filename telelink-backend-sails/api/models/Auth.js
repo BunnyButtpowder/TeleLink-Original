@@ -10,7 +10,9 @@ module.exports = {
       model: 'Role', 
       required: true  
     },
-    isActive: { type: 'boolean', defaultsTo: true }
+    isActive: { type: 'boolean', defaultsTo: true },
+    otpCode: { type: 'string', allowNull: true },
+    otpExpiresAt: { type: 'ref', columnType: 'datetime' },
   }
 };
 

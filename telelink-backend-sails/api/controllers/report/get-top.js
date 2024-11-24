@@ -1,9 +1,9 @@
 const { fail } = require("grunt");
 
 module.exports = {
-  friendlyName: "Get revenue report by month",
+  friendlyName: "Get top 10 saleman of the month or all-time",
 
-  description: "A sum up of all call result in a month",
+  description: "Top 10 best selling salemans",
 
   inputs: {
     agencyId: {
