@@ -15,31 +15,38 @@ import 'react-toastify/dist/ReactToastify.css';
 import { initializeApp } from 'firebase/app'
 import { firebaseConfig } from '../../../../accounts/components/core/firebaseConfig'
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
-
+import { useAuth } from '../../../../../../app/modules/auth'
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
 type Props = {
   isUserLoading: boolean
-  user: User
+  user: User  
 }
+const vietnamesePhoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
 
 const token = localStorage.getItem('auth_token');
 const firebaseApp = initializeApp(firebaseConfig);
+
 
 const salesmanSchema = Yup.object().shape({
   auth: Yup.object().shape({
     username: Yup.string().required('Vui lòng điền vào trường này'),
     email: Yup.string()
       .email('Sai định dạng email')
-      .min(3, 'Minimum 3 symbols')
-      .max(50, 'Maximum 50 symbols')
+      .min(3, 'Cần tối thiểu 3 ký tự')
+    .max(50, 'Cần tối đa 50 ký tự')
       .required('Vui lòng điền vào trường này'),
-    password: Yup.string().required('Vui lòng nhập mật khẩu'),
+    password: Yup.string()
+    .min(3, 'Cần tối thiểu 3 ký tự')
+    .max(50, 'Cần tối đa 50 ký tự')
+    .required('Vui lòng nhập mật khẩu'),
     isActive: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
     role: Yup.number().required('Vui lòng chọn quyền'),
   }),
-  fullName: Yup.string().min(3, 'Minimum 3 symbols').required('Vui lòng điền vào trường này'),
-  phoneNumber: Yup.string().nullable(),
+  fullName: Yup.string().min(3, 'Cần tối thiểu 3 ký tự').required('Vui lòng điền vào trường này'),
+  phoneNumber: Yup.string()
+  .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
+  .required('Vui lòng điền vào trường này'),
   address: Yup.string().nullable(),
   dob: Yup.string().nullable(),
   gender: Yup.string().nullable(),
@@ -49,20 +56,26 @@ const salesmanSchema = Yup.object().shape({
   avatar: Yup.string().nullable(),
 })
 
+
 const agencySchema = Yup.object().shape({
   auth: Yup.object().shape({
     username: Yup.string().required('Vui lòng điền vào trường này'),
     email: Yup.string()
       .email('Sai định dạng email')
-      .min(3, 'Minimum 3 symbols')
-      .max(50, 'Maximum 50 symbols')
+      .min(3, 'Cần tối thiểu 3 ký tự')
+    .max(50, 'Cần tối đa 50 ký tự')
       .required('Vui lòng điền vào trường này'),
-    password: Yup.string().required('Vui lòng nhập mật khẩu'),
+    password: Yup.string()
+    .min(3, 'Cần tối thiểu 3 ký tự')
+    .max(50, 'Cần tối đa 50 ký tự')
+    .required('Vui lòng nhập mật khẩu'),
     isActive: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
     role: Yup.number().required('Vui lòng chọn quyền'),
   }),
-  fullName: Yup.string().min(3, 'Minimum 3 symbols').required('Vui lòng điền vào trường này'),
-  phoneNumber: Yup.string().nullable(),
+  fullName: Yup.string().min(3,'Cần tối thiểu 3 ký tự').required('Vui lòng điền vào trường này'),
+  phoneNumber: Yup.string()
+  .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
+  .required('Vui lòng điền vào trường này'),
   address: Yup.string().nullable(),
   dob: Yup.string().nullable(),
   gender: Yup.string().nullable(),
@@ -75,10 +88,12 @@ const agencySchema = Yup.object().shape({
 
 const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   const intl = useIntl();
-  const { setItemIdForUpdate } = useListView()
-  const { refetch } = useQueryResponse()
+  const { setItemIdForUpdate } = useListView();
+  const { refetch } = useQueryResponse();
+  const { currentUser, setCurrentUser } = useAuth();
 
-  // Define the roles and configurations
+  const agency = currentUser?.agency?.id;
+
   const roleConfig: { [key: number]: string } = {
     1: 'admin',
     2: 'agency',
@@ -89,18 +104,21 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   const [agencies, setAgencies] = useState<Array<{ id: ID; name: string }>>([]);
 
   useEffect(() => {
-    axios.get(`${API_URL}/agencys/getall`).then((response) => {
-      const agenciesData = response.data.data;
-      if (Array.isArray(agenciesData)) {
-        setAgencies(agenciesData);
-      } else {
-        console.error('Unexpected data format:', agenciesData);
+    axios
+      .get(`${API_URL}/agencys/getall`)
+      .then((response) => {
+        const agenciesData = response.data.data;
+        if (Array.isArray(agenciesData)) {
+          setAgencies(agenciesData);
+        } else {
+          console.error('Unexpected data format:', agenciesData);
+          setAgencies([]);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching agencies: ', error);
         setAgencies([]);
-      }
-    }).catch((error) => {
-      console.error('Error fetching agencies: ', error);
-      setAgencies([]);
-    });
+      });
   }, []);
 
   const [userForEdit, setUserForEdit] = useState<User>({
@@ -125,21 +143,19 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
     },
   });
 
-
   const cancel = (withRefresh?: boolean) => {
     if (withRefresh) {
-      refetch()
+      refetch();
     }
-    setItemIdForUpdate(undefined)
-  }
+    setItemIdForUpdate(undefined);
+  };
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const storage = getStorage(firebaseApp);
 
-  const userAvatarImg = userForEdit.avatar
+  const userAvatarImg = userForEdit.avatar;
 
-  // Handling image file change
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setSelectedFile(file);
@@ -148,31 +164,30 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
       const preview = URL.createObjectURL(file);
       setPreviewUrl(preview);
     }
-  }
+  };
 
   const uploadImage = async (file: File) => {
     const storageRef = ref(storage, `avatars/${userForEdit?.id || 'new_user'}_${file.name}`);
-    console.log("Storage reference created:", storageRef);
+    console.log('Storage reference created:', storageRef);
     try {
       await uploadBytes(storageRef, file);
-      console.log("File uploaded successfully!", file.name);
+      console.log('File uploaded successfully!', file.name);
 
       const downloadURL = await getDownloadURL(storageRef);
-      console.log("Download URL: ", downloadURL);
+      console.log('Download URL: ', downloadURL);
       return downloadURL;
     } catch (error) {
-      console.error("Error uploading file: ", error);
+      console.error('Error uploading file: ', error);
       return null;
     }
   };
 
-  // Salesman formik form
   const salemanFormik = useFormik<User>({
     initialValues: userForEdit,
     enableReinitialize: true,
     validationSchema: salesmanSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      setSubmitting(true)
+      setSubmitting(true);
       try {
         let avatarUrl = values.avatar;
         if (selectedFile) {
@@ -187,22 +202,29 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
 
         let response;
         if (isNotEmpty(values.id)) {
-          response = await updateUser(values, token || '')
-          toast.success('Cập nhật thành công!')
+          response = await updateUser(values, token || '');
+          toast.success('Cập nhật thành công!');
         } else {
-          response = await createUser(values)
-          toast.success('Tạo tài khoản thành công!')
+          response = await createUser(values);
+          toast.success('Tạo tài khoản thành công!');
         }
       } catch (error) {
-        const errorMessage = (error as any).response?.data?.message
+        const errorMessage = (error as any).response?.data?.message;
         toast.error(errorMessage);
-        console.error("From UserEditModalForm: ", errorMessage)
+        console.error('From UserEditModalForm: ', errorMessage);
       } finally {
-        setSubmitting(false)
-        cancel(true)
+        setSubmitting(false);
+        cancel(true);
       }
     },
-  })
+  });
+
+  // Add the separated useEffect here
+  useEffect(() => {
+    if (currentUser?.auth?.role === 2) {
+      salemanFormik.setFieldValue('agency.id', currentUser?.agency?.id || null);
+    }
+  }, [currentUser?.auth?.role, currentUser?.agency?.id]);
 
   // useEffect(() => {
   //   console.log('Formik state:', {
@@ -272,6 +294,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   return (
     <>
       {/* Role Selection */}
+    {!currentUser?.agency && (
       <div className='mb-7'>
         <label className='required fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.ROLE' })}</label>
         <div className='d-flex'>
@@ -301,7 +324,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
           </label>
         </div>
       </div>
-
+    )}
       {/* Form for Salesman */}
       {selectedRole === 'salesman' ? (
         <form id='kt_modal_add_user_form' className='form' onSubmit={salemanFormik.handleSubmit} noValidate>
@@ -626,46 +649,48 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
             {/* end::Input group */}
 
             {/* begin::Input group */}
-            <div className='fv-row mb-7'>
-              {/* begin::Label */}
-              <label className=' fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AGENCY' })}</label>
-              {/* end::Label */}
+            {currentUser?.auth?.role !== 2 ? (
+              <div className='fv-row mb-7'> 
+                {/* begin::Label */}
+                <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AGENCY' })}</label>
+                {/* end::Label */}
 
-              {/* begin::Dropdown */}
-              <select
-                // {...salemanFormik.getFieldProps('agency.id')}
-                value={salemanFormik.values.agency?.id || ''}
-                onChange={(e) => {
-                  const selectedAgencyId = e.target.value ? parseInt(e.target.value) : null;
-                  salemanFormik.setFieldValue('agency.id', selectedAgencyId);
-                }}
-                className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
-                  { 'is-invalid': salemanFormik.touched.agency && salemanFormik.errors.agency },
-                  { 'is-valid': salemanFormik.touched.agency && !salemanFormik.errors.agency }
+                {/* begin::Dropdown */}
+                <select
+                  value={salemanFormik.values.agency?.id || ''}
+                  onChange={(e) => {
+                    const selectedAgencyId = e.target.value ? parseInt(e.target.value) : null;
+                    salemanFormik.setFieldValue('agency.id', selectedAgencyId);
+                  }}
+                  className={clsx(
+                    'form-control form-control-solid mb-3 mb-lg-0',
+                    { 'is-invalid': salemanFormik.touched.agency && salemanFormik.errors.agency },
+                    { 'is-valid': salemanFormik.touched.agency && !salemanFormik.errors.agency }
+                  )}
+                  name='agency.id'
+                  disabled={salemanFormik.isSubmitting || isUserLoading}
+                >
+                  <option value='' disabled>{intl.formatMessage({ id: 'SELECT.AGENCY' })}</option>
+                  {agencies.length > 0 ? (
+                    agencies.map((agency) => (
+                      <option key={agency.id} value={agency.id ?? ''}>
+                        {agency.name}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled>{intl.formatMessage({ id: 'NO.AGENCY' })}</option>
+                  )}
+                </select>
+                {salemanFormik.touched.agency && salemanFormik.errors.agency && (
+                  <div className='fv-plugins-message-container'>
+                    <span role='alert'>{salemanFormik.errors.agency}</span>
+                  </div>
                 )}
-                name='agency.id'
-                disabled={salemanFormik.isSubmitting || isUserLoading}
-              >
-                <option value='' disabled>{intl.formatMessage({ id: 'SELECT.AGENCY' })}</option>
-                {agencies.length > 0 ? (
-                  agencies.map((agency) => (
-                    <option key={agency.id} value={agency.id ?? ''}>
-                      {agency.name}
-                    </option>
-                  ))
-                ) : (
-                  <option disabled>{intl.formatMessage({ id: 'NO.AGENCY' })}</option>
-                )}
-              </select>
-              {salemanFormik.touched.agency && salemanFormik.errors.agency && (
-                <div className='fv-plugins-message-container'>
-                  <span role='alert'>{salemanFormik.errors.agency}</span>
-                </div>
-              )}
-              {/* end::Dropdown */}
-            </div>
+                {/* end::Dropdown */}
+              </div>
+            ) : null}
             {/* end::Input group */}
+
 
             {/* begin::Input group */}
             <div className='mb-7'>
