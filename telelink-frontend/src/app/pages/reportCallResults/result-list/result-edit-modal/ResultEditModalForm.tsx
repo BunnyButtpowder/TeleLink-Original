@@ -22,13 +22,13 @@ const vietnamesePhoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
 
 const editResultSchema = Yup.object().shape({
   result: Yup.number().required('Vui lòng chọn kết quả cuộc gọi'),
-  dataPackage: Yup.string().nullable(),
+  dataPackage: Yup.number().required('Vui lòng chọn gói cước'),
   customerName: Yup.string().required('Vui lòng nhập tên khách hàng'),
   address: Yup.string().nullable(),
   note: Yup.string().nullable(),
-  subscriberNumber: Yup.string()
-  .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
-  .required('Vui lòng điền số điện thoại'),
+  // subscriberNumber: Yup.string()
+  // .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
+  // .nullable(),
   revenue: Yup.number().nullable(),
   dateToCall: Yup.string().nullable(),
 })
@@ -75,7 +75,7 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
     customerName: result.customerName || initialCallResult.customerName,
     address: result.address || initialCallResult.address,
     note: result.note || initialCallResult.note,
-    subscriberNumber: result.subscriberNumber || initialCallResult.subscriberNumber,
+    // subscriberNumber: result.subscriberNumber || initialCallResult.subscriberNumber,
     revenue: result.revenue || initialCallResult.revenue,
     dateToCall: result.dateToCall || initialCallResult.dateToCall,
   })
@@ -202,33 +202,6 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
             </div>
             {/* end::Customer Name */}
 
-            {/* begin::Phone Number */}
-            <div className='fv-row mb-7'>
-              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.PHONE' })}</label>
-
-              <input
-                placeholder='Số điện thoại'
-                {...formik.getFieldProps('subscriberNumber')}
-                className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
-                  { 'is-invalid': formik.touched.subscriberNumber && formik.errors.subscriberNumber },
-                  {
-                    'is-valid': formik.touched.subscriberNumber && !formik.errors.subscriberNumber,
-                  }
-                )}
-                type='text'
-                name='subscriberNumber'
-                autoComplete='off'
-                disabled={formik.isSubmitting || isUserLoading}
-              />
-              {formik.touched.subscriberNumber && formik.errors.subscriberNumber && (
-                <div className='fv-plugins-message-container'>
-                  <span role='alert'>{formik.errors.subscriberNumber}</span>
-                </div>
-              )}
-            </div>
-            {/* end::Phone Number */}
-
             {/* begin::Customer address */}
             <div className='fv-row mb-7'>
               <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'CUSTOMER.ADDRESS' })}</label>
@@ -274,7 +247,7 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
                   <option>Loading packages...</option>
                 ) : (
                   packages.map((pack) => (
-                    <option key={pack.id} value={pack.title}>
+                    <option key={pack.id} value={pack.id}>
                       {pack.title}
                     </option>
                   )))
@@ -289,40 +262,6 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
               )}
             </div>
             {/* end::Package Selection */}
-
-            {/* begin::Input group */}
-            <div className='fv-row mb-7'>
-              {/* begin::Label */}
-              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'PACKAGE_REVENUE' })}</label>
-              {/* end::Label */}
-
-              {/* begin::Input */}
-              <div className='position-relative'>
-                <input
-                  placeholder= '0'
-                  {...formik.getFieldProps('revenue')}
-                  className={clsx(
-                    'form-control form-control-solid mb-3 mb-lg-0',
-                    { 'is-invalid': formik.touched.revenue && formik.errors.revenue },
-                    {
-                      'is-valid': formik.touched.revenue && !formik.errors.revenue,
-                    }
-                  )}
-                  type='number'
-                  name='revenue'
-                  autoComplete='off'
-                  disabled={formik.isSubmitting || isUserLoading}
-                />
-                <span className='position-absolute top-50 end-0 translate-middle-y pe-3'>VND</span>
-              </div>
-              {/* end::Input */}
-              {formik.touched.revenue && formik.errors.revenue && (
-                <div className='fv-plugins-message-container'>
-                  <span role='alert'>{formik.errors.revenue}</span>
-                </div>
-              )}
-            </div>
-            {/* end::Input group */}
 
             <div className='fv-row mb-7'>
               <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NOTE' })}</label>

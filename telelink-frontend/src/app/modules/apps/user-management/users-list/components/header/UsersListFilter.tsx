@@ -107,7 +107,7 @@ const UsersListFilter = () => {
               <option value=''></option>
               <option value='1'>Admin</option>
               <option value='2'>Chi nhánh</option>
-              <option value='3'>Salesman</option>
+              <option value='3'>Nhân viên</option>
             </select>
           </div>
           {/* end::Input group */}

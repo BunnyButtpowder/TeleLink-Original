@@ -16,7 +16,7 @@ const getUsers = (params: {searchTermAuth?: string, sort?: string, order?: strin
     .then((response: AxiosResponse<UsersQueryResponse>) => response.data);
 };
 
-const getSalesmenByAgency = (params: {searchTermAuth?: string, sort?: string, order?: string, role?: number, gender?: string, agency?: number}) : Promise<UsersQueryResponse> => {
+const getSalesmenByAgency = (params: {searchTermAuth?: string, sort?: string, order?: string, agencyId?: number}) : Promise<UsersQueryResponse> => {
   return axios
     .get(`${API_URL}/users/agency`, {params})
     .then((response: AxiosResponse<UsersQueryResponse>) => response.data);
