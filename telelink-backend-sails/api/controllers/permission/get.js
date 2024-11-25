@@ -22,9 +22,11 @@ module.exports = {
     const { role_id } = inputs;
     const role = await Role.findOne({id: role_id})
     const result = await Permission.find({id: {in : role.permissions}})
-    return res.ok(result);
+    return res.ok({
+      message: `list permissions by role:`,
+      data: result,
+      count: result.length
+    });
 
   }
-
-
 };

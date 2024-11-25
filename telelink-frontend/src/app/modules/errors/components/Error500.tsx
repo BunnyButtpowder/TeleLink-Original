@@ -1,12 +1,12 @@
-import {FC} from 'react'
-import {Link} from 'react-router-dom'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
+import { toAbsoluteUrl } from '../../../../_metronic/helpers'
 
 const Error500: FC = () => {
   return (
     <>
       {/* begin::Title */}
-      <h1 className='fw-bolder fs-2qx text-gray-900 mb-4'>System Error</h1>
+      <h1 className='fw-bolder fs-2qx text-gray-900 mb-4'>Lỗi hệ thống!</h1>
       {/* end::Title */}
 
       {/* begin::Text */}
@@ -33,7 +33,7 @@ const Error500: FC = () => {
       {/* begin::Link */}
       <div className='mb-0'>
         <Link to='/dashboard' className='btn btn-sm btn-primary'>
-          Return Home
+          Trở về trang chủ
         </Link>
       </div>
       {/* end::Link */}
@@ -41,4 +41,4 @@ const Error500: FC = () => {
   )
 }
 
-export {Error500}
+export { Error500 }
