@@ -22,7 +22,7 @@ export type FilterState = {
     type?: string
     provider?: string
     saleman?: number
-    agencyId?: number
+    agencyId?: string
     result?: number
     gender?: string
     agency?: number 

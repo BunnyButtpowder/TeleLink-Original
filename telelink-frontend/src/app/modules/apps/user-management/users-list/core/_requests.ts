@@ -111,9 +111,12 @@ const deleteUser = (userId: ID): Promise<void> => {
   return axios.delete(`${DELETE_USER_URL}${userId}`).then(() => { });
 };
 
-const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
-  const requests = userIds.map((id) => axios.delete(`${USER_URL}/${id}`));
-  return axios.all(requests).then(() => { });
+const deleteSelectedUsers = (ids: Array<ID>): Promise<void> => {
+  return axios
+    .delete(`${API_URL}/users/many-delete`, {
+      data: { ids }, 
+    })
+    .then(() => {});
 };
 
 export {
