@@ -10,14 +10,54 @@ const DataListFilter = () => {
   const { updateState } = useQueryRequest()
   const { isLoading } = useQueryResponse()
   const [placeOfIssue, setPlaceOfIssue] = useState<string | undefined>()
+  const [placeOfIssues, setPlaceOfIssues] = useState<string[]>([]);
   const [networkName, setNetworkName] = useState<string | undefined>()
   const intl = useIntl()
   const { refetch } = useQueryResponse();
 
-  useEffect(() => {
-    MenuComponent.reinitialization()
-  }, [])
 
+  const API_URL = import.meta.env.VITE_APP_API_URL;
+
+  useEffect(() => {
+    MenuComponent.reinitialization();
+  
+    const fetchPlaceOfIssues = async () => {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch(`${API_URL}/data/getall`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
+        const result = await response.json();
+  
+        if (result && result.data) {
+          // Explicitly map the result.data to ensure it contains strings
+          const uniquePlaceOfIssues = Array.from(
+            new Set(
+              (result.data as Array<{ placeOfIssue: string }>) // Type assertion here
+                .map(item => item.placeOfIssue)
+                .filter(Boolean) // Remove any falsy values
+            )
+          );
+  
+          // Update the state with unique placeOfIssues (string array)
+          setPlaceOfIssues(uniquePlaceOfIssues);
+        }
+      } catch (error) {
+        console.error('Error fetching placeOfIssues:', error);
+      }
+    };
+  
+    fetchPlaceOfIssues();
+  }, []);
+  
   const resetData = () => {
     setPlaceOfIssue('')
     setNetworkName('')
@@ -68,22 +108,24 @@ const DataListFilter = () => {
         {/* begin::Content */}
         <div className='px-7 py-5' data-kt-user-table-filter='form'>
           {/* begin::Input group */}
-          <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Nơi cấp data:</label>
+          <div className="mb-10">
+            <label className="form-label fs-6 fw-bold">Nơi cấp data:</label>
             <select
-              className='form-select form-select-solid fw-bolder'
-              data-kt-select2='true'
-              data-placeholder='Select option'
-              data-allow-clear='true'
-              data-kt-user-table-filter='role'
-              data-hide-search='true'
+              className="form-select form-select-solid fw-bolder"
+              data-kt-select2="true"
+              data-placeholder="Select option"
+              data-allow-clear="true"
+              data-kt-user-table-filter="role"
+              data-hide-search="true"
               onChange={(e) => setPlaceOfIssue(e.target.value)}
               value={placeOfIssue}
             >
-              <option value=''></option>
-              <option value='Hà Nội'>Hà Nội</option>
-              <option value='Đà Nẵng'>Đà Nẵng</option>
-              <option value='TP Hồ Chí Minh'>TP Hồ Chí Minh</option>
+              <option value=""></option>
+              {placeOfIssues.map((issue) => (
+                <option key={issue} value={issue}>
+                  {issue}
+                </option>
+              ))}
             </select>
           </div>
           {/* end::Input group */}
@@ -105,7 +147,6 @@ const DataListFilter = () => {
               <option value='Viettel'>Viettel</option>
               <option value='Vinaphone'>Vinaphone</option>
               <option value='Mobifone'>Mobifone</option>
-              <option value='Vietnamobile'>Vietnamobile</option>
             </select>
           </div>
           {/* end::Input group */}

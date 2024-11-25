@@ -9,28 +9,27 @@ import { changePassword } from '../../../../../../app/modules/accounts/component
 
 const emailFormValidationSchema = Yup.object().shape({
   newEmail: Yup.string()
-    .email('Wrong email format')
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
+  .min(3, 'Cần tối thiểu 3 ký tự')
+  .max(50, 'Cần tối đa 50 ký tự')
     .required('Email is required'),
   confirmPassword: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
+  .min(3, 'Cần tối thiểu 3 ký tự')
+  .max(50, 'Cần tối đa 50 ký tự')
     .required('Password is required'),
 })
 
 const passwordFormValidationSchema = Yup.object().shape({
   currentPassword: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
+  .min(3, 'Cần tối thiểu 3 ký tự')
+  .max(50, 'Cần tối đa 50 ký tự')
     .required('Mật khẩu không được để trống'),
   newPassword: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
+  .min(3, 'Cần tối thiểu 3 ký tự')
+  .max(50, 'Cần tối đa 50 ký tự')
     .required('Mật khẩu không được để trống'),
   passwordConfirmation: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
+  .min(3, 'Cần tối thiểu 3 ký tự')
+  .max(50, 'Cần tối đa 50 ký tự')
     .required('Mật khẩu không được để trống')
     .oneOf([Yup.ref('newPassword')], 'Mật khẩu không khớp'),
 })

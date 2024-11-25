@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
-import { MenuComponent } from '../../../../../../_metronic/assets/ts/components'
-import { initialResultQueryState, KTIcon } from '../../../../../../_metronic/helpers'
-import { useQueryRequest } from '../../core/QueryRequestProvider'
-import { useQueryResponse } from '../../core/QueryResponseProvider'
-import { useIntl } from 'react-intl'
-import { getAllAgencies } from '../../../../data/data-list/core/_requests'
+import {useEffect, useState} from 'react'
+import {MenuComponent} from '../../../../../../_metronic/assets/ts/components'
+import {initialResultQueryState, KTIcon} from '../../../../../../_metronic/helpers'
+import {useQueryRequest} from '../../core/QueryRequestProvider'
+import {useQueryResponse} from '../../core/QueryResponseProvider'
+import {useIntl} from 'react-intl'
 import { useAuth } from '../../../../../../app/modules/auth'
 import { parse } from 'path'
 
@@ -14,49 +13,125 @@ const ResultListFilter = () => {
   const { currentUser } = useAuth()
   const [month, setMonth] = useState<string | undefined>('')
   const [year, setYear] = useState<string | undefined>('')
-  const [agencyId, setAgencyId] = useState<number | undefined>()
+  const [agencyId, setAgencyId] = useState<string | undefined>()
+  const [agencies, setAgencies] = useState<{ id: number, name: string }[]>([]) // State to hold agency list
+  const [salesmen, setSalesmen] = useState<{ id: number, fullName: string }[]>([]) // State to hold salesmen list
   const [result, setResult] = useState<number | undefined>()
-  const [agencies, setAgencies] = useState<{ id: number, name: string }[]>([])
-  const [isAdmin] = useState(currentUser?.auth?.role === 1);
+  const [saleman, setSaleman] = useState<number | undefined>()
   const intl = useIntl()
   const { refetch } = useQueryResponse();
+  
 
-  const fetchAgencies = async () => {
-    try {
-      const agencies = await getAllAgencies();
-      setAgencies(agencies.data);
-    } catch (error) {
-      console.error('Failed to fetch agencies:', error);
-    }
-  }
+  const API_URL = import.meta.env.VITE_APP_API_URL;
+
+  const userRole = currentUser?.auth.role;
+  const agencyID = currentUser?.agency?.id;
 
   useEffect(() => {
-    if (isAdmin) {
-      fetchAgencies();
-    }
+    
     MenuComponent.reinitialization()
-  }, [isAdmin])
+    if (userRole !== 3) {
 
-  const resetResult = () => {
-    setMonth('')
-    setYear('')
+    const fetchAgencies = async () => {
+      try {
+        const token = localStorage.getItem('auth_token')
+        const response = await fetch(`${API_URL}/agencys/getall`, {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Adjust if a different auth scheme is used
+            'Content-Type': 'application/json'
+          }
+        })
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+  
+        const result = await response.json()
+        if (result && result.data) {
+          setAgencies(result.data)
+        }
+      } catch (error) {
+        console.error('Error fetching agencies:', error)
+      }
+    }
+
+    fetchAgencies()
+    }
+  }, [userRole])
+
+  useEffect(() => {
+    const fetchSalesmen = async () => {
+        if (userRole === 3 || !agencyId) {
+          setSalesmen([])
+          return
+        }
+      if (!agencyId) {
+        setSalesmen([]) // Clear the salesmen list if no agency is selected
+        return
+      }
+
+      try {
+        const token = localStorage.getItem('auth_token')
+        const response = await fetch(`${API_URL}/users/agency?agencyId=${agencyId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+
+        const result = await response.json()
+        if (result && result.employees) {
+          setSalesmen(result.employees.map((employee: any) => ({ id: employee.id, fullName: employee.fullName })))
+        }
+      } catch (error) {
+        console.error('Error fetching salesmen:', error)
+      }
+    }
+
+    fetchSalesmen()
+  }, [agencyId,userRole]) 
+
+  useEffect(() => {
+    // Automatically fetch salesmen for the current agency when role = 2
+    if (userRole === 2 && agencyID) {
+      setAgencyId(agencyId) 
+    }
+  }, [userRole, agencyID])
+
+  const resetData = () => {
+    setMonth(undefined)
+    setYear(undefined)
     setAgencyId(undefined)
     setResult(undefined)
+    setSaleman(undefined)
     updateState({
-      ...initialResultQueryState
+      filter: {
+        month: undefined,
+        year: undefined,
+        agencyId: undefined,
+        result: undefined,
+        saleman: undefined,
+      }, ...initialResultQueryState
     })
     refetch()
   }
 
-  const filterResult = () => {
+
+  const filterData = () => {
     const date = month && year ? `${month}-${year}` : '';
+    console.log("Applying filters:", { agencyId, result, saleman, date });
     updateState({
-      filter: { date, agencyId, result },
-    })
+      filter: {agencyId, result, saleman, date},
+    });
     refetch();
   }
 
   return (
+    
     <>
       {/* begin::Filter Button */}
       <button
@@ -120,63 +195,72 @@ const ResultListFilter = () => {
           </div>
 
           {/* begin::Input group */}
+          {userRole !== 2 && userRole !== 3 && (
+            <div className='mb-10'>
+              <label className='form-label fs-6 fw-bold'>Chi nhánh:</label>
+              <select
+                className='form-select form-select-solid fw-bolder'
+                onChange={(e) => setAgencyId(e.target.value)}
+                value={agencyId}
+              >
+                <option value=''></option>
+                {agencies.map((agency) => (
+                  <option key={agency.id} value={agency.id}>
+                    {agency.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {userRole !== 3 && (
+            <div className='mb-10'>
+              <label className='form-label fs-6 fw-bold'>Nhân viên bán hàng:</label>
+              <select
+                className='form-select form-select-solid fw-bolder'
+                onChange={(e) => setSaleman(e.target.value ? parseInt(e.target.value, 10) : undefined)}
+                value={saleman}
+                disabled={!agencyId}
+              >
+                <option value=''></option>
+                {salesmen.map((salesman) => (
+                  <option key={salesman.id} value={salesman.id}>
+                    {salesman.fullName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          {/* end::Input group */}
+
+          {/* begin::Input group */}
           <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Kết quả:</label>
+            <label className='form-label fs-6 fw-bold'>Kết quả: </label>
             <select
               className='form-select form-select-solid fw-bolder'
               data-kt-select2='true'
               data-placeholder='Select option'
               data-allow-clear='true'
-              data-kt-user-table-filter='role'
+              data-kt-user-table-filter='two-step'
               data-hide-search='true'
               onChange={(e) => setResult(e.target.value ? parseInt(e.target.value, 10) : undefined)}
-              value={result ?? ''}
+              value={result}
             >
               <option value=''></option>
               <option value='1'>Đồng ý</option>
-              <option value='2'>Không đồng ý</option>
-              <option value='3'>Không bắt máy</option>
-              <option value='4'>Không liên lạc được</option>
               <option value='5'>Hẹn gọi lại sau</option>
               <option value='6'>Đang tư vấn</option>
               <option value='7'>Chờ nạp thẻ, chuyển khoản</option>
-              <option value='8'>Mất đơn</option>
             </select>
           </div>
           {/* end::Input group */}
-
-          {isAdmin && (
-            <>
-              {/* begin::Input group */}
-              < div className='mb-10'>
-                <label className='form-label fs-6 fw-bold'>Chi nhánh:</label>
-                <select
-                  className='form-select form-select-solid fw-bolder'
-                  data-kt-select2='true'
-                  data-placeholder='Select option'
-                  data-allow-clear='true'
-                  data-kt-user-table-filter='two-step'
-                  data-hide-search='true'
-                  onChange={(e) => setAgencyId(e.target.value ? parseInt(e.target.value, 10) : undefined)}
-                  value={agencyId ?? ''}
-                >
-                  <option value=''></option>
-                  {agencies.map(agency => (
-                    <option key={agency.id} value={agency.id}>{agency.name}</option>
-                  ))}
-                </select>
-              </div>
-              {/* end::Input group */}
-            </>
-          )}
-
 
           {/* begin::Actions */}
           <div className='d-flex justify-content-end'>
             <button
               type='button'
               disabled={isLoading}
-              onClick={resetResult}
+              onClick={resetData}
               className='btn btn-light btn-active-light-primary fw-bold me-2 px-6'
               data-kt-menu-dismiss='true'
               data-kt-user-table-filter='reset'
@@ -186,7 +270,7 @@ const ResultListFilter = () => {
             <button
               disabled={isLoading}
               type='button'
-              onClick={filterResult}
+              onClick={filterData}
               className='btn btn-primary fw-bold px-6'
               data-kt-menu-dismiss='true'
               data-kt-user-table-filter='filter'

@@ -22,11 +22,13 @@ export type FilterState = {
     type?: string
     provider?: string
     saleman?: number
-    agencyId?: number
+    agencyId?: string
     result?: number
     gender?: string
-    agency?: number
+    agency?: number 
     date?: string
+    month?: string
+    year?: string
   }
 }
 
@@ -58,6 +60,18 @@ export const initialQueryState: QueryState = {
   filter: {
     placeOfIssue: '',
     networkName: '',
+  },
+}
+
+export const initialResultState: QueryState = {
+  page: 1,
+  items_per_page: 10,
+  filter: {
+    month: undefined,
+    year: undefined,
+    agency: undefined,
+    result: undefined,
+    saleman: undefined,
   },
 }
 

@@ -19,8 +19,8 @@ type Props = {
 const resultSchema = Yup.object().shape({
   result: Yup.number().required('Vui lòng chọn kết quả cuộc gọi'),
   dataPackage: Yup.string().nullable(),
-  customerName: Yup.string().required('Vui lòng nhập tên khách hàng'),
-  address: Yup.string().required('Vui lòng nhập địa chỉ khách hàng'),
+  customerName: Yup.string().nullable(),
+  address: Yup.string().nullable(),
   note: Yup.string().nullable(),
 })
 
@@ -149,7 +149,7 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
 
             {/* begin::Customer Name */}
             <div className='fv-row mb-7'>
-              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'CUSTOMER.NAME' })}</label>
+              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'CUSTOMER.NAME' })}</label>
 
               <input
                 placeholder='Nhập tên khách hàng'

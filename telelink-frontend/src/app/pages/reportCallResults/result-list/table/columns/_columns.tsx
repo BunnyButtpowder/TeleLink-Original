@@ -43,14 +43,16 @@ const resultsColumns: ReadonlyArray<Column<CallResult>> = [
     accessor: 'createdAt',
     Cell: ({ ...props }) => {
       const timestamp = props.data[props.row.index].createdAt;
-
+  
       if (timestamp) {
-        const date = new Date(timestamp);
-        return <span>{date.toLocaleDateString('vi-VN')}</span>
+        // Ensure the timestamp is in milliseconds
+        const date = new Date(timestamp * 1000); // Multiply by 1000 if the timestamp is in seconds
+        return <span>{date.toLocaleDateString('vi-VN')}</span>;
       }
       return <span></span>;
     }
-  },
+  }
+  ,
   {
     Header: (props) => <ResultCustomHeader tableProps={props} title='Chi nhánh sales' className='min-w-125px' />,
     id: 'agency',
@@ -73,22 +75,26 @@ const resultsColumns: ReadonlyArray<Column<CallResult>> = [
     accessor: 'updatedAt',
     Cell: ({ ...props }) => {
       const timestamp = props.data[props.row.index].updatedAt;
-
+  
       if (timestamp) {
-        const date = new Date(timestamp);
+        // Convert to milliseconds if the timestamp is in seconds
+        const adjustedTimestamp = timestamp.toString().length === 10 ? timestamp * 1000 : timestamp;
+  
+        const date = new Date(adjustedTimestamp);
         const formattedDate = date.toLocaleString('vi-VN', {
           year: 'numeric',
           month: '2-digit',
           day: '2-digit',
           hour: '2-digit',
           minute: '2-digit',
-          hour12: false,
+          hour12: false, // Use 24-hour format
         });
-        return <span>{formattedDate}</span>
+        return <span>{formattedDate}</span>;
       }
-      return <span></span>; 
+      return <span></span>;
     }
-  },
+  }
+  ,
   {
     Header: (props) => (
       <ResultCustomHeader tableProps={props} title='Tên gói cước' className='min-w-125px' />

@@ -24,7 +24,7 @@ const QueryRequestProvider: FC<WithChildren> = ({children}) => {
       };
       return newState;
     });
-  }
+  };
 
   return (
     <QueryRequestContext.Provider value={{state, updateState}}>
