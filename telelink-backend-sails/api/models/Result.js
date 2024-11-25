@@ -51,12 +51,6 @@ module.exports = {
     
 
   },
-
-  afterCreate: function (value, proceed){
-    console.log(value);
-    return proceed()
-    
-  }
-
+  
 };
 
