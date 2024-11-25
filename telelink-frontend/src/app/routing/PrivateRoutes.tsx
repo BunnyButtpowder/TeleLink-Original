@@ -13,6 +13,7 @@ import { RevenuePage } from '../pages/reportRevenue/RevenuePage'
 import { ResultPage } from '../pages/reportCallResults/ResultPage'
 import { PackagePage } from '../pages/package/PackagePage'
 import { BlackListPage } from '../pages/blacklist/BlackListPage'
+import { PermissionPage } from '../pages/permission/PermissionPage'
 // import { PlanPage } from '../pages/plan/PlanPage'
 
 const PrivateRoutes = () => {
@@ -130,10 +131,10 @@ const PrivateRoutes = () => {
           }
         />
         <Route
-          path='blacklist/report'
+          path='permissions'
           element={
             <SuspensedView>
-              {/* <BlackListReportPage /> */}
+              <PermissionPage />
             </SuspensedView>
           }
         />

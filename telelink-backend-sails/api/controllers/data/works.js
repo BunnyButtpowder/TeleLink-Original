@@ -26,6 +26,7 @@ module.exports = {
   fn: async function (inputs) {
     let { dataId, callResult, date } = inputs;
     const userId = this.req.user.id;
+    console.log('Request User:', this.req.user);
     let { result, dataPackage, customerName, address, note } = callResult;
 
     try {

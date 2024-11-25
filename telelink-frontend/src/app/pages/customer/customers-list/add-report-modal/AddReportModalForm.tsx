@@ -20,7 +20,7 @@ const resultSchema = Yup.object().shape({
   result: Yup.number().required('Vui lòng chọn kết quả cuộc gọi'),
   dataPackage: Yup.string().nullable(),
   customerName: Yup.string().required('Vui lòng nhập tên khách hàng'),
-  address: Yup.string().nullable(),
+  address: Yup.string().required('Vui lòng nhập địa chỉ khách hàng'),
   note: Yup.string().nullable(),
 })
 
@@ -76,9 +76,9 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
         let response;
         if (dataId) {
           response = await createCallResult(values, dataId, date);
+          refetch();
           localStorage.removeItem(`dataDetails_${currentUser?.id}`);
           setDataDetails(undefined);
-          refetch()
           onClose()
           toast.success('Gửi báo cáo thành công!')
         }
