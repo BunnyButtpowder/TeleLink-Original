@@ -9,6 +9,7 @@ import { DataDistributionModal } from '../../data-distribution-modal/DataDistrib
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQueryResponse } from '../../core/QueryResponseProvider'
+import { useAuth } from '../../../../../../app/modules/auth'
 
 const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = ({ onUploadComplete }) => {
   const intl = useIntl()
@@ -17,6 +18,8 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
   const [progress, setProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input element
   const { refetch } = useQueryResponse()
+  const { currentUser } = useAuth()
+  const userRole = currentUser?.auth.role
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files?.[0];
@@ -78,28 +81,32 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
         <DataListFilter />
 
-        {/* begin::Upload data */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".xlsx, .xls"
-          onChange={handleFileChange}
-          id="fileInput"
-          style={{ display: 'none' }}
-          disabled={uploading}
-        />
-        <label htmlFor="fileInput">
-          <button
-            type="button"
-            className="btn btn-light-primary me-3"
-            disabled={uploading}
-            onClick={triggerFileUpload}
-          >
-            <KTIcon iconName="exit-up" className="fs-2" />
-            {uploading ? 'Đang tải lên...' : 'Upload dữ liệu'}
-          </button>
-        </label>
-        {/* end::Upload data */}
+        {userRole === 1 && (
+          <>
+            {/* begin::Upload data */}
+            < input
+              ref={fileInputRef}
+              type="file"
+              accept=".xlsx, .xls"
+              onChange={handleFileChange}
+              id="fileInput"
+              style={{ display: 'none' }}
+              disabled={uploading}
+            />
+            <label htmlFor="fileInput">
+              <button
+                type="button"
+                className="btn btn-light-primary me-3"
+                disabled={uploading}
+                onClick={triggerFileUpload}
+              >
+                <KTIcon iconName="exit-up" className="fs-2" />
+                {uploading ? 'Đang tải lên...' : 'Upload dữ liệu'}
+              </button>
+            </label>
+            {/* end::Upload data */}
+          </>
+        )}
 
         {/* begin::Distribute Data */}
         <button type='button' className='btn btn-primary' onClick={openDataDistributionModal}>

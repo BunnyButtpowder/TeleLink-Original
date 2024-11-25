@@ -39,8 +39,10 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
 
   const handleSetDataDetails = (data: Customer | undefined) => {
     setDataDetails(data);
-    if (currentUser) {
+    if (currentUser && data) {
       localStorage.setItem(`dataDetails_${currentUser.id}`, JSON.stringify(data));
+    } else if (currentUser) {
+      localStorage.removeItem(`dataDetails_${currentUser.id}`);
     }
   };
 

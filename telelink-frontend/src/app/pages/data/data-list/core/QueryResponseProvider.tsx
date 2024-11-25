@@ -1,5 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
-/* eslint-disable react-hooks/exhaustive-deps */
+import { useNavigate } from 'react-router-dom';
 import { FC, useContext, useState, useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import {
@@ -25,12 +24,19 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   const agencyId = currentUser?.agency?.id;
   const [query, setQuery] = useState<string>(stringifyRequestQuery(state))
   const updatedQuery = useMemo(() => stringifyRequestQuery(state), [state])
+  const navigate= useNavigate()
 
   useEffect(() => {
     if (query !== updatedQuery) {
       setQuery(updatedQuery)
     }
   }, [updatedQuery])
+
+  useEffect(() => {
+    if (userRole === 3) {
+      navigate('/error/404');
+    }
+  }, [userRole, navigate])
 
   const fetchData = () => {
     const { search = '', sort = '', order = '', filter = {} } = state;

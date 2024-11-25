@@ -4,23 +4,40 @@ const fs = require('fs');
 module.exports = {
   importData: async function (req, res, filePath) {
     try {
+
       const workbook = XLSX.readFile(filePath);
       const sheetName = workbook.SheetNames[0];
       const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
 
+      if (!worksheet || worksheet.length === 0) {
+        throw new Error("File Excel không chứa dữ liệu.");
+      }
+
+
       function normalizeString(str) {
         return str
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/\s+/g, '')
-          .replace(/[\n\t\r]/g, '')
-          .replace(/đ/g, 'd')
-          .toLowerCase();
+          ?.normalize('NFD')
+          ?.replace(/[\u0300-\u036f]/g, '')
+          ?.replace(/\s+/g, '')
+          ?.replace(/đ/g, 'd')
+          ?.toLowerCase();
       }
+
 
       const headers = worksheet[0].map((header) => normalizeString(header));
 
-      console.log('Headers after normalization:', headers);
+
+      const cleanedWorksheet = worksheet.slice(1).filter((row) =>
+        row.some((cell) => cell && cell.toString().trim() !== '')
+      );
+      console.log(`Tổng số dòng ban đầu: ${worksheet.length}`);
+      console.log(`Tổng số dòng sau khi loại bỏ dòng trống: ${cleanedWorksheet.length}`);
+
+
+      if (cleanedWorksheet.length === 0) {
+        throw new Error("Không có dữ liệu hợp lệ sau khi loại bỏ các dòng trống.");
+      }
+
 
       const columnMapping = {
         'noicapdata': 'placeOfIssue',
@@ -49,44 +66,45 @@ module.exports = {
         'khac3': 'other3',
       };
 
-      console.log('Column Mapping Keys:', Object.keys(columnMapping));
 
       const headerIndexes = {};
+      const missingColumns = [];
       for (const [normalizedHeader, field] of Object.entries(columnMapping)) {
         const index = headers.indexOf(normalizeString(normalizedHeader));
-        if (index !== -1) {
-          headerIndexes[field] = index;
+        if (index === -1) {
+          missingColumns.push(normalizedHeader);
         } else {
-          return res.badRequest({ message: `Không tìm thấy cột cho trường: ${normalizedHeader}` });
+          headerIndexes[field] = index;
         }
       }
 
-      for (let i = 1; i < worksheet.length; i++) {
-        const row = worksheet[i];
+      if (missingColumns.length > 0) {
+        throw new Error(`Các cột bị thiếu trong Excel: ${missingColumns.join(', ')}`);
+      }
+
+
+      const validData = [];
+      const skippedRows = [];
+      cleanedWorksheet.forEach((row, index) => {
         const subscriberNumber = row[headerIndexes['subscriberNumber']] || '';
+        const networkName = row[headerIndexes['networkName']] || '';
+        const category = row[headerIndexes['category']] || '';
 
-
-        const existingData = await Data.findOne({ where: { subscriberNumber } });
-
-
-        if (existingData) {
-
-          await Data.destroy({ id: existingData.id });
-          await DataAssignment.destroy({ data: existingData.id })
+        if (!subscriberNumber || !networkName || !category) {
+          skippedRows.push(index + 2);
+          return;
         }
 
-
-
-        await Data.create({
+        validData.push({
+          subscriberNumber,
           placeOfIssue: row[headerIndexes['placeOfIssue']] || '',
-          networkName: row[headerIndexes['networkName']] || '',
-          category: row[headerIndexes['category']] || '',
-          subscriberNumber: subscriberNumber,
+          networkName,
+          category,
           currentPackage: row[headerIndexes['currentPackage']] || '',
           priorityPackage1: row[headerIndexes['priorityPackage1']] || '',
           priorityPackage2: row[headerIndexes['priorityPackage2']] || '',
-          registrationDate: row[headerIndexes['registrationDate']] === '' ? null : row[headerIndexes['registrationDate']],
-          expirationDate: row[headerIndexes['expirationDate']] === '' ? null : row[headerIndexes['expirationDate']],
+          registrationDate: row[headerIndexes['registrationDate']] || null,
+          expirationDate: row[headerIndexes['expirationDate']] || null,
           notes: row[headerIndexes['notes']] || '',
           TKC: row[headerIndexes['TKC']] || '',
           APRU3Months: row[headerIndexes['APRU3Months']] || '',
@@ -103,17 +121,56 @@ module.exports = {
           other2: row[headerIndexes['other2']] || '',
           other3: row[headerIndexes['other3']] || '',
         });
+      });
+
+      if (validData.length === 0) {
+        throw new Error("Không có dữ liệu hợp lệ để nhập.");
+      }
+      const subscriberNumbers = validData.map((item) => item.subscriberNumber);   
+      const existingSubscribers = await Data.find({ where: { subscriberNumber: subscriberNumbers } });
+      const existingMap = new Map(existingSubscribers.map((item) => [item.subscriberNumber, item]));
+      const dataToUpdate = [];
+      const dataToCreate = [];
+      validData.forEach((item) => {
+        if (existingMap.has(item.subscriberNumber)) {
+          const existing = existingMap.get(item.subscriberNumber);
+          dataToUpdate.push({
+            ...existing,
+            ...item, 
+          });
+        } else {
+          dataToCreate.push(item);
+        }
+      });
+      for (const data of dataToUpdate) {
+        await Data.update({ id: data.id }).set(data);
+      }
+      if (dataToCreate.length > 0) {
+        await Data.createEach(dataToCreate);
       }
 
-      // Xóa file đã nhập
-      fs.unlinkSync(filePath);
+  
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
 
-      return res.ok({ message: 'Dữ liệu được nhập thành công' });
-
-
+      return res.ok({
+        message: `Nhập dữ liệu thành công: ${dataToCreate.length} bản ghi mới, ${dataToUpdate.length} bản ghi được cập nhật.`,
+        skippedRows,
+      });
     } catch (err) {
-      console.log(err)
-      return res.serverError({ message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.', err });
+      console.error('Lỗi trong quá trình nhập dữ liệu:', err.message);
+
+
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+
+
+      return res.serverError({
+        message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.',
+        error: err.message,
+      });
     }
   },
 };

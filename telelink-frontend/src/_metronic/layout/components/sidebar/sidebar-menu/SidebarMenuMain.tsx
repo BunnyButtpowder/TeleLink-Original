@@ -7,7 +7,6 @@ import { useAuth } from '../../../../../app/modules/auth'
 const SidebarMenuMain = () => {
   const intl = useIntl()
   const { currentUser } = useAuth()
-
   const userRole = currentUser?.auth.role
 
   return (
@@ -142,6 +141,11 @@ const SidebarMenuMain = () => {
             icon='abstract-28'
             title={intl.formatMessage({ id: 'SIDEBAR.USER_MANAGEMENT' })}
             fontIcon='bi-layers'
+          />
+          <SidebarMenuItem
+            to='/permissions'
+            icon='shield-tick'
+            title={intl.formatMessage({ id: 'PERMISSION' })}
           />
         </>
       )}

@@ -41,7 +41,7 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
       return getUsers({searchTermAuth: search, sort , order, role, gender, agency});
     } else if (userRole === 2 && agencyId) {
       // Agency gets data by agency id
-      const response = await getSalesmenByAgency({searchTermAuth: search, sort, order, role, gender, agency});
+      const response = await getSalesmenByAgency({searchTermAuth: search, sort, order, agencyId});
       return {data: response.employees};
     } else {
       // Undefined role gets empty data
