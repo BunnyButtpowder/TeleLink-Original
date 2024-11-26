@@ -21,7 +21,7 @@ const revenueColumns: ReadonlyArray<Column<Revenue>> = [
     Header: (props) => <ResultCustomHeader tableProps={props} title='Chi nhánh' className='min-w-125px' />,
     id: 'agency',
     // accessor: 'agency',
-    Cell: ({...props}) => <AgencyCell agency={props.data[props.row.index]?.agency} />,
+    Cell: ({...props}) => <AgencyCell agency={props.data[props.row.index]?.agency?.name} />,
   },
   {
     Header: (props) => (
@@ -59,8 +59,8 @@ const revenueColumns: ReadonlyArray<Column<Revenue>> = [
     Header: (props) => (
       <ResultCustomHeader tableProps={props} title='Không liên lạc được' className='min-w-200px' />
     ),
-    id: 'unreachable',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.report?.unreachable}</span>,
+    id: 'unavailable',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.report?.unavailable}</span>,
   },
   {
     Header: (props) => (

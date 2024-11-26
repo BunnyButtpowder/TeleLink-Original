@@ -38,7 +38,6 @@ const salesmanSchema = Yup.object().shape({
       .required('Vui lòng điền vào trường này'),
     password: Yup.string()
     .min(3, 'Cần tối thiểu 3 ký tự')
-    .max(50, 'Cần tối đa 50 ký tự')
     .required('Vui lòng nhập mật khẩu'),
     isActive: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
     role: Yup.number().required('Vui lòng chọn quyền'),
@@ -67,7 +66,6 @@ const agencySchema = Yup.object().shape({
       .required('Vui lòng điền vào trường này'),
     password: Yup.string()
     .min(3, 'Cần tối thiểu 3 ký tự')
-    .max(50, 'Cần tối đa 50 ký tự')
     .required('Vui lòng nhập mật khẩu'),
     isActive: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
     role: Yup.number().required('Vui lòng chọn quyền'),
@@ -556,7 +554,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
             {/* begin::Input group */}
             <div className='fv-row mb-7'>
               {/* begin::Label */}
-              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.PHONE' })}</label>
+              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.PHONE' })}</label>
               {/* end::Label */}
 
               {/* begin::Input */}
@@ -1056,7 +1054,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                   placeholder='Số điện thoại'
                   {...agencyFormik.getFieldProps('phoneNumber')}
                   className={clsx(
-                    'form-control form-control-solid mb-3 mb-lg-0',
+                    'form-control form-control-solid mb-3 mb-lg-0 required',
                     { 'is-invalid': agencyFormik.touched.phoneNumber && agencyFormik.errors.phoneNumber },
                     {
                       'is-valid': agencyFormik.touched.phoneNumber && !agencyFormik.errors.phoneNumber,

@@ -1,11 +1,12 @@
 import {ID, Response} from '../../../../../_metronic/helpers'
+import { Agency } from '../../../../modules/apps/user-management/users-list/core/_models'
 
 export type Report = {
   total?: number
   accept?: number
   reject?: number
   unanswered?: number
-  unreachable?: number
+  unavailable?: number
   rehandle?: number
   lost?: number
   revenue?: number
@@ -15,7 +16,7 @@ export type Report = {
 
 export type Revenue = {
   id?: ID
-  agency?: string
+  agency?: Agency
   report: Report
 }
 

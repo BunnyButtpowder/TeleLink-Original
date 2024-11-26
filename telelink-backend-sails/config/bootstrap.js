@@ -74,8 +74,8 @@ module.exports.bootstrap = async function () {
   if ((await Role.count()) == 0) {
     await Role.createEach([
       {title: 'Admin', onlyViewCreateBy: false, permissions: [1,2,3,4,5,6,7,8,9,10,11,12]},
-      {title: 'Agency', onlyViewCreateBy: false, permissions: [1]},
-      {title: 'Salesman', onlyViewCreateBy: false, permissions: [1]}
+      {title: 'Agency', onlyViewCreateBy: false, permissions: [2,6,7,8,11]},
+      {title: 'Salesman', onlyViewCreateBy: false, permissions: [7,8]}
     ])
   }
 
