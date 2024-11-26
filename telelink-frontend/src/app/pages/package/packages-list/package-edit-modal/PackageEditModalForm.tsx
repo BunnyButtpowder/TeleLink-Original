@@ -38,7 +38,6 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
 
   const [packageForEdit, setPackageForEdit] = useState<Package>({
     ...pack,
-    code: pack.code || initialPackage.code,
     title: pack.title || initialPackage.title,
     provider: pack.provider || initialPackage.provider,
     type: pack.type || initialPackage.type,
@@ -92,41 +91,6 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
             data-kt-scroll-offset='300px'
           >
 
-            {/* begin::Input group */}
-            <div className='fv-row mb-7'>
-              {/* begin::Label */}
-              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'CODE' })}</label>
-              {/* end::Label */}
-
-              {/* begin::Input */}
-              <input
-                placeholder='Mã số'
-                {...packageFormik.getFieldProps('code')}
-                type='text'
-                name='code'
-                
-                className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
-                  { 'is-invalid': packageFormik.touched.code && packageFormik.errors.code },
-                  {
-                    'is-valid': packageFormik.touched.code && !packageFormik.errors.code,
-                    
-                  }
-                )}
-                autoComplete='off'
-                disabled={packageFormik.isSubmitting || isUserLoading}
-                
-              />
-              {packageFormik.touched.code && packageFormik.errors.code && (
-                <div className='fv-plugins-message-container'>
-                  <div className='fv-help-block'>
-                    <span role='alert'>{packageFormik.errors.code}</span>
-                  </div>
-                </div>
-              )}
-              {/* end::Input */}
-            </div>
-            {/* end::Input group */}
 
             {/* begin::Input group */}
             <div className='fv-row mb-7'>

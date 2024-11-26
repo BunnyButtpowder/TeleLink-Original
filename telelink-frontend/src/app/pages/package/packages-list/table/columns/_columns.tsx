@@ -20,11 +20,6 @@ const usersColumns: ReadonlyArray<Column<Package>> = [
     // Cell: ({ ...props }) => <span>{props.data[props.row.index].id}</span>,
   },
   {
-    Header: (props) => <PackageCustomHeader tableProps={props} title='Mã số' className='min-w-125px' />,
-    accessor: 'code',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index].code}</span>,
-  },
-  {
     Header: (props) => <PackageCustomHeader tableProps={props} title='Mã gói' className='min-w-125px' />,
     id: 'title',
     // Cell: ({ ...props }) => <span>{props.data[props.row.index]?.auth?.username}</span>,

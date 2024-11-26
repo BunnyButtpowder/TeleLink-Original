@@ -53,18 +53,18 @@ module.exports = {
     await Promise.all(randomDataToAssign.map(async (data) => {
       await Data.updateOne({ id: data.id }).set({ agency: agencyId });
     }));
-    try {
-      await Notifications.create({
-        user: userId,
-        message: `Đã phân bổ thành công ${quantity} data mới.`,
-        status: 'unread',
-      });
-    } catch (error) {
-      console.log(error);
-      return this.res.serverError({
-        message: 'Có lỗi xảy ra khi tạo thông báo.',
-      });
-    }
+    // try {
+    //   await Notifications.create({
+    //     user: userId,
+    //     message: `Đã phân bổ thành công ${quantity} data mới.`,
+    //     status: 'unread',
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    //   return this.res.serverError({
+    //     message: 'Có lỗi xảy ra khi tạo thông báo.',
+    //   });
+    // }
     sails.sockets.broadcast(
       agencyId,
       'newDataAssigned',

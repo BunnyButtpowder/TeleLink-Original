@@ -53,7 +53,6 @@ module.exports = {
           where: {
             isDelete: false,
             or: [
-              { code: { like: `%${searchTerm.toLowerCase()}%` } },
               { title: { like: `%${searchTerm.toLowerCase()}%` } },
               { provider: { like: `%${searchTerm.toLowerCase()}%` } },
             ],

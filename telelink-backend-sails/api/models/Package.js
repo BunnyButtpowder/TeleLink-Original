@@ -9,10 +9,6 @@ module.exports = {
 
   attributes: {
 
-    code: {
-      type: 'string',
-      unique: true
-    },
     title: {
       type: 'string',
       unique: true

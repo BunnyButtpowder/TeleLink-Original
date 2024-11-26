@@ -20,7 +20,6 @@ const getPackageById = async (id: ID) => {
 
 const createPackage = (pack: Package): Promise<Package | undefined> => {
   const transformedPackage = {
-    code: pack.code,
     title: pack.title,
     provider: pack.provider,
     type: pack.type,
@@ -42,7 +41,6 @@ const updatePackage = async (pack: Package, token: string): Promise<Package | un
       },
       body: JSON.stringify({
         id: pack.id,
-        code: pack.code,
         title: pack.title,
         provider: pack.provider,
         type: pack.type,
