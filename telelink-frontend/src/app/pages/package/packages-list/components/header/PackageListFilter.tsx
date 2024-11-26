@@ -83,7 +83,6 @@ const PackageListFilter = () => {
               <option value='Viettel'>Viettel</option>
               <option value='Vinaphone'>Vinaphone</option>
               <option value='Mobifone'>Mobifone</option>
-              <option value='Vietnamobile'>Vietnamobile</option>
             </select>
           </div>
           {/* end::Input group */}

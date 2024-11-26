@@ -7,11 +7,11 @@ import {Data} from '../../core/_models'
 import { DataNetworkCell } from './DataNetworkCell'
 
 const usersColumns: ReadonlyArray<Column<Data>> = [
-  // {
-  //   Header: (props) => <UserSelectionHeader tableProps={props} />,
-  //   id: 'selection',
-  //   Cell: ({...props}) => <UserSelectionCell id={props.data[props.row.index].id} />,
-  // },
+  {
+    Header: (props) => <UserSelectionHeader tableProps={props} />,
+    id: 'selection',
+    Cell: ({...props}) => <UserSelectionCell id={props.data[props.row.index].id} />,
+  },
   {
     Header: (props) => (
       <DataCustomHeader tableProps={props} title='Nơi cấp data' className='min-w-125px' />
