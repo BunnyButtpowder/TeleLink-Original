@@ -143,6 +143,10 @@ const deleteUser = (userId: ID): Promise<void> => {
   return axios.delete(`${USER_URL}/${userId}`).then(() => { });
 };
 
+const deleteSelectedData = (ids: ID[]): Promise<void> => {
+  return axios.delete(`${API_URL}/data/many-delete`, { data: { ids } }).then(() => { });
+};
+
 export {
   importData,
   getAllData,
@@ -158,5 +162,6 @@ export {
   getAllNetworks,
   getNetworksByAgency,
   getCategoriesByAgency,
-  dataAssignAdminToSaleman
+  dataAssignAdminToSaleman,
+  deleteSelectedData
 };
