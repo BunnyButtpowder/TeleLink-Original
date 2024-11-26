@@ -65,11 +65,11 @@ module.exports.bootstrap = async function () {
     ]);
   }
 
-  if ((await Permission.count()) == 0) {
-    await Permission.createEach([
-      { title: "TestPermission", path: "auth/test-permission", method: "GET" },
-    ]);
-  }
+  // if ((await Permission.count()) == 0) {
+  //   await Permission.createEach([
+  //     { title: "TestPermission", path: "auth/test-permission", method: "GET" },
+  //   ]);
+  // }
 
   if ((await Role.count()) == 0) {
     await Role.createEach([
