@@ -29,7 +29,7 @@ const revenueColumns: ReadonlyArray<Column<Revenue>> = [
     ),
     id: 'revenue',
     Cell: ({ ...props }) => {
-      const revenue = props.data[props.row.index]?.report?.revenue;
+      const revenue = props.data[props.row.index]?.revenue;
       const formattedPrice = revenue !== undefined ? new Intl.NumberFormat('vi-VN').format(revenue) : '';
       return <span>{formattedPrice}</span>;
     },
@@ -39,42 +39,42 @@ const revenueColumns: ReadonlyArray<Column<Revenue>> = [
       <ResultCustomHeader tableProps={props} title='Đồng ý' className='min-w-100px' />
     ),
     id: 'accept',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.report?.accept}</span>,
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.accept}</span>,
   },
   {
     Header: (props) => (
       <ResultCustomHeader tableProps={props} title='Không đồng ý' className='min-w-125px' />
     ),
     id: 'reject',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.report?.reject}</span>,
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.reject}</span>,
   },
   {
     Header: (props) => (
       <ResultCustomHeader tableProps={props} title='Không bắt máy' className='min-w-125px' />
     ),
     id: 'unanswered',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.report?.unanswered}</span>,
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.unanswered}</span>,
   },
   {
     Header: (props) => (
       <ResultCustomHeader tableProps={props} title='Không liên lạc được' className='min-w-200px' />
     ),
     id: 'unavailable',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.report?.unavailable}</span>,
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.unavailable}</span>,
   },
   {
     Header: (props) => (
       <ResultCustomHeader tableProps={props} title='Đồng ý xử lý lại' className='min-w-150px' />
     ),
     id: 'rehandle',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.report?.rehandle}</span>,
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.rehandle}</span>,
   },
   {
     Header: (props) => (
       <ResultCustomHeader tableProps={props} title='Mất đơn' className='min-w-125px' />
     ),
     id: 'lost',
-    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.report?.lost}</span>,
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.lost}</span>,
   },
   {
     Header: (props) => (
@@ -83,7 +83,7 @@ const revenueColumns: ReadonlyArray<Column<Revenue>> = [
     id: 'successRate',
     // Cell: ({ ...props }) => <span>{props.data[props.row.index]?.report?.successRate} %</span>,
     Cell: ({ ...props }) => {
-      const report = props.data[props.row.index]?.report;
+      const report = props.data[props.row.index];
       console.log('Report Data:', report);
       const successRate = report?.successRate ?? 0;
       return <div className='badge badge-success fw-bolder'>{successRate.toFixed(2)}%</div>
@@ -96,7 +96,7 @@ const revenueColumns: ReadonlyArray<Column<Revenue>> = [
     id: 'failRate',
     // Cell: ({ ...props }) => <span>{props.data[props.row.index]?.report?.failRate} %</span>,
     Cell: ({ ...props }) => {
-      const report = props.data[props.row.index]?.report;
+      const report = props.data[props.row.index];
       console.log('Report Data:', report);
       const failRate = report?.failRate ?? 0;
       return <div className='badge badge-danger fw-bolder'>{failRate.toFixed(2)}%</div>

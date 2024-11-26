@@ -56,6 +56,7 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
     try {
       const packages = await getAllPackages();
       setPackages(packages.data);
+      console.log('Fetched packages:', packages);
     } catch (error) {
       console.error('Failed to fetch packages:', error);
     } finally {

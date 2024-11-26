@@ -1,7 +1,9 @@
 import {ID, Response} from '../../../../../_metronic/helpers'
 import { Agency } from '../../../../modules/apps/user-management/users-list/core/_models'
 
-export type Report = {
+export type Revenue = {
+  id?: ID
+  agency?: Agency
   total?: number
   accept?: number
   reject?: number
@@ -12,12 +14,6 @@ export type Report = {
   revenue?: number
   successRate?: number
   failRate?: number
-}
-
-export type Revenue = {
-  id?: ID
-  agency?: Agency
-  report: Report
 }
 
 export type RevenueQueryResponse = Response<Array<Revenue>>

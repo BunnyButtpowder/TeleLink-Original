@@ -24,7 +24,7 @@ const importData = async (file: File, onUploadProgress: (ProgressEvent: any) => 
   }
 };
 
-const getAllData = (params: {searchTerm?: string, sort?: string, order?: string, placeOfIssue?: string, networkName?: string}): Promise<DataQueryResponse> => {
+const getAllData = (params: {searchTerm?: string, sort?: string, order?: string, placeOfIssue?: string, networkName?: string, page?: number, limit?: number}): Promise<DataQueryResponse> => {
   return axios
     .get(GET_ALL_DATA_URL, { params })
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
