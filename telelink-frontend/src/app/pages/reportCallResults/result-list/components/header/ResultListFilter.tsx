@@ -13,7 +13,7 @@ const ResultListFilter = () => {
   const { currentUser } = useAuth()
   const [month, setMonth] = useState<string | undefined>('')
   const [year, setYear] = useState<string | undefined>('')
-  const [agencyId, setAgencyId] = useState<string | undefined>()
+  const [agencyId, setAgencyId] = useState< string | undefined>()
   const [agencies, setAgencies] = useState<{ id: number, name: string }[]>([]) // State to hold agency list
   const [salesmen, setSalesmen] = useState<{ id: number, fullName: string }[]>([]) // State to hold salesmen list
   const [result, setResult] = useState<number | undefined>()
@@ -61,46 +61,47 @@ const ResultListFilter = () => {
 
   useEffect(() => {
     const fetchSalesmen = async () => {
-        if (userRole === 3 || !agencyId) {
-          setSalesmen([])
-          return
-        }
-      if (!agencyId) {
-        setSalesmen([]) // Clear the salesmen list if no agency is selected
+      let fetchAgencyId = agencyId;
+
+      if (userRole === 2) {
+        fetchAgencyId = agencyID?.toString(); 
+      }
+
+      console.log(fetchAgencyId)
+
+      if (!fetchAgencyId) {
+        setSalesmen([]) 
         return
       }
 
       try {
         const token = localStorage.getItem('auth_token')
-        const response = await fetch(`${API_URL}/users/agency?agencyId=${agencyId}`, {
+        const response = await fetch(`${API_URL}/users/agency?agencyId=${fetchAgencyId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         })
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
         }
 
         const result = await response.json()
+
+      console.log(result);
         if (result && result.employees) {
           setSalesmen(result.employees.map((employee: any) => ({ id: employee.id, fullName: employee.fullName })))
         }
+        console.log(salesmen);
       } catch (error) {
         console.error('Error fetching salesmen:', error)
       }
     }
-
+    
     fetchSalesmen()
-  }, [agencyId,userRole]) 
+  }, [agencyId, agencyID, userRole])  
 
-  useEffect(() => {
-    // Automatically fetch salesmen for the current agency when role = 2
-    if (userRole === 2 && agencyID) {
-      setAgencyId(agencyId) 
-    }
-  }, [userRole, agencyID])
 
   const resetData = () => {
     setMonth(undefined)
@@ -200,7 +201,7 @@ const ResultListFilter = () => {
               <label className='form-label fs-6 fw-bold'>Chi nhánh:</label>
               <select
                 className='form-select form-select-solid fw-bolder'
-                onChange={(e) => setAgencyId(e.target.value)}
+                onChange={(e) => setAgencyId(e.target.value )}
                 value={agencyId}
               >
                 <option value=''></option>
@@ -220,7 +221,7 @@ const ResultListFilter = () => {
                 className='form-select form-select-solid fw-bolder'
                 onChange={(e) => setSaleman(e.target.value ? parseInt(e.target.value, 10) : undefined)}
                 value={saleman}
-                disabled={!agencyId}
+                // disabled={!agencyId}
               >
                 <option value=''></option>
                 {salesmen.map((salesman) => (
@@ -228,6 +229,7 @@ const ResultListFilter = () => {
                     {salesman.fullName}
                   </option>
                 ))}
+                
               </select>
             </div>
           )}
