@@ -33,7 +33,7 @@ module.exports = {
       const { searchTerm, searchTermAuth, sort, order, role, agency } = inputs;
       const sortOrder = sort && order ? `${sort} ${order}` : undefined;
 
-      const whereClause = {};
+      const whereClause = {isDelete: false};
       if (searchTerm) {
         whereClause.or = [
           { phoneNumber: { like: `%${searchTerm}%` } },

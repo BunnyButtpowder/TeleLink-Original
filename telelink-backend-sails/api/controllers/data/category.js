@@ -11,10 +11,10 @@ module.exports = {
     try {
       const allData = await Data.find({
         agency: null,
-        isDelete : false
+        isDelete : false,
+        // networkName 
       });
 
-      // Kiểm tra xem có dữ liệu không
       if (!allData || allData.length === 0) {
         return res.ok({ message: 'Không có dữ liệu nào được tìm thấy.' });
       }

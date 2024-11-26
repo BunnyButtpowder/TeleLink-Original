@@ -1,9 +1,7 @@
 const _ = require('lodash');
 
 module.exports = {
-  friendlyName: 'Get all network and categorize with counts',
-
-  description: 'Lấy tất cả dữ liệu, phân loại theo nhà mạng và đếm số lượng trong mỗi loại.',
+  
 
   fn: async function (inputs) {
     const { res } = this;

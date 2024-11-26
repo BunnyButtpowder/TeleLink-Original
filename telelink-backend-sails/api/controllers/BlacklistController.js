@@ -2,9 +2,9 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 
 module.exports = {
-  importBlacklist: async function (req, res, filePath , id) {
+  importBlacklist: async function (req, res, filePath, id) {
     try {
-      
+
       console.log(id)
 
       const workbook = XLSX.readFile(filePath);
@@ -40,7 +40,12 @@ module.exports = {
 
       for (let i = 1; i < worksheet.length; i++) {
         const row = worksheet[i];
-        const SDT = row[headerIndexes['SDT']] || '';
+        let SDT = row[headerIndexes['SDT']] || '';
+        // SDT = String(SDT);
+
+        // if (SDT && !SDT.startsWith('0')) {
+        //   SDT = '0' + SDT;
+        // }
 
         const existingBlacklist = await Blacklist.findOne({ where: { SDT } });
 
