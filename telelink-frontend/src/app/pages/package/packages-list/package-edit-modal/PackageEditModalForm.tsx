@@ -21,15 +21,23 @@ type Props = {
 const token = localStorage.getItem('auth_token');
 
 const packageSchema = Yup.object().shape({
-  code: Yup.string().min(2, 'Tối thiểu 2 ký tự').required('Vui lòng điền vào trường này'),
   title: Yup.string().required('Vui lòng điền vào trường này'),
   provider: Yup.string().required('Vui lòng điền vào trường này'),
   type: Yup.string().required('Vui lòng chọn 1 loại gói cước'),
-  price: Yup.number()
-  .min(10000, 'Giá phải lớn hơn hoặc bằng 10,000')
-  .integer('Giá phải là số nguyên')
-  .typeError('Vui lòng nhập số hợp lệ')
-  .required('Vui lòng điền vào trường này'),})
+  price: Yup.string()
+    .required('Vui lòng điền vào trường này')
+    .test('min-price', 'Giá tối thiểu là 10.000 VND', (value) => {
+      if (!value) return false; // Ensure the field is not empty
+      const numericValue = parseInt(value.replace(/\./g, ''), 10); // Remove dots and convert to number
+      return numericValue >= 10000; // Check minimum price
+    }),
+  //  code: Yup.string().nullable(),
+  //  title: Yup.string().nullable(),
+  //  provider: Yup.string().nullable(),
+  //  type: Yup.string().nullable(), 
+  //  price: Yup.string().required(),
+
+})
 
 const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
   const intl = useIntl();
@@ -194,7 +202,7 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
                     type='radio'
                     value="Mobiphone"
                     id='kt_modal_update_role_option_1'
-                    checked={packageFormik.values.provider === 'Mobiphone'}
+                    checked={packageFormik.values.provider === 'Mobiphone'}                   
                     onChange={() => packageFormik.setFieldValue('provider', 'Mobiphone')}
                     disabled={packageFormik.isSubmitting || isUserLoading}
                   />
@@ -249,53 +257,56 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
 
             {/* begin::Input group */}
             <div className="fv-row mb-7">
-            {/* Label */}
-            <label className="required fw-bold fs-6 mb-2">{intl.formatMessage({ id: 'UNIT.PRICE' })}</label>
+              {/* Label */}
+              <label className="required fw-bold fs-6 mb-2">{intl.formatMessage({ id: 'UNIT.PRICE' })}</label>
 
-            {/* Input */}
-            <div className="position-relative">
-              <input
-                placeholder="0"
-                {...packageFormik.getFieldProps('price')}
-                className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
-                  { 'is-invalid': packageFormik.touched.price && packageFormik.errors.price },
-                  { 'is-valid': packageFormik.touched.price && !packageFormik.errors.price }
-                )}
-                // type="text"
-                // name="price"
-                autoComplete="off"
-                disabled={packageFormik.isSubmitting || isUserLoading}
-                // onBlur={(e) => {
-                //   const value = parseInt(e.target.value.replace(/\./g, ''), 10);
-                //   if (!isNaN(value) && value >= 10000) {
-                //     packageFormik.setFieldValue('price', value.toLocaleString('vi-VN')); // Format value
-                //   } else {
-                //     packageFormik.setFieldValue('price', ''); // Reset invalid values
-                //   }
-                //   console.log(packageFormik.touched.price);
-                //   packageFormik.validateField('price'); // Trigger validation on blur
-                // }}
-                // onChange={(e) => {
-                //   const rawValue = e.target.value.replace(/\./g, '');
-                //   if (/^\d*$/.test(rawValue)) {
-                //     packageFormik.setFieldValue('price', rawValue); // Set value if valid
-                //   }
-                //   packageFormik.validateField('price'); // Validate on every change
-                // }}
-              />
-              <span className="position-absolute top-50 end-0 translate-middle-y pe-3">VND</span>
+              {/* Input */}
+              <div className="position-relative">
+                <input
+                  placeholder="0"
+                  {...packageFormik.getFieldProps('price')}
+                  className={clsx(
+                    'form-control form-control-solid mb-3 mb-lg-0',
+                    { 'is-invalid': packageFormik.touched.price && packageFormik.errors.price },
+                    { 'is-valid': packageFormik.touched.price && !packageFormik.errors.price }
+                  )}
+                  type="text"
+                  name="price"
+                  autoComplete="off"
+                  disabled={packageFormik.isSubmitting || isUserLoading}
+                  onBlur={(e) => {
+                    const rawValue = e.target.value.replace(/\./g, '');
+                    const value = parseInt(rawValue, 10);
+                    if (!isNaN(value) && value >= 10000) {
+                      packageFormik.setFieldValue('price', value.toLocaleString('vi-VN')); // Format value
+                    } else {
+                      packageFormik.setFieldValue('price', ''); // Reset invalid values
+                    }
+                    packageFormik.validateField('price'); // Trigger validation on blur
+                  }}
+                  onChange={(e) => {
+                    let rawValue = e.target.value.replace(/\./g, '');
+                    if (/^\d*$/.test(rawValue)) {
+                      const formattedValue = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                      packageFormik.setFieldValue('price', formattedValue); // Format value dynamically
+                    }
+                    packageFormik.validateField('price'); // Validate on every change
+                    console.log('price')
+                  }}
+                />
+                <span className="position-absolute top-50 end-0 translate-middle-y pe-3">VND</span>
+              </div>
+
+              {/* Error Message */}
+              {packageFormik.touched.price && packageFormik.errors.price && (
+                <div className="fv-plugins-message-container">
+                  <div className="fv-help-block">
+                    <span role="alert">{packageFormik.errors.price}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Error Message */}
-            {packageFormik.touched.price && packageFormik.errors.price && (
-              <div className="fv-plugins-message-container">
-                <div className="fv-help-block">
-                  <span role="alert">{packageFormik.errors.price}</span>
-                </div>
-              </div>
-            )}
-          </div>
             {/* end::Input group */}
           </div>
           {/* end::Scroll */}

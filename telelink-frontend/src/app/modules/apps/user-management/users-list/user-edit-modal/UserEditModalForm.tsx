@@ -1068,7 +1068,9 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                 {/* end::Input */}
                 {agencyFormik.touched.phoneNumber && agencyFormik.errors.phoneNumber && (
                   <div className='fv-plugins-message-container'>
+                    <div className="fv-help-block">
                     <span role='alert'>{agencyFormik.errors.phoneNumber}</span>
+                  </div>
                   </div>
                 )}
               </div>

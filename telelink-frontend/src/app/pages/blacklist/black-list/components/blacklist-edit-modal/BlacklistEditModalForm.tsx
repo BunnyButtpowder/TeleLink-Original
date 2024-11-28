@@ -26,7 +26,7 @@ const BlacklistSchema = Yup.object().shape({
   SDT: Yup.string()
     .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
     .required('Vui lòng điền số muốn chặn'),
-  note: Yup.string().nullable(),
+    note: Yup.string().required('Vui lòng nhập ghi chú'),
 })
 
 const BlacklistEditModalForm: FC<Props> = ({ number, isUserLoading }) => {
@@ -126,8 +126,7 @@ const BlacklistEditModalForm: FC<Props> = ({ number, isUserLoading }) => {
             {/* begin::Input group */}
             <div className='fv-row mb-7'>
               {/* begin::Label */}
-              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NOTE' })}</label>
-              {/* end::Label */}
+              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NOTE' })}</label>              {/* end::Label */}
 
               {/* begin::Input */}
               <input

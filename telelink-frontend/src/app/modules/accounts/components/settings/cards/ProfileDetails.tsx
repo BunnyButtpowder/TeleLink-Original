@@ -10,7 +10,7 @@ import { useQueryResponse } from '../../../../apps/user-management/users-list/co
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../core/firebaseConfig';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
+import { ToastContainer, toast } from 'react-toastify';
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -27,8 +27,11 @@ const profileDetailsSchema = Yup.object().shape({
   gender: Yup.string()
     .oneOf(['male', 'female'], 'Gender must be either Male or Female')
     .required('Gender is required'),
-  dob: Yup.date().nullable().required('Date of birth is required'),
-});
+    dob: Yup.date()
+    .nullable()
+    .required('Date of birth is required')
+    .max(new Date(), 'Date of birth cannot be in the future'),
+  });
 
 const ProfileDetails: FC = () => {
   const { currentUser, setCurrentUser } = useAuth();
@@ -120,6 +123,8 @@ const ProfileDetails: FC = () => {
           token || ''
         );
         console.log('Profile updated successfully:', updatedProfile);
+        toast.success('Cập nhật thông tin thành công!');
+
 
         // Optionally update the local state with the updated profile
         const updatedUser = {
@@ -137,6 +142,7 @@ const ProfileDetails: FC = () => {
         
       } catch (error) {
         console.error('Error updating profile:', error);
+        toast.error('Cập nhật thông tin thất bại!');
       } finally {
         setSubmitting(false);
         setLoading(false);
@@ -304,6 +310,8 @@ const ProfileDetails: FC = () => {
           </div>
         </form>
       </div>
+      <ToastContainer position="top-right" autoClose={5000} />
+
     </div>
   );
 };

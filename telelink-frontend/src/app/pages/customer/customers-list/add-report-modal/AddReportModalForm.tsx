@@ -5,7 +5,7 @@ import { initialResult, Result } from '../core/_models'
 import clsx from 'clsx'
 import { useListView } from '../core/ListViewProvider'
 import { UsersListLoading } from '../components/loading/UsersListLoading'
-import { createCallResult, getAllPackages } from '../core/_requests'
+import { createCallResult, getPackagesByDataId } from '../core/_requests'
 import { useQueryResponse } from '../core/QueryResponseProvider'
 import { useIntl } from 'react-intl'
 import { ToastContainer, toast } from 'react-toastify'
@@ -48,14 +48,18 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
   const fetchPackages = async () => {
     setIsLoadingPackages(true);
     try {
-      const packages = await getAllPackages();
-      setPackages(packages.data);
+      const packageArray = await getPackagesByDataId(dataId); // Ensure dataId is passed
+      console.log('Fetched packages:', packageArray);
+      setPackages(
+        packageArray.map((pkg, index) => ({ id: index, title: pkg })) // Map to { id, title }
+      );
     } catch (error) {
       console.error('Failed to fetch packages:', error);
     } finally {
       setIsLoadingPackages(false);
     }
-  }
+  };
+  
 
   useEffect(() => {
     fetchPackages();
