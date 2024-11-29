@@ -25,9 +25,19 @@ module.exports = {
             message: `Không tìm thấy dữ liệu với ID ${id}.`,
           });
         }
+
+        let dataResult = data.Package.split(",");
+        for(i in dataResult){
+          dataResult[i] = dataResult[i].toUpperCase().trim();
+        }
+        console.log(dataResult);
+
+        const result = await Package.find({title: {in : dataResult}});
+        
+        
         return res.ok({
           id: data.id,
-          package: data.Package,
+          package: result,
           message: `Lấy thông tin Package thành công.`,
         });
   
