@@ -1,4 +1,3 @@
-
 import {FC, useEffect} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
 import {MenuComponent} from '../../../../../../../_metronic/assets/ts/components'
@@ -6,6 +5,8 @@ import {ID, KTIcon, QUERIES} from '../../../../../../../_metronic/helpers'
 import {useListView} from '../../core/ListViewProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
 import {deleteUser} from '../../core/_requests'
+import {toast} from 'react-toastify'
+
 
 type Props = {
   id: ID
@@ -25,12 +26,21 @@ const UserActionsCell: FC<Props> = ({id}) => {
   }
 
   const deleteItem = useMutation(() => deleteUser(id), {
-    // 💡 response of the mutation is passed to onSuccess
     onSuccess: () => {
-      // ✅ update detail view directly
       queryClient.invalidateQueries([`${QUERIES.USERS_LIST}-${query}`])
+      toast.success('Xoá tài khoản thành công!', {position: 'top-right'})
+    },
+    onError: () => {
+      toast.error('Xoá tài khoản thất bại. Vui lòng thử lại.', {position: 'top-right'})
     },
   })
+
+  const handleDelete = async () => {
+    const isConfirmed = window.confirm('Bạn có chắc chắn muốn xóa?')
+    if (isConfirmed) {
+      await deleteItem.mutateAsync()
+    }
+  }
 
   return (
     <>
@@ -61,19 +71,11 @@ const UserActionsCell: FC<Props> = ({id}) => {
           <a
             className='menu-link px-3'
             data-kt-users-table-filter='delete_row'
-            onClick={async () => await deleteItem.mutateAsync()}
+            onClick={handleDelete}
           >
             Xoá
           </a>
         </div>
-        {/* end::Menu item */}
-
-        {/* begin::Menu item */}
-        {/* <div className='menu-item px-3'>
-          <a className='menu-link px-3' onClick={openEditModal}>
-            Cấp mật khẩu
-          </a>
-        </div> */}
         {/* end::Menu item */}
       </div>
       {/* end::Menu */}

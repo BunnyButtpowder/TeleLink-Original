@@ -1,4 +1,3 @@
-
 import { FC, useEffect } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { MenuComponent } from '../../../../../../_metronic/assets/ts/components'
@@ -7,9 +6,9 @@ import { useListView } from '../../core/ListViewProvider'
 import { useQueryResponse } from '../../core/QueryResponseProvider'
 import { deleteNumber } from '../../core/_requests'
 import { useIntl } from 'react-intl'
-import React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 type Props = {
   id: ID
@@ -30,13 +29,21 @@ const BlacklistActionsCell: FC<Props> = ({ id }) => {
   }
 
   const deleteItem = useMutation(() => deleteNumber(id), {
-    // 💡 response of the mutation is passed to onSuccess
     onSuccess: () => {
-      toast.success('Đã xoá thành công');
-      // ✅ update detail view directly
       queryClient.invalidateQueries([`${QUERIES.USERS_LIST}-${query}`])
+      toast.success('Xoá số chặn thành công!', {position: 'top-right'})
+    },
+    onError: () => {
+      toast.error('Xoá số chặn thất bại. Vui lòng thử lại.', {position: 'top-right'})
     },
   })
+
+  const handleDelete = async () => {
+    const isConfirmed = window.confirm('Bạn có chắc chắn muốn xóa?')
+    if (isConfirmed) {
+      await deleteItem.mutateAsync()
+    }
+  }
 
   return (
     <>
@@ -67,7 +74,7 @@ const BlacklistActionsCell: FC<Props> = ({ id }) => {
           <a
             className='menu-link px-3'
             data-kt-users-table-filter='delete_row'
-            onClick={async () => await deleteItem.mutateAsync()}
+            onClick={handleDelete}
           >
             {intl.formatMessage({ id: 'MENU.ACTIONS.DELETE' })}
           </a>
@@ -75,6 +82,7 @@ const BlacklistActionsCell: FC<Props> = ({ id }) => {
         {/* end::Menu item */}
       </div>
       {/* end::Menu */}
+      <ToastContainer />
     </>
   )
 }

@@ -19,7 +19,10 @@ const dataDistributionSchema = Yup.object().shape({
 })
 
 const salesmanDataDistributionSchema = Yup.object().shape({
-  quantity: Yup.number().required('Vui lòng nhập số lượng').min(1, 'Số lượng phải lớn hơn 0'),
+  quantity: Yup.number()
+  .integer('Số lượng phải là số nguyên')
+  .min(1, 'Số lượng phải lớn hơn hoặc bằng 1')
+  .required('Vui lòng điền vào trường này'),  
   agencyId: Yup.string().required('Vui lòng chọn chi nhánh'),
   userId: Yup.string().required('Vui lòng chọn nhân viên'),
   network: Yup.string().required('Vui lòng chọn nhà mạng'),
@@ -284,7 +287,9 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
               </select>
               {formik.touched.userId && formik.errors.userId && (
                 <div className='fv-plugins-message-container'>
+                  <div className="fv-help-block">
                   <span role='alert'>{formik.errors.userId}</span>
+                </div>
                 </div>
               )}
             </div>
@@ -356,10 +361,11 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
           {/* Begin::Quantity Input */}
           <div className='fv-row mb-7'>
             <label className='required fw-bold fs-6 mb-2'>
-              {intl.formatMessage({ id: 'QUANTITY' })} {selectedCategoryCount !== null ? `(Tối đa: ${selectedCategoryCount})` : ''}
+              {intl.formatMessage({ id: 'QUANTITY' })}{' '}
+              {selectedCategoryCount !== null ? `(Tối đa: ${selectedCategoryCount})` : ''}
             </label>
             <input
-              type='number'
+              type='text' // Use 'text' to intercept invalid inputs like decimals or negatives
               {...formik.getFieldProps('quantity')}
               className={clsx(
                 'form-control form-control-solid mb-3 mb-lg-0',
@@ -368,6 +374,12 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
               )}
               placeholder='Số lượng'
               autoComplete='off'
+              onChange={(e) => {
+                const rawValue = e.target.value;
+                // Allow only digits
+                const numericValue = rawValue.replace(/[^0-9]/g, '');
+                formik.setFieldValue('quantity', numericValue); // Update Formik value
+              }}
             />
             {formik.touched.quantity && formik.errors.quantity && (
               <div className='fv-plugins-message-container'>
@@ -376,6 +388,7 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
             )}
           </div>
           {/* End::Quantity Input */}
+
         </div>
 
         {/* Begin::Actions */}
