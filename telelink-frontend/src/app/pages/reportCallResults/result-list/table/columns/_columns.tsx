@@ -45,8 +45,7 @@ const resultsColumns: ReadonlyArray<Column<CallResult>> = [
       const timestamp = props.data[props.row.index].createdAt;
   
       if (timestamp) {
-        // Ensure the timestamp is in milliseconds
-        const date = new Date(timestamp * 1000); // Multiply by 1000 if the timestamp is in seconds
+        const date = new Date(timestamp);
         return <span>{date.toLocaleDateString('vi-VN')}</span>;
       }
       return <span></span>;

@@ -122,6 +122,10 @@ export type QueryResponseContextProps<T> = {
 
 export const initialQueryResponse = { refetch: () => { }, isLoading: false, query: '' }
 
+export type ExtendedResponse<T> = T & {
+  networks?: Record<string, { count: number }>;
+};
+
 export type ListViewContextProps = {
   selected: Array<ID>
   onSelect: (selectedId: ID) => void

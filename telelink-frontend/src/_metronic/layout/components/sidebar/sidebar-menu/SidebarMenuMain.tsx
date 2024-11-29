@@ -159,12 +159,6 @@ const SidebarMenuMain = () => {
             title={intl.formatMessage({ id: 'DATA' })}
             fontIcon='bi-app-indicator'
           />
-          <SidebarMenuItem
-            to='/customers'
-            icon='profile-user'
-            title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })}
-            fontIcon='bi-app-indicator'
-          />
 
           <SidebarMenuItem
             to='/blacklist'
