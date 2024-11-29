@@ -39,12 +39,12 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   }, [userRole, navigate])
 
   const fetchData = () => {
-    const { search = '', sort = '', order = '', filter = {} } = state;
+    const { search = '', sort = '', order = '', filter = {}, page = 1, items_per_page = 10 } = state;
   
     const { placeOfIssue, networkName } = filter;
     // Admin gets all data
     if (userRole === 1) {
-      return getAllData({ searchTerm: search, sort, order, placeOfIssue, networkName });
+      return getAllData({ searchTerm: search, sort, order, placeOfIssue, networkName, page, limit: items_per_page });
     } else if (userRole === 2 && agencyId) {
       return getDataByAgency(agencyId);
     } else {
@@ -79,16 +79,20 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
 
   const useQueryResponsePagination = () => {
     const defaultPaginationState: PaginationState = {
-      links: [],
-      ...initialQueryState,
+      ...initialQueryState
     }
 
     const { response } = useQueryResponse()
-    if (!response || !response.payload || !response.payload.pagination) {
+    if (!response) {
       return defaultPaginationState
     }
 
-    return response.payload.pagination
+    return {
+      page: response.currentPage,
+      items_per_page: response.perPage,
+      total: response.totalCount,
+      total_pages: response.totalPages,
+    }
   }
 
   const useQueryResponseLoading = (): boolean => {
