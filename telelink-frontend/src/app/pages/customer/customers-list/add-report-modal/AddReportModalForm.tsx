@@ -48,11 +48,10 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
   const fetchPackages = async () => {
     setIsLoadingPackages(true);
     try {
-      const packageArray = await getPackagesByDataId(dataId); // Ensure dataId is passed
+      const packageArray = await getPackagesByDataId(dataId); // Correctly typed return value
       console.log('Fetched packages:', packageArray);
-      setPackages(
-        packageArray.map((pkg, index) => ({ id: index, title: pkg })) // Map to { id, title }
-      );
+  
+      setPackages(packageArray); // Directly set the result
     } catch (error) {
       console.error('Failed to fetch packages:', error);
     } finally {
