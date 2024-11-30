@@ -40,18 +40,7 @@ module.exports = {
             }
             const token = jwt.sign({ id: auth.id, username: auth.username }, process.env.JWT_SECRET, { expiresIn: '365d' });
 
-            // if (auth.role === 2) {
-            //     req.session.user = {
-            //         id: auth.id,
-            //         role: auth.role,
-            //         agencyId: user.id 
-            //     };
-            // } else {
-            //     req.session.user = {
-            //         id: auth.id,
-            //         role: auth.role
-            //     };
-            // }
+           
             return res.json({ message: "Đăng nhập thành công", user: { id: user.id, fullname: user.fullName, agencyId: user.agency }, token });
 
 

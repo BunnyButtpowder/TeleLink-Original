@@ -237,6 +237,7 @@ module.exports = {
         callResult: newResult,
       });
     } catch (error) {
+      console.log(error);
       return this.res.serverError({
         message: "Lỗi khi tạo kết quả cuộc gọi",
         error: error.message,

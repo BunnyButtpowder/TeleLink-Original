@@ -37,15 +37,15 @@ module.exports = {
       allowNull: true,
     },
     registrationDate: {
-      type: 'string',
-      columnType: 'date',
-      allowNull: true,
+      type: 'ref',
+      columnType: 'datetime',
     },
     expirationDate: {
-      type: 'string', 
-      columnType: 'date',
-      allowNull: true,
-    },    
+      type: 'ref',
+      columnType: 'datetime',
+    },
+    
+       
     notes: {    // Ghi chú
       type: 'string',
       allowNull: true,
