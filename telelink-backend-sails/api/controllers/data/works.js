@@ -60,17 +60,15 @@ module.exports = {
           message: "Bạn không có quyền cập nhật dữ liệu này.",
         });
       }
-      let package = null;
-      if (dataPackage) {
-        package = await Package.findOne({ id: dataPackage });
+      let dataPackage = null;
+      let price = 0
+      if (dataPackage && result == 1) {
+        const package = await Package.findOne({ id: dataPackage });
         if (!package) {
           return this.res.notFound({ message: "Không tìm thấy gói data." });
         }
-        if (result != 1) {
-          (dataPackage = null), (package.price = 0);
-        } else {
-          dataPackage = package.title;
-        }
+        dataPackage = package.title
+        price = package.price
       }
 
       const month = new Date(Date.now()).getMonth();
@@ -151,7 +149,7 @@ module.exports = {
         agency: user.agency,
         saleman: user.id,
         subscriberNumber: data.subscriberNumber,
-        revenue: package.price,
+        revenue: price,
         dateToCall: date,
       });
       await DataAssignment.updateOne({
