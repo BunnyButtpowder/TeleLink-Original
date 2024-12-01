@@ -39,6 +39,8 @@ module.exports = {
       }
 
 
+
+
       const columnMapping = {
         'noicapdata': 'placeOfIssue',
         'nhamang': 'networkName',
@@ -94,6 +96,22 @@ module.exports = {
           skippedRows.push(index + 2);
           return;
         }
+        function parseDate(dateValue) {
+          if (!dateValue) return null;
+        
+         
+          if (typeof dateValue === 'number' && !isNaN(dateValue)) {
+            const excelStartDate = new Date(1900, 0, 1); 
+            const offset = 24 * 60 * 60 * 1000; 
+            const excelDate = new Date(excelStartDate.getTime() + (dateValue - 1) * offset); 
+        
+            return excelDate.toISOString().split('T')[0]; 
+          }
+        
+          // Nếu là chuỗi ngày hợp lệ
+          const parsed = new Date(dateValue);
+          return isNaN(parsed.getTime()) ? null : parsed.toISOString().split('T')[0]; // Trả về định dạng YYYY-MM-DD
+        }
 
         validData.push({
           subscriberNumber,
@@ -103,8 +121,8 @@ module.exports = {
           currentPackage: row[headerIndexes['currentPackage']] || '',
           priorityPackage1: row[headerIndexes['priorityPackage1']] || '',
           priorityPackage2: row[headerIndexes['priorityPackage2']] || '',
-          registrationDate: row[headerIndexes['registrationDate']] || null,
-          expirationDate: row[headerIndexes['expirationDate']] || null,
+          registrationDate: parseDate(row[headerIndexes['registrationDate']] || null),
+          expirationDate: parseDate(row[headerIndexes['expirationDate']] || null),
           notes: row[headerIndexes['notes']] || '',
           TKC: row[headerIndexes['TKC']] || '',
           APRU3Months: row[headerIndexes['APRU3Months']] || '',
@@ -126,36 +144,57 @@ module.exports = {
       if (validData.length === 0) {
         throw new Error("Không có dữ liệu hợp lệ để nhập.");
       }
-      const subscriberNumbers = validData.map((item) => item.subscriberNumber);   
-      const existingSubscribers = await Data.find({ where: { subscriberNumber: subscriberNumbers } });
-      const existingMap = new Map(existingSubscribers.map((item) => [item.subscriberNumber, item]));
-      const dataToUpdate = [];
-      const dataToCreate = [];
-      validData.forEach((item) => {
-        if (existingMap.has(item.subscriberNumber)) {
-          const existing = existingMap.get(item.subscriberNumber);
-          dataToUpdate.push({
-            ...existing,
-            ...item, 
-          });
-        } else {
-          dataToCreate.push(item);
-        }
-      });
-      for (const data of dataToUpdate) {
-        await Data.update({ id: data.id }).set(data);
-      }
-      if (dataToCreate.length > 0) {
-        await Data.createEach(dataToCreate);
+      const uniqueNumbers = new Set(validData.map(item => item.subscriberNumber));
+      console.log('Số thuê bao duy nhất:', uniqueNumbers.size);
+
+      const subscriberNumbers = validData.map((item) => item.subscriberNumber);
+      const deleteResult = await Data.destroy({ subscriberNumber: subscriberNumbers }).fetch();
+      const deletedDataIds = deleteResult.map((record) => record.id);
+
+      console.log(`Đã xóa ${deletedDataIds.length} bản ghi trong bảng Data.`);
+
+      if (deletedDataIds.length > 0) {
+        
+        const deleteAssignResult = await DataAssignment.destroy({ data: deletedDataIds }).fetch();
+        console.log(`Đã xóa ${deleteAssignResult.length} bản ghi trong bảng DataAssign.`);
       }
 
-  
+      const createResult = await Data.createEach(validData).fetch();
+
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }
 
+      // const subscriberNumbers = validData.map((item) => item.subscriberNumber);
+      // const existingSubscribers = await Data.find({ where: { subscriberNumber: subscriberNumbers } });
+      // const existingMap = new Map(existingSubscribers.map((item) => [item.subscriberNumber, item]));
+      // const dataToUpdate = [];
+      // const dataToCreate = [];
+      // validData.forEach((item) => {
+      //   if (existingMap.has(item.subscriberNumber)) {
+      //     const existing = existingMap.get(item.subscriberNumber);
+      //     dataToUpdate.push({
+      //       ...existing,
+      //       ...item,
+      //     });
+      //   } else {
+      //     dataToCreate.push(item);
+      //   }
+      // });
+      // for (const data of dataToUpdate) {
+      //   await Data.update({ id: data.id }).set(data);
+      // }
+      // if (dataToCreate.length > 0) {
+      //   await Data.createEach(dataToCreate);
+      // }
+
+
+      // if (fs.existsSync(filePath)) {
+      //   fs.unlinkSync(filePath);
+      // }
+
       return res.ok({
-        message: `Nhập dữ liệu thành công: ${dataToCreate.length} bản ghi mới, ${dataToUpdate.length} bản ghi được cập nhật.`,
+        message: `Xử lý hoàn tất:  Đã xóa ${deleteResult.length} bản ghi cũ. Đã thêm mới ${createResult.length} bản ghi.`,
         skippedRows,
       });
     } catch (err) {
