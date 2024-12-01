@@ -1,0 +1,72 @@
+@startuml
+actor User
+boundary "Delete User" as Client
+participant "<<middlewares>>\ngetAuth" as mid1
+participant "<<middlewares>>\ncheckPermission" as mid2
+participant "<<action>>\ndelete" as Controller
+entity "Auth" as Model1
+entity "User" as Model2
+database "MySQL" as DB
+
+User -> Client: type keyword, select sort
+activate User
+activate Client
+Client -> mid1: DELETE /user/delete
+activate mid1
+alt invalid token 
+mid1 --> Client: message, 401
+end
+alt User not exist
+mid1 --> Client: message, 401
+end
+mid1 -> mid2: next()
+deactivate mid1
+activate mid2
+alt API not found
+mid2 --> Client: message, 404
+end
+alt Permission denied
+mid2 --> Client: message, 403
+end
+mid2 -> Controller: next()
+deactivate mid2
+activate Controller
+Controller -> Model1: find()
+activate Model1
+Model1 -> DB: find()
+activate DB
+DB --> Model1
+deactivate DB
+Model1 --> Controller
+deactivate Model1
+alt No user found
+Controller --> Client: message, 404
+end
+Controller -> Model1: destroyOne()
+activate Model1
+Model1 -> DB: destroyOne()
+activate DB
+DB --> Model1
+deactivate DB
+Model1 --> Controller
+deactivate Model1
+Controller -> Model2: destroyOne()
+activate Model2
+Model2 -> DB: destroyOne()
+activate DB
+DB --> Model2
+deactivate DB
+Model2 --> Controller
+deactivate Model2
+Controller --> Client: message, 200
+deactivate Controller
+
+
+
+
+
+
+
+deactivate Client
+
+@enduml

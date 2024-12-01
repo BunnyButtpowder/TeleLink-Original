@@ -1,0 +1,118 @@
+@startuml
+actor User
+boundary "Create call result" as Client
+participant "<<middlewares>>\ngetAuth" as mid1
+participant "<<middlewares>>\ncheckPermission" as mid2
+participant "<<action>>\nwork" as Controller
+entity "Data" as Model1
+entity "DataAssignment" as Model2
+entity "Package" as Model3
+entity "Report" as Model4
+entity "DataRehandle" as Model5
+entity "Result" as Model6
+database "MySQL" as DB
+
+User -> Client: type customer information and result
+activate User
+activate Client
+Client -> mid1: POST /data/work
+activate mid1
+alt invalid token 
+mid1 --> Client: message, 401
+end
+alt User not exist
+mid1 --> Client: message, 401
+end
+mid1 -> mid2: next()
+deactivate mid1
+activate mid2
+alt API not found
+mid2 --> Client: message, 404
+end
+alt Permission denied
+mid2 --> Client: message, 403
+end
+mid2 -> Controller: next()
+deactivate mid2
+activate Controller
+Controller -> Model1: find()
+activate Model1
+Model1 -> DB: find()
+activate DB
+DB --> Model1
+deactivate DB
+Model1 --> Controller
+deactivate Model1
+alt No data found
+Controller --> Client: message, 404
+end
+Controller -> Model2: find()
+activate Model2
+Model2 -> DB: find()
+activate DB
+DB --> Model2
+deactivate DB
+Model2 --> Controller
+deactivate Model2
+alt Not allowed to use this data
+Controller --> Client: message, 403
+end
+Controller -> Model3: find()
+activate Model3
+Model3 -> DB: find()
+activate DB
+DB --> Model3
+deactivate DB
+Model3 --> Controller
+deactivate Model3
+alt Package not found
+Controller --> Client: message, 404
+end
+Controller -> Model4: find(date)
+activate Model4
+Model4 -> DB: find()
+activate DB
+DB --> Model4
+deactivate DB
+Model4 --> Controller
+deactivate Model4
+alt No report of this date found
+    Controller -> Model4: create()
+    activate Model4
+    Model4 -> DB
+    activate DB
+    DB --> Model4
+    deactivate DB
+    Model4 --> Controller: new record
+    deactivate Model4
+end
+alt CallResult is in [5,6,7]
+    Controller -> Model5: create(data, user)
+    activate Model5
+    Model5 -> DB: create()
+    activate DB
+    DB --> Model5
+    deactivate DB
+    Model5 --> Controller
+    deactivate Model5
+end
+Controller -> Model6: Create()
+activate Model6
+Model6 -> DB: Create()
+activate DB
+DB --> Model6
+deactivate DB
+Model6 --> Controller: new record
+deactivate Model6
+Controller --> Client: message, data, 201
+deactivate Controller
+
+
+
+
+
+
+
+deactivate Client
+
+@enduml

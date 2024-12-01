@@ -14,6 +14,10 @@ module.exports = async function (req, res, next) {
   try {
     const decodedToken = await sails.helpers.jwt.verifyAsync(token);
     req.user = decodedToken; // Attach the user data to req object
+    const existingUser = await Auth.findOne({ id: decodedToken.id });
+    if (!existingUser) {
+      return res.unauthorized("Người dùng đăng nhập không tồn tại");
+    }
     return next();
   } catch (err) {
     return res.status(401).json({ err: 'Invalid token', details: err });

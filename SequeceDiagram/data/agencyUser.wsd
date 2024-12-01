@@ -1,0 +1,75 @@
+@startuml
+actor User
+boundary "Data page" as Client
+participant "<<middlewares>>\ngetAuth" as mid1
+participant "<<middlewares>>\ncheckPermission" as mid2
+participant "<<action>>\ndata-assign/agency" as Controller
+entity "User" as Model1
+entity "Data" as Model2
+entity "DataAssignment" as Model3
+
+database "MySQL" as DB
+
+User -> Client: select User, quantity, data type
+activate User
+activate Client
+Client -> mid1: POST /data-assign/admin-user
+activate mid1
+alt invalid token
+    mid1 --> Client: message, 401
+end
+alt User not exist
+    mid1 --> Client: message, 401
+end
+mid1 -> mid2: next()
+deactivate mid1
+activate mid2
+alt API not found
+    mid2 --> Client: message, 404
+end
+alt Permission denied
+    mid2 --> Client: message, 403
+end
+mid2 -> Controller: next()
+deactivate mid2
+activate Controller
+
+Controller -> Model1: findOne()
+activate Model1
+Model1 -> DB: findOne()
+activate DB
+DB --> Model1
+deactivate DB
+Model1 --> Controller: user entity
+deactivate Model1
+alt User not found
+    Controller --> Client: message, 404
+end
+Controller -> Model2: find(agencyId)
+activate Model2
+Model2 -> DB: find(agencyId)
+activate DB
+DB --> Model2
+deactivate DB
+Model2 --> Controller: data entity
+deactivate Model2
+alt No matching data found
+    Controller --> Client: message, 404
+end
+alt No enough data to be distribute
+    Controller --> Client: message, 400
+end
+Controller -> Controller: Shuffle data
+Controller -> Model3: create()
+activate Model3
+Model3 -> DB: create()
+activate DB
+DB --> Model3
+deactivate DB
+Model3 --> Controller
+deactivate Model3
+Controller --> Client: message, 200
+deactivate Controller
+deactivate Client
+
+@enduml
