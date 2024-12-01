@@ -1,16 +1,15 @@
 @startuml
 actor User
-boundary "Forgot Page" as Client
-participant "<<action>>\nforgotPass" as Controller
-participant "<<service>>\nNodemailer" as mail
+boundary "Reset Page" as Client
+participant "<<action>>\nResetPass" as Controller
 entity "Auth" as Model
 database "MySQL" as DB
 
-User -> Client: Type in email
+User -> Client: Type in otp
 activate User
 activate Client
 
-Client -> Controller: POST /forgotPass
+Client -> Controller: POST /resetPass
 activate Controller
 Controller -> Model: find()
 activate Model
@@ -20,10 +19,16 @@ DB --> Model
 deactivate DB
 Model --> Controller: auth entity
 deactivate Model
-alt No matching email found
-    Controller --> Client: message, 404
+Controller -> Controller: verify OTP
+alt OTP code is invalid
+    Controller --> Client: message, 403
 end
-Controller -> Model: updateOne(otp)
+Controller -> Controller: verify expired Date
+alt OTP code is expired
+    Controller --> Client: message, 403
+end
+Controller -> Controller: hash password
+Controller -> Model: updateOne(newPassword)
 activate Model
 Model -> DB: updateOne()
 activate DB
@@ -31,9 +36,6 @@ DB --> Model
 deactivate DB
 Model --> Controller
 deactivate Model
-Controller -> mail: sendMail()
-activate mail
-deactivate mail
 Controller --> Client: message, 200
 deactivate Controller
     

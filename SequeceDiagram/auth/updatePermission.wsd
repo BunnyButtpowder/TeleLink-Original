@@ -1,0 +1,47 @@
+@startuml
+actor User
+boundary "Permission Page" as Client
+participant "<<middlewares>>\ngetAuth" as mid1
+participant "<<middlewares>>\ncheckPermission" as mid2
+participant "<<action>>\nupdate" as Controller
+entity "Role" as Model
+
+database "MySQL" as DB
+
+User -> Client: select permissions, submit
+activate User
+activate Client
+Client -> mid1: GET /permission/update
+activate mid1
+alt invalid token
+    mid1 --> Client: message, 401
+end
+alt User not exist
+    mid1 --> Client: message, 401
+end
+mid1 -> mid2: next()
+deactivate mid1
+activate mid2
+alt API not found
+    mid2 --> Client: message, 404
+end
+alt Permission denied
+    mid2 --> Client: message, 403
+end
+mid2 -> Controller: next()
+deactivate mid2
+activate Controller
+
+Controller -> Model: update(roleId)
+activate Model
+Model -> DB: update(roleId)
+activate DB
+DB --> Model
+deactivate DB
+Model --> Controller: role's permissions
+deactivate Model
+Controller --> Client: message, data, 200
+deactivate Controller
+deactivate Client
+
+@enduml
