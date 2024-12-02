@@ -201,7 +201,7 @@ const ResultListFilter = () => {
               <label className='form-label fs-6 fw-bold'>Chi nhánh:</label>
               <select
                 className='form-select form-select-solid fw-bolder'
-                onChange={(e) => setAgencyId(e.target.value  ? parseInt(e.target.value, 10) : undefined)}
+                onChange={(e) => setAgencyId(e.target.value ? parseInt(e.target.value, 10) : undefined)}
                 value={agencyId}
               >
                 <option value=''></option>
