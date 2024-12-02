@@ -101,6 +101,14 @@ export const initialResultQueryState: QueryState = {
   },
 }
 
+export const initialReportQueryState: QueryState = {
+  page: 1,
+  items_per_page: 10,
+  filter: {
+    date: '',
+  },
+}
+
 export const initialQueryRequest: QueryRequestContextProps = {
   state: initialQueryState,
   updateState: () => { },

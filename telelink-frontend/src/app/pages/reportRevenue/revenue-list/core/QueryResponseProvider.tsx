@@ -35,6 +35,7 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
     const { search = '', filter = {} } = state;
 
     const { agencyId, date } = filter;
+
     // Admin gets all revenue records
     if (userRole === 1) {
       return getAllRevenue({ agencyId, searchTerm: search, date });
