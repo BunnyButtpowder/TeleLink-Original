@@ -23,9 +23,12 @@ module.exports = {
       let { result, dataPackage, customerName, address, note, dateToCall } =
         update;
       const existingResult = await Result.findOne({ id: resultId });
-      const userId = this.req.user.id;
+     
 
-      const existingUser = await Auth.findOne({ id: userId });
+      const userId = this.req.user.id;
+      
+
+      const existingUser = await User.findOne({ auth: userId });
       if (!existingUser) {
         return res.unauthorized("Người dùng đăng nhập không tồn tại");
       }
@@ -45,18 +48,15 @@ module.exports = {
       const currentYear = new Date(Date.now()).getYear();
       const createdYear = new Date(existingResult.createdAt).getYear();
 
-      let package = null;
-      if (dataPackage) {
-        package = await Package.findOne({ id: dataPackage });
+      let title = null;
+      let price = 0
+      if (dataPackage && result == 1) {
+        const package = await Package.findOne({ id: dataPackage });
         if (!package) {
           return this.res.notFound({ message: "Không tìm thấy gói data." });
         }
-        if (result != 1) {
-          dataPackage = null;
-          package.price = 0;
-        } else {
-          dataPackage = package.title;
-        }
+        title = package.title
+        price = package.price
       }
 
       if (currentMonth == createdMonth && createdYear == currentYear) {
@@ -68,22 +68,22 @@ module.exports = {
         );
 
         let report = await Report.findOne({
-          agency: user.agency,
+          agency: existingUser.agency,
           createdAt: { ">=": startDate, "<=": endDate },
         });
         if (!report) {
-          report = await Report.create({ agency: user.agency }).fetch();
+          report = await Report.create({ agency: existingUser.agency }).fetch();
         }
         await Result.updateOne(
           { id: resultId },
           {
             result,
-            dataPackage,
+            dataPackage: title,
             customerName,
             address,
             note,
             dateToCall,
-            revenue: package.price,
+            revenue: price,
           }
         );
         let rawQuery, groupedResults;
@@ -94,7 +94,7 @@ module.exports = {
         GROUP BY data_id, result, revenue
         `;
         groupedResults = await sails.sendNativeQuery(rawQuery, [
-          user.agency,
+          existingUser.agency,
           startDate,
           endDate,
         ]);
