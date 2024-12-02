@@ -104,7 +104,7 @@ DB --> Model6
 deactivate DB
 Model6 --> Controller: new record
 deactivate Model6
-Controller --> Client: message, data, 201
+Controller --> Client: message, 201
 deactivate Controller
 
 

@@ -64,7 +64,7 @@ DB --> Model2
 deactivate DB
 Model2 --> Controller
 deactivate Model2
-Controller --> Client: message, data, 201
+Controller --> Client: message, 200
 deactivate Controller
 
 

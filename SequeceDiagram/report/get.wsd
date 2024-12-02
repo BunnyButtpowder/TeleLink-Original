@@ -1,0 +1,66 @@
+@startuml
+actor User
+boundary "Report Page" as Client
+participant "<<middlewares>>\ngetAuth" as mid1
+participant "<<middlewares>>\ncheckPermission" as mid2
+participant "<<action>>\nget" as Controller
+entity "Agency" as Model1
+entity "Report" as Model2
+database "MySQL" as DB
+
+User -> Client: type in agency and date
+activate User
+activate Client
+Client -> mid1: GET /result/get?agencyId=?&date=?
+activate mid1
+alt invalid token
+    mid1 --> Client: message, 401
+end
+alt User not exist
+    mid1 --> Client: message, 401
+end
+mid1 -> mid2: next()
+deactivate mid1
+activate mid2
+alt API not found
+    mid2 --> Client: message, 404
+end
+alt Permission denied
+    mid2 --> Client: message, 403
+end
+mid2 -> Controller: next()
+deactivate mid2
+activate Controller
+alt filter by agency
+    Controller -> Model1: findOne()
+    activate Model1
+    Model1 -> DB: findOne()
+    activate DB
+    DB --> Model1
+    deactivate DB
+    Model1 --> Controller
+    deactivate Model1
+    alt Agency not exist
+        Controller --> Client: message, 404
+    end
+end
+Controller -> Model2: find()
+activate Model2
+Model2 -> DB: find()
+activate DB
+DB --> Model2
+deactivate DB
+Model2 --> Controller
+deactivate Model2
+Controller --> Client: message, data, 200
+deactivate Controller
+
+
+
+
+
+
+
+deactivate Client
+
+@enduml
