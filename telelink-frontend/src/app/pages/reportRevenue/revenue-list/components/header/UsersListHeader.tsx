@@ -1,5 +1,5 @@
 import {useListView} from '../../core/ListViewProvider'
-import {ResultListToolbar} from './ResultListToolbar'
+import {ReportListToolbar} from './ReportListToolbar'
 import {UsersListGrouping} from './UsersListGrouping'
 import {UsersListSearchComponent} from './UsersListSearchComponent'
 
@@ -11,7 +11,7 @@ const UsersListHeader = () => {
       {/* begin::Card toolbar */}
       <div className='card-toolbar'>
         {/* begin::Group actions */}
-        {selected.length > 0 ? <UsersListGrouping /> : <ResultListToolbar />}
+        {selected.length > 0 ? <UsersListGrouping /> : <ReportListToolbar />}
         {/* end::Group actions */}
       </div>
       {/* end::Card toolbar */}

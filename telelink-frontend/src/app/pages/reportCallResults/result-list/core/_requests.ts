@@ -38,6 +38,20 @@ const updateCallResult = async (resultId: number, updateData: Partial<CallResult
   }
 }
 
+const getPackagesByDataId = async (dataId: string): Promise<Array<{ id: number; title: string }>> => {
+  try {
+    const response = await axios.get(`${API_URL}/packages/get-package?id=${dataId}`);
+    // Assuming `response.data.package` is an array of objects with `id` and `title`
+    return response.data.package.map((pkg: any) => ({
+      id: pkg.id,
+      title: pkg.title,
+    }));
+  } catch (error) {
+    console.error('Failed to fetch packages by data ID:', error);
+    throw error;
+  }
+};
+
 const getResultById = async (id: ID) => {
   const response = await axios.get(`${API_URL}/result/${id}`);
   return response.data;
@@ -58,4 +72,5 @@ export {
   deleteSelectedUsers,
   getResultById,
   updateCallResult,
+  getPackagesByDataId
 };

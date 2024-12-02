@@ -1,9 +1,9 @@
 import {KTIcon} from '../../../../../../_metronic/helpers'
 import {useListView} from '../../core/ListViewProvider'
-import {ResultListFilter} from './ResultListFilter'
+import {ReportListFilter} from './ReportListFilter'
 import {useIntl} from 'react-intl'
 
-const ResultListToolbar = () => {
+const ReportListToolbar = () => {
   const intl = useIntl()
   const {setItemIdForUpdate} = useListView()
   const openAddUserModal = () => {
@@ -12,7 +12,7 @@ const ResultListToolbar = () => {
 
   return (
     <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-      <ResultListFilter />
+      <ReportListFilter />
 
       {/* <button type='button' className='btn btn-light-primary me-3'>
         <KTIcon iconName='exit-up' className='fs-2' />
@@ -27,4 +27,4 @@ const ResultListToolbar = () => {
   )
 }
 
-export {ResultListToolbar}
+export {ReportListToolbar}

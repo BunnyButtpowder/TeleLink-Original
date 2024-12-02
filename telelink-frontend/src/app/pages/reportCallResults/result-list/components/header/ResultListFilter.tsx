@@ -13,7 +13,7 @@ const ResultListFilter = () => {
   const { currentUser } = useAuth()
   const [month, setMonth] = useState<string | undefined>('')
   const [year, setYear] = useState<string | undefined>('')
-  const [agencyId, setAgencyId] = useState< string | undefined>()
+  const [agencyId, setAgencyId] = useState< number | undefined>()
   const [agencies, setAgencies] = useState<{ id: number, name: string }[]>([]) // State to hold agency list
   const [salesmen, setSalesmen] = useState<{ id: number, fullName: string }[]>([]) // State to hold salesmen list
   const [result, setResult] = useState<number | undefined>()
@@ -64,7 +64,7 @@ const ResultListFilter = () => {
       let fetchAgencyId = agencyId;
 
       if (userRole === 2) {
-        fetchAgencyId = agencyID?.toString(); 
+        fetchAgencyId = agencyID; 
       }
 
       console.log(fetchAgencyId)
@@ -201,7 +201,7 @@ const ResultListFilter = () => {
               <label className='form-label fs-6 fw-bold'>Chi nhánh:</label>
               <select
                 className='form-select form-select-solid fw-bolder'
-                onChange={(e) => setAgencyId(e.target.value )}
+                onChange={(e) => setAgencyId(e.target.value  ? parseInt(e.target.value, 10) : undefined)}
                 value={agencyId}
               >
                 <option value=''></option>

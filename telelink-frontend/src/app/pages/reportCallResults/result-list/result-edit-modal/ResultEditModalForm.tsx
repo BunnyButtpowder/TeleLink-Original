@@ -11,7 +11,7 @@ import {useQueryResponse} from '../core/QueryResponseProvider'
 import {useIntl} from 'react-intl'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { getAllPackages } from '../../../customer/customers-list/core/_requests'
+import { getPackagesByDataId } from '../../../customer/customers-list/core/_requests'
 
 type Props = {
   isUserLoading: boolean
@@ -23,7 +23,7 @@ const vietnamesePhoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
 const editResultSchema = Yup.object().shape({
   result: Yup.number().required('Vui lòng chọn kết quả cuộc gọi'),
   dataPackage: Yup.number().required('Vui lòng chọn gói cước'),
-  customerName: Yup.string().required('Vui lòng nhập tên khách hàng'),
+  customerName: Yup.string().nullable(),
   address: Yup.string().nullable(),
   note: Yup.string().nullable(),
   // subscriberNumber: Yup.string()
@@ -51,11 +51,12 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
     { value: 8, label: 'Mất đơn' },
   ]
 
-  const fetchPackages = async () => {
+  const fetchPackages = async (dataId: number) => {
     setIsLoadingPackages(true);
+    console.log(dataId);
     try {
-      const packages = await getAllPackages();
-      setPackages(packages.data);
+      const packageArray = await getPackagesByDataId(dataId.toString());
+      setPackages(packageArray);
       console.log('Fetched packages:', packages);
     } catch (error) {
       console.error('Failed to fetch packages:', error);
@@ -72,6 +73,7 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
   const [resultForEdit] = useState<CallResult>({
     ...result,
     result: result.result || initialCallResult.result,
+    data_id: result.data_id || initialCallResult.data_id,
     dataPackage: result.dataPackage || initialCallResult.dataPackage,
     customerName: result.customerName || initialCallResult.customerName,
     address: result.address || initialCallResult.address,
@@ -117,7 +119,9 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
   })
 
   useEffect(() => {
-    fetchPackages();
+    if (resultForEdit.data_id?.id) {
+      fetchPackages(resultForEdit.data_id.id);
+    }
 
     if (![5, 6, 7].includes(formik.values.result)) {
       formik.setFieldValue('dateToCall', '');
@@ -178,7 +182,7 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
 
             {/* begin::Customer Name */}
             <div className='fv-row mb-7'>
-              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'CUSTOMER.NAME' })}</label>
+              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'CUSTOMER.NAME' })}</label>
 
               <input
                 placeholder='Nhập tên khách hàng'
