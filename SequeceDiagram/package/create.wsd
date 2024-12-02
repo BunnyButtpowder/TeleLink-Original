@@ -1,18 +1,16 @@
 @startuml
 actor User
-boundary "Permission Page" as Client
+boundary "Package Page" as Client
 participant "<<middlewares>>\ngetAuth" as mid1
 participant "<<middlewares>>\ncheckPermission" as mid2
-participant "<<action>>\nupdate" as Controller
-entity "Role" as Model
-
+participant "<<action>>\nget" as Controller
+entity "Package" as Model
 database "MySQL" as DB
 
-User -> Client: select permissions, submit
+User -> Client: type in package information
 activate User
 activate Client
-Client -> mid1: GET /permission/update
-activate mid1
+Client -> mid1: GET /package/create
 alt invalid token
     mid1 --> Client: message, 401
 end
@@ -31,17 +29,26 @@ end
 mid2 -> Controller: next()
 deactivate mid2
 activate Controller
-
-Controller -> Model: update(roleId)
+Controller -> Model: create()
 activate Model
-Model -> DB: update(roleId)
+Model -> DB: create()
 activate DB
 DB --> Model
 deactivate DB
-Model --> Controller: role's permissions
+Model --> Controller
 deactivate Model
+alt Package title duplicated
+Controller --> Client: message, 400
+end
 Controller --> Client: message, 200
 deactivate Controller
+
+
+
+
+
+
+
 deactivate Client
 
 @enduml
