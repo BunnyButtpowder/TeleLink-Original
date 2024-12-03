@@ -59,7 +59,6 @@ end
 alt No enough data to be distribute
     Controller --> Client: message, 400
 end
-Controller -> Controller: Shuffle data
 Controller -> Model3: create()
 activate Model3
 Model3 -> DB: create()
