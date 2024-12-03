@@ -94,7 +94,7 @@ module.exports = {
         GROUP BY data_id, result, revenue
         `;
         groupedResults = await sails.sendNativeQuery(rawQuery, [
-          existingUser.agency,
+          existingResult.agency,
           startDate,
           endDate,
         ]);
