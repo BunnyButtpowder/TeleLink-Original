@@ -7,6 +7,7 @@ module.exports = {
             url: process.env.DATABASE_URL,
         }
     },
+   
     port: process.env.PORT || 1337,
     security: {
         cors: {

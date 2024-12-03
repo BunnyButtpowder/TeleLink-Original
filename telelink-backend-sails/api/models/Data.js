@@ -37,12 +37,12 @@ module.exports = {
       allowNull: true,
     },
     registrationDate: {
-      type: 'ref',
-      columnType: 'datetime',
+      type: 'string',
+      allowNull: true,
     },
     expirationDate: {
-      type: 'ref',
-      columnType: 'datetime',
+      type: 'string',
+      allowNull: true,
     },
     
        
