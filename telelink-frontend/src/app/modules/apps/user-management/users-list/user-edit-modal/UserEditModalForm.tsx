@@ -446,6 +446,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                 )}
                 autoComplete='off'
                 disabled={salemanFormik.isSubmitting || isUserLoading}
+                readOnly={salemanFormik.values.auth?.username !== null && salemanFormik.values.auth?.username !== ''} 
               />
               {salemanFormik.touched.auth?.username && salemanFormik.errors.auth?.username && (
                 <div className='fv-plugins-message-container'>
@@ -477,6 +478,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                 )}
                 autoComplete='off'
                 disabled={salemanFormik.isSubmitting || isUserLoading}
+                readOnly={salemanFormik.values.auth?.password !== null && salemanFormik.values.auth?.password !== ''} 
               />
               {salemanFormik.touched.auth?.password && salemanFormik.errors.auth?.password && (
                 <div className='fv-plugins-message-container'>
@@ -938,6 +940,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                   )}
                   autoComplete='off'
                   disabled={agencyFormik.isSubmitting || isUserLoading}
+                  readOnly={agencyFormik.values.auth?.username !== null && agencyFormik.values.auth?.username !== ''} 
                 />
                 {agencyFormik.touched.auth?.username && agencyFormik.errors.auth?.username && (
                   <div className='fv-plugins-message-container'>
@@ -969,6 +972,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                   )}
                   autoComplete='off'
                   disabled={agencyFormik.isSubmitting || isUserLoading}
+                  readOnly={agencyFormik.values.auth?.password !== null && agencyFormik.values.auth?.password !== ''}
                 />
                 {agencyFormik.touched.auth?.password && agencyFormik.errors.auth?.password && (
                   <div className='fv-plugins-message-container'>

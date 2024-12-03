@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../../../app/modules/auth'
 import { useQueryResponse } from '../core/QueryResponseProvider'
 
+
 // Define the schemas for form validation
 const dataDistributionSchema = Yup.object().shape({
   agencyId: Yup.string().required('Vui lòng chọn chi nhánh'),
@@ -156,36 +157,39 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
     },
     validationSchema: isAdmin && selectedTarget === 'agency' ? dataDistributionSchema : salesmanDataDistributionSchema,
     onSubmit: async (values, { resetForm }) => {
-      setIsSubmitting(true)
+      setIsSubmitting(true);
       try {
         let response;
         if (isAdmin && selectedTarget === 'agency') {
           response = await dataAssignAgency(values);
-        }
-        else if (isAdmin && selectedTarget === 'salesman') {
+        } else if (isAdmin && selectedTarget === 'salesman') {
           response = await dataAssignAdminToSaleman(values);
-        } 
-        else {
+        } else {
           response = await dataAssignSalesman(values);
         }
-        toast.success(response.message || 'Phân phối dữ liệu thành công!');
-        //resetForm();
-        // fetchNetworks();
-        // fetchCategories();
+
+        resetForm();
+        fetchNetworks();
+        fetchCategories();
         refetch();
         onClose();
+        toast.success("Phân phối dữ liệu thành công!")
+
       } catch (error) {
         const errorMessage = (error as any).response?.data?.message || 'Phân phối dữ liệu thất bại!';
-        console.error('Error distributing data:', errorMessage)
-        toast.error(errorMessage)
+        
+        console.error('Error distributing data:', errorMessage);
+        toast.error(errorMessage);
       } finally {
-        setIsSubmitting(false)
+        setIsSubmitting(false);
       }
     },
-  })
+  });
+  
 
   return (
     <>
+          <ToastContainer />
       {isAdmin && (
         // Radio buttons only for admin to choose between agency and salesman
         <div className='d-flex justify-content-evenly mb-7'>
@@ -383,7 +387,10 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
             />
             {formik.touched.quantity && formik.errors.quantity && (
               <div className='fv-plugins-message-container'>
+                <div className='fv-help-block'>
+
                 <span role='alert'>{formik.errors.quantity}</span>
+                </div>
               </div>
             )}
           </div>
@@ -414,10 +421,12 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
               </span>
             )}
           </button>
-          <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
         </div>
         {/* End::Actions */}
+ 
       </form>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+
     </>
   )
 }
