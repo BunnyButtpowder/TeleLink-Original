@@ -38,14 +38,14 @@ module.exports = {
     },
     registrationDate: {
       type: 'string',
-      columnType: 'date',
       allowNull: true,
     },
     expirationDate: {
-      type: 'string', 
-      columnType: 'date',
+      type: 'string',
       allowNull: true,
-    },    
+    },
+    
+       
     notes: {    // Ghi chú
       type: 'string',
       allowNull: true,

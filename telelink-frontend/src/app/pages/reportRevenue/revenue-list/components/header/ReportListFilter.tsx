@@ -1,30 +1,43 @@
 import {useEffect, useState} from 'react'
 import {MenuComponent} from '../../../../../../_metronic/assets/ts/components'
-import {initialQueryState, KTIcon} from '../../../../../../_metronic/helpers'
+import {initialReportQueryState, KTIcon} from '../../../../../../_metronic/helpers'
 import {useQueryRequest} from '../../core/QueryRequestProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
 import {useIntl} from 'react-intl'
 
-const ResultListFilter = () => {
+const ReportListFilter = () => {
   const {updateState} = useQueryRequest()
   const {isLoading} = useQueryResponse()
-  const [role, setRole] = useState<string | undefined>()
-  const [lastLogin, setLastLogin] = useState<string | undefined>()
+  const [month, setMonth] = useState<string | undefined>('')
+  const [year, setYear] = useState<string | undefined>('')
   const intl = useIntl()
+  const { refetch } = useQueryResponse();
+
 
   useEffect(() => {
     MenuComponent.reinitialization()
   }, [])
 
   const resetData = () => {
-    updateState({filter: undefined, ...initialQueryState})
+    setMonth(undefined)
+    setYear(undefined)
+    updateState({
+      filter: {
+        month: undefined,
+        year: undefined,
+      }, ...initialReportQueryState
+    })
+    refetch()
   }
 
   const filterData = () => {
+    console.log(month, year);
+    const date = month && year ? `${month}-${year}` : '';
+    console.log("Applying filters:", { date });
     updateState({
-      filter: {last_login: lastLogin},
-      ...initialQueryState,
-    })
+      filter: {date},
+    });
+    refetch();
   }
 
   return (
@@ -55,70 +68,61 @@ const ResultListFilter = () => {
 
         {/* begin::Content */}
         <div className='px-7 py-5' data-kt-user-table-filter='form'>
-          {/* begin::Input group */}
-          <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Role:</label>
-            <select
-              className='form-select form-select-solid fw-bolder'
-              data-kt-select2='true'
-              data-placeholder='Select option'
-              data-allow-clear='true'
-              data-kt-user-table-filter='role'
-              data-hide-search='true'
-              onChange={(e) => setRole(e.target.value)}
-              value={role}
-            >
-              <option value=''></option>
-              <option value='Partner'>Partner</option>
-              <option value='Sub-admin'>Administrator (Sub)</option>
-              <option value='Salesman'>Salesman</option>
-            </select>
-          </div>
-          {/* end::Input group */}
+         {/* Month Selector */}
+         <div className="mb-10 d-flex justify-content-between">
+            <div>
+              <label className="form-label fs-6 fw-bold">Tháng:</label>
+              <select
+                className="form-select form-select-solid fw-bolder"
+                onChange={(e) => setMonth(e.target.value)}
+                value={month}
+              >
+                <option value="">Chọn tháng</option>
+                {[...Array(12)].map((_, i) => (
+                  <option key={i + 1} value={(i + 1).toString().padStart(2, '0')}>
+                    {`Tháng ${i + 1}`}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* begin::Input group */}
-          <div className='mb-10'>
-            <label className='form-label fs-6 fw-bold'>Last login:</label>
-            <select
-              className='form-select form-select-solid fw-bolder'
-              data-kt-select2='true'
-              data-placeholder='Select option'
-              data-allow-clear='true'
-              data-kt-user-table-filter='two-step'
-              data-hide-search='true'
-              onChange={(e) => setLastLogin(e.target.value)}
-              value={lastLogin}
-            >
-              <option value=''></option>
-              <option value='Yesterday'>Yesterday</option>
-              <option value='20 mins ago'>20 mins ago</option>
-              <option value='5 hours ago'>5 hours ago</option>
-              <option value='2 days ago'>2 days ago</option>
-            </select>
+            <div>
+              <label className="form-label fs-6 fw-bold">Năm:</label>
+              <select
+                className="form-select form-select-solid fw-bolder"
+                onChange={(e) => setYear(e.target.value)}
+                value={year}
+              >
+                <option value="">Chọn năm</option>
+                {[...Array(5)].map((_, i) => (
+                  <option key={i} value={(new Date().getFullYear() - i).toString()}>
+                    {new Date().getFullYear() - i}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          {/* end::Input group */}
-
           {/* begin::Actions */}
           <div className='d-flex justify-content-end'>
             <button
               type='button'
               disabled={isLoading}
-              onClick={filterData}
+              onClick={resetData}
               className='btn btn-light btn-active-light-primary fw-bold me-2 px-6'
               data-kt-menu-dismiss='true'
               data-kt-user-table-filter='reset'
             >
-              Reset
+              Đặt lại
             </button>
             <button
               disabled={isLoading}
               type='button'
-              onClick={resetData}
+              onClick={filterData}
               className='btn btn-primary fw-bold px-6'
               data-kt-menu-dismiss='true'
               data-kt-user-table-filter='filter'
             >
-              Apply
+              Áp dụng 
             </button>
           </div>
           {/* end::Actions */}
@@ -130,4 +134,4 @@ const ResultListFilter = () => {
   )
 }
 
-export {ResultListFilter}
+export {ReportListFilter}

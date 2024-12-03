@@ -13,8 +13,12 @@ const ProviderCell: FC<Props> = ({ provider }) => {
       providerLabel = 'Viettel'
       badgeClass = 'badge badge-light-danger'
       break;
-    case 'Vinaphone': // Vinaphone - blue
+    case 'Vinaphone': // Vinaphone - cyan
       providerLabel = 'Vinaphone'
+      badgeClass = 'badge badge-light-info'
+      break;
+    case 'Mobifone': // Mobifone - blue
+      providerLabel = 'Mobifone'
       badgeClass = 'badge badge-light-primary'
       break;
     default: // Undefined network name - grey

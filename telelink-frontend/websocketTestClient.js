@@ -1,8 +1,6 @@
 import io from 'socket.io-client';
 
 const agencyId = '1'
-
-// Kết nối đến server WebSocket
 const socket = io('http://localhost:9999', {
   transports: ['websocket']
 });  
@@ -15,7 +13,7 @@ socket.on('connect', function() {
 
 socket.on('newDataAssigned', function(data) {
   console.log('Received newDataAssigned event:', data);
-  // Bạn có thể xử lý dữ liệu ở đây, ví dụ hiển thị thông báo cho người dùng.
+  // alert('Received newDataAssigned event:', data);
 });
 
 socket.on('disconnect', function() {

@@ -13,8 +13,12 @@ const DataNetworkCell: FC<Props> = ({ networkName }) => {
             networkLabel = 'Viettel'
             badgeClass = 'badge badge-light-danger'
             break;
-        case 'Vinaphone': // Vinaphone - blue
+        case 'Vinaphone': // Vinaphone - cyan
             networkLabel = 'Vinaphone'
+            badgeClass = 'badge badge-light-info'
+            break;
+        case 'Mobifone': // Mobifone - blue
+            networkLabel = 'Mobifone'
             badgeClass = 'badge badge-light-primary'
             break;
         default: // Undefined network name - grey

@@ -21,7 +21,7 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
   const {state} = useQueryRequest()
   const { currentUser } = useAuth();
   const userRole = currentUser?.auth.role;
-  const agencyId = currentUser?.agency?.id;
+  const agencyID = currentUser?.agency?.id;
   const userId = currentUser?.id;
   const [query, setQuery] = useState<string>(stringifyRequestQuery(state))
   const updatedQuery = useMemo(() => stringifyRequestQuery(state), [state])
@@ -40,9 +40,9 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
     if (userRole === 1) {
       return getAllCallResults({ saleman, agencyId, result, searchTerm: search, sort, order, date });
     } else if (userRole === 2) {
-      return getAllCallResults({ saleman, agencyId: agencyId, result, searchTerm: search, sort, order, date });
+      return getAllCallResults({ saleman, agencyId: agencyID, result, searchTerm: search, sort, order, date });
     } else if (userRole === 3) {
-      return getAllCallResults({ saleman: userId, agencyId: agencyId, result, searchTerm: search, sort, order, date });
+      return getAllCallResults({ saleman: userId, agencyId: agencyID, result, searchTerm: search, sort, order, date });
     } else {
       return Promise.resolve({data: [], count: 0});
     }
@@ -74,16 +74,15 @@ const useQueryResponseData = () => {
 
 const useQueryResponsePagination = () => {
   const defaultPaginationState: PaginationState = {
-    links: [],
     ...initialQueryState,
   }
 
   const {response} = useQueryResponse()
-  if (!response || !response.payload || !response.payload.pagination) {
+  if (!response) {
     return defaultPaginationState
   }
 
-  return response.payload.pagination
+  return response
 }
 
 const useQueryResponseLoading = (): boolean => {

@@ -35,6 +35,7 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
     const { search = '', filter = {} } = state;
 
     const { agencyId, date } = filter;
+
     // Admin gets all revenue records
     if (userRole === 1) {
       return getAllRevenue({ agencyId, searchTerm: search, date });
@@ -71,16 +72,15 @@ const useQueryResponseData = () => {
 
 const useQueryResponsePagination = () => {
   const defaultPaginationState: PaginationState = {
-    links: [],
     ...initialQueryState,
   }
 
   const {response} = useQueryResponse()
-  if (!response || !response.payload || !response.payload.pagination) {
+  if (!response) {
     return defaultPaginationState
   }
 
-  return response.payload.pagination
+  return response
 }
 
 const useQueryResponseLoading = (): boolean => {

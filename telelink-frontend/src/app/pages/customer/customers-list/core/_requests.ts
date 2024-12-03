@@ -20,19 +20,20 @@ const getAllPackages = async() => {
   }
 }
 
-const getPackagesByDataId = async (dataId: string): Promise<string[]> => {
+const getPackagesByDataId = async (dataId: string): Promise<Array<{ id: number; title: string }>> => {
   try {
     const response = await axios.get(`${API_URL}/packages/get-package?id=${dataId}`);
-    const packageString = response.data.package; // The string containing package names
-    if (packageString) {
-      return packageString.split(','); // Split the string into an array of packages
-    }
-    return []; // Return an empty array if no packages are available
+    // Assuming `response.data.package` is an array of objects with `id` and `title`
+    return response.data.package.map((pkg: any) => ({
+      id: pkg.id,
+      title: pkg.title,
+    }));
   } catch (error) {
     console.error('Failed to fetch packages by data ID:', error);
     throw error;
   }
 };
+
 
 const createCallResult = async (result: Result, dataId: string, date: string) => {
   const response = await axios.post(`${API_URL}/data/works?dataId=${dataId}`,

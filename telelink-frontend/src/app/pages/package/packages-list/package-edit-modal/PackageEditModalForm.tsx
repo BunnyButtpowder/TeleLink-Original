@@ -202,14 +202,14 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
                     type='radio'
                     value="Mobiphone"
                     id='kt_modal_update_role_option_1'
-                    checked={packageFormik.values.provider === 'Mobiphone'}                   
-                    onChange={() => packageFormik.setFieldValue('provider', 'Mobiphone')}
+                    checked={packageFormik.values.provider === 'Mobifone'}                   
+                    onChange={() => packageFormik.setFieldValue('provider', 'Mobifone')}
                     disabled={packageFormik.isSubmitting || isUserLoading}
                   />
                   {/* end::Input */}
                   {/* begin::Label */}
                   <label className='form-check-label' htmlFor='kt_modal_update_role_option_1'>
-                    <div className='fw-bolder text-gray-800'>Mobiphone</div>
+                    <div className='fw-bolder text-gray-800'>Mobifone</div>
                   </label>
                   {/* end::Label */}
                 </div>

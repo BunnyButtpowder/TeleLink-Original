@@ -60,14 +60,14 @@ module.exports = {
           message: "Bạn không có quyền cập nhật dữ liệu này.",
         });
       }
-      let dataPackage = null;
+      let title = null;
       let price = 0
       if (dataPackage && result == 1) {
         const package = await Package.findOne({ id: dataPackage });
         if (!package) {
           return this.res.notFound({ message: "Không tìm thấy gói data." });
         }
-        dataPackage = package.title
+        title = package.title
         price = package.price
       }
 
@@ -141,7 +141,7 @@ module.exports = {
       }
       const newResult = await Result.create({
         result,
-        dataPackage,
+        dataPackage: title,
         customerName,
         address,
         note,
@@ -235,6 +235,7 @@ module.exports = {
         callResult: newResult,
       });
     } catch (error) {
+      console.log(error);
       return this.res.serverError({
         message: "Lỗi khi tạo kết quả cuộc gọi",
         error: error.message,

@@ -1,6 +1,6 @@
 import { useState, FC, useEffect } from 'react';
 import { toAbsoluteUrl } from '../../../../../../_metronic/helpers';
-import { initialUser  as initialValues } from '../SettingsModel';
+import { initialUser as initialValues } from '../SettingsModel';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useAuth } from '../../../../../../app/modules/auth';
@@ -19,19 +19,30 @@ const firebaseApp = initializeApp(firebaseConfig);
 const vietnamesePhoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
 
 const profileDetailsSchema = Yup.object().shape({
-  fullName: Yup.string().required('Full name is required'),
+  fullName: Yup.string().required('Vui lòng nhập vào trường này'),
   phoneNumber: Yup.string()
-    .matches(vietnamesePhoneRegExp, 'Phone number is not valid')
-    .required('Contact phone is required'),
-  address: Yup.string().required('Address is required'),
+    .matches(vietnamesePhoneRegExp, 'Vui lòng nhập đúng định dạng số điện thoại Việt Nam, bao gồm 10 chữ số, bắt đầu bằng các đầu số hợp lệ như 03, 05, 07, 08, hoặc 09.')
+    .required('Vui lòng nhập vào trường này'),
+  address: Yup.string().required('Vui lòng nhập vào trường này'),
   gender: Yup.string()
-    .oneOf(['male', 'female'], 'Gender must be either Male or Female')
-    .required('Gender is required'),
-    dob: Yup.date()
-    .nullable()
-    .required('Date of birth is required')
-    .max(new Date(), 'Date of birth cannot be in the future'),
-  });
+    .oneOf(['male', 'female'], 'Gender must be either Male or Female'),
+    // .required('Vui lòng nhập vào trường này'),
+  dob: Yup.date()
+    .required('Vui lòng nhập vào trường này')
+    .max(new Date(), 'Ngày sinh không hợp lệ')
+    .test(
+      'is-18',
+      'Bạn phải đủ 18 tuổi',
+      (value) => {
+        if (!value) return false;
+        const today = new Date();
+        const birthDate = new Date(value);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const isOldEnough = age > 18 || (age === 18 && today >= new Date(birthDate.setFullYear(birthDate.getFullYear() + 18)));
+        return isOldEnough;
+      }
+    )
+});
 
 const ProfileDetails: FC = () => {
   const { currentUser, setCurrentUser } = useAuth();
@@ -73,22 +84,22 @@ const ProfileDetails: FC = () => {
   const uploadImage = async (file: File) => {
     const storageRef = ref(storage, `avatars/${currentUser?.id}_${file.name}`);
     console.log("Storage reference created:", storageRef);
-  
+
     await uploadBytes(storageRef, file).then(() => {
       console.log("File uploaded successfully:", file.name);
     }).catch((error) => {
       console.error("Error uploading file:", error);
     });
-  
+
     const downloadURL = await getDownloadURL(storageRef).catch((error) => {
       console.error("Error getting download URL:", error);
       return undefined; // handle error
     });
-  
+
     console.log("Download URL:", downloadURL);
     return downloadURL;
   };
-  
+
 
   const formik = useFormik({
     initialValues: data,
@@ -135,11 +146,11 @@ const ProfileDetails: FC = () => {
             ? currentUser.agency  // Keep the existing agency if values.agency is just a number
             : values.agency,       // Otherwise, use the full agency object if provided
         };
-        
+
         setCurrentUser(updatedUser);
-        
+
         setData(values);
-        
+
       } catch (error) {
         console.error('Error updating profile:', error);
         toast.error('Cập nhật thông tin thất bại!');

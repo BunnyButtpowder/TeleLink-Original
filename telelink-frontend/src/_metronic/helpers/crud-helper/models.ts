@@ -4,8 +4,8 @@ export type ID = undefined | null | number
 
 export type PaginationState = {
   page: number
-  items_per_page: 10 | 30 | 50 | 100
-  links?: Array<{ label: string; active: boolean; url: string | null; page: number | null }>
+  items_per_page: 10 | 30 | 50 | 100,
+  total_pages?: number
 }
 
 export type SortState = {
@@ -38,13 +38,11 @@ export type SearchState = {
 
 export type Response<T> = {
   data?: T
-  payload?: {
-    message?: string
-    errors?: {
-      [key: string]: Array<string>
-    }
-    pagination?: PaginationState
-  }
+  count?: number
+  currentPage?: number
+  perPage?: number
+  totalCount?: number
+  totalPages?: number
 }
 
 export type QueryState = PaginationState & SortState & FilterState & SearchState
@@ -103,6 +101,14 @@ export const initialResultQueryState: QueryState = {
   },
 }
 
+export const initialReportQueryState: QueryState = {
+  page: 1,
+  items_per_page: 10,
+  filter: {
+    date: '',
+  },
+}
+
 export const initialQueryRequest: QueryRequestContextProps = {
   state: initialQueryState,
   updateState: () => { },
@@ -123,6 +129,10 @@ export type QueryResponseContextProps<T> = {
 }
 
 export const initialQueryResponse = { refetch: () => { }, isLoading: false, query: '' }
+
+export type ExtendedResponse<T> = T & {
+  networks?: Record<string, { count: number }>;
+};
 
 export type ListViewContextProps = {
   selected: Array<ID>
