@@ -17,10 +17,11 @@ import { firebaseConfig } from '../../../../accounts/components/core/firebaseCon
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
 import { useAuth } from '../../../../../../app/modules/auth'
 const API_URL = import.meta.env.VITE_APP_API_URL;
+import PasswordInputField from './PasswordInputField'
 
 type Props = {
   isUserLoading: boolean
-  user: User  
+  user: User
 }
 const vietnamesePhoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
 
@@ -34,18 +35,18 @@ const salesmanSchema = Yup.object().shape({
     email: Yup.string()
       .email('Sai định dạng email')
       .min(3, 'Cần tối thiểu 3 ký tự')
-    .max(50, 'Cần tối đa 50 ký tự')
+      .max(50, 'Cần tối đa 50 ký tự')
       .required('Vui lòng điền vào trường này'),
     password: Yup.string()
-    .min(3, 'Cần tối thiểu 3 ký tự')
-    .required('Vui lòng nhập mật khẩu'),
+      .min(3, 'Cần tối thiểu 3 ký tự')
+      .required('Vui lòng nhập mật khẩu'),
     isActive: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
     role: Yup.number().required('Vui lòng chọn quyền'),
   }),
   fullName: Yup.string().min(3, 'Cần tối thiểu 3 ký tự').required('Vui lòng điền vào trường này'),
   phoneNumber: Yup.string()
-  .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
-  .required('Vui lòng điền vào trường này'),
+    .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
+    .required('Vui lòng điền vào trường này'),
   address: Yup.string().nullable(),
   dob: Yup.string().nullable(),
   gender: Yup.string().nullable(),
@@ -62,18 +63,18 @@ const agencySchema = Yup.object().shape({
     email: Yup.string()
       .email('Sai định dạng email')
       .min(3, 'Cần tối thiểu 3 ký tự')
-    .max(50, 'Cần tối đa 50 ký tự')
+      .max(50, 'Cần tối đa 50 ký tự')
       .required('Vui lòng điền vào trường này'),
     password: Yup.string()
-    .min(3, 'Cần tối thiểu 3 ký tự')
-    .required('Vui lòng nhập mật khẩu'),
+      .min(3, 'Cần tối thiểu 3 ký tự')
+      .required('Vui lòng nhập mật khẩu'),
     isActive: Yup.boolean().required('Vui lòng chọn trạng thái hoạt động'),
     role: Yup.number().required('Vui lòng chọn quyền'),
   }),
-  fullName: Yup.string().min(3,'Cần tối thiểu 3 ký tự').required('Vui lòng điền vào trường này'),
+  fullName: Yup.string().min(3, 'Cần tối thiểu 3 ký tự').required('Vui lòng điền vào trường này'),
   phoneNumber: Yup.string()
-  .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
-  .required('Vui lòng điền vào trường này'),
+    .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
+    .required('Vui lòng điền vào trường này'),
   address: Yup.string().nullable(),
   dob: Yup.string().nullable(),
   gender: Yup.string().nullable(),
@@ -217,7 +218,6 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
     },
   });
 
-  // Add the separated useEffect here
   useEffect(() => {
     if (currentUser?.auth?.role === 2) {
       salemanFormik.setFieldValue('agency.id', currentUser?.agency?.id || null);
@@ -292,37 +292,37 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   return (
     <>
       {/* Role Selection */}
-    {!currentUser?.agency && (
-      <div className='mb-7'>
-        <label className='required fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.ROLE' })}</label>
-        <div className='d-flex'>
-          <label className='form-check form-check-custom form-check-solid me-5' style={{ cursor: 'pointer' }}>
-            <input
-              className='form-check-input'
-              type='radio'
-              name='role'
-              value='agency'
-              checked={selectedRole === 'agency'}
-              style={{ cursor: 'pointer' }}
-              onChange={handleRoleChange}
-            />
-            <span className='form-check-label'>{intl.formatMessage({ id: 'AGENCY' })}</span>
-          </label>
-          <label className='form-check form-check-custom form-check-solid' style={{ cursor: 'pointer' }}>
-            <input
-              className='form-check-input'
-              type='radio'
-              name='role'
-              value='salesman'
-              checked={selectedRole === 'salesman'}
-              style={{ cursor: 'pointer' }}
-              onChange={handleRoleChange}
-            />
-            <span className='form-check-label'>{intl.formatMessage({ id: 'SALESMAN' })}</span>
-          </label>
+      {!currentUser?.agency && (
+        <div className='mb-7'>
+          <label className='required fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.ROLE' })}</label>
+          <div className='d-flex'>
+            <label className='form-check form-check-custom form-check-solid me-5' style={{ cursor: 'pointer' }}>
+              <input
+                className='form-check-input'
+                type='radio'
+                name='role'
+                value='agency'
+                checked={selectedRole === 'agency'}
+                style={{ cursor: 'pointer' }}
+                onChange={handleRoleChange}
+              />
+              <span className='form-check-label'>{intl.formatMessage({ id: 'AGENCY' })}</span>
+            </label>
+            <label className='form-check form-check-custom form-check-solid' style={{ cursor: 'pointer' }}>
+              <input
+                className='form-check-input'
+                type='radio'
+                name='role'
+                value='salesman'
+                checked={selectedRole === 'salesman'}
+                style={{ cursor: 'pointer' }}
+                onChange={handleRoleChange}
+              />
+              <span className='form-check-label'>{intl.formatMessage({ id: 'SALESMAN' })}</span>
+            </label>
+          </div>
         </div>
-      </div>
-    )}
+      )}
       {/* Form for Salesman */}
       {selectedRole === 'salesman' ? (
         <form id='kt_modal_add_user_form' className='form' onSubmit={salemanFormik.handleSubmit} noValidate>
@@ -427,98 +427,66 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
             </div>
             {/* end::Input group */}
 
-            {/* begin::Input group */}
-            <div className='fv-row mb-7'>
-              {/* begin::Label */}
-              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.USERNAME' })}</label>
-              {/* end::Label */}
-
-              {/* begin::Input */}
-              <input
-                placeholder='Tên đăng nhập'
-                {...salemanFormik.getFieldProps('auth.username')}
-                type='text'
-                name='auth.username'
-                className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
-                  { 'is-invalid': salemanFormik.touched.auth?.username && salemanFormik.errors.auth?.username },
-                  { 'is-valid': salemanFormik.touched.auth?.username && !salemanFormik.errors.auth?.username }
-                )}
-                autoComplete='off'
-                disabled={salemanFormik.isSubmitting || isUserLoading}
-              />
-              {salemanFormik.touched.auth?.username && salemanFormik.errors.auth?.username && (
-                <div className='fv-plugins-message-container'>
-                  <div className='fv-help-block'>
-                    <span role='alert'>{salemanFormik.errors.auth?.username}</span>
+            {!isNotEmpty(salemanFormik.values.id) && (
+              <div className='fv-row mb-7'>
+                <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.USERNAME' })}</label>
+                <input
+                  placeholder='Tên đăng nhập'
+                  {...salemanFormik.getFieldProps('auth.username')}
+                  type='text'
+                  name='auth.username'
+                  className={clsx(
+                    'form-control form-control-solid mb-3 mb-lg-0',
+                    { 'is-invalid': salemanFormik.touched.auth?.username && salemanFormik.errors.auth?.username },
+                    { 'is-valid': salemanFormik.touched.auth?.username && !salemanFormik.errors.auth?.username }
+                  )}
+                  autoComplete='off'
+                  disabled={salemanFormik.isSubmitting || isUserLoading}
+                />
+                {salemanFormik.touched.auth?.username && salemanFormik.errors.auth?.username && (
+                  <div className='fv-plugins-message-container'>
+                    <div className='fv-help-block'>
+                      <span role='alert'>{salemanFormik.errors.auth?.username}</span>
+                    </div>
                   </div>
-                </div>
-              )}
-              {/* end::Input */}
-            </div>
-            {/* end::Input group */}
-
-            {/* begin::Input group */}
-            <div className='fv-row mb-7'>
-              {/* begin::Label */}
-              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}</label>
-              {/* end::Label */}
-
-              {/* begin::Input */}
-              <input
-                placeholder={intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}
-                {...salemanFormik.getFieldProps('auth.password')}
-                type='text'
-                name='auth.password'
-                className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
-                  { 'is-invalid': salemanFormik.touched.auth?.password && salemanFormik.errors.auth?.password },
-                  { 'is-valid': salemanFormik.touched.auth?.password && !salemanFormik.errors.auth?.password }
                 )}
-                autoComplete='off'
-                disabled={salemanFormik.isSubmitting || isUserLoading}
+              </div>
+            )}
+
+            {!isNotEmpty(salemanFormik.values.id) && (
+              <PasswordInputField
+                formik={salemanFormik}
+                fieldName='auth.password'
+                label={intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}
               />
-              {salemanFormik.touched.auth?.password && salemanFormik.errors.auth?.password && (
-                <div className='fv-plugins-message-container'>
-                  <div className='fv-help-block'>
-                    <span role='alert'>{salemanFormik.errors.auth?.password}</span>
+            )}
+
+            {!isNotEmpty(salemanFormik.values.id) && (
+              <div className='fv-row mb-7'>
+                <label className='required fw-bold fs-6 mb-2'>Email</label>
+
+                <input
+                  placeholder='Email'
+                  {...salemanFormik.getFieldProps('auth.email')}
+                  className={clsx(
+                    'form-control form-control-solid mb-3 mb-lg-0',
+                    { 'is-invalid': salemanFormik.touched.auth?.email && salemanFormik.errors.auth?.email },
+                    {
+                      'is-valid': salemanFormik.touched.auth?.email && !salemanFormik.errors.auth?.email,
+                    }
+                  )}
+                  type='text'
+                  name='auth.email'
+                  autoComplete='off'
+                  disabled={salemanFormik.isSubmitting || isUserLoading}
+                />
+                {salemanFormik.touched.auth?.email && salemanFormik.errors.auth?.email && (
+                  <div className='fv-plugins-message-container'>
+                    <span role='alert'>{salemanFormik.errors.auth?.email}</span>
                   </div>
-                </div>
-              )}
-              {/* end::Input */}
-            </div>
-            {/* end::Input group */}
-
-            {/* begin::Input group */}
-            <div className='fv-row mb-7'>
-              {/* begin::Label */}
-              <label className='required fw-bold fs-6 mb-2'>Email</label>
-              {/* end::Label */}
-
-              {/* begin::Input */}
-              <input
-                placeholder='Email'
-                {...salemanFormik.getFieldProps('auth.email')}
-                className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
-                  { 'is-invalid': salemanFormik.touched.auth?.email && salemanFormik.errors.auth?.email },
-                  {
-                    'is-valid': salemanFormik.touched.auth?.email && !salemanFormik.errors.auth?.email,
-                  }
                 )}
-                type='text'
-                name='auth.email'
-                autoComplete='off'
-                disabled={salemanFormik.isSubmitting || isUserLoading}
-              />
-              {/* end::Input */}
-              {salemanFormik.touched.auth?.email && salemanFormik.errors.auth?.email && (
-                <div className='fv-plugins-message-container'>
-                  <span role='alert'>{salemanFormik.errors.auth?.email}</span>
-                </div>
-              )}
-            </div>
-            {/* end::Input group */}
+              </div>
+            )}
 
             {/* begin::Input group */}
             <div className='fv-row mb-7'>
@@ -648,7 +616,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
 
             {/* begin::Input group */}
             {currentUser?.auth?.role !== 2 ? (
-              <div className='fv-row mb-7'> 
+              <div className='fv-row mb-7'>
                 {/* begin::Label */}
                 <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AGENCY' })}</label>
                 {/* end::Label */}
@@ -917,105 +885,75 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
               </div>
               {/* end::Input group */}
 
-              {/* begin::Input group */}
-              <div className='fv-row mb-7'>
-                {/* begin::Label */}
-                <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.USERNAME' })}</label>
-                {/* end::Label */}
+              {!isNotEmpty(agencyFormik.values.id) && (
+                <div className='fv-row mb-7'>
+                  <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.USERNAME' })}</label>
 
-                {/* begin::Input */}
-                <input
-                  placeholder='Tên đăng nhập'
-                  {...agencyFormik.getFieldProps('auth.username')}
-                  type='text'
-                  name='auth.username'
-                  className={clsx(
-                    'form-control form-control-solid mb-3 mb-lg-0',
-                    { 'is-invalid': agencyFormik.touched.auth?.username && agencyFormik.errors.auth?.username },
-                    {
-                      'is-valid': agencyFormik.touched.auth?.username && !agencyFormik.errors.auth?.username,
-                    }
-                  )}
-                  autoComplete='off'
-                  disabled={agencyFormik.isSubmitting || isUserLoading}
-                />
-                {agencyFormik.touched.auth?.username && agencyFormik.errors.auth?.username && (
-                  <div className='fv-plugins-message-container'>
-                    <div className='fv-help-block'>
-                      <span role='alert'>{agencyFormik.errors.auth?.username}</span>
+                  <input
+                    placeholder='Tên đăng nhập'
+                    {...agencyFormik.getFieldProps('auth.username')}
+                    type='text'
+                    name='auth.username'
+                    className={clsx(
+                      'form-control form-control-solid mb-3 mb-lg-0',
+                      { 'is-invalid': agencyFormik.touched.auth?.username && agencyFormik.errors.auth?.username },
+                      {
+                        'is-valid': agencyFormik.touched.auth?.username && !agencyFormik.errors.auth?.username,
+                      }
+                    )}
+                    autoComplete='off'
+                    disabled={agencyFormik.isSubmitting || isUserLoading}
+                  />
+                  {agencyFormik.touched.auth?.username && agencyFormik.errors.auth?.username && (
+                    <div className='fv-plugins-message-container'>
+                      <div className='fv-help-block'>
+                        <span role='alert'>{agencyFormik.errors.auth?.username}</span>
+                      </div>
                     </div>
-                  </div>
-                )}
-                {/* end::Input */}
-              </div>
-              {/* end::Input group */}
-
-              {/* begin::Input group */}
-              <div className='fv-row mb-7'>
-                {/* begin::Label */}
-                <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}</label>
-                {/* end::Label */}
-
-                {/* begin::Input */}
-                <input
-                  placeholder={intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}
-                  {...agencyFormik.getFieldProps('auth.password')}
-                  type='text'
-                  name='auth.password'
-                  className={clsx(
-                    'form-control form-control-solid mb-3 mb-lg-0',
-                    { 'is-invalid': agencyFormik.touched.auth?.password && agencyFormik.errors.auth?.password },
-                    { 'is-valid': agencyFormik.touched.auth?.password && !agencyFormik.errors.auth?.password }
                   )}
-                  autoComplete='off'
-                  disabled={agencyFormik.isSubmitting || isUserLoading}
+                </div>
+
+              )}
+
+              {!isNotEmpty(agencyFormik.values.id) && (
+                <PasswordInputField
+                  formik={agencyFormik}
+                  fieldName='auth.password'
+                  label={intl.formatMessage({ id: 'AUTH.INPUT.PASSWORD' })}
                 />
-                {agencyFormik.touched.auth?.password && agencyFormik.errors.auth?.password && (
-                  <div className='fv-plugins-message-container'>
-                    <div className='fv-help-block'>
-                      <span role='alert'>{agencyFormik.errors.auth?.password}</span>
+              )}
+
+              {!isNotEmpty(agencyFormik.values.id) && (
+                <div className='fv-row mb-7'>
+                  <label className='required fw-bold fs-6 mb-2'>Email</label>
+
+                  <input
+                    placeholder='Email'
+                    {...agencyFormik.getFieldProps('auth.email')}
+                    className={clsx(
+                      'form-control form-control-solid mb-3 mb-lg-0',
+                      { 'is-invalid': agencyFormik.touched.auth?.email && agencyFormik.errors.auth?.email },
+                      {
+                        'is-valid': agencyFormik.touched.auth?.email && !agencyFormik.errors.auth?.email,
+                      }
+                    )}
+                    type='text'
+                    name='auth.email'
+                    autoComplete='off'
+                    disabled={agencyFormik.isSubmitting || isUserLoading}
+                  />
+                  {agencyFormik.touched.auth?.email && agencyFormik.errors.auth?.email && (
+                    <div className='fv-plugins-message-container'>
+                      <span role='alert'>{agencyFormik.errors.auth?.email}</span>
                     </div>
-                  </div>
-                )}
-                {/* end::Input */}
-              </div>
-              {/* end::Input group */}
-
-              {/* begin::Input group */}
-              <div className='fv-row mb-7'>
-                {/* begin::Label */}
-                <label className='required fw-bold fs-6 mb-2'>Email</label>
-                {/* end::Label */}
-
-                {/* begin::Input */}
-                <input
-                  placeholder='Email'
-                  {...agencyFormik.getFieldProps('auth.email')}
-                  className={clsx(
-                    'form-control form-control-solid mb-3 mb-lg-0',
-                    { 'is-invalid': agencyFormik.touched.auth?.email && agencyFormik.errors.auth?.email },
-                    {
-                      'is-valid': agencyFormik.touched.auth?.email && !agencyFormik.errors.auth?.email,
-                    }
                   )}
-                  type='text'
-                  name='auth.email'
-                  autoComplete='off'
-                  disabled={agencyFormik.isSubmitting || isUserLoading}
-                />
-                {/* end::Input */}
-                {agencyFormik.touched.auth?.email && agencyFormik.errors.auth?.email && (
-                  <div className='fv-plugins-message-container'>
-                    <span role='alert'>{agencyFormik.errors.auth?.email}</span>
-                  </div>
-                )}
-              </div>
-              {/* end::Input group */}
+                </div>
+              )}
 
               {/* begin::Input group */}
               <div className='fv-row mb-7'>
                 {/* begin::Label */}
-                <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.ADDRESS' })}</label>
+                <label className=' fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'USERS.ADDRESS' })}</label>
                 {/* end::Label */}
 
                 {/* begin::Input */}
@@ -1069,8 +1007,8 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                 {agencyFormik.touched.phoneNumber && agencyFormik.errors.phoneNumber && (
                   <div className='fv-plugins-message-container'>
                     <div className="fv-help-block">
-                    <span role='alert'>{agencyFormik.errors.phoneNumber}</span>
-                  </div>
+                      <span role='alert'>{agencyFormik.errors.phoneNumber}</span>
+                    </div>
                   </div>
                 )}
               </div>
