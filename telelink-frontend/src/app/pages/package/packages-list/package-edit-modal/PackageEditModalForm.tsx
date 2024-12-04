@@ -20,6 +20,72 @@ type Props = {
 
 const token = localStorage.getItem('auth_token');
 
+const numberToWords = (num: number): string => {
+  const viUnits = ["", "mươi", "trăm", "nghìn", "triệu", "tỷ"];
+  const viNums = ["Không", "Một", "Hai", "Ba", "Bốn", "Năm", "Sáu", "Bảy", "Tám", "Chín"];
+
+  if (num === 0) return "Không đồng";
+
+  const getPart = (n: number): string => {
+    let part = "";
+    const hundreds = Math.floor(n / 100);
+    const tensAndOnes = n % 100;
+    const tens = Math.floor(tensAndOnes / 10);
+    const ones = tensAndOnes % 10;
+
+    // Handle hundreds
+    if (hundreds > 0) {
+      part += viNums[hundreds] + " " + viUnits[2] + " ";
+    }
+
+    // Handle tens and ones
+    if (tens > 0) {
+      if (tens === 1) {
+        part += "Mười ";
+      } else {
+        part += viNums[tens] + " " + viUnits[1] + " ";
+      }
+      if (ones > 0) {
+        part += ones === 5 ? "lăm " : viNums[ones] + " ";
+      }
+    } else if (ones > 0) {
+      // Add "linh" only if there are no tens and not a single-digit number
+      part += (n >= 10 ? "linh " : "") + (ones === 5 ? "lăm " : viNums[ones] + " ");
+    }
+
+    return part.trim();
+  };
+
+  let result = "";
+  let unitIndex = 0;
+  while (num > 0) {
+    const part = num % 1000;
+    if (part > 0) {
+      const unit = unitIndex > 0 ? viUnits[unitIndex + 2] : ""; // "nghìn", "triệu", "tỷ"
+      const partString = getPart(part);
+
+      // For four-digit numbers, remove "linh"
+      if (unitIndex > 0 && partString.includes("linh")) {
+        result = partString.replace("linh", "") + (unit ? " " + unit : "") + " " + result;
+      } else {
+        result = partString + (unit ? " " + unit : "") + " " + result;
+      }
+    }
+    num = Math.floor(num / 1000);
+    unitIndex++;
+  }
+
+  // Special case cleanup for redundant words
+  result = result
+    .replace(/\bLinh Một Triệu\b/g, "Một triệu")
+    .replace(/\bKhông Tỷ\b/g, "Tỷ")
+    .replace(/\bKhông Triệu\b/g, "Triệu")
+    .trim();
+
+  return result + " đồng";
+};
+
+
 const packageSchema = Yup.object().shape({
   title: Yup.string().required('Vui lòng điền vào trường này'),
   provider: Yup.string().required('Vui lòng điền vào trường này'),
@@ -66,21 +132,28 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
     enableReinitialize: true,
     validationSchema: packageSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      setSubmitting(true)
+      setSubmitting(true);
       try {
-        if (isNotEmpty(values.id)) {
-          await updatePackage(values, token || '')
+        // Remove dots from price and convert to number
+        const sanitizedValues = {
+          ...values,
+          price: parseInt(String(values.price).replace(/\./g, ''), 10), // Convert price to plain number
+        };
+  
+        if (isNotEmpty(sanitizedValues.id)) {
+          await updatePackage(sanitizedValues, token || '');
         } else {
-          await createPackage(values)
+          await createPackage(sanitizedValues);
         }
       } catch (ex) {
-        console.error(ex)
+        console.error(ex);
       } finally {
-        setSubmitting(false)
-        cancel(true)
+        setSubmitting(false);
+        cancel(true);
       }
     },
-  })
+  });
+  
 
   return (
     <>
@@ -257,10 +330,7 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
 
             {/* begin::Input group */}
             <div className="fv-row mb-7">
-              {/* Label */}
               <label className="required fw-bold fs-6 mb-2">{intl.formatMessage({ id: 'UNIT.PRICE' })}</label>
-
-              {/* Input */}
               <div className="position-relative">
                 <input
                   placeholder="0"
@@ -291,11 +361,19 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
                       packageFormik.setFieldValue('price', formattedValue); // Format value dynamically
                     }
                     packageFormik.validateField('price'); // Validate on every change
-                    console.log('price')
                   }}
                 />
                 <span className="position-absolute top-50 end-0 translate-middle-y pe-3">VND</span>
               </div>
+
+              {/* Display the formatted price in words */}
+              {packageFormik.values.price && (
+                <div className="text-muted mt-2">
+                  <small style={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+                        {numberToWords(parseInt(String(packageFormik.values.price).replace(/\./g, ''), 10))}
+                  </small>                
+                </div>
+              )}
 
               {/* Error Message */}
               {packageFormik.touched.price && packageFormik.errors.price && (
@@ -306,6 +384,7 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
                 </div>
               )}
             </div>
+
 
             {/* end::Input group */}
           </div>

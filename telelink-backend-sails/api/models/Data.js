@@ -43,9 +43,7 @@ module.exports = {
     expirationDate: {
       type: 'string',
       allowNull: true,
-    },
-    
-       
+    }, 
     notes: {    // Ghi chú
       type: 'string',
       allowNull: true,
