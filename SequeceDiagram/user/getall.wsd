@@ -50,7 +50,6 @@ DB --> Model2
 deactivate DB
 Model2 --> Controller
 deactivate Model2
-Controller -> Controller: Apply filter
 Controller --> Client: message, data, 200
 deactivate Controller
 

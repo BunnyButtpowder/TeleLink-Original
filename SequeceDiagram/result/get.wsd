@@ -14,19 +14,19 @@ activate User
 activate Client
 Client -> mid1: GET /result/getall?saleman=?&agency=?searchTeam=?&...sort=?
 activate mid1
-alt invalid token
+opt invalid token
     mid1 --> Client: message, 401
 end
-alt User not exist
+opt User not exist
     mid1 --> Client: message, 401
 end
 mid1 -> mid2: next()
 deactivate mid1
 activate mid2
-alt API not found
+opt API not found
     mid2 --> Client: message, 404
 end
-alt Permission denied
+opt Permission denied
     mid2 --> Client: message, 403
 end
 mid2 -> Controller: next()
@@ -41,7 +41,7 @@ alt filter by saleman
     deactivate DB
     Model2 --> Controller
     deactivate Model2
-    alt User not exist
+    opt User not exist
         Controller --> Client: message, 404
     end
 end
@@ -54,7 +54,7 @@ alt filter by agency
     deactivate DB
     Model3 --> Controller
     deactivate Model3
-    alt Agency not exist
+    opt Agency not exist
         Controller --> Client: message, 404
     end
 end
@@ -66,7 +66,7 @@ DB --> Model1
 deactivate DB
 Model1 --> Controller
 deactivate Model1
-alt No result found
+opt No result found
     Controller --> Client: message, 404
 end
 Controller --> Client: message, data, 200

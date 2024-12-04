@@ -104,6 +104,14 @@ DB --> Model6
 deactivate DB
 Model6 --> Controller: new record
 deactivate Model6
+Controller -> Model4: update()
+activate Model4
+Model4 -> DB: update()
+activate DB
+DB --> Model4
+deactivate DB
+Model4 --> Controller
+deactivate Model4
 Controller --> Client: message, 201
 deactivate Controller
 
