@@ -2,7 +2,6 @@
 actor User
 boundary "Profile Page" as Client
 participant "<<middlewares>>\ngetAuth" as mid1
-participant "<<middlewares>>\ncheckPermission" as mid2
 participant "<<action>>\ngetUserInfo" as Controller
 entity "User" as Model
 database "MySQL" as DB
@@ -18,17 +17,8 @@ end
 alt User not exist
     mid1 --> Client: message, 401
 end
-mid1 -> mid2: next()
+mid1 -> Controller: next()
 deactivate mid1
-activate mid2
-alt API not found
-    mid2 --> Client: message, 404
-end
-alt Permission denied
-    mid2 --> Client: message, 403
-end
-mid2 -> Controller: next()
-deactivate mid2
 activate Controller
 Controller -> Model: findOne()
 activate Model

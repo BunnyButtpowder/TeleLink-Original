@@ -3,14 +3,15 @@ actor User
 boundary "BlackList Page" as Client
 participant "<<middlewares>>\ngetAuth" as mid1
 participant "<<middlewares>>\ncheckPermission" as mid2
-participant "<<action>>\nget" as Controller
+participant "<<action>>\ncreate" as Controller
 entity "BlackList" as Model
+entity "Data" as Model2 
 database "MySQL" as DB
 
 User -> Client: edit blacklist information
 activate User
 activate Client
-Client -> mid1: POST /blacklist/create
+Client -> mid1: POST /blacklists/create
 activate mid1
 alt invalid token
     mid1 --> Client: message, 401
@@ -30,6 +31,17 @@ end
 mid2 -> Controller: next()
 deactivate mid2
 activate Controller
+Controller -> Model: findOne()
+activate Model
+Model -> DB: findOne()
+activate DB
+DB --> Model
+deactivate DB
+Model --> Controller
+deactivate Model
+opt Phone number exist
+Controller --> Client: message, 400
+end
 Controller -> Model: create()
 activate Model
 Model -> DB: create()
@@ -38,6 +50,24 @@ DB --> Model
 deactivate DB
 Model --> Controller
 deactivate Model
+Controller -> Model2: find()
+activate Model2
+Model2 -> DB: find()
+activate DB
+DB --> Model2
+deactivate DB
+Model2 --> Controller
+deactivate Model2
+alt Data have matching phone number found
+Controller -> Model2: delete()
+activate Model2
+Model2 -> DB: delete()
+activate DB
+DB --> Model2
+deactivate DB
+Model2 --> Controller
+deactivate Model2
+end
 Controller --> Client: message, 201
 deactivate Controller
 

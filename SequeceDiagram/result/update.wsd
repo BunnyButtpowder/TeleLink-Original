@@ -6,6 +6,8 @@ participant "<<middlewares>>\ncheckPermission" as mid2
 participant "<<action>>\nupdate" as Controller
 entity "Result" as Model1
 entity "Report" as Model2
+entity "Auth" as Model3
+
 database "MySQL" as DB
 
 User -> Client: type keyword, select sort
@@ -34,6 +36,17 @@ activate Controller
 opt Outdated Result
 Controller --> Client: message, 403
 end
+Controller -> Model3: findOne(userId)
+activate Model3
+Model3 -> DB: findOne()
+activate DB
+DB --> Model3
+deactivate DB
+Model3 --> Controller
+deactivate Model3
+opt User doesn't own the Result or not a admin
+    Controller --> Client: message, 403
+end
 Controller -> Model1: find(existingResult)
 activate Model1
 Model1 -> DB: find()
@@ -44,9 +57,6 @@ Model1 --> Controller: Result entity
 deactivate Model1
 opt Result not exist
     Controller --> Client: message, 404
-end
-opt User doesn't own the Result or not a admin
-    Controller --> Client: message, 403
 end
 Controller -> Model1: updateOne()
 activate Model1

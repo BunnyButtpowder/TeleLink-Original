@@ -3,27 +3,27 @@ actor User
 boundary "Package Page" as Client
 participant "<<middlewares>>\ngetAuth" as mid1
 participant "<<middlewares>>\ncheckPermission" as mid2
-participant "<<action>>\nget" as Controller
+participant "<<action>>\ncreate" as Controller
 entity "Package" as Model
 database "MySQL" as DB
 
 User -> Client: type in package information
 activate User
 activate Client
-Client -> mid1: GET /package/create
-alt invalid token
+Client -> mid1: POST /package/create
+opt invalid token
     mid1 --> Client: message, 401
 end
-alt User not exist
+opt User not exist
     mid1 --> Client: message, 401
 end
 mid1 -> mid2: next()
 deactivate mid1
 activate mid2
-alt API not found
+opt API not found
     mid2 --> Client: message, 404
 end
-alt Permission denied
+opt Permission denied
     mid2 --> Client: message, 403
 end
 mid2 -> Controller: next()
@@ -37,7 +37,7 @@ DB --> Model
 deactivate DB
 Model --> Controller
 deactivate Model
-alt Package title duplicated
+opt Package title duplicated
 Controller --> Client: message, 400
 end
 Controller --> Client: message, 200

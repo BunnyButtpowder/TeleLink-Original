@@ -3,14 +3,14 @@ actor User
 boundary "Package Page" as Client
 participant "<<middlewares>>\ngetAuth" as mid1
 participant "<<middlewares>>\ncheckPermission" as mid2
-participant "<<action>>\nget" as Controller
+participant "<<action>>\nupdate" as Controller
 entity "Package" as Model
 database "MySQL" as DB
 
 User -> Client: type in package information
 activate User
 activate Client
-Client -> mid1: POST /package/update
+Client -> mid1: PUT /package/update
 activate mid1
 alt invalid token
     mid1 --> Client: message, 401
