@@ -25,7 +25,7 @@ module.exports = {
             const columnMapping = {
                 'magoi': 'title',
                 'nhamang': 'provider',
-                'loaigoi': 'type',
+                'loaihinh': 'type',
                 'giagoi': 'price'
             };
 
