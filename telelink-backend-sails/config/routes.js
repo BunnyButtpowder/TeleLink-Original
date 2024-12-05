@@ -10,6 +10,7 @@
 
 const BlacklistController = require('../api/controllers/BlacklistController');
 const DataController = require('../api/controllers/DataController');
+const PackageController = require('../api/controllers/PackageController');
 
 
 module.exports.routes = {
@@ -89,6 +90,27 @@ module.exports.routes = {
       const id = req.body.id;
       // console.log(id);
       return BlacklistController.importBlacklist(req, res, tempPath, id);
+
+    } catch (err) {
+      console.error('Error during file upload: ', err);
+      return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
+    }
+  },'POST /import-package': async (req, res) => {
+    try {
+      
+      if (!req.files || Object.keys(req.files).length === 0) {
+        console.log('No files uploaded');
+        return res.badRequest({ error: 'Không có tệp được tải lên' });
+      }
+
+      const uploadedFile = req.files.file;
+      console.log(uploadedFile);
+      const tempPath = __dirname + '/tmp/' + uploadedFile.name;
+      await uploadedFile.mv(tempPath);
+      console.log('File uploaded to: ', tempPath);
+      const id = req.body.id;
+      // console.log(id);
+      return PackageController.importPackage(req, res, tempPath, id);
 
     } catch (err) {
       console.error('Error during file upload: ', err);
