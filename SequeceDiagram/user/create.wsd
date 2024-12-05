@@ -15,25 +15,25 @@ activate Client
 
 Client -> mid1: POST /user/create
 activate mid1
-alt invalid token 
+opt invalid token 
 mid1 --> Client: message, 401
 end
-alt User not exist
+opt User not exist
 mid1 --> Client: message, 401
 end
 mid1 -> mid2: next()
 deactivate mid1
 activate mid2
-alt API not found
+opt API not found
 mid2 --> Client: message, 404
 end
-alt Permission denied
+opt Permission denied
 mid2 --> Client: message, 403
 end
 mid2 -> Controller: next()
 deactivate mid2
 activate Controller
-alt role = 2 but name is null
+opt role = 2 but name is null
     Controller --> Client: message, 400
 end
 Controller -> Model1: findOne(email)
@@ -42,7 +42,7 @@ Model1 -> DB: find()
 activate DB
 DB --> Model1
 deactivate DB
-alt Email exist 
+opt Email exist 
     Model1 --> Controller: message, 409
     deactivate Model1
 end
@@ -52,7 +52,7 @@ Model1 -> DB: find()
 activate DB
 DB --> Model1
 deactivate DB
-alt Username exist
+opt Username exist
     Model1 --> Controller: message, 409
     deactivate Model1
 end
@@ -73,7 +73,7 @@ DB --> Model2
 deactivate DB
 Model2 --> Controller: new record
 deactivate Model2
-alt Role = 2
+opt Role = 2
 Controller -> Model3: create(agencyInfo)
 activate Model3
 Model3 -> DB: create()

@@ -28,7 +28,7 @@ module.exports = {
       const userId = this.req.user.id;
       
 
-      const existingUser = await User.findOne({ auth: userId });
+      const existingUser = await Auth.findOne({ id: userId });
       if (!existingUser) {
         return res.unauthorized("Người dùng đăng nhập không tồn tại");
       }
@@ -68,11 +68,11 @@ module.exports = {
         );
 
         let report = await Report.findOne({
-          agency: existingUser.agency,
+          agency: existingResult.agency,
           createdAt: { ">=": startDate, "<=": endDate },
         });
         if (!report) {
-          report = await Report.create({ agency: existingUser.agency }).fetch();
+          report = await Report.create({ agency: existingResult.agency }).fetch();
         }
         await Result.updateOne(
           { id: resultId },
@@ -94,7 +94,7 @@ module.exports = {
         GROUP BY data_id, result, revenue
         `;
         groupedResults = await sails.sendNativeQuery(rawQuery, [
-          existingUser.agency,
+          existingResult.agency,
           startDate,
           endDate,
         ]);

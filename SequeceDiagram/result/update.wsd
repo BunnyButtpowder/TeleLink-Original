@@ -3,9 +3,11 @@ actor User
 boundary "Result Page" as Client
 participant "<<middlewares>>\ngetAuth" as mid1
 participant "<<middlewares>>\ncheckPermission" as mid2
-participant "<<action>>\ngetall" as Controller
+participant "<<action>>\nupdate" as Controller
 entity "Result" as Model1
 entity "Report" as Model2
+entity "Auth" as Model3
+
 database "MySQL" as DB
 
 User -> Client: type keyword, select sort
@@ -13,26 +15,37 @@ activate User
 activate Client
 Client -> mid1: POST /result/update
 activate mid1
-alt invalid token
+opt invalid token
     mid1 --> Client: message, 401
 end
-alt User not exist
+opt User not exist
     mid1 --> Client: message, 401
 end
 mid1 -> mid2: next()
 deactivate mid1
 activate mid2
-alt API not found
+opt API not found
     mid2 --> Client: message, 404
 end
-alt Permission denied
+opt Permission denied
     mid2 --> Client: message, 403
 end
 mid2 -> Controller: next()
 deactivate mid2
 activate Controller
-alt Outdated Result
+opt Outdated Result
 Controller --> Client: message, 403
+end
+Controller -> Model3: findOne(userId)
+activate Model3
+Model3 -> DB: findOne()
+activate DB
+DB --> Model3
+deactivate DB
+Model3 --> Controller
+deactivate Model3
+opt User doesn't own the Result or not a admin
+    Controller --> Client: message, 403
 end
 Controller -> Model1: find(existingResult)
 activate Model1
@@ -42,11 +55,8 @@ DB --> Model1
 deactivate DB
 Model1 --> Controller: Result entity
 deactivate Model1
-alt Result not exist
+opt Result not exist
     Controller --> Client: message, 404
-end
-alt User doesn't own the Result or not a admin
-    Controller --> Client: message, 403
 end
 Controller -> Model1: updateOne()
 activate Model1

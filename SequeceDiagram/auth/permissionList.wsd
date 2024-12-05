@@ -3,7 +3,7 @@ actor User
 boundary "Permission Page" as Client
 participant "<<middlewares>>\ngetAuth" as mid1
 participant "<<middlewares>>\ncheckPermission" as mid2
-participant "<<action>>\nget" as Controller
+participant "<<action>>\ngetPermissionList" as Controller
 entity "Role" as Model1
 entity "Permission" as Model2
 
@@ -14,19 +14,19 @@ activate User
 activate Client
 Client -> mid1: GET /permission/get?id=?
 activate mid1
-alt invalid token
+opt invalid token
     mid1 --> Client: message, 401
 end
-alt User not exist
+opt User not exist
     mid1 --> Client: message, 401
 end
 mid1 -> mid2: next()
 deactivate mid1
 activate mid2
-alt API not found
+opt API not found
     mid2 --> Client: message, 404
 end
-alt Permission denied
+opt Permission denied
     mid2 --> Client: message, 403
 end
 mid2 -> Controller: next()

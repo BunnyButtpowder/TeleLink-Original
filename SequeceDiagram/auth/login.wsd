@@ -12,35 +12,35 @@ activate Client
 
 Client -> Controller: Send request with login credentials
 activate Controller
-    alt Credentials is empty
-        Controller --> Client: message, 400
-    else Credentials is valid 
-        Controller -> Model: Find(username)
-        activate Model
-        Model -> DB: find()
-        activate DB
-        DB --> Model
-        deactivate DB
-        Model --> Controller: account data
-        deactivate Model
-        alt Username not exist
-            Controller --> Client: message, 404
-        else Username found
-            Controller -> Controller: compare password
-            alt invalid password
-                Controller --> Client: message, 403
-            else correct password
-                Controller -> jwt: generate_token()
-                activate jwt
-                jwt --> Controller: Token string
-                deactivate jwt
-                Controller --> Client: message, 200
-                deactivate Controller
-            end
+alt Credentials is empty
+    Controller --> Client: message, 400
+else Credentials is valid
+    Controller -> Model: Find(username)
+    activate Model
+    Model -> DB: find()
+    activate DB
+    DB --> Model
+    deactivate DB
+    Model --> Controller: account data
+    deactivate Model
+    alt Username not exist
+        Controller --> Client: message, 404
+    else Username found
+        Controller -> Controller: compare password
+        alt invalid password
+            Controller --> Client: message, 403
+        else correct password
+            Controller -> jwt: generate_token()
+            activate jwt
+            jwt --> Controller: Token string
+            deactivate jwt
+            Controller --> Client: message, 200
+            deactivate Controller
         end
-
     end
-    deactivate Client
+
+end
+deactivate Client
 
 
 
