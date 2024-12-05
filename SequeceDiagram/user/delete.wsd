@@ -8,24 +8,24 @@ entity "Auth" as Model1
 entity "User" as Model2
 database "MySQL" as DB
 
-User -> Client: type keyword, select sort
+User -> Client: select account
 activate User
 activate Client
 Client -> mid1: DELETE /user/delete
 activate mid1
-alt invalid token 
+opt invalid token 
 mid1 --> Client: message, 401
 end
-alt User not exist
+opt User not exist
 mid1 --> Client: message, 401
 end
 mid1 -> mid2: next()
 deactivate mid1
 activate mid2
-alt API not found
+opt API not found
 mid2 --> Client: message, 404
 end
-alt Permission denied
+opt Permission denied
 mid2 --> Client: message, 403
 end
 mid2 -> Controller: next()
@@ -39,7 +39,7 @@ DB --> Model1
 deactivate DB
 Model1 --> Controller
 deactivate Model1
-alt No user found
+opt No user found
 Controller --> Client: message, 404
 end
 Controller -> Model1: destroyOne()

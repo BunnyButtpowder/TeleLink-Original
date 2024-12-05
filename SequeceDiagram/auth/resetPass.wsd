@@ -19,15 +19,12 @@ DB --> Model
 deactivate DB
 Model --> Controller: auth entity
 deactivate Model
-Controller -> Controller: verify OTP
-alt OTP code is invalid
+opt OTP code is invalid
     Controller --> Client: message, 403
 end
-Controller -> Controller: verify expired Date
-alt OTP code is expired
+opt OTP code is expired
     Controller --> Client: message, 403
 end
-Controller -> Controller: hash password
 Controller -> Model: updateOne(newPassword)
 activate Model
 Model -> DB: updateOne()
