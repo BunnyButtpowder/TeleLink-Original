@@ -4,7 +4,6 @@ const fs = require('fs');
 module.exports = {
   importData: async function (req, res, filePath) {
     try {
-
       const workbook = XLSX.readFile(filePath);
       const sheetName = workbook.SheetNames[0];
       const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
@@ -12,7 +11,6 @@ module.exports = {
       if (!worksheet || worksheet.length === 0) {
         throw new Error("File Excel không chứa dữ liệu.");
       }
-
 
       function normalizeString(str) {
         return str
@@ -23,9 +21,7 @@ module.exports = {
           ?.toLowerCase();
       }
 
-
       const headers = worksheet[0].map((header) => normalizeString(header));
-
 
       const cleanedWorksheet = worksheet.slice(1).filter((row) =>
         row.some((cell) => cell && cell.toString().trim() !== '')
@@ -33,13 +29,9 @@ module.exports = {
       console.log(`Tổng số dòng ban đầu: ${worksheet.length}`);
       console.log(`Tổng số dòng sau khi loại bỏ dòng trống: ${cleanedWorksheet.length}`);
 
-
       if (cleanedWorksheet.length === 0) {
         throw new Error("Không có dữ liệu hợp lệ sau khi loại bỏ các dòng trống.");
       }
-
-
-
 
       const columnMapping = {
         'noicapdata': 'placeOfIssue',
@@ -68,7 +60,6 @@ module.exports = {
         'khac3': 'other3',
       };
 
-
       const headerIndexes = {};
       const missingColumns = [];
       for (const [normalizedHeader, field] of Object.entries(columnMapping)) {
@@ -84,9 +75,13 @@ module.exports = {
         throw new Error(`Các cột bị thiếu trong Excel: ${missingColumns.join(', ')}`);
       }
 
+      // Truy vấn danh sách số thuê bao trong bảng Blacklist
+      const blacklistRecords = await Blacklist.find();
+      const blacklistNumbers = new Set(blacklistRecords.map(record => record.SDT));
 
       const validData = [];
       const skippedRows = [];
+      const blacklistedRows = [];
       cleanedWorksheet.forEach((row, index) => {
         const subscriberNumber = row[headerIndexes['subscriberNumber']] || '';
         const networkName = row[headerIndexes['networkName']] || '';
@@ -96,22 +91,12 @@ module.exports = {
           skippedRows.push(index + 2);
           return;
         }
-        // function parseDate(dateValue) {
-        //   if (!dateValue) return null;
 
-
-        //   if (typeof dateValue === 'number' && !isNaN(dateValue)) {
-        //     const excelStartDate = new Date(1900, 0, 1); 
-        //     const offset = 24 * 60 * 60 * 1000; 
-        //     const excelDate = new Date(excelStartDate.getTime() + (dateValue - 1) * offset); 
-
-        //     return excelDate.toISOString().split('T')[0]; 
-        //   }
-
-        //   // Nếu là chuỗi ngày hợp lệ
-        //   const parsed = new Date(dateValue);
-        //   return isNaN(parsed.getTime()) ? null : parsed.toISOString().split('T')[0]; // Trả về định dạng YYYY-MM-DD
-        // }
+        
+        if (blacklistNumbers.has(subscriberNumber)) {
+          blacklistedRows.push(index + 2);
+          return; 
+        }
 
         validData.push({
           subscriberNumber,
@@ -144,6 +129,7 @@ module.exports = {
       if (validData.length === 0) {
         throw new Error("Không có dữ liệu hợp lệ để nhập.");
       }
+
       const uniqueNumbers = new Set(validData.map(item => item.subscriberNumber));
       console.log('Số thuê bao duy nhất:', uniqueNumbers.size);
 
@@ -154,7 +140,6 @@ module.exports = {
       console.log(`Đã xóa ${deletedDataIds.length} bản ghi trong bảng Data.`);
 
       if (deletedDataIds.length > 0) {
-
         const deleteAssignResult = await DataAssignment.destroy({ data: deletedDataIds }).fetch();
         console.log(`Đã xóa ${deleteAssignResult.length} bản ghi trong bảng DataAssign.`);
       }
@@ -165,46 +150,17 @@ module.exports = {
         fs.unlinkSync(filePath);
       }
 
-      // const subscriberNumbers = validData.map((item) => item.subscriberNumber);
-      // const existingSubscribers = await Data.find({ where: { subscriberNumber: subscriberNumbers } });
-      // const existingMap = new Map(existingSubscribers.map((item) => [item.subscriberNumber, item]));
-      // const dataToUpdate = [];
-      // const dataToCreate = [];
-      // validData.forEach((item) => {
-      //   if (existingMap.has(item.subscriberNumber)) {
-      //     const existing = existingMap.get(item.subscriberNumber);
-      //     dataToUpdate.push({
-      //       ...existing,
-      //       ...item,
-      //     });
-      //   } else {
-      //     dataToCreate.push(item);
-      //   }
-      // });
-      // for (const data of dataToUpdate) {
-      //   await Data.update({ id: data.id }).set(data);
-      // }
-      // if (dataToCreate.length > 0) {
-      //   await Data.createEach(dataToCreate);
-      // }
-
-
-      // if (fs.existsSync(filePath)) {
-      //   fs.unlinkSync(filePath);
-      // }
-
       return res.ok({
         message: `Xử lý hoàn tất:  Đã xóa ${deleteResult.length} bản ghi cũ. Đã thêm mới ${createResult.length} bản ghi.`,
         skippedRows,
+        blacklistedRows,
       });
     } catch (err) {
       console.error('Lỗi trong quá trình nhập dữ liệu:', err.message);
 
-
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }
-
 
       return res.serverError({
         message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.',
