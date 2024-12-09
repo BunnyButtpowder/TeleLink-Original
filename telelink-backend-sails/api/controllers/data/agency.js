@@ -1,5 +1,4 @@
 module.exports = {
-
   friendlyName: 'View branch data',
 
   description: 'Xem các dữ liệu đã được phân bổ cho chi nhánh theo agency ID.',
@@ -39,62 +38,73 @@ module.exports = {
 
   fn: async function (inputs) {
     let { res } = this;
+
     try {
       const { agencyId, searchTerm, sort, order, page, limit } = inputs;
 
-      const AgencyExit = await Agency.findOne({ id: agencyId });
-      if (!AgencyExit) {
-        return this.res.notFound({ message: "không tìm thấy chi nhánh." });
+      // Kiểm tra sự tồn tại của agency
+      const agencyExists = await Agency.findOne({ id: agencyId });
+      if (!agencyExists) {
+        return res.notFound({ message: 'Không tìm thấy chi nhánh.' });
       }
 
+      // Xây dựng bộ lọc tìm kiếm
+      const searchFilters = { agency: agencyId };
+      if (searchTerm) {
+        searchFilters.or = [
+          { placeOfIssue: { contains: searchTerm.toLowerCase() } },
+          { networkName: { contains: searchTerm.toLowerCase() } },
+          { category: { contains: searchTerm.toLowerCase() } },
+        ];
+      }
+
+      // Tìm tất cả bản ghi phù hợp
+      const matchingRecords = await Data.find({ where: searchFilters });
+      const totalCount = matchingRecords.length;
+
+      // Tính số trang
+      const totalPages = Math.ceil(totalCount / limit);
+
+      // Phân trang dữ liệu
       const sortOrder = sort && order ? `${sort} ${order}` : undefined;
       const skip = (page - 1) * limit;
 
-      let branchData;
-      if (searchTerm) {
-        branchData = await Data.find({
-          where: {
-            agency: agencyId,
-            or: [
-              { placeOfIssue: { like: `%${searchTerm.toLowerCase()}%` } },
-              { networkName: { like: `%${searchTerm.toLowerCase()}%` } },
-              { category: { like: `%${searchTerm.toLowerCase()}%` } },
-            ],
-          },
-          sort: sortOrder,
-          skip: skip,
-          limit: limit,
-        });
-      } else {
-        branchData = await Data.find({
-          where: { agency: agencyId },
-          sort: sortOrder,
-          skip: skip,
-          limit: limit,
-        });
-      }
+      const data = await Data.find({
+        where: searchFilters,
+        sort: sortOrder,
+        skip: skip,
+        limit: limit,
+      });
 
-      const totalCount = await Data.count({ agency: agencyId });
-      const totalPages = Math.ceil(totalCount / limit);
-
-      if (branchData.length === 0) {
-        return res.ok({ message: searchTerm ? 'Không tìm thấy dữ liệu phù hợp.' : 'Không có dữ liệu' });
-      }
-
-      return this.res.ok({
-        message: `Đây là danh sách data của agency với ID ${agencyId}`,
-        data: branchData,
-        pagination: {
+      // Nếu không có dữ liệu trả về thông báo
+      if (data.length === 0) {
+        return res.ok({
+          message: searchTerm
+            ? 'Không tìm thấy dữ liệu phù hợp với từ khóa tìm kiếm.'
+            : 'Không có dữ liệu.',
+          data: [],
+          count: 0,
           totalCount: totalCount,
           totalPages: totalPages,
           currentPage: page,
-          limit: limit,
-        },
+          perPage: limit,
+        });
+      }
+
+      // Trả về kết quả
+      return res.ok({
+        message: `Dữ liệu của agency với ID ${agencyId}`,
+        data: data,
+        count: data.length,
+        totalCount: totalCount,
+        totalPages: totalPages,
+        currentPage: page,
+        perPage: limit,
       });
 
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return res.serverError({ error: 'Có lỗi xảy ra khi lấy hoặc tìm kiếm dữ liệu.' });
     }
-  }
+  },
 };
