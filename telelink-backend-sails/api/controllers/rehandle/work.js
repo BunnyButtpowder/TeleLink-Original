@@ -125,6 +125,8 @@ module.exports = {
           const rehandle = await DataRehandle.create({
             user: userId,
             data: dataId,
+            subscriberNumber: data.subscriberNumber,
+            customerName,
             complete: false,
             latestResult: result,
             dateToCall: date,
