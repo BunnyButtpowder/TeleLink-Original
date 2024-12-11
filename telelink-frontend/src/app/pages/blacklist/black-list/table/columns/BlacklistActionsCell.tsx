@@ -82,7 +82,6 @@ const BlacklistActionsCell: FC<Props> = ({ id }) => {
         {/* end::Menu item */}
       </div>
       {/* end::Menu */}
-      <ToastContainer />
     </>
   )
 }
