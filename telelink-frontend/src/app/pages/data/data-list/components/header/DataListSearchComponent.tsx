@@ -5,8 +5,7 @@ import { useIntl } from 'react-intl'
 import { useAuth } from '../../../../../../app/modules/auth'
 import { getAllNetworks, getNetworksByAgency } from '../../core/_requests'
 
-const DataListSearchComponent = () => {
-  const { updateState } = useQueryRequest()
+const DataListSearchComponent: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {  const { updateState } = useQueryRequest()
   const [searchTerm, setSearchTerm] = useState<string>('')
   const intl = useIntl()
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
@@ -35,7 +34,7 @@ const DataListSearchComponent = () => {
 
   useEffect(() => {
     fetchNetworks();
-  }, [isAdmin, agencyId])
+  }, [isAdmin, agencyId, refreshTrigger])
 
   useEffect(() => {
     if (debouncedSearchTerm !== undefined && searchTerm !== undefined) {
