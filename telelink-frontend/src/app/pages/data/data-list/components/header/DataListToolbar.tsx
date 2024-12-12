@@ -43,6 +43,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
+        onRefresh()
       }
     }
   };
