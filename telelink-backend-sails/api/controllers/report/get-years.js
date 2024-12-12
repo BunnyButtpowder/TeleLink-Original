@@ -16,7 +16,7 @@ module.exports = {
 
   fn: async function (inputs) {
     let { res } = this;
-    let { agencyId, date } = inputs;
+    let { agencyId } = inputs;
 
     if (agencyId) {
       const AgencyExist = await Agency.findOne({ id: agencyId });
