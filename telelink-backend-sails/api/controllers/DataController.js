@@ -141,6 +141,8 @@ module.exports = {
 
       if (deletedDataIds.length > 0) {
         const deleteAssignResult = await DataAssignment.destroy({ data: deletedDataIds }).fetch();
+        const deleteReAssignResult = await DataRehandle.destroy({ data: deletedDataIds }).fetch();
+        console.log(`Đã xóa ${deleteReAssignResult.length} bản ghi trong bảng DataAssign.`);
         console.log(`Đã xóa ${deleteAssignResult.length} bản ghi trong bảng DataAssign.`);
       }
 

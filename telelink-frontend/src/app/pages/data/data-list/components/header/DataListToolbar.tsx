@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useQueryResponse } from '../../core/QueryResponseProvider'
 import { useAuth } from '../../../../../../app/modules/auth'
 
-const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = ({ onUploadComplete }) => {
+const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRefresh: () => void }> = ({ onUploadComplete, onRefresh }) => {
   const intl = useIntl()
   const [isDistributionModalOpen, setDistributionModalOpen] = useState(false)
   const [uploading, setUploading] = useState(false);
@@ -59,6 +59,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void }> = 
 
   const closeDataDistributionModal = () => {
     setDistributionModalOpen(false);
+    onRefresh();
   }
 
   return (

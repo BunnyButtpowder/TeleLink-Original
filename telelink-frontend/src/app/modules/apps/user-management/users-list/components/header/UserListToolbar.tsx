@@ -5,8 +5,12 @@ import { useIntl } from 'react-intl'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import React from 'react'
+import { useAuth } from '../../../../../auth'
+
 
 const UsersListToolbar = () => {
+  const { currentUser } = useAuth();
+  const agencyID = currentUser?.agency?.id;
   const intl = useIntl()
   const { setItemIdForUpdate } = useListView()
   const openAddUserModal = () => {
@@ -17,8 +21,7 @@ const UsersListToolbar = () => {
     <>
       <ToastContainer />
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-        <UsersListFilter />
-
+        {agencyID == null && <UsersListFilter />}
         {/* begin::Export */}
         {/* <button type='button' className='btn btn-light-primary me-3'>
           <KTIcon iconName='exit-up' className='fs-2' />

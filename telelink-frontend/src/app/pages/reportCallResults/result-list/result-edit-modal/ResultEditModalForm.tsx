@@ -22,7 +22,10 @@ const vietnamesePhoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
 
 const editResultSchema = Yup.object().shape({
   result: Yup.number().required('Vui lòng chọn kết quả cuộc gọi'),
-  dataPackage: Yup.number().required('Vui lòng chọn gói cước'),
+  dataPackage: Yup.string()
+  // .nullable()
+  // .typeError('Vui lòng chọn gói cước hợp lệ') // Custom error message for invalid type
+  .required('Vui lòng chọn gói cước'),  
   customerName: Yup.string().nullable(),
   address: Yup.string().nullable(),
   note: Yup.string().nullable(),
@@ -31,6 +34,7 @@ const editResultSchema = Yup.object().shape({
   // .nullable(),
   revenue: Yup.number().nullable(),
   dateToCall: Yup.string().nullable(),
+  
 })
 
 const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
@@ -53,28 +57,34 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
 
   const fetchPackages = async (dataId: number) => {
     setIsLoadingPackages(true);
-    console.log(dataId);
     try {
       const packageArray = await getPackagesByDataId(dataId.toString());
-      setPackages(packageArray);
-      console.log('Fetched packages:', packages);
+      setPackages(
+        packageArray.map((pack) => ({
+          id: Number(pack.id), // Ensure IDs are numbers
+          title: pack.title,
+        }))
+      );
     } catch (error) {
       console.error('Failed to fetch packages:', error);
     } finally {
       setIsLoadingPackages(false);
     }
-  }
+  };
+  
 
-  const handlePackageChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedPackage = e.target.value;
-    formik.setFieldValue('dataPackage', selectedPackage);
-  }
+  const handlePackageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedPackageId = parseInt(e.target.value, 10); // Ensure it's a number
+    formik.setFieldValue('dataPackage', isNaN(selectedPackageId) ? null : selectedPackageId);
+  };
+  
+  
 
   const [resultForEdit] = useState<CallResult>({
     ...result,
     result: result.result || initialCallResult.result,
     data_id: result.data_id || initialCallResult.data_id,
-    dataPackage: result.dataPackage || initialCallResult.dataPackage,
+    dataPackage: result.dataPackage || '',
     customerName: result.customerName || initialCallResult.customerName,
     address: result.address || initialCallResult.address,
     note: result.note || initialCallResult.note,
@@ -98,6 +108,7 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
     validationSchema: editResultSchema,
     onSubmit: async (values, {setSubmitting}) => {
       setSubmitting(true)
+      console.log(resultForEdit)
       try {
         if (values.id) {
           let response;
@@ -245,18 +256,21 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
                   { 'is-invalid': formik.touched.dataPackage && formik.errors.dataPackage },
                   { 'is-valid': formik.touched.dataPackage && !formik.errors.dataPackage }
                 )}
+                value={formik.values.dataPackage || ''} // Explicitly set the value to '' when not selected
                 onChange={handlePackageChange}
               >
-                <option value='' disabled>{intl.formatMessage({ id: 'CHOOSE_PACKAGE' })}</option>
+                <option value='' disabled>
+                  {intl.formatMessage({ id: 'CHOOSE_PACKAGE' })}
+                </option>
                 {isLoadingPackages ? (
-                  <option>Loading packages...</option>
+                  <option disabled>Loading packages...</option>
                 ) : (
                   packages.map((pack) => (
                     <option key={pack.id} value={pack.id}>
                       {pack.title}
                     </option>
-                  )))
-                }
+                  ))
+                )}
               </select>
               {formik.touched.dataPackage && formik.errors.dataPackage && (
                 <div className='fv-plugins-message-container'>
@@ -267,6 +281,7 @@ const ResultEditModalForm: FC<Props> = ({result, isUserLoading}) => {
               )}
             </div>
             {/* end::Package Selection */}
+
 
             <div className='fv-row mb-7'>
               <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NOTE' })}</label>

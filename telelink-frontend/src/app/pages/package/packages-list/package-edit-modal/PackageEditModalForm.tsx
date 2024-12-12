@@ -273,7 +273,7 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
                     {...packageFormik.getFieldProps('provider')}
                     name='auth.status'
                     type='radio'
-                    value="Mobiphone"
+                    value="Mobifone"
                     id='kt_modal_update_role_option_1'
                     checked={packageFormik.values.provider === 'Mobifone'}                   
                     onChange={() => packageFormik.setFieldValue('provider', 'Mobifone')}

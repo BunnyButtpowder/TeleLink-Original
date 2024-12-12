@@ -7,6 +7,7 @@ import { useAuth } from '../../../../../../app/modules/auth'
 import { getData } from '../../core/_requests'
 import { useQueryResponse } from '../../core/QueryResponseProvider';
 import { AddReportModal } from '../../add-report-modal/AddReportModal';
+import { BlacklistEditModal } from '../../blacklist-edit-modal/BlackListEditModal';
 import React from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,6 +16,7 @@ const CustomersListToolbar = () => {
   const intl = useIntl()
   const { currentUser, setCurrentUserData } = useAuth();
   const [isAddReportModalOpen, setAddReportModalOpen] = useState(false)
+  const [isBlacklistEditModalOpen, setBlacklistEditModalOpen] = useState(false)
   const { setDataDetails } = useQueryResponse();
   const [cooldown, setCooldown] = useState(false);
   const salesmanId = currentUser?.id;
@@ -43,6 +45,14 @@ const CustomersListToolbar = () => {
 
   const closeAddReportModal = () => {
     setAddReportModalOpen(false);
+  }
+  
+  const openBlacklistEditModal = () => {
+    setBlacklistEditModalOpen(true);
+  }
+
+  const closeBlacklistEditModal = () => {
+    setBlacklistEditModalOpen(false);
   }
 
   const fetchData = async () => {
@@ -88,6 +98,13 @@ const CustomersListToolbar = () => {
         </button>
         {/* end::Get Data */}
 
+        {/* begin: Add Blacklist */}
+        <button type='button' className='btn btn-primary me-3' onClick={openBlacklistEditModal}>
+          <KTIcon iconName='abstract-11' className='fs-2' />
+          Chặn số
+        </button>
+        {/* end: Add Blacklist */}
+
         {/* begin::Add user */}
         <button type='button' className='btn btn-primary' onClick={openAddReportModal}>
           <KTIcon iconName='plus' className='fs-2' />
@@ -96,6 +113,7 @@ const CustomersListToolbar = () => {
         {/* end::Add user */}
       </div>
       {isAddReportModalOpen && <AddReportModal onClose={closeAddReportModal} />}
+      {isBlacklistEditModalOpen && <BlacklistEditModal onClose={closeBlacklistEditModal} />}
     </>
   )
 }
