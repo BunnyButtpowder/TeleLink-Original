@@ -42,7 +42,7 @@ module.exports = {
       const [month, year] = date.split("-");
       startDate = Date.parse(new Date(Date.UTC(year, month - 1, 1, 0, 0, 0)));
       endDate = Date.parse(new Date(Date.UTC(year, month, 0, 23, 59, 59)));
-      criteria.createdAt = { ">=": startDate, "<=": endDate };
+      criteria.createdAt = { ">=": startDate, "<=": endDate }; 
     }
 
     let rawQuery, groupedResults;
