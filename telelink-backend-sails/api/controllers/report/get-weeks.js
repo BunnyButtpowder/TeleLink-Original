@@ -58,8 +58,8 @@ module.exports = {
     // All done.
     return this.res.ok({
       message: `Revenue report:`,
-      data: filteredResult,
-      count: filteredResult.length,
+      // data: filteredResult,
+      // count: filteredResult.length,
     });
   },
 };
