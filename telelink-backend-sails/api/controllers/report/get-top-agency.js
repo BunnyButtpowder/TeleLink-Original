@@ -6,10 +6,6 @@ module.exports = {
   description: "Top agency best selling salemans",
 
   inputs: {
-    agencyId: {
-      type: "string",
-      required: false,
-    },
     date: {
       type: "string",
       required: false,
@@ -24,21 +20,7 @@ module.exports = {
 
   fn: async function (inputs) {
     let { res } = this;
-    let { agencyId, date, top } = inputs;
-
-    if (agencyId) {
-      const AgencyExist = await Agency.findOne({ id: agencyId });
-      if (!AgencyExist) {
-        return this.res.notFound({ message: "không tìm thấy chi nhánh." });
-      }
-    } else {
-      agencyId = undefined;
-    }
-
-    const criteria = {
-      agency: agencyId,
-    };
-
+    let { date, top } = inputs;
     //định nghĩa tháng cần tìm
     let startDate,
       endDate = undefined;
@@ -46,7 +28,6 @@ module.exports = {
       const [month, year] = date.split("-");
       startDate = Date.parse(new Date(Date.UTC(year, month - 1, 1, 0, 0, 0)));
       endDate = Date.parse(new Date(Date.UTC(year, month, 0, 23, 59, 59)));
-      criteria.createdAt = { ">=": startDate, "<=": endDate }; 
     }
 
     let rawQuery, groupedResults;
