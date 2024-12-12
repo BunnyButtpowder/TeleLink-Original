@@ -1,7 +1,7 @@
 const { fail } = require("grunt");
 
 module.exports = {
-  friendlyName: "Get revenue report by weeks",
+  friendlyName: "Get revenue report by years",
 
   description: "A sum up of all call result in a year",
 
@@ -41,26 +41,22 @@ module.exports = {
         SELECT 
           agency,
           YEAR(FROM_UNIXTIME(r.createdAt / 1000)) AS year,
-          WEEK(FROM_UNIXTIME(r.createdAt / 1000)) AS week, 
           SUM(revenue) AS total_revenue,
           a.name
       FROM 
           result r join agency a on r.agency = a.id
       GROUP BY 
           r.agency, 
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000)), 
-          WEEK(FROM_UNIXTIME(r.createdAt / 1000))
+          YEAR(FROM_UNIXTIME(r.createdAt / 1000)) 
       ORDER BY 
-          r.agency, 
-          year, 
-          week;
+          agency, 
+          year; 
         `;
-    if(agencyId){
+    if (agencyId) {
       rawQuery = `
         SELECT 
           agency,
           YEAR(FROM_UNIXTIME(r.createdAt / 1000)) AS year,
-          WEEK(FROM_UNIXTIME(r.createdAt / 1000)) AS week, 
           SUM(revenue) AS total_revenue,
           a.name
       FROM 
@@ -69,17 +65,14 @@ module.exports = {
         r.agency = $1
       GROUP BY 
           r.agency, 
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000)), 
-          WEEK(FROM_UNIXTIME(r.createdAt / 1000))
+          YEAR(FROM_UNIXTIME(r.createdAt / 1000)) 
       ORDER BY 
-          r.agency, 
-          year, 
-          week;
+          agency, 
+          year; 
         `;
     }
     groupedResults = await sails.sendNativeQuery(rawQuery, [agencyId]);
     console.log(groupedResults.rows);
-    
 
     // const filteredResult = result.map((item) => ({
     //   revenue: item.revenue,
