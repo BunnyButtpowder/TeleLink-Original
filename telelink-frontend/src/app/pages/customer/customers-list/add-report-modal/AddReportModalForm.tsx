@@ -92,7 +92,7 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
       } catch (error) {
         const errorMessage = (error as any).response?.data?.message || 'Gửi kết quả cuộc gọi thất bại!'
         toast.error(errorMessage)
-        console.error('Failed to submit report:', errorMessage)
+        console.error('Có lỗi trong quá trình tạo kết quả cuộc gọi', errorMessage)
       } finally {
         setSubmitting(false)
       }
