@@ -16,7 +16,7 @@ module.exports = {
 
   fn: async function (inputs) {
     let { res } = this;
-    let { agencyId } = inputs;
+    let { agencyId, date } = inputs;
 
     if (agencyId) {
       const AgencyExist = await Agency.findOne({ id: agencyId });
@@ -26,14 +26,34 @@ module.exports = {
     } else {
       agencyId = undefined;
     }
-
+    let startDate, endDate;
     //định nghĩa tháng cần tìm
-    const month = new Date(Date.now()).getMonth();
-    const year = new Date(Date.now()).getFullYear();
-    let startDate = Date.parse(new Date(Date.UTC(year, month, 1, 0, 0, 0)));
-    let endDate = Date.parse(
-      new Date(Date.UTC(year, month + 1, 0, 23, 59, 59))
+    const now = new Date(); // Current date and time
+
+    endDate = Date.parse(
+      new Date(
+        Date.UTC(
+          now.getUTCFullYear(),
+          now.getUTCMonth(),
+          now.getUTCDate(),
+          23,
+          59,
+          59
+        )
+      )
     );
+
+    const oneYearAgo = new Date(
+      Date.UTC(
+        now.getUTCFullYear() - 5,
+        now.getUTCMonth(),
+        now.getUTCDate(),
+        0,
+        0,
+        0
+      )
+    );
+    startDate = Date.parse(oneYearAgo);
 
     let rawQuery, groupedResults;
 
@@ -45,12 +65,14 @@ module.exports = {
           a.name
       FROM 
           result r join agency a on r.agency = a.id
+      Where
+        r.createdAt > $1 AND r.createdAt < $2
       GROUP BY 
           r.agency, 
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000)) 
+          YEAR(FROM_UNIXTIME(r.createdAt / 1000))
       ORDER BY 
-          agency, 
-          year; 
+          r.agency, 
+          year;
         `;
     if (agencyId) {
       rawQuery = `
@@ -62,25 +84,26 @@ module.exports = {
       FROM 
           result r join agency a on r.agency = a.id
       Where
-        r.agency = $1
+        r.agency = $1 AND r.createdAt > $2 AND r.createdAt < $3
       GROUP BY 
           r.agency, 
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000)) 
+          YEAR(FROM_UNIXTIME(r.createdAt / 1000))
       ORDER BY 
-          agency, 
-          year; 
+          r.agency, 
+          year;
         `;
+      groupedResults = await sails.sendNativeQuery(rawQuery, [
+        agencyId,
+        startDate,
+        endDate,
+      ]);
+    } else {
+      groupedResults = await sails.sendNativeQuery(rawQuery, [
+        startDate,
+        endDate,
+      ]);
     }
-    groupedResults = await sails.sendNativeQuery(rawQuery, [agencyId]);
-    console.log(groupedResults.rows);
 
-    // const filteredResult = result.map((item) => ({
-    //   revenue: item.revenue,
-    //   agencyName: item.agency?.name,
-    //   createdAt: item.createdAt,
-    // }));
-
-    // All done.
     return this.res.ok({
       message: `Revenue report:`,
       data: groupedResults.rows,
