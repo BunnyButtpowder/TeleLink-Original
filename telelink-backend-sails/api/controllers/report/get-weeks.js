@@ -30,21 +30,36 @@ module.exports = {
     //định nghĩa tháng cần tìm
     const month = new Date(Date.now()).getMonth();
     const year = new Date(Date.now()).getFullYear();
-    let startDate = Date.parse(new Date(Date.UTC(year - 1, month, 1, 0, 0, 0)));
+    let startDate = Date.parse(new Date(Date.UTC(year, month, 1, 0, 0, 0)));
     let endDate = Date.parse(
       new Date(Date.UTC(year, month + 1, 0, 23, 59, 59))
     );
 
-    const result = await Report.find({
-      createdAt: { ">=": startDate, "<=": endDate },
-      agency: agencyId,
-    }).populate("agency");
+    let rawQuery, groupedResults;
+      rawQuery = `
+        SELECT sum(revenue)
+        FROM result
+        WHERE agency = $1 AND createdAt > $2 AND createdAt < $3
+        GROUP BY agency
+        `;
+      groupedResults = await sails.sendNativeQuery(rawQuery, [
+        user.agency,
+        startDate,
+        endDate,
+      ]);
+
+
+    const filteredResult = result.map((item) => ({
+      revenue: item.revenue,
+      agencyName: item.agency?.name,
+      createdAt: item.createdAt,
+    }));
 
     // All done.
     return this.res.ok({
       message: `Revenue report:`,
-      data: result,
-      count: result.length,
+      data: filteredResult,
+      count: filteredResult.length,
     });
   },
 };
