@@ -9,6 +9,14 @@ module.exports = {
       model: 'data',
       required: true,
     },
+    subcriberNumber: {
+      type: 'string',
+      allowNull:true
+    },
+    customerName: {
+      type: 'string',
+      allowNull:true
+    },
     complete: {
       type: 'boolean',
       defaultsTo: false,

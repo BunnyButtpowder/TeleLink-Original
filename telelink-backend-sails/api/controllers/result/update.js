@@ -1,3 +1,5 @@
+const DataRehandle = require("../../models/DataRehandle");
+
 module.exports = {
   friendlyName: "Update call result",
 
@@ -74,6 +76,25 @@ module.exports = {
         if (!report) {
           report = await Report.create({ agency: existingResult.agency }).fetch();
         }
+        try {
+          await DataRehandle.destroy({data: existingResult.data, complete: false})
+        } catch (error) {
+          console.log("no rehandle data destroyed");
+        }
+        if(result in [5,6,7]){
+          const rehandle = await DataRehandle.create({
+            user: userId,
+            data: existingResult.data,
+            subscriberNumber: existingResult.subscriberNumber,
+            customerName,
+            complete: false,
+            latestResult: result,
+            dateToCall,
+            note,
+          });
+          
+        }
+
         await Result.updateOne(
           { id: resultId },
           {
