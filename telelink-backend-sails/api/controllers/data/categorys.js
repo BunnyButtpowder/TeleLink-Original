@@ -1,9 +1,9 @@
 const _ = require('lodash');
 
 module.exports = {
-  friendlyName: 'Get all data and categorize with counts',
+  friendlyName: 'Update to get categories by network operator',
 
-  description: 'Lấy tất cả dữ liệu, phân loại theo loại và đếm số lượng trong mỗi loại.',
+  description: 'Cập nhật lấy categories theo nhà mạng',
   
   inputs: {
     network: {

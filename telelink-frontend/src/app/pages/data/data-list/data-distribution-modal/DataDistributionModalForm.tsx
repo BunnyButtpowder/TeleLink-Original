@@ -21,9 +21,9 @@ const dataDistributionSchema = Yup.object().shape({
 
 const salesmanDataDistributionSchema = Yup.object().shape({
   quantity: Yup.number()
-  .integer('Số lượng phải là số nguyên')
-  .min(1, 'Số lượng phải lớn hơn hoặc bằng 1')
-  .required('Vui lòng điền vào trường này'),  
+    .integer('Số lượng phải là số nguyên')
+    .min(1, 'Số lượng phải lớn hơn hoặc bằng 1')
+    .required('Vui lòng điền vào trường này'),
   agencyId: Yup.string().required('Vui lòng chọn chi nhánh'),
   userId: Yup.string().required('Vui lòng chọn nhân viên'),
   network: Yup.string().required('Vui lòng chọn nhà mạng'),
@@ -168,16 +168,16 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
           response = await dataAssignSalesman(values);
         }
 
-        resetForm();
-        fetchNetworks();
-        fetchCategories();
+        // resetForm();
+        // fetchNetworks();
+        // fetchCategories();
         refetch();
         onClose();
         toast.success("Phân phối dữ liệu thành công!")
 
       } catch (error) {
         const errorMessage = (error as any).response?.data?.message || 'Phân phối dữ liệu thất bại!';
-        
+
         console.error('Error distributing data:', errorMessage);
         toast.error(errorMessage);
       } finally {
@@ -185,11 +185,10 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
       }
     },
   });
-  
+
 
   return (
     <>
-          <ToastContainer />
       {isAdmin && (
         // Radio buttons only for admin to choose between agency and salesman
         <div className='d-flex justify-content-evenly mb-7'>
@@ -292,8 +291,8 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
               {formik.touched.userId && formik.errors.userId && (
                 <div className='fv-plugins-message-container'>
                   <div className="fv-help-block">
-                  <span role='alert'>{formik.errors.userId}</span>
-                </div>
+                    <span role='alert'>{formik.errors.userId}</span>
+                  </div>
                 </div>
               )}
             </div>
@@ -389,7 +388,7 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
               <div className='fv-plugins-message-container'>
                 <div className='fv-help-block'>
 
-                <span role='alert'>{formik.errors.quantity}</span>
+                  <span role='alert'>{formik.errors.quantity}</span>
                 </div>
               </div>
             )}
@@ -423,10 +422,8 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
           </button>
         </div>
         {/* End::Actions */}
- 
-      </form>
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
 
+      </form>
     </>
   )
 }

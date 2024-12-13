@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useListView } from '../../core/ListViewProvider'
 import { UsersListFilter } from './UsersListFilter'
 import { useIntl } from 'react-intl'
-import { useAuth } from '../../../../../../app/modules/auth'
+import { useAuth } from '../../../../../modules/auth'
 import { getData } from '../../core/_requests'
 import { useQueryResponse } from '../../core/QueryResponseProvider';
 import { AddReportModal } from '../../add-report-modal/AddReportModal';
@@ -92,25 +92,25 @@ const CustomersListToolbar = () => {
         {/* <UsersListFilter /> */}
 
         {/* begin::Get Data */}
-        <button type='button' className='btn btn-success me-3' onClick={handleGetData} disabled={cooldown}>
+        <button type='button' className='btn btn-light-primary me-3' onClick={handleGetData} disabled={cooldown}>
           <KTIcon iconName='exit-up' className='fs-2' />
           Lấy số
         </button>
         {/* end::Get Data */}
 
         {/* begin: Add Blacklist */}
-        <button type='button' className='btn btn-danger me-3' onClick={openBlacklistEditModal}>
+        <button type='button' className='btn btn-primary me-3' onClick={openBlacklistEditModal}>
           <KTIcon iconName='abstract-11' className='fs-2' />
           Chặn số
         </button>
         {/* end: Add Blacklist */}
 
-        {/* begin::Add report */}
+        {/* begin::Add user */}
         <button type='button' className='btn btn-primary' onClick={openAddReportModal}>
           <KTIcon iconName='plus' className='fs-2' />
           {intl.formatMessage({ id: 'CREATE.REPORT' })}
         </button>
-        {/* end::Add report */}
+        {/* end::Add user */}
       </div>
       {isAddReportModalOpen && <AddReportModal onClose={closeAddReportModal} />}
       {isBlacklistEditModalOpen && <BlacklistEditModal onClose={closeBlacklistEditModal} />}

@@ -3,17 +3,19 @@ import {QueryRequestProvider} from './core/QueryRequestProvider'
 import {QueryResponseProvider} from './core/QueryResponseProvider'
 import {CustomersListHeader} from './components/header/CustomersListHeader'
 import {CustomersTable} from './table/CustomersTable'
-import {KTCard, toAbsoluteUrl} from '../../../../_metronic/helpers'
+import {AddReportModal} from './add-report-modal/AddReportModal'
+import {KTCard} from '../../../../_metronic/helpers'
 import { ToolbarWrapper } from '../../../../_metronic/layout/components/toolbar'
 import { Content } from '../../../../_metronic/layout/components/content'
-import { CustomerForm } from './components/widget/CustomerForm'
 
 const CustomersList = () => {
   const {itemIdForUpdate} = useListView()
   return (
     <>
-        {/* <CustomersTable /> */}
-        <CustomerForm className='card-xl-stretch mb-xl-8' color='primary' img={toAbsoluteUrl('media/patterns/pattern-1.jpg')} />
+      <KTCard>
+        <CustomersListHeader />
+        <CustomersTable />
+      </KTCard>
       {/* {itemIdForUpdate !== undefined && <AddReportModal />} */}
     </>
   )

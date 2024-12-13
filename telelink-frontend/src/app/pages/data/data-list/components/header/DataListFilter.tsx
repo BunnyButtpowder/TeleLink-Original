@@ -5,12 +5,13 @@ import { useQueryRequest } from '../../core/QueryRequestProvider'
 import { useQueryResponse } from '../../core/QueryResponseProvider'
 import { useIntl } from 'react-intl'
 import { ref } from 'firebase/storage'
+import { getAllPlaceOfIssues } from '../../core/_requests'
 
 const DataListFilter = () => {
   const { updateState } = useQueryRequest()
   const { isLoading } = useQueryResponse()
   const [placeOfIssue, setPlaceOfIssue] = useState<string | undefined>()
-  const [placeOfIssues, setPlaceOfIssues] = useState<string[]>([]);
+  const [placeOfIssues, setPlaceOfIssues] = useState<{ [key: string]: { count: number } }>({})
   const [networkName, setNetworkName] = useState<string | undefined>()
   const intl = useIntl()
   const { refetch } = useQueryResponse();
@@ -18,42 +19,17 @@ const DataListFilter = () => {
 
   const API_URL = import.meta.env.VITE_APP_API_URL;
 
+  const fetchPlaceOfIssues = async () => {
+    try {
+      const placeOfIssues = await getAllPlaceOfIssues();
+      setPlaceOfIssues(placeOfIssues);
+    } catch (error) {
+      console.error('Failed to fetch place of issues:', error);
+    }
+  }
+
   useEffect(() => {
     MenuComponent.reinitialization();
-  
-    const fetchPlaceOfIssues = async () => {
-      try {
-        const token = localStorage.getItem('auth_token');
-        const response = await fetch(`${API_URL}/data/getall`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-  
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-  
-        const result = await response.json();
-  
-        if (result && result.data) {
-          // Explicitly map the result.data to ensure it contains strings
-          const uniquePlaceOfIssues = Array.from(
-            new Set(
-              (result.data as Array<{ placeOfIssue: string }>) // Type assertion here
-                .map(item => item.placeOfIssue)
-                .filter(Boolean) // Remove any falsy values
-            )
-          );
-  
-          // Update the state with unique placeOfIssues (string array)
-          setPlaceOfIssues(uniquePlaceOfIssues);
-        }
-      } catch (error) {
-        console.error('Error fetching placeOfIssues:', error);
-      }
-    };
   
     fetchPlaceOfIssues();
   }, []);
@@ -121,9 +97,9 @@ const DataListFilter = () => {
               value={placeOfIssue}
             >
               <option value=""></option>
-              {placeOfIssues.map((issue) => (
-                <option key={issue} value={issue}>
-                  {issue}
+              {Object.entries(placeOfIssues).map(([name, count]) => (
+                <option key={name} value={name}>
+                  {name}
                 </option>
               ))}
             </select>

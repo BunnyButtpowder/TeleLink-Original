@@ -15,7 +15,6 @@ import {getUsers, getSalesmenByAgency} from './_requests'
 import {User} from './_models'
 import {useQueryRequest} from './QueryRequestProvider'
 import { useAuth } from '../../../../../../app/modules/auth'
-// import {getSalesmenByAgency} from '../../../../../pages/data/data-list/core/_requests'
 
 const QueryResponseContext = createResponseContext<User>(initialQueryResponse)
 const QueryResponseProvider: FC<WithChildren> = ({children}) => {

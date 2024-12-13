@@ -5,7 +5,7 @@ import {UsersListSearchComponent} from './UsersListSearchComponent'
 const CustomersListHeader = () => {
   const {selected} = useListView()
   return (
-    <div className='border-0  d-flex justify-content-end'>
+    <div className='card-header border-0 pt-6 d-flex justify-content-end'>
       {/* <UsersListSearchComponent /> */}
       {/* begin::Card toolbar */}
       <div className='card-toolbar'>

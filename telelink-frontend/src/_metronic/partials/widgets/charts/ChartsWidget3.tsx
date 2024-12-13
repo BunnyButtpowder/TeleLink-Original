@@ -38,9 +38,9 @@ const ChartsWidget3: React.FC<Props> = ({className}) => {
       {/* begin::Header */}
       <div className='card-header border-0 pt-5'>
         <h3 className='card-title align-items-start flex-column'>
-          <span className='card-label fw-bold fs-3 mb-1'>Recent Transactions</span>
+          <span className='card-label fw-bold fs-3 mb-1'>Thống kê doanh thu</span>
 
-          <span className='text-muted fw-semibold fs-7'>More than 1000 new records</span>
+          <span className='text-muted fw-semibold fs-7'></span>
         </h3>
 
         {/* begin::Toolbar */}
@@ -49,21 +49,21 @@ const ChartsWidget3: React.FC<Props> = ({className}) => {
             className='btn btn-sm btn-color-muted btn-active btn-active-primary active px-4 me-1'
             id='kt_charts_widget_3_year_btn'
           >
-            Year
+            Năm
           </a>
 
           <a
             className='btn btn-sm btn-color-muted btn-active btn-active-primary px-4 me-1'
             id='kt_charts_widget_3_month_btn'
           >
-            Month
+            Tháng
           </a>
 
           <a
             className='btn btn-sm btn-color-muted btn-active btn-active-primary px-4'
             id='kt_charts_widget_3_week_btn'
           >
-            Week
+            Tuần
           </a>
         </div>
         {/* end::Toolbar */}

@@ -24,7 +24,7 @@ const importData = async (file: File, onUploadProgress: (ProgressEvent: any) => 
   }
 };
 
-const getAllData = (params: {searchTerm?: string, sort?: string, order?: string, placeOfIssue?: string, networkName?: string, page?: number, limit?: number}): Promise<DataQueryResponse> => {
+const getAllData = (params?: {searchTerm?: string, sort?: string, order?: string, placeOfIssue?: string, networkName?: string, page?: number, limit?: number}): Promise<DataQueryResponse> => {
   return axios
     .get(GET_ALL_DATA_URL, { params })
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
@@ -33,6 +33,12 @@ const getAllData = (params: {searchTerm?: string, sort?: string, order?: string,
 const getAllNetworks = (): Promise<any> => {
   return axios
     .get(`${API_URL}/data/network`)
+    .then((response: AxiosResponse<any>) => response.data);
+}
+
+const getAllPlaceOfIssues = (): Promise<any> => {
+  return axios
+    .get(`${API_URL}/data/place-of-issue`)
     .then((response: AxiosResponse<any>) => response.data);
 }
 
@@ -163,5 +169,6 @@ export {
   getNetworksByAgency,
   getCategoriesByAgency,
   dataAssignAdminToSaleman,
-  deleteSelectedData
+  deleteSelectedData,
+  getAllPlaceOfIssues
 };

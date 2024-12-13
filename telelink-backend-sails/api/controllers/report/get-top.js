@@ -47,7 +47,7 @@ module.exports = {
 
     let rawQuery, groupedResults;
     rawQuery = `
-    SELECT SUM(revenue) as 'Total revenue', saleman, user.fullname, user.agency
+    SELECT SUM(revenue) as 'Total revenue', saleman, user.fullname, user.agency, user.avatar
     FROM result
     JOIN user ON saleman = user.id
     WHERE 

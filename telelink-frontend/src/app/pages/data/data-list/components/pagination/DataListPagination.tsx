@@ -5,18 +5,6 @@ import {useQueryRequest} from '../../core/QueryRequestProvider'
 import {PaginationState} from '../../../../../../_metronic/helpers'
 import {useMemo} from 'react'
 
-const mappedLabel = (label: string): string => {
-  if (label === '&laquo; Previous') {
-    return 'Previous'
-  }
-
-  if (label === 'Next &raquo;') {
-    return 'Next'
-  }
-
-  return label
-}
-
 const DataListPagination = () => {
   const pagination = useQueryResponsePagination()
   const isLoading = useQueryResponseLoading()
