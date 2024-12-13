@@ -1,4 +1,3 @@
-const DataRehandle = require("../../models/DataRehandle");
 
 module.exports = {
   friendlyName: "Update call result",
@@ -77,14 +76,16 @@ module.exports = {
           report = await Report.create({ agency: existingResult.agency }).fetch();
         }
         try {
-          await DataRehandle.destroy({data: existingResult.data, complete: false})
+          await DataRehandle.destroy({data: existingResult.data_id, complete: false})
         } catch (error) {
           console.log("no rehandle data destroyed");
         }
-        if(result in [5,6,7]){
+        if([5,6,7].includes(result)){
+          console.log(result);
+          
           const rehandle = await DataRehandle.create({
             user: userId,
-            data: existingResult.data,
+            data: existingResult.data_id,
             subscriberNumber: existingResult.subscriberNumber,
             customerName,
             complete: false,
