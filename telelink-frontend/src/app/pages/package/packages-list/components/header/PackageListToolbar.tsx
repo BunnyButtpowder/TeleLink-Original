@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-// import { importData } from '../../core/_requests'
+import { importData } from '../../core/_requests'
 import {KTIcon} from '../../../../../../_metronic/helpers'
 import { Package } from '../../core/_models'
 import {useListView} from '../../core/ListViewProvider'
@@ -25,13 +25,13 @@ const PackageListToolbar: React.FC<{ onUploadComplete: (data: Package[]) => void
       setUploading(true);
 
       try {
-        // const response = await importData(files);
-        // onUploadComplete(response.data);
+        const response = await importData(files);
+        onUploadComplete(response.data);
         refetch();
-        toast.success('Upload data thành công!');
+        toast.success('Upload gói cước thành công!');
       } catch (error) {
         console.error('Error uploading the file: ', error);
-        toast.error('Upload data thất bại!');
+        toast.error('Upload gói cước thất bại!');
       } finally {
         setUploading(false);
         if (fileInputRef.current) {

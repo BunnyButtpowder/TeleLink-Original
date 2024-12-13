@@ -482,7 +482,9 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
                 />
                 {salemanFormik.touched.auth?.email && salemanFormik.errors.auth?.email && (
                   <div className='fv-plugins-message-container'>
+                    <div className='fv-help-block'>
                     <span role='alert'>{salemanFormik.errors.auth?.email}</span>
+                    </div>
                   </div>
                 )}
               </div>

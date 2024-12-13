@@ -9,6 +9,7 @@
     "array-query": "^0.2.2",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
     "express-fileupload": "^1.5.1",
     "grunt": "1.0.4",
     "include-all": "^4.0.3",

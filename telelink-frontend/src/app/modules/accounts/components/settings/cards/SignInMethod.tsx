@@ -7,6 +7,9 @@ import { useIntl } from 'react-intl'
 import { useAuth } from '../../../../../../app/modules/auth'
 import { changePassword } from '../../../../../../app/modules/accounts/components/core/_request';
 
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const emailFormValidationSchema = Yup.object().shape({
   newEmail: Yup.string()
   .min(3, 'Cần tối thiểu 3 ký tự')
@@ -68,32 +71,35 @@ const SignInMethod: FC = () => {
     },
     validationSchema: passwordFormValidationSchema,
     onSubmit: async (values) => {
-      setLoading2(true)
-      
+      setLoading2(true);
+  
       try {
         const userId = currentUser?.id;
-        
+  
         if (!userId) {
-          console.error('User is not logged in');
+          toast.error('User is not logged in');
           setLoading2(false);
           return;
-        };
+        }
+  
         await changePassword(userId, values.currentPassword, values.newPassword);
         setPasswordUpdateData(values);
         setLoading2(false);
         setPasswordForm(false);
-        alert('Password changed successfully');
-
-      } catch (error) {
+        toast.success('Password changed successfully!');
+      } catch (error: any) {
         console.error('Error while changing password', error);
         setLoading2(false);
-        alert('Error while changing password');
+        const errorMessage = error?.response?.data?.message || 'An unexpected error occurred';
+        toast.error(errorMessage);
       }
     },
-  })
+  });
+  
 
   return (
     <div className='card mb-5 mb-xl-10'>
+      <ToastContainer />
       <div
         className='card-header border-0 cursor-pointer'
         role='button'

@@ -4,7 +4,7 @@ import { useFormik } from 'formik'
 import clsx from 'clsx'
 import axios from 'axios'
 import { useIntl } from 'react-intl'
-import { dataAssignAgency, dataAssignSalesman, dataAssignAdminToSaleman, getAllAgencies, getAllDataCategories, getSalesmenByAgency, getAllNetworks, getNetworksByAgency, getCategoriesByAgency } from '../core/_requests'
+import { dataAssignAgency, dataAssignSalesman, dataAssignAdminToSaleman, getAllAgencies, getDataCategoriesByNetworks, getSalesmenByAgency, getAllNetworks, getNetworksByAgency, getCategoriesByAgency } from '../core/_requests'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../../../app/modules/auth'
@@ -93,22 +93,22 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
     }
   }
 
-  const fetchCategories = async () => {
-    setIsLoadingCategories(true);
-    try {
-      if (isAdmin) {
-        const categories = await getAllDataCategories();
-        setCategories(categories);
-      } else {
-        const categories = await getCategoriesByAgency(agencyId?.toString() || '');
-        setCategories(categories);
-      }
-    } catch (error) {
-      console.error('Failed to fetch data categories:', error);
-    } finally {
-      setIsLoadingCategories(false);
-    }
-  }
+  // const fetchCategories = async () => {
+  //   setIsLoadingCategories(true);
+  //   try {
+  //     if (isAdmin && networks) {
+  //       const categories = await getDataCategoriesByNetworks();
+  //       setCategories(categories);
+  //     } else {
+  //       const categories = await getCategoriesByAgency(agencyId?.toString() || '');
+  //       setCategories(categories);
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to fetch data categories:', error);
+  //   } finally {
+  //     setIsLoadingCategories(false);
+  //   }
+  // }
 
   // Fetch agencies only if logged in user is admin
   useEffect(() => {
@@ -119,7 +119,7 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
     // Fetch salesmen, networks and categories
     fetchSalesmen();
     fetchNetworks();
-    fetchCategories();
+    // fetchCategories();
   }, [isAdmin])
 
   // Fetch salesman when agency changes
@@ -135,10 +135,29 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
   }
 
   // Update network value when selecting networks
-  const handleNetworkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedNetwork = e.target.value;
-    formik.setFieldValue('network', selectedNetwork);
+// Update network value when selecting networks
+const handleNetworkChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const selectedNetwork = e.target.value;
+  formik.setFieldValue('network', selectedNetwork);
+
+  // Call fetchCategories only if a valid network is selected
+  if (selectedNetwork) {
+    try {
+      if (isAdmin) {
+      setIsLoadingCategories(true);
+      const categories = await getDataCategoriesByNetworks(selectedNetwork); // Pass the selected network
+      setCategories(categories);
+    } else {
+      const categories = await getCategoriesByAgency(agencyId?.toString() || '');
+      setCategories(categories);
+    }
+    } catch (error) {
+      console.error('Failed to fetch data categories for the selected network:', error);
+    } finally {
+      setIsLoadingCategories(false);
+    }
   }
+};
 
   // Update count when category changes
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -168,8 +187,8 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
           response = await dataAssignSalesman(values);
         }
 
-        // resetForm();
-        // fetchNetworks();
+        resetForm();
+        fetchNetworks();
         // fetchCategories();
         refetch();
         onClose();
@@ -262,7 +281,9 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
               </select>
               {formik.touched.agencyId && formik.errors.agencyId && (
                 <div className='fv-plugins-message-container'>
+                  <div className="fv-help-block">
                   <span role='alert'>{formik.errors.agencyId}</span>
+                </div>
                 </div>
               )}
             </div>

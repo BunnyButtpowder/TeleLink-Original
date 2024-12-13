@@ -32,6 +32,29 @@ const getTop10Salesmen = async (params?: {
   }
 }
 
+const exportReport = (): Promise<void> => {
+  return axios
+    .get(`${API_URL}/api/reports/export`, {
+      responseType: "blob", 
+      headers: {
+        Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+    })
+    .then((response: AxiosResponse<Blob>) => {
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "Report.xlsx"; 
+      link.click();
+    })
+    .catch((error) => {
+      console.error("Error exporting report:", error);
+      throw error;
+    });
+};
+
 const getUserById = (id: ID): Promise<Revenue | undefined> => {
   return axios
     .get(`${REVENUE_URL}/${id}`)
@@ -70,4 +93,5 @@ export {
   createUser,
   updateUser,
   getTop10Salesmen
+  exportReport
 };

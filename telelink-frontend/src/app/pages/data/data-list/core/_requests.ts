@@ -131,6 +131,16 @@ const getAllDataCategories = async () => {
   }
 }
 
+const getDataCategoriesByNetworks = async (network: string): Promise<any> => {
+  try {
+    const response = await axios.get(`${API_URL}/data/categorys`, { params: { network } });
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to fetch data categories for network: ${network}`, error);
+    throw error;
+  }
+};
+
 const getUserById = (id: ID): Promise<Data | undefined> => {
   return axios
     .get(`${USER_URL}/${id}`)
