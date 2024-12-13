@@ -30,14 +30,14 @@ module.exports = {
     page: {
       type: 'number',
       required: false,
-      defaultsTo: 1, 
-      min: 1, 
+      defaultsTo: 1,
+      min: 1,
     },
     limit: {
       type: 'number',
       required: false,
       defaultsTo: 10,
-      min: 1, 
+      min: 1,
     }
 
   },
@@ -64,9 +64,9 @@ module.exports = {
         const data = await Data.find({
           isDelete: false,
           or: [
-            { placeOfIssue: { 'like': '%' + searchTerm.toLowerCase() + '%' } },
-            { networkName: { 'like': '%' + searchTerm.toLowerCase() + '%' } },
-            { category: { 'like': '%' + searchTerm.toLowerCase() + '%' } },
+            { placeOfIssue: { like: `%${searchTerm.toLowerCase()}%` } },
+            { networkName: { like: `%${searchTerm.toLowerCase()}%` } },
+            { category: { like: `%${searchTerm.toLowerCase()}%` } },
           ]
         });
       }
@@ -76,7 +76,7 @@ module.exports = {
       // });
 
       dataQuery = dataQuery.skip((page - 1) * limit).limit(limit);
-      
+
       if (sort && order) {
         dataQuery.sort(`${sort} ${order}`);
       }
@@ -88,12 +88,14 @@ module.exports = {
       const totalCount = await Data.count(filters);
       const totalPages = Math.ceil(totalCount / limit);
 
-      return res.ok({ data: data,
+      return res.ok({
+        data: data,
         count: data.length,
         totalCount: totalCount,
         totalPages: totalPages,
         currentPage: page,
-        perPage: limit, });
+        perPage: limit,
+      });
 
     } catch (err) {
       console.log(err)
