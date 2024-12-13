@@ -6,6 +6,21 @@ const API_URL = import.meta.env.VITE_APP_API_URL;
 const PACKAGE_URL = `${API_URL}/package`;
 const DELETE_PACKAGE_URL = `${API_URL}/package?id=`;
 
+const importData = async (file: File): Promise<any> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const response = await axios.post(`${API_URL}/import-package`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error importing data', error);
+    throw error;
+  }
+};
 
 const getPackages = (params: {searchTerm?: string, sort?: string, order?: string, provider?: string, type?: string}): Promise<PackageQueryResponse> => {
   return axios
@@ -76,4 +91,5 @@ export {
   getPackageById,
   createPackage,
   updatePackage,
+  importData
 };

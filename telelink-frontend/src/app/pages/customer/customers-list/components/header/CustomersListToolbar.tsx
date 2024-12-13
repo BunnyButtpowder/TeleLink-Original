@@ -99,7 +99,7 @@ const CustomersListToolbar = () => {
         {/* end::Get Data */}
 
         {/* begin: Add Blacklist */}
-        <button type='button' className='btn btn-primary me-3' onClick={openBlacklistEditModal}>
+        <button type='button' className='btn btn-danger me-3' onClick={openBlacklistEditModal}>
           <KTIcon iconName='abstract-11' className='fs-2' />
           Chặn số
         </button>
