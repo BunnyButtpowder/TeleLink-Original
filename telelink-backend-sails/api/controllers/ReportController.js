@@ -19,18 +19,19 @@ module.exports = {
       // Define columns
       worksheet.columns = [
         { header: 'STT', key: 'index', width: 10 },
-        { header: 'Agency', key: 'agency', width: 30 },
-        { header: 'Total Orders', key: 'total', width: 15 },
-        { header: 'Accepted', key: 'accept', width: 15 },
-        { header: 'Rejected', key: 'reject', width: 15 },
-        { header: 'Unanswered', key: 'unanswered', width: 15 },
-        { header: 'Unavailable', key: 'unavailable', width: 20 },
-        { header: 'Rehandle', key: 'rehandle', width: 15 },
-        { header: 'Lost', key: 'lost', width: 15 },
-        { header: 'Revenue', key: 'revenue', width: 15 },
-        { header: 'Success Rate (%)', key: 'successRate', width: 20 },
-        { header: 'Fail Rate (%)', key: 'failRate', width: 20 },
+        { header: 'Đại lý', key: 'agency', width: 30 },
+        { header: 'Tổng đơn hàng', key: 'total', width: 15 },
+        { header: 'Đã đồng ý', key: 'accept', width: 15 },
+        { header: 'Đã từ chối', key: 'reject', width: 15 },
+        { header: 'Không nghe máy', key: 'unanswered', width: 15 },
+        { header: 'Không liên lạc được', key: 'unavailable', width: 20 },
+        { header: 'Xử lý lại', key: 'rehandle', width: 15 },
+        { header: 'Mất đơn hàng', key: 'lost', width: 15 },
+        { header: 'Doanh thu', key: 'revenue', width: 15 },
+        { header: 'Tỷ lệ thành công (%)', key: 'successRate', width: 20 },
+        { header: 'Tỷ lệ thất bại (%)', key: 'failRate', width: 20 },
       ];
+      
 
       // Add user data rows
       reports.forEach((report, index) => {
