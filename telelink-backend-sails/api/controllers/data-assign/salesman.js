@@ -39,9 +39,12 @@ module.exports = {
 
       let packageUpdate = ""
       let package = dataDetails.Package.split(",");
+      package.push(dataDetails.currentPackage);
       for (i in package) {
         package[i] = package[i].toUpperCase().trim();
       }
+      console.log(package);
+      
 
       const packageList = await Package.find({ title: { in: package } });
 
