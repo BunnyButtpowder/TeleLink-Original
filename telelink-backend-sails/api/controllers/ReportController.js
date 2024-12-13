@@ -30,6 +30,7 @@ module.exports = {
         { header: 'Doanh thu', key: 'revenue', width: 15 },
         { header: 'Tỷ lệ thành công (%)', key: 'successRate', width: 20 },
         { header: 'Tỷ lệ thất bại (%)', key: 'failRate', width: 20 },
+        { header: 'Thời gian', key: 'updatedAt', width: 20 },
       ];
       
 
@@ -48,6 +49,7 @@ module.exports = {
           revenue: report.revenue || 0,
           successRate: report.successRate || 0,
           failRate: report.failRate || 0,
+          updatedAt: report.updatedAt ? new Date(report.updatedAt).toLocaleString() : 'N/A',
         });
       });
 
