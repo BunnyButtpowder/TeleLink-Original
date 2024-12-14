@@ -27,7 +27,7 @@ module.exports = {
         return res.ok({ data: data, count: data.length });
       } catch (err) {
         
-        return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách dataa hoặc thông tin xác thực.' });
+        return res.serverError({ error: 'Có lỗi xảy ra khi lấy danh sách  hoặc thông tin xác thực.' });
       }
   
   
