@@ -92,6 +92,6 @@ export {
   getUserById,
   createUser,
   updateUser,
-  getTop10Salesmen
+  getTop10Salesmen,
   exportReport
 };

@@ -9,7 +9,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../../../app/modules/auth'
 import { useQueryResponse } from '../core/QueryResponseProvider'
-
+import Select from 'react-select';
 
 // Define the schemas for form validation
 const dataDistributionSchema = Yup.object().shape({
@@ -259,66 +259,58 @@ const handleNetworkChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
             // Agency selection for admin
             <div className='fv-row mb-7'>
               <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'AGENCY' })}</label>
-              <select
-                {...formik.getFieldProps('agencyId')}
-                className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
-                  { 'is-invalid': formik.touched.agencyId && formik.errors.agencyId },
-                  { 'is-valid': formik.touched.agencyId && !formik.errors.agencyId }
-                )}
-                onChange={handleAgencyChange}
-              >
-                <option value='' disabled>{intl.formatMessage({ id: 'SELECT.AGENCY' })}</option>
-                {isLoadingAgencies ? (
-                  <option>Loading agencies...</option>
-                ) : (
-                  agencies.map((agency) => (
-                    <option key={agency.id} value={agency.id.toString()}>
-                      {agency.name}
-                    </option>
-                  )))
-                }
-              </select>
+              <Select
+                options={agencies.map((agency) => ({
+                  value: agency.id.toString(),
+                  label: agency.name,
+                }))}
+                onChange={(selectedOption) => {
+                  formik.setFieldValue('agencyId', selectedOption?.value || '');
+                  const syntheticEvent = { target: { value: selectedOption?.value || '' } };
+                  handleAgencyChange(syntheticEvent as React.ChangeEvent<HTMLSelectElement>);
+                }}
+                isClearable
+                isSearchable={true}
+                isLoading={isLoadingAgencies}
+                placeholder={intl.formatMessage({ id: 'SELECT.AGENCY' })}
+                classNamePrefix="react-select"
+              />
               {formik.touched.agencyId && formik.errors.agencyId && (
                 <div className='fv-plugins-message-container'>
                   <div className="fv-help-block">
-                  <span role='alert'>{formik.errors.agencyId}</span>
-                </div>
+                    <span role='alert'>{formik.errors.agencyId}</span>
+                  </div>
                 </div>
               )}
             </div>
           )}
           {/* End::Agency Selection */}
 
-          {/* Begin:: Salesman Selection */}
           {selectedTarget === 'salesman' && (
-            <div className='fv-row mb-7'>
-              <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'SALESMAN' })}</label>
-              <select
-                {...formik.getFieldProps('userId')}
-                className={clsx(
-                  'form-control form-control-solid mb-3 mb-lg-0',
-                  { 'is-invalid': formik.touched.userId && formik.errors.userId },
-                  { 'is-valid': formik.touched.userId && !formik.errors.userId }
-                )}
-              >
-                <option value='' disabled>{intl.formatMessage({ id: 'SELECT.SALESMAN' })}</option>
-                {salesman.map((employee) => (
-                  <option key={employee.id} value={employee.id.toString()}>
-                    {employee.fullName}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.userId && formik.errors.userId && (
-                <div className='fv-plugins-message-container'>
-                  <div className="fv-help-block">
-                    <span role='alert'>{formik.errors.userId}</span>
-                  </div>
+          <div className='fv-row mb-7'>
+            <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'SALESMAN' })}</label>
+            <Select
+              options={salesman.map((employee) => ({
+                value: employee.id,
+                label: employee.fullName,
+              }))}
+              onChange={(selectedOption) => {
+                formik.setFieldValue('userId', selectedOption?.value || '');
+              }}
+              isClearable
+              isSearchable={true}
+              placeholder={intl.formatMessage({ id: 'SELECT.SALESMAN' })}
+              classNamePrefix="react-select"
+            />
+            {formik.touched.userId && formik.errors.userId && (
+              <div className='fv-plugins-message-container'>
+                <div className="fv-help-block">
+                  <span role='alert'>{formik.errors.userId}</span>
                 </div>
-              )}
-            </div>
-          )}
-          {/* End:: Salesman Selection */}
+              </div>
+            )}
+          </div>
+        )}
 
           {/* Begin::Network Input */}
           <div className='fv-row mb-7'>
@@ -354,26 +346,20 @@ const handleNetworkChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
           {/* Begin::Category Selection */}
           <div className='fv-row mb-7'>
             <label className='required fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'DATA_CLASSIFY' })}</label>
-            <select
-              value={formik.values.category}
-              onChange={handleCategoryChange}
-              className={clsx(
-                'form-control form-control-solid mb-3 mb-lg-0',
-                { 'is-invalid': formik.touched.category && formik.errors.category },
-                { 'is-valid': formik.touched.category && !formik.errors.category }
-              )}
-            >
-              <option value='' disabled>{intl.formatMessage({ id: 'SELECT.DATA_CLASSIFY' })}</option>
-              {isLoadingCategories ? (
-                <option>Loading categories...</option>
-              ) : (
-                categories && Object.entries(categories).map(([category, { count }]) => (
-                  <option key={category} value={category}>
-                    {category} (Số lượng còn lại: {count})
-                  </option>
-                ))
-              )}
-            </select>
+            <Select
+              options={Object.entries(categories).map(([category, { count }]) => ({
+                value: category,
+                label: `${category} (Số lượng còn lại: ${count})`,
+              }))}
+              onChange={(selectedOption) => {
+                formik.setFieldValue('category', selectedOption?.value || '');
+                // handleCategoryChange(selectedOption?.value); // Call your custom change handler if needed
+              }}
+              isSearchable={true}
+              isLoading={isLoadingCategories}
+              placeholder={intl.formatMessage({ id: 'SELECT.DATA_CLASSIFY' })}
+              classNamePrefix="react-select"
+            />
             {formik.touched.category && formik.errors.category && (
               <div className='fv-plugins-message-container'>
                 <span role='alert'>{formik.errors.category}</span>

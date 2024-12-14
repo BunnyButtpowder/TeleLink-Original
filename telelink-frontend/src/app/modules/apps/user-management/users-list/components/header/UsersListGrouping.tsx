@@ -10,13 +10,18 @@ const UsersListGrouping = () => {
   const {query} = useQueryResponse()
 
   const deleteSelectedItems = useMutation(() => deleteSelectedUsers(selected), {
-    // 💡 response of the mutation is passed to onSuccess
     onSuccess: () => {
-      // ✅ update detail view directly
       queryClient.invalidateQueries([`${QUERIES.USERS_LIST}-${query}`])
       clearSelected()
     },
   })
+
+  const handleDelete = async () => {
+    const isConfirmed = window.confirm('Bạn có chắc chắn muốn xóa các tài khoản đã chọn?')
+    if (isConfirmed) {
+      await deleteSelectedItems.mutateAsync()
+    }
+  }
 
   return (
     <div className='d-flex justify-content-end align-items-center'>
@@ -27,7 +32,7 @@ const UsersListGrouping = () => {
       <button
         type='button'
         className='btn btn-danger'
-        onClick={async () => await deleteSelectedItems.mutateAsync()}
+        onClick={handleDelete}
       >
         Xoá tài khoản đã chọn
       </button>
