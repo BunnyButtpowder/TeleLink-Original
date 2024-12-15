@@ -51,6 +51,7 @@ module.exports = {
       const { searchTerm, sort, order, placeOfIssue, networkName, page, limit } = inputs;
       let filters = { isDelete: false };
 
+      // Áp dụng bộ lọc nếu có
       if (placeOfIssue) {
         filters.placeOfIssue = { contains: placeOfIssue };
       }
@@ -60,35 +61,68 @@ module.exports = {
 
       let dataQuery = Data.find(filters);
 
+      // Nếu có từ khóa tìm kiếm, thay đổi query để tìm kiếm
       if (searchTerm) {
-        const data = await Data.find({
-          isDelete: false,
-          or: [
-            { placeOfIssue: { like: `%${searchTerm.toLowerCase()}%` } },
-            { networkName: { like: `%${searchTerm.toLowerCase()}%` } },
-            { category: { like: `%${searchTerm.toLowerCase()}%` } },
-          ]
+        dataQuery = Data.find({
+          where: {
+            isDelete: false,
+            or: [
+              { placeOfIssue: { like: `%${searchTerm.toLowerCase()}%` } },
+              { networkName: { like: `%${searchTerm.toLowerCase()}%` } },
+              { category: { like: `%${searchTerm.toLowerCase()}%` } },
+            ]
+          }
         });
       }
 
-      // const data = await Data.find({
-      //   isDelete: false
-      // });
-
-      dataQuery = dataQuery.skip((page - 1) * limit).limit(limit);
-
+      // Thêm phân trang và sắp xếp
+      const skip = (page - 1) * limit;
       if (sort && order) {
         dataQuery.sort(`${sort} ${order}`);
       }
 
+      dataQuery = dataQuery.skip(skip).limit(limit);
+
+      // Lấy dữ liệu
       const data = await dataQuery;
+
+      // Nếu không có dữ liệu
       if (data.length === 0) {
-        return res.notFound({ message: 'Không tìm thấy dữ liệu phù hợp.' });
+        return res.ok({
+          message: searchTerm ? 'Không tìm thấy dữ liệu phù hợp.' : 'Không có dữ liệu.',
+          data: [],
+          count: 0,
+          totalCount: 0,
+          totalPages: 0,
+          currentPage: page,
+          perPage: limit,
+        });
       }
-      const totalCount = await Data.count(filters);
+
+      // Tính tổng số bản ghi sau khi áp dụng bộ lọc và tìm kiếm
+      let totalCount;
+      if (searchTerm) {
+        // Chờ đợi kết quả của Data.count với điều kiện tìm kiếm
+        totalCount = await Data.count({
+          where: {
+            isDelete: false,
+            or: [
+              { placeOfIssue: { like: `%${searchTerm.toLowerCase()}%` } },
+              { networkName: { like: `%${searchTerm.toLowerCase()}%` } },
+              { category: { like: `%${searchTerm.toLowerCase()}%` } },
+            ]
+          }
+        });
+      } else {
+        // Nếu không có tìm kiếm, sử dụng filters bình thường
+        totalCount = await Data.count(filters);
+      }
+
       const totalPages = Math.ceil(totalCount / limit);
 
+      // Trả về kết quả
       return res.ok({
+        message: 'Danh sách dữ liệu',
         data: data,
         count: data.length,
         totalCount: totalCount,
@@ -98,7 +132,7 @@ module.exports = {
       });
 
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return res.serverError({ error: 'Có lỗi xảy ra khi lấy hoặc tìm kiếm dữ liệu.' });
     }
   }
