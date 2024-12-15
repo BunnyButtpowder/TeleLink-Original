@@ -1,6 +1,22 @@
 const XLSX = require('xlsx');
 const fs = require('fs');
 
+function parseExcelDate(date) {
+  if (!date) return null;
+
+ 
+  if (typeof date === 'string') {
+    return date.trim();  
+  }
+  if (typeof date === 'number') {
+    const excelDate = new Date((date - 25569) * 86400 * 1000); 
+    const localDate = new Date(excelDate.getTime() - 7 * 60 * 60 * 1000); 
+    return localDate.toLocaleString('en-GB');
+  }
+
+  return null;
+}
+
 module.exports = {
   importData: async function (req, res, filePath) {
     try {
@@ -106,8 +122,8 @@ module.exports = {
           currentPackage: row[headerIndexes['currentPackage']] || '',
           priorityPackage1: row[headerIndexes['priorityPackage1']] || '',
           priorityPackage2: row[headerIndexes['priorityPackage2']] || '',
-          registrationDate: row[headerIndexes['registrationDate']] || null,
-          expirationDate: row[headerIndexes['expirationDate']] || null,
+          registrationDate: parseExcelDate(row[headerIndexes['registrationDate']] || ''),  
+          expirationDate: parseExcelDate(row[headerIndexes['expirationDate']] || ''),  
           notes: row[headerIndexes['notes']] || '',
           TKC: row[headerIndexes['TKC']] || '',
           APRU3Months: row[headerIndexes['APRU3Months']] || '',
