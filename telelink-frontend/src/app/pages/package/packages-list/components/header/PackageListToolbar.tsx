@@ -21,11 +21,19 @@ const PackageListToolbar: React.FC<{ onUploadComplete: (data: Package[]) => void
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files?.[0];
+    const user = localStorage.getItem('currentUser') || '';
+    const userId = JSON.parse(user).id;
+
+    if (!userId) {
+          toast.error('User ID is missing. Please log in again.');
+          return;
+        }
+
     if (files) {
       setUploading(true);
 
       try {
-        const response = await importData(files);
+        const response = await importData(files, userId);
         onUploadComplete(response.data);
         refetch();
         toast.success('Upload gói cước thành công!');

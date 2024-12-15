@@ -163,6 +163,18 @@ const deleteSelectedData = (ids: ID[]): Promise<void> => {
   return axios.delete(`${API_URL}/data/many-delete`, { data: { ids } }).then(() => { });
 };
 
+const deleteManyData = async (filters: { networkName: string; createdAt: string }): Promise<void> => {
+  try {
+    const response = await axios.delete(`${API_URL}/data/many-delete`, {
+      data: filters,
+    });
+    console.log('Filtered data deleted successfully:', response.data);
+  } catch (error) {
+    console.error('Error deleting filtered data:', error);
+    throw error;
+  }
+};
+
 export {
   importData,
   getAllData,
@@ -181,5 +193,6 @@ export {
   dataAssignAdminToSaleman,
   deleteSelectedData,
   getAllPlaceOfIssues,
-  getDataCategoriesByNetworks
+  getDataCategoriesByNetworks,
+  deleteManyData
 };
