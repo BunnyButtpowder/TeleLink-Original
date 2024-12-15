@@ -2,7 +2,7 @@ module.exports = {
 
   friendlyName: 'GetAllPackages',
 
-  description: 'Lấy tất cả các gói dịch vụ với tìm kiếm và sắp xếp.',
+  description: 'Lấy tất cả các gói dịch vụ với tìm kiếm, sắp xếp và phân trang.',
 
   inputs: {
     searchTerm: {
@@ -26,6 +26,16 @@ module.exports = {
       type: 'string',
       required: false,
     },
+    page: {
+      type: 'number',
+      required: false,
+      defaultsTo: 1, // Trang mặc định là 1
+    },
+    limit: {
+      type: 'number',
+      required: false,
+      defaultsTo: 10, 
+    },
   },
 
   exits: {},
@@ -34,10 +44,9 @@ module.exports = {
     let { res } = this;
 
     try {
-      const { searchTerm, sort, order, provider, type } = inputs;
+      const { searchTerm, sort, order, provider, type, page, limit } = inputs;
       let filters = { isDelete: false };
 
-      // Add provider and type filters if they are provided
       if (provider) {
         filters.provider = { contains: provider };
       }
@@ -45,39 +54,43 @@ module.exports = {
         filters.type = { contains: type };
       }
 
+      // Nếu có searchTerm, thêm vào các điều kiện tìm kiếm
+      if (searchTerm) {
+        filters.or = [
+          { title: { contains: searchTerm.toLowerCase() } },
+          { provider: { contains: searchTerm.toLowerCase() } },
+        ];
+      }
+
       let packageQuery = Package.find(filters);
 
-      // If a search term is provided, modify the query to search by multiple fields
-      if (searchTerm) {
-        packageQuery = Package.find({
-          where: {
-            isDelete: false,
-            or: [
-              { title: { like: `%${searchTerm.toLowerCase()}%` } },
-              { provider: { like: `%${searchTerm.toLowerCase()}%` } },
-            ],
-          },
+      if (sort && order) {
+        packageQuery = packageQuery.sort(`${sort} ${order}`);
+      }
+
+      const skip = (page - 1) * limit;
+
+      packageQuery.skip(skip).limit(limit);
+
+      const packageData = await packageQuery;
+      const totalCount = await Package.count(filters);
+
+      if (packageData.length === 0) {
+        return res.ok({ 
+          message: searchTerm ? 'Không tìm thấy dữ liệu phù hợp.' : 'Không có dữ liệu', 
+          data: [], 
+          count: 0, 
+          total: totalCount 
         });
       }
 
-      // Apply sorting if both sort and order are provided
-      if (sort && order) {
-        packageQuery.sort(`${sort} ${order}`);
-      }
-
-      // Execute the query and get the data
-      const packageData = await packageQuery;
-
-      // Check if data was found, return a message if no results were found
-      if (packageData.length === 0) {
-        return res.ok({ message: searchTerm ? 'Không tìm thấy dữ liệu phù hợp.' : 'Không có dữ liệu', data: [], count: 0 });
-      }
-
-      // Return the data if found
       return res.ok({
         message: 'Đây là danh sách các gói dịch vụ',
         data: packageData,
         count: packageData.length,
+        total: totalCount,
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / limit),
       });
 
     } catch (err) {
