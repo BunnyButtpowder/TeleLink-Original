@@ -23,7 +23,6 @@ module.exports = {
       });
 
       const employee = await User.findOne({id:id}).populate('auth')
-      console.log(employee)
 
       if (!employee || !employee.auth || employee.auth.role !== 3) {
         return res.status(404).json({ message: 'Không tìm thấy nhân viên hợp lệ.' });
@@ -38,11 +37,31 @@ module.exports = {
      
       const dataDetails = await Data.findOne({ id: randomAssignedData.data });
 
+      let packageUpdate = ""
+      let package = dataDetails.Package.split(",");
+      package.push(dataDetails.currentPackage);
+      for (i in package) {
+        package[i] = package[i].toUpperCase().trim();
+      }
+      console.log(package);
+      
+
+      const packageList = await Package.find({ title: { in: package } });
+
+      for (i in packageList) {
+        if(i!=0)
+          packageUpdate = packageUpdate.concat(`, ${packageList[i].title}`)
+        else
+          packageUpdate = packageUpdate.concat(`${packageList[i].title}`)
+      } 
+      dataDetails.Package = packageUpdate
+      console.log(packageUpdate);
+      
+
       const result = {
         ...randomAssignedData,
         dataDetails: dataDetails,
       };
-
       
       return res.status(200).json(result);
     } catch (error) {

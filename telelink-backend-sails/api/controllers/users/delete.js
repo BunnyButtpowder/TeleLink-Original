@@ -33,6 +33,7 @@ module.exports = {
         if (user.agency) {
           await User.update({ agency: user.agency.id }).set({ agency: null });
           await Data.update({ agency: user.agency.id }).set({ agency: null });
+          await Agency.update({ id: user.agency.id }).set({ isDelete: true });
         }
         
         return res.ok({ message: 'Người dùng có vai trò 2 đã được vô hiệu hóa và cập nhật agency thành null' });
