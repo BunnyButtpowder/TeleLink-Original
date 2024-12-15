@@ -13,9 +13,13 @@ import { UserGenderCell } from './UserGenderCell'
 const usersColumns: ReadonlyArray<Column<User>> = [
   // id, fullname, username, role, createdAt
   {
-    Header: (props) => <UserSelectionHeader tableProps={props} />,
     id: 'selection',
-    Cell: ({ ...props }) => <UserSelectionCell id={props.data[props.row.index].id} />,
+    Header: (props) => <UserSelectionHeader tableProps={props} />,
+    Cell: ({ ...props }) => {
+      const role = props.data[props.row.index].auth?.role;
+      if (role === 1 || role === 2) return null;
+      return <UserSelectionCell id={props.data[props.row.index].id} />;
+    },
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='#' className='min-w-30px' />,
@@ -100,8 +104,14 @@ const usersColumns: ReadonlyArray<Column<User>> = [
       <UserCustomHeader tableProps={props} title='Tác vụ' className=' min-w-100px' />
     ),
     id: 'actions',
-    Cell: ({ ...props }) => <UserActionsCell id={props.data[props.row.index].id} />,
+    Cell: ({ ...props }) => (
+      <UserActionsCell 
+        id={props.data[props.row.index].id} 
+        role={props.data[props.row.index].auth?.role} 
+      />
+    ),
   },
+  
 ]
 
 export { usersColumns }

@@ -25,6 +25,34 @@ const revenueColumns: ReadonlyArray<Column<Revenue>> = [
   },
   {
     Header: (props) => (
+      <ResultCustomHeader tableProps={props} title='Thời gian cập nhật cuối' className='min-w-125px' />
+    ),
+    id: 'updatedAt',
+    accessor: 'updatedAt',
+    Cell: ({ ...props }) => {
+      const timestamp = props.data[props.row.index].updatedAt;
+  
+      if (timestamp) {
+        // Convert to milliseconds if the timestamp is in seconds
+        const adjustedTimestamp = timestamp.toString().length === 10 ? timestamp * 1000 : timestamp;
+  
+        const date = new Date(adjustedTimestamp);
+        const formattedDate = date.toLocaleString('vi-VN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false, // Use 24-hour format
+        });
+        return <span>{formattedDate}</span>;
+      }
+      return <span></span>;
+    }
+  }
+  ,
+  {
+    Header: (props) => (
       <ResultCustomHeader tableProps={props} title='Tổng đơn hàng' className='min-w-125px' />
     ),
     id: 'revenue',

@@ -313,8 +313,8 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
                 disabled={packageFormik.isSubmitting || isUserLoading}
               >
                 <option value=''></option>
-                <option value='TT'>Trả trước</option>
-                <option value='TS'>Trả sau</option>
+                <option value='Trả trước'>Trả trước</option>
+                <option value='Trả sau'>Trả sau</option>
               </select>
               {/* end::Select */}
               {/* end::Input */}

@@ -180,5 +180,6 @@ export {
   getCategoriesByAgency,
   dataAssignAdminToSaleman,
   deleteSelectedData,
-  getAllPlaceOfIssues
+  getAllPlaceOfIssues,
+  getDataCategoriesByNetworks
 };

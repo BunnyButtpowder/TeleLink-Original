@@ -7,12 +7,16 @@ import { Blacklist } from '../../core/_models'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQueryResponse } from '../../core/QueryResponseProvider'
+import { useAuth } from '../../../../../../app/modules/auth'
+
 
 
 const BlackListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void }> = ({ onUploadComplete }) => {
   const intl = useIntl()
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input element
+  const { currentUser } = useAuth();
+  const userRole = currentUser?.auth.role;
   const {setItemIdForUpdate} = useListView()
   const { refetch } = useQueryResponse()
   const openAddBlacklistModal = () => {
@@ -58,38 +62,41 @@ const BlackListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void
     <>
       <ToastContainer />
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-        {/* begin::Upload data */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".xlsx, .xls"
-          onChange={handleFileChange}
-          id="fileInput"
-          style={{ display: 'none' }}
-          disabled={uploading}
-        />
-        <label htmlFor="fileInput">
-          <button
-            type="button"
-            className="btn btn-light-primary me-3"
-            disabled={uploading}
-            onClick={triggerFileUpload}
-          >
-            <KTIcon iconName="exit-up" className="fs-2" />
-            {uploading ? 'Đang tải lên...' : 'Upload dữ liệu'}
-          </button>
-        </label>
-        {/* end::Upload data */}
-        
-        {/* begin::Add user */}
-          <button type='button' className='btn btn-primary' onClick={openAddBlacklistModal}>
-            <KTIcon iconName='plus' className='fs-2' />
-          {intl.formatMessage({id: 'BLACKLIST.MANAGEMENT.ADD_BLACKLIST'})}
-          </button>
-      {/* end::Add user */}
+        {/* Conditionally render buttons based on user role */}
+        {userRole !== 3 && (
+          <>
+            {/* begin::Upload data */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".xlsx, .xls"
+              onChange={handleFileChange}
+              id="fileInput"
+              style={{ display: 'none' }}
+              disabled={uploading}
+            />
+            <label htmlFor="fileInput">
+              <button
+                type="button"
+                className="btn btn-light-primary me-3"
+                disabled={uploading}
+                onClick={triggerFileUpload}
+              >
+                <KTIcon iconName="exit-up" className="fs-2" />
+                {uploading ? 'Đang tải lên...' : 'Upload dữ liệu'}
+              </button>
+            </label>
+            {/* end::Upload data */}
+
+            {/* begin::Add user */}
+            <button type='button' className='btn btn-primary' onClick={openAddBlacklistModal}>
+              <KTIcon iconName='plus' className='fs-2' />
+              {intl.formatMessage({id: 'BLACKLIST.MANAGEMENT.ADD_BLACKLIST'})}
+            </button>
+            {/* end::Add user */}
+          </>
+        )}
       </div>
-      
-     
     </>
   )
 }

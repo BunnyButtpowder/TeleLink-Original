@@ -23,9 +23,8 @@ module.exports = {
         });
       }
 
-      let dataResult = data.currentPackage.split(",");
-      dataResult = dataResult.concat(data.Package.split(","));
-      console.log(dataResult);
+      let dataResult = data.Package.split(",");
+      dataResult.push(data.currentPackage);
 
       for (i in dataResult) {
         dataResult[i] = dataResult[i].toUpperCase().trim();

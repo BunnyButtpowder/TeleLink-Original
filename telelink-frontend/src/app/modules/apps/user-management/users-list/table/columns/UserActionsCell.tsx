@@ -7,12 +7,12 @@ import {useQueryResponse} from '../../core/QueryResponseProvider'
 import {deleteUser} from '../../core/_requests'
 import {toast} from 'react-toastify'
 
-
 type Props = {
   id: ID
+  role?: number
 }
 
-const UserActionsCell: FC<Props> = ({id}) => {
+const UserActionsCell: FC<Props> = ({id, role}) => {
   const {setItemIdForUpdate} = useListView()
   const {query} = useQueryResponse()
   const queryClient = useQueryClient()
@@ -66,17 +66,17 @@ const UserActionsCell: FC<Props> = ({id}) => {
         </div>
         {/* end::Menu item */}
 
-        {/* begin::Menu item */}
-        <div className='menu-item px-3'>
-          <a
-            className='menu-link px-3'
-            data-kt-users-table-filter='delete_row'
-            onClick={handleDelete}
-          >
-            Xoá
-          </a>
-        </div>
-        {/* end::Menu item */}
+        {role === 3 && ( // Render only if the role is Salesman
+          <div className='menu-item px-3'>
+            <a
+              className='menu-link px-3'
+              data-kt-users-table-filter='delete_row'
+              onClick={handleDelete}
+            >
+              Xoá
+            </a>
+          </div>
+        )}
       </div>
       {/* end::Menu */}
     </>
