@@ -47,18 +47,33 @@ module.exports = {
         filters.createdAt = { '>=': startOfDay, '<=': endOfDay };  
       }
 
+      // Tìm các bản ghi cần xóa
       const recordsToDelete = await Data.find(filters);
 
       if (!recordsToDelete || recordsToDelete.length === 0) {
         return res.notFound({ message: 'Không tìm thấy bản ghi nào để xóa' });
       }
 
-      const idsToDelete = recordsToDelete.map((item) => item.id);
+   
+      const assignedRecords = await DataAssignment.find({ data: { in: recordsToDelete.map(item => item.id) } });
+      const assignedIds = new Set(assignedRecords.map(record => record.data));
+
+    
+      const recordsToDeleteWithoutAssigned = recordsToDelete.filter(record => !assignedIds.has(record.id));
+      const idsToDelete = recordsToDeleteWithoutAssigned.map((item) => item.id);
+
+      if (idsToDelete.length === 0) {
+        return res.notFound({ message: 'Không có bản ghi nào đủ điều kiện để xóa (đã được gán).' });
+      }
+
+    
       await Data.destroy({ id: { in: idsToDelete } });
-      await DataAssignment.destroy({ data: { in: idsToDelete } });
+
+      // (Nếu cần) Xóa các bản ghi gán tương ứng từ bảng DataAssignment
+      // await DataAssignment.destroy({ data: { in: idsToDelete } });
 
       return res.ok({
-        message: `Đã xóa thành công ${recordsToDelete.length} bản ghi.`,
+        message: `Đã xóa thành công ${idsToDelete.length} bản ghi.`,
         deletedIds: idsToDelete,
       });
 
