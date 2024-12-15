@@ -1,8 +1,10 @@
+import { FormatNumberOptions } from 'react-intl'
 import {ID, Response} from '../../../../../_metronic/helpers'
 import { Agency } from '../../../../modules/apps/user-management/users-list/core/_models'
 
 export type Revenue = {
   id?: ID
+  updatedAt?: number
   agency?: Agency
   total?: number
   accept?: number
