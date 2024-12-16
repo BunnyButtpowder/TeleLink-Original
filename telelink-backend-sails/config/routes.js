@@ -67,8 +67,8 @@ module.exports.routes = {
       const tempPath = __dirname + '/tmp/' + uploadedFile.name;
       await uploadedFile.mv(tempPath);
       console.log('File uploaded to: ', tempPath);
-      return DataController.importData(req, res, tempPath);
-
+      const id = req.body.id;
+      return DataController.importData(req, res, tempPath , id);
     } catch (err) {
       console.error('Error during file upload: ', err);
       return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });

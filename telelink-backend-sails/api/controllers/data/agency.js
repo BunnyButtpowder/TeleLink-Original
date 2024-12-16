@@ -49,7 +49,7 @@ module.exports = {
       }
 
       // Xây dựng bộ lọc tìm kiếm
-      const searchFilters = { agency: agencyId };
+      const searchFilters = { agency: agencyId , isDelete: false };
       if (searchTerm) {
         searchFilters.or = [
           { placeOfIssue: { contains: searchTerm.toLowerCase() } },
