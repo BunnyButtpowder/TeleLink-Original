@@ -6,6 +6,7 @@ import {useListView} from '../../core/ListViewProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
 import {deleteUser} from '../../core/_requests'
 import {toast} from 'react-toastify'
+import Swal from 'sweetalert2';
 
 type Props = {
   id: ID
@@ -36,8 +37,15 @@ const UserActionsCell: FC<Props> = ({id, role}) => {
   })
 
   const handleDelete = async () => {
-    const isConfirmed = window.confirm('Bạn có chắc chắn muốn xóa?')
-    if (isConfirmed) {
+    const result = await Swal.fire({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      text: 'Hành động này không thể hoàn tác!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy'
+    });
+    if (result.isConfirmed) {
       await deleteItem.mutateAsync()
     }
   }

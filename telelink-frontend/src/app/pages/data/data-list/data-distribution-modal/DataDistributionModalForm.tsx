@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../../../app/modules/auth'
 import { useQueryResponse } from '../core/QueryResponseProvider'
 import Select from 'react-select';
+import Swal from 'sweetalert2';
 
 // Define the schemas for form validation
 const dataDistributionSchema = Yup.object().shape({
@@ -192,7 +193,16 @@ const handleNetworkChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         // fetchCategories();
         refetch();
         onClose();
-        toast.success("Phân phối dữ liệu thành công!")
+        Swal.fire({
+          title: 'Dữ liệu',
+          text: 'Dữ liệu đã được phân bổ thành công',
+          icon: 'success',
+          timer: 5000,  // Thông báo tự động đóng sau 5 giây
+          showConfirmButton: false,  // Ẩn nút xác nhận
+          position: 'top-end',  // Đặt vị trí của modal ở góc trên bên phải
+          toast: true,  // Bật chế độ "toast"
+          timerProgressBar: true,  // Hiển thị thanh tiến trình
+        });
 
       } catch (error) {
         const errorMessage = (error as any).response?.data?.message || 'Phân phối dữ liệu thất bại!';
