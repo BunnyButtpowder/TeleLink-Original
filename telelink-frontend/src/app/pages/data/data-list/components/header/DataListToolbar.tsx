@@ -6,6 +6,7 @@ import { DataListFilter } from './DataListFilter'
 import { useIntl } from 'react-intl'
 import { Data } from '../../core/_models'
 import { DataDistributionModal } from '../../data-distribution-modal/DataDistributionModal'
+import { DeleteManyModal } from '../../delete-many-modal/DeleteManyModal'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQueryResponse } from '../../core/QueryResponseProvider'
@@ -14,6 +15,7 @@ import { useAuth } from '../../../../../../app/modules/auth'
 const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRefresh: () => void }> = ({ onUploadComplete, onRefresh }) => {
   const intl = useIntl()
   const [isDistributionModalOpen, setDistributionModalOpen] = useState(false)
+  const [isDeleteManyModalOpen, setDeleteManyModalOpen] = useState(false)
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input element
@@ -63,6 +65,15 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
     onRefresh();
   }
 
+  const openDeleteManyModal = () => {
+    setDeleteManyModalOpen(true);
+  }
+
+  const closeDeleteManyModal = () => {    
+    setDeleteManyModalOpen(false);
+    onRefresh();
+  }
+  
   return (
     <>
       <ToastContainer />
@@ -81,10 +92,16 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
         </div>
       )} */}
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
+
         <DataListFilter />
 
         {userRole === 1 && (
+          
           <>
+          <button className='btn btn-primary' onClick={openDeleteManyModal}>
+            <KTIcon iconName='abstract-11' className='fs-2' />
+            Xóa nhiều Dữ liệu
+          </button>
             {/* begin::Upload data */}
             < input
               ref={fileInputRef}
@@ -118,6 +135,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
         {/* end::Distribute Data */}
       </div>
       {isDistributionModalOpen && <DataDistributionModal onClose={closeDataDistributionModal} />}
+      {isDeleteManyModalOpen && <DeleteManyModal onClose={closeDeleteManyModal} />}
     </>
   )
 }
