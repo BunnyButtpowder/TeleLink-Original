@@ -92,10 +92,6 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
         </div>
       )} */}
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-      <button className='btn btn-danger me-3' onClick={openDeleteManyModal}>
-            <KTIcon iconName='abstract-11' className='fs-2' />
-            Xóa nhiều Dữ liệu
-      </button>
         <DataListFilter />
 
         {userRole === 1 && (

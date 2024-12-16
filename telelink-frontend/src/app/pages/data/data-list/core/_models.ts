@@ -9,8 +9,8 @@ export type Data = {
   currentPackage?: string
   priorityPackage1?: string
   priorityPackage2?: string
-  registrationDate?: String
-  expirationDate?: String
+  registrationDate?: string
+  expirationDate?: string
   notes?: string
   TKC?: string
   APRU3Months?: string

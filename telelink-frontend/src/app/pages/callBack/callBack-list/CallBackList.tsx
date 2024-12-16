@@ -3,7 +3,7 @@ import {QueryRequestProvider} from './core/QueryRequestProvider'
 import {QueryResponseProvider} from './core/QueryResponseProvider'
 import {CallBackListHeader} from './components/header/CallBackListHeader'
 import {CallBackTable} from './table/CallBackTable'
-import {AddReportModal} from './add-report-modal/AddReportModal'
+import {RehandleModal} from './rehandle-modal/RehandleModal'
 import {KTCard} from '../../../../_metronic/helpers'
 import { ToolbarWrapper } from '../../../../_metronic/layout/components/toolbar'
 import { Content } from '../../../../_metronic/layout/components/content'
@@ -13,10 +13,10 @@ const CallBackList = () => {
   return (
     <>
       <KTCard>
-        <CallBackListHeader />
+        {/* <CallBackListHeader /> */}
         <CallBackTable />
       </KTCard>
-      {/* {itemIdForUpdate !== undefined && <AddReportModal />} */}
+      {itemIdForUpdate !== undefined && <RehandleModal />}
     </>
   )
 }

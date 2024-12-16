@@ -2,24 +2,20 @@ import {KTIcon} from '../../../../../_metronic/helpers'
 import {useListView} from '../core/ListViewProvider'
 import {useIntl} from 'react-intl'
 
-interface AddReportModalHeaderProps {
-  onClose: () => void;
-}
-
-const AddReportModalHeader : React.FC<AddReportModalHeaderProps> = ({ onClose }) => {
+const RehandleModalHeader = () => {
   const {setItemIdForUpdate} = useListView()
   const intl = useIntl()
   return (
     <div className='modal-header'>
       {/* begin::Modal title */}
-      <h2 className='fw-bolder'>{intl.formatMessage({id:'MENU.REPORTS.CALL_RESULTS'})}</h2>
+      <h2 className='fw-bolder'>Báo cáo gọi lại</h2>
       {/* end::Modal title */}
 
       {/* begin::Close */}
       <div
         className='btn btn-icon btn-sm btn-active-icon-primary'
         data-kt-users-modal-action='close'
-        onClick={onClose}
+        onClick={() => setItemIdForUpdate(undefined)}
         style={{cursor: 'pointer'}}
       >
         <KTIcon iconName='cross' className='fs-1' />
@@ -29,4 +25,4 @@ const AddReportModalHeader : React.FC<AddReportModalHeaderProps> = ({ onClose })
   )
 }
 
-export {AddReportModalHeader}
+export {RehandleModalHeader}

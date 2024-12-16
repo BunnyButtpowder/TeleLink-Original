@@ -27,6 +27,11 @@ const getAllRehandles = async (params?: RehandleQueryParams): Promise<CallBackQu
   }
 }
 
+const getRehandleById = async (id: ID): Promise<Result> => {
+  const response = await axios.get(`${API_URL}/rehandles/getid?id=${id}`);
+  return response.data.data;
+};
+
 const getPackagesByDataId = async (dataId: string): Promise<Array<{ id: number; title: string }>> => {
   try {
     const response = await axios.get(`${API_URL}/packages/get-package?id=${dataId}`);
@@ -42,8 +47,8 @@ const getPackagesByDataId = async (dataId: string): Promise<Array<{ id: number; 
 };
 
 
-const createCallResult = async (result: Result, dataId: string, date: string) => {
-  const response = await axios.post(`${API_URL}/rehandle/works?dataId=${dataId}`,
+const createRehandleResult = async (result: Result, dataId: number, date: string) => {
+  const response = await axios.post(`${API_URL}/rehandle/work?dataId=${dataId}`,
     {
       callResult: {
         result: result.result,
@@ -67,6 +72,7 @@ const createCallResult = async (result: Result, dataId: string, date: string) =>
 
 export {
   getAllRehandles,
-  createCallResult,
-  getPackagesByDataId
+  createRehandleResult,
+  getPackagesByDataId,
+  getRehandleById
 };

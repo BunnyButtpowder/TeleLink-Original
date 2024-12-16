@@ -17,6 +17,10 @@ module.exports = {
       type: 'string',
       allowNull:true
     },
+    address: {
+      type: 'string',
+      allowNull:true
+    },
     complete: {
       type: 'boolean',
       defaultsTo: false,

@@ -1,39 +1,63 @@
 import { Column } from 'react-table'
-import { UserInfoCell } from './UserInfoCell'
-import { UserLastLoginCell } from './UserLastLoginCell'
-import { UserTwoStepsCell } from './UserTwoStepsCell'
 import { UserSelectionCell } from './UserSelectionCell'
-import { CustomerCustomHeader } from './CustomerCustomHeader'
+import { CallBackCustomHeader } from './CallBackCustomHeader'
 import { UserSelectionHeader } from './UserSelectionHeader'
-import { Customer } from '../../core/_models'
+import { Rehandle } from '../../core/_models'
+import { ResultCell } from './ResultCell'
+import { ActionsCell } from './ActionsCell'
 
-const customersColumns: ReadonlyArray<Column<Customer>> = [
+const customersColumns: ReadonlyArray<Column<Rehandle>> = [
   {
-    Header: (props) => <CustomerCustomHeader tableProps={props} title='Số thuê bao' className='min-w-125px' />,
-    accessor: 'subscriberNumber',
+    Header: (props) => <CallBackCustomHeader tableProps={props} title='Số thuê bao' className='min-w-125px' />,
+    id: 'subscriberNumber',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.subscriberNumber}</span>,
   },
   {
-    Header: (props) => <CustomerCustomHeader tableProps={props} title='Gói hiện tại' className='min-w-125px' />,
-    accessor: 'currentPackage',
+    Header: (props) => <CallBackCustomHeader tableProps={props} title='Khách hàng' className='min-w-125px' />,
+    accessor: 'customerName',
   },
   {
-    Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Gói đặc biệt (ưu tiên 1)' className='min-w-125px' />
-    ),
-    accessor: 'priorityPackage1',
-    // Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].last_login} />,
-  },
-  {
-    Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Gói cước gán (ưu tiên 2)' className='min-w-125px' />
-    ),
-    accessor: 'priorityPackage2',
-  },
-  {
-    Header: (props) => <CustomerCustomHeader tableProps={props} title='Ngày đăng ký' className='min-w-125px' />,
-    accessor: 'registrationDate',
+    Header: (props) => <CallBackCustomHeader tableProps={props} title='Ngày gọi lại' className='min-w-125px' />,
+    accessor: 'dateToCall',
     Cell: ({ ...props }) => {
-      const timestamp = props.data[props.row.index].registrationDate
+      const timestamp = props.data[props.row.index]?.dateToCall;
+
+      if (timestamp) {
+        const date = new Date(timestamp);
+        return <span className='badge badge-danger'>{date.toLocaleDateString('vi-VN')}</span>
+      }
+      return <span></span>;
+    }
+  },
+  {
+    Header: (props) => <CallBackCustomHeader tableProps={props} title='Kết quả gần nhất' className='min-w-125px' />,
+    id: 'latestResult',
+    Cell: ({ ...props }) => <ResultCell result={props.data[props.row.index].latestResult}></ResultCell>,
+  },
+  {
+    Header: (props) => <CallBackCustomHeader tableProps={props} title='Gói hiện tại' className='min-w-125px' />,
+    id: 'currentPackage',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.currentPackage}</span>,
+  },
+  {
+    Header: (props) => (
+      <CallBackCustomHeader tableProps={props} title='Gói đặc biệt (ưu tiên 1)' className='min-w-125px' />
+    ),
+    id: 'priorityPackage1',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.priorityPackage1}</span>,
+  },
+  {
+    Header: (props) => (
+      <CallBackCustomHeader tableProps={props} title='Gói cước gán (ưu tiên 2)' className='min-w-125px' />
+    ),
+    id: 'priorityPackage2',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.priorityPackage2}</span>,
+  },
+  {
+    Header: (props) => <CallBackCustomHeader tableProps={props} title='Ngày đăng ký' className='min-w-125px' />,
+    id: 'registrationDate',
+    Cell: ({ ...props }) => {
+      const timestamp = props.data[props.row.index]?.data?.registrationDate
 
       if (timestamp) {
         const date = new Date(timestamp);
@@ -51,10 +75,10 @@ const customersColumns: ReadonlyArray<Column<Customer>> = [
     }
   },
   {
-    Header: (props) => <CustomerCustomHeader tableProps={props} title='Ngày hết hạn' className='min-w-125px' />,
-    accessor: 'expirationDate',
+    Header: (props) => <CallBackCustomHeader tableProps={props} title='Ngày hết hạn' className='min-w-125px' />,
+    id: 'expirationDate',
     Cell: ({ ...props }) => {
-      const timestamp = props.data[props.row.index].expirationDate
+      const timestamp = props.data[props.row.index]?.data?.expirationDate
 
       if (timestamp) {
         const date = new Date(timestamp);
@@ -73,100 +97,122 @@ const customersColumns: ReadonlyArray<Column<Customer>> = [
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Ghi chú' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Ghi chú' className='min-w-125px' />
     ),
-    accessor: 'notes',
+    accessor: 'note',
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='TKC' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='TKC' className='min-w-125px' />
     ),
-    accessor: 'TKC',
+    id: 'TKC',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.TKC}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='APRU 3 tháng' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='APRU 3 tháng' className='min-w-125px' />
     ),
-    accessor: 'APRU3Months',
+    id: 'APRU3Months',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.APRU3Months}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Tiêu dùng n-1' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Tiêu dùng n-1' className='min-w-125px' />
     ),
-    accessor: 'usageMonth1',
+    id: 'usageMonth1',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.usageMonth1}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Tiêu dùng n-2' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Tiêu dùng n-2' className='min-w-125px' />
     ),
-    accessor: 'usageMonth2',
+    id: 'usageMonth2',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.usageMonth2}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Tiêu dùng n-3' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Tiêu dùng n-3' className='min-w-125px' />
     ),
-    accessor: 'usageMonth3',
+    id: 'usageMonth3',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.usageMonth3}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Tiêu dùng n-4' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Tiêu dùng n-4' className='min-w-125px' />
     ),
-    accessor: 'usageMonth4',
+    id: 'usageMonth4',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.usageMonth4}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Gói cước tư vấn' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Gói cước tư vấn' className='min-w-125px' />
     ),
-    accessor: 'Package',
+    id: 'Package',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.Package}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Nơi cấp data' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Nơi cấp data' className='min-w-125px' />
     ),
-    accessor: 'placeOfIssue',
+    id: 'placeOfIssue',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.placeOfIssue}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Tiêu dùng TKC' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Tiêu dùng TKC' className='min-w-125px' />
     ),
-    accessor: 'totalTKCUsage',
+    id: 'totalTKCUsage',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.totalTKCUsage}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Tiêu dùng thoại' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Tiêu dùng thoại' className='min-w-125px' />
     ),
-    accessor: 'voiceUsage',
+    id: 'voiceUsage',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.voiceUsage}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Tiêu dùng data' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Tiêu dùng data' className='min-w-125px' />
     ),
-    accessor: 'dataUsage',
+    id: 'dataUsage',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.dataUsage}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Dùng data ngoài gói' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Dùng data ngoài gói' className='min-w-125px' />
     ),
-    accessor: 'outOfPackageDataUsage',
+    id: 'outOfPackageDataUsage',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.outOfPackageDataUsage}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Khac 1' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Khac 1' className='min-w-125px' />
     ),
-    accessor: 'other1',
+    id: 'other1',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.other1}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Khac 2' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Khac 2' className='min-w-125px' />
     ),
-    accessor: 'other2',
+    id: 'other2',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.other2}</span>,
   },
   {
     Header: (props) => (
-      <CustomerCustomHeader tableProps={props} title='Khac 3' className='min-w-125px' />
+      <CallBackCustomHeader tableProps={props} title='Khac 3' className='min-w-125px' />
     ),
-    accessor: 'other3',
-  }
+    id: 'other3',
+    Cell: ({ ...props }) => <span>{props.data[props.row.index]?.data?.other3}</span>,
+  },
+  {
+    Header: (props) => (
+      <CallBackCustomHeader tableProps={props} title='Tác vụ' className='text-end min-w-100px' />
+    ),
+    id: 'actions',
+    Cell: ({...props}) => <ActionsCell id={props.data[props.row.index]?.id} />,
+  },
 ]
 
 export { customersColumns }

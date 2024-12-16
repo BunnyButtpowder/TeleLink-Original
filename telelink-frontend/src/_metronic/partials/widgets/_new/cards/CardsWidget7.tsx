@@ -71,7 +71,7 @@ const CardsWidget7 = ({ className, description, stats, labelColor, textColor }: 
               )}
             </div>
           ))}
-          <a href="#" className="symbol symbol-35px symbol-circle">
+          {/* <a href="#" className="symbol symbol-35px symbol-circle">
             <span
               className={clsx(
                 'symbol-label fs-8 fw-bold',
@@ -81,7 +81,7 @@ const CardsWidget7 = ({ className, description, stats, labelColor, textColor }: 
             >
               +{Math.max(10 - topSalesmen.length, 0)}
             </span>
-          </a>
+          </a> */}
         </div>
       </div>
     </div>

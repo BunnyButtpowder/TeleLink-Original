@@ -12,16 +12,17 @@ const SidebarMenuMain = () => {
   return (
     <>
       {/* All users access */}
-      <SidebarMenuItem
-        to='/dashboard'
-        icon='element-11'
-        title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
-        fontIcon='bi-app-indicator'
-      />
+
 
       {/* Admin access */}
       {userRole === 1 && (
         <>
+          <SidebarMenuItem
+            to='/dashboard'
+            icon='element-11'
+            title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
+            fontIcon='bi-app-indicator'
+          />
           <SidebarMenuItem
             to='/data'
             icon='wifi-square'
@@ -108,19 +109,19 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/error/404' title='Error 404' hasBullet={true} />
         <SidebarMenuItem to='/error/500' title='Error 500' hasBullet={true} />
       </SidebarMenuItemWithSub> */}
-          <SidebarMenuItemWithSub
-        to='/crafted/widgets'
-        title='Widgets'
-        icon='element-7'
-        fontIcon='bi-layers'
-      >
-        <SidebarMenuItem to='/crafted/widgets/lists' title='Lists' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/widgets/statistics' title='Statistics' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/widgets/charts' title='Charts' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/widgets/mixed' title='Mixed' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
-      </SidebarMenuItemWithSub>
+          {/* <SidebarMenuItemWithSub
+            to='/crafted/widgets'
+            title='Widgets'
+            icon='element-7'
+            fontIcon='bi-layers'
+          >
+            <SidebarMenuItem to='/crafted/widgets/lists' title='Lists' hasBullet={true} />
+            <SidebarMenuItem to='/crafted/widgets/statistics' title='Statistics' hasBullet={true} />
+            <SidebarMenuItem to='/crafted/widgets/charts' title='Charts' hasBullet={true} />
+            <SidebarMenuItem to='/crafted/widgets/mixed' title='Mixed' hasBullet={true} />
+            <SidebarMenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
+            <SidebarMenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
+          </SidebarMenuItemWithSub> */}
           <div className='menu-item'>
             <div className='menu-content pt-8 pb-2'>
               <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{intl.formatMessage({ id: 'SIDEBAR.ADMINISTRATION' })}</span>
@@ -153,6 +154,12 @@ const SidebarMenuMain = () => {
       {/* Agency access */}
       {userRole === 2 && (
         <>
+          <SidebarMenuItem
+            to='/dashboard'
+            icon='element-11'
+            title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
+            fontIcon='bi-app-indicator'
+          />
           <SidebarMenuItem
             to='/data'
             icon='wifi-square'

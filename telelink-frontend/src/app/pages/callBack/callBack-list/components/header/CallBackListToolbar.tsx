@@ -5,7 +5,7 @@ import { UsersListFilter } from './UsersListFilter'
 import { useIntl } from 'react-intl'
 import { useAuth } from '../../../../../modules/auth'
 import { useQueryResponse } from '../../core/QueryResponseProvider';
-import { AddReportModal } from '../../add-report-modal/AddReportModal';
+import { RehandleModal } from '../../rehandle-modal/RehandleModal';
 import React from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,7 +15,6 @@ const CallBackListToolbar = () => {
   const { currentUser, setCurrentUserData } = useAuth();
   const [isAddReportModalOpen, setAddReportModalOpen] = useState(false)
   const [isBlacklistEditModalOpen, setBlacklistEditModalOpen] = useState(false)
-  const { setDataDetails } = useQueryResponse();
   const [cooldown, setCooldown] = useState(false);
   const salesmanId = currentUser?.id;
   const COOLDOWN_TIME = 15000;
@@ -77,7 +76,7 @@ const CallBackListToolbar = () => {
         </button>
         {/* end::Add user */}
       </div>
-      {isAddReportModalOpen && <AddReportModal onClose={closeAddReportModal} />}
+      {isAddReportModalOpen && <RehandleModal />}
     </>
   )
 }

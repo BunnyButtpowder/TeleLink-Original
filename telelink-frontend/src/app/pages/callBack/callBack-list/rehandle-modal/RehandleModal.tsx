@@ -1,8 +1,8 @@
 import {useEffect} from 'react'
-import {AddReportModalHeader} from './AddReportModalHeader'
-import {AddReportModalFormWrapper} from './AddReportModalFormWrapper'
+import {RehandleModalHeader} from './RehandleModalHeader'
+import {RehandleModalFormWrapper} from './RehandleModalFormWrapper'
 
-const AddReportModal: React.FC<{onClose: () => void}> = ({onClose}) => {
+const RehandleModal = () => {
   useEffect(() => {
     document.body.classList.add('modal-open')
     return () => {
@@ -23,10 +23,10 @@ const AddReportModal: React.FC<{onClose: () => void}> = ({onClose}) => {
         <div className='modal-dialog modal-dialog-centered mw-650px'>
           {/* begin::Modal content */}
           <div className='modal-content'>
-            <AddReportModalHeader onClose={onClose} />
+            <RehandleModalHeader/>
             {/* begin::Modal body */}
             <div className='modal-body scroll-y mx-5 mx-xl-15 my-7'>
-              <AddReportModalFormWrapper onClose={onClose} />
+              <RehandleModalFormWrapper/>
             </div>
             {/* end::Modal body */}
           </div>
@@ -41,4 +41,4 @@ const AddReportModal: React.FC<{onClose: () => void}> = ({onClose}) => {
   )
 }
 
-export {AddReportModal}
+export {RehandleModal}

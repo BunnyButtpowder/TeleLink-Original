@@ -1,12 +1,14 @@
 import { subscribe } from 'diagnostics_channel'
 import { ID, Response } from '../../../../../_metronic/helpers'
 import { Agency, User } from '../../../../modules/apps/user-management/users-list/core/_models'
-import { Data } from '../../../data/data-list/core/_models';
+import { Data, initialData } from '../../../data/data-list/core/_models';
 export type Rehandle = {
+  id: ID,
   user: User,
   data: Data,
   subcriberNumber?: string,
   customerName?: string,
+  address?: string,
   complete: boolean,
   latestResult: number,
   dateToCall: string,
@@ -16,7 +18,7 @@ export type CallBackQueryResponse = Response<Array<Rehandle>>
 
 export type Result = {
   id?: number;
-  data_id: number;
+  data: Data;
   agency?: number;
   saleman?: number;
   subscriberNumber: string;
@@ -28,13 +30,15 @@ export type Result = {
   revenue?: number;
   createdAt?: number;
   updatedAt?: number;
+  dateToCall?: string | null
 }
 
 export const initialResult: Result = {
-  data_id: 0,
+  data: initialData,
   subscriberNumber: '',
   result: 1,
   dataPackage: '',
   customerName: '',
   address: '',
+  dateToCall: ''
 }
