@@ -40,29 +40,41 @@ module.exports = {
       // Extract the last 9 digits of the SDT
       const last9Digits = SDT.slice(-9);
 
-      // Find and delete rows in the Data table with matching subscriberNumber
-      const matchingData = await Data.find({
+      // Find the Data table row with the matching subscriberNumber
+      const matchingData = await Data.findOne({
         subscriberNumber: { endsWith: last9Digits },
       });
 
-      if (matchingData.length > 0) {
-        const deletedEntries = await Data.destroy({
-          id: { in: matchingData.map((data) => data.id) },
+      if (matchingData) {
+        // Update the isBlock to true for the matching record in Data table
+        const updatedEntry = await Data.update({
+          id: matchingData.id, // Use the exact ID of the matching record
+        })
+        .set({
+          isBlock: true,
+        })
+        .fetch();
+
+        // Delete the corresponding entry in DataAssignment
+        const deletedAssignments = await DataAssignment.destroy({
+          data: matchingData.id, // Use the exact ID of the matching record
         }).fetch();
 
         return res.status(201).json({
-          message: `Blacklist entry created. ${deletedEntries.length} matching Data entries were deleted.`,
+          message: `Blacklist entry created. Data entry with subscriberNumber ${SDT} was updated to isBlock=true, and corresponding DataAssignment entry was deleted.`,
           blacklist: newBlacklistEntry,
-          deletedData: deletedEntries,
+          updatedData: updatedEntry,
+          deletedAssignments: deletedAssignments,
         });
       }
 
       return res.status(201).json({
-        message: 'Blacklist entry created. No matching Data entries found to delete.',
+        message: 'Blacklist entry created. No matching Data entry found to update.',
         blacklist: newBlacklistEntry,
       });
 
     } catch (error) {
+      console.log(error);
       return res.serverError({
         error: 'Đã xảy ra lỗi khi tạo blacklist.',
         details: error.message,
