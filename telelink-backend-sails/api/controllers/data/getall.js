@@ -49,7 +49,7 @@ module.exports = {
 
     try {
       const { searchTerm, sort, order, placeOfIssue, networkName, page, limit } = inputs;
-      let filters = { isDelete: false };
+      let filters = { isDelete: false , agency: null , isBlock: false };
 
       // Áp dụng bộ lọc nếu có
       if (placeOfIssue) {
