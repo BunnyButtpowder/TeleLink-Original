@@ -73,8 +73,8 @@ module.exports.bootstrap = async function () {
 
   if ((await Role.count()) == 0) {
     await Role.createEach([
-      {title: 'Admin', onlyViewCreateBy: false, permissions: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]},
-      {title: 'Agency', onlyViewCreateBy: false, permissions: [2,6,7,8,11,14,15,17]},
+      {title: 'Admin', onlyViewCreateBy: false, permissions: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]},
+      {title: 'Agency', onlyViewCreateBy: false, permissions: [2,6,7,8,11,14,15,16]},
       {title: 'Salesman', onlyViewCreateBy: false, permissions: [7,8]}
     ])
   }
@@ -155,11 +155,6 @@ module.exports.bootstrap = async function () {
         "title" : "DeleteAccount/BanAccount",
         "path" : "users/delete",
         "method" : "DELETE"
-      },
-      {
-        "title" : "ImportData",
-        "path" : "import-data",
-        "method" : "POST"
       },
       {
         "title" : "ExportReport",
