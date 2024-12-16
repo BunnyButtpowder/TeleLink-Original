@@ -25,6 +25,7 @@ module.exports = {
       const allData = await Data.find({
         agency: agencyId,
         isDelete: false,
+        isBlock: false
       });
       if (allData.length === 0) {
         return res.notFound({ message: "Không có dữ liệu." });

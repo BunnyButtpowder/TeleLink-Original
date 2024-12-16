@@ -37,27 +37,28 @@ module.exports = {
         user: userID,
       }).fetch();
 
-      // Extract the last 9 digits of the SDT
+      
       const last9Digits = SDT.slice(-9);
 
-      // Find the Data table row with the matching subscriberNumber
+      
       const matchingData = await Data.findOne({
         subscriberNumber: { endsWith: last9Digits },
       });
 
       if (matchingData) {
-        // Update the isBlock to true for the matching record in Data table
+        
         const updatedEntry = await Data.update({
-          id: matchingData.id, // Use the exact ID of the matching record
+          id: matchingData.id,
         })
         .set({
           isBlock: true,
+          isDelete: false
         })
         .fetch();
 
-        // Delete the corresponding entry in DataAssignment
+       
         const deletedAssignments = await DataAssignment.destroy({
-          data: matchingData.id, // Use the exact ID of the matching record
+          data: matchingData.id, 
         }).fetch();
 
         return res.status(201).json({
