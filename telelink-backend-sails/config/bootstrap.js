@@ -73,8 +73,8 @@ module.exports.bootstrap = async function () {
 
   if ((await Role.count()) == 0) {
     await Role.createEach([
-      {title: 'Admin', onlyViewCreateBy: false, permissions: [1,2,3,4,5,6,7,8,9,10,11,12]},
-      {title: 'Agency', onlyViewCreateBy: false, permissions: [2,6,7,8,11]},
+      {title: 'Admin', onlyViewCreateBy: false, permissions: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]},
+      {title: 'Agency', onlyViewCreateBy: false, permissions: [2,6,7,8,11,14,15,17]},
       {title: 'Salesman', onlyViewCreateBy: false, permissions: [7,8]}
     ])
   }
@@ -140,122 +140,34 @@ module.exports.bootstrap = async function () {
         "title" : "CreatePackage",
         "path" : "package",
         "method" : "POST"
-      }
+      },
+      {
+        "title" : "CreateAgency",
+        "path" : "users/create",
+        "method" : "POST"
+      },
+      {
+        "title" : "CreateSalesman",
+        "path" : "users/saleman",
+        "method" : "POST"
+      },
+      {
+        "title" : "DeleteAccount/BanAccount",
+        "path" : "users/delete",
+        "method" : "DELETE"
+      },
+      {
+        "title" : "ImportData",
+        "path" : "import-data",
+        "method" : "POST"
+      },
+      {
+        "title" : "ExportReport",
+        "path" : "export-report",
+        "method" : "GET"
+      },
     ])
   }
-
-
-  // {
-  //   "permission": [
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 1,
-      //   "isDelete" : 0,
-      //   "title" : "GetAllData",
-      //   "path" : "data\/getall",
-      //   "method" : "GET"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 2,
-      //   "isDelete" : 0,
-      //   "title" : "GetAgencyData",
-      //   "path" : "data\/agency",
-      //   "method" : "GET"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 3,
-      //   "isDelete" : 0,
-      //   "title" : "ImportData",
-      //   "path" : "import-data",
-      //   "method" : "POST"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 4,
-      //   "isDelete" : 0,
-      //   "title" : "GetAllPackages",
-      //   "path" : "packages\/getall",
-      //   "method" : "GET"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 5,
-      //   "isDelete" : 0,
-      //   "title" : "GetAllBlacklist",
-      //   "path" : "blacklists\/getall",
-      //   "method" : "GET"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 6,
-      //   "isDelete" : 0,
-      //   "title" : "GetAgencyBlacklist",
-      //   "path" : "blacklists\/agency",
-      //   "method" : "GET"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 7,
-      //   "isDelete" : 0,
-      //   "title" : "GetSalemanBlacklist",
-      //   "path" : "blacklists\/salesman",
-      //   "method" : "GET"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 8,
-      //   "isDelete" : 0,
-      //   "title" : "GetAllCallResults",
-      //   "path" : "result\/getall",
-      //   "method" : "GET"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 9,
-      //   "isDelete" : 0,
-      //   "title" : "AssignDataAdminAgency",
-      //   "path" : "data-assign\/agency",
-      //   "method" : "POST"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 10,
-      //   "isDelete" : 0,
-      //   "title" : "AssignDataAdminSaleman",
-      //   "path" : "data-assign\/admin-user",
-      //   "method" : "POST"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 11,
-      //   "isDelete" : 0,
-      //   "title" : "AssignDataAgencySaleman",
-      //   "path" : "data-assign\/agency-user",
-      //   "method" : "POST"
-      // },
-      // {
-      //   "createdAt" : 1732432973533,
-      //   "updatedAt" : 1732432973533,
-      //   "id" : 12,
-      //   "isDelete" : 0,
-      //   "title" : "CreatePackage",
-      //   "path" : "package",
-      //   "method" : "POST"
-      // }
-  //   ]}
     
 
   // By convention, this is a good place to set up fake data during development.

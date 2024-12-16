@@ -26,13 +26,14 @@ module.exports = {
         const relatedUsers = await User.find({ agency: user.agency.id });
         for (const relatedUser of relatedUsers) {
           await DataAssignment.destroy({ user: relatedUser.id });
+          await DataRehandle.destroy({ user: relatedUser.id });
         }
         console.log(relatedUsers);
 
 
         if (user.agency) {
           await User.update({ agency: user.agency.id }).set({ agency: null });
-          await Data.update({ agency: user.agency.id }).set({ agency: null });
+          await Data.update({ agency: user.agency.id }).set({isDelete: false, agency: null });
           await Agency.update({ id: user.agency.id }).set({ isDelete: true });
         }
         
