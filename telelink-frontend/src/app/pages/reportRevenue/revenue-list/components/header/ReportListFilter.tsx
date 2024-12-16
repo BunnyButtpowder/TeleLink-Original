@@ -13,7 +13,6 @@ const ReportListFilter = () => {
   const intl = useIntl()
   const { refetch } = useQueryResponse();
 
-
   useEffect(() => {
     MenuComponent.reinitialization()
   }, [])
@@ -31,9 +30,8 @@ const ReportListFilter = () => {
   }
 
   const filterData = () => {
-    console.log(month, year);
-    const date = month && year ? `${month}-${year}` : '';
-    console.log("Applying filters:", { date });
+    if (!month || !year) return; // Ensure both month and year are selected
+    const date = `${month}-${year}`;
     updateState({
       filter: {date},
     });
@@ -115,7 +113,7 @@ const ReportListFilter = () => {
               Đặt lại
             </button>
             <button
-              disabled={isLoading}
+              disabled={isLoading || !month || !year}
               type='button'
               onClick={filterData}
               className='btn btn-primary fw-bold px-6'

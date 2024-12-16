@@ -4,7 +4,7 @@ export type AuthInfo = {
   email?: string
   username: string
   password: string
-  isActive?: boolean
+  isActive: boolean
   role: number
 }
 
