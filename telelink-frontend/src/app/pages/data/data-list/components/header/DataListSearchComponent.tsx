@@ -4,6 +4,7 @@ import { useQueryRequest } from '../../core/QueryRequestProvider'
 import { useIntl } from 'react-intl'
 import { useAuth } from '../../../../../../app/modules/auth'
 import { getAllNetworks, getNetworksByAgency } from '../../core/_requests'
+import io from 'socket.io-client';
 
 const DataListSearchComponent: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {  const { updateState } = useQueryRequest()
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -31,6 +32,34 @@ const DataListSearchComponent: React.FC<{ refreshTrigger: number }> = ({ refresh
       setIsLoadingNetworks(false);
     }
   }
+  useEffect(() => {
+    const socket = io('http://localhost:9999', {
+      transports: ['websocket']
+    });
+
+    socket.on('connect', function() {
+      console.log('WebSocket client connected!');
+      console.log('Joining room:', agencyId);
+      socket.emit('joinRoom', { agencyId });
+    });
+    
+    socket.on('newDataAssigned', function() {
+      console.log('Received newDataAssigned event:', );
+      fetchNetworks();
+    });
+    
+    socket.on('disconnect', function() {
+      console.log('WebSocket client disconnected');
+    });
+    
+    socket.on('connect_error', function() {
+      console.log('Connection error:', );
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [fetchNetworks]);
 
   useEffect(() => {
     fetchNetworks();
