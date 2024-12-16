@@ -1,6 +1,6 @@
 import {Route, Routes, Outlet, Navigate} from 'react-router-dom'
 import {PageLink, PageTitle} from '../../../_metronic/layout/core'
-import {CustomersListWrapper} from './callBack-list/CustomersList'
+import {CallBackListWrapper} from './callBack-list/CallBackList'
 import {useIntl} from 'react-intl'
 
 const usersBreadcrumbs: Array<PageLink> = [
@@ -18,7 +18,7 @@ const usersBreadcrumbs: Array<PageLink> = [
   },
 ]
 
-const CustomersPage = () => {
+const CallBackPage = () => {
   const intl = useIntl()
   return (
     <Routes>
@@ -27,8 +27,8 @@ const CustomersPage = () => {
           index
           element={
             <>
-              <PageTitle>{intl.formatMessage({id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS'})}</PageTitle>
-              <CustomersListWrapper />
+              <PageTitle>Xử lý lại</PageTitle>
+              <CallBackListWrapper />
             </>
           }
         />
@@ -37,4 +37,4 @@ const CustomersPage = () => {
   )
 }
 
-export {CustomersPage}
+export {CallBackPage}

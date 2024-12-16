@@ -4,14 +4,14 @@ import { CustomHeaderColumn } from './columns/CustomHeaderColumn'
 import { CustomRow } from './columns/CustomRow'
 import { useQueryResponseData, useQueryResponseLoading } from '../core/QueryResponseProvider'
 import { customersColumns } from './columns/_columns'
-import { Customer } from '../core/_models'
+import { Rehandle } from '../core/_models'
 import { UsersListLoading } from '../components/loading/UsersListLoading'
 import { KTCardBody } from '../../../../../_metronic/helpers'
 
-const CustomersTable = () => {
-  const customer = useQueryResponseData();
+const CallBackTable = () => {
+  const callback = useQueryResponseData();
   const isLoading = useQueryResponseLoading();
-  const data = useMemo(() => customer as Customer[], [customer]);
+  const data = useMemo(() => callback as Rehandle[], [callback]);
   const columns = useMemo(() => customersColumns, [])
   const { getTableProps, getTableBodyProps, headers, rows, prepareRow } = useTable({
     columns,
@@ -29,14 +29,14 @@ const CustomersTable = () => {
         >
           <thead>
             <tr className='text-start text-muted fw-bolder fs-7 text-uppercase gs-0'>
-              {headers.map((column: ColumnInstance<Customer>) => (
+              {headers.map((column: ColumnInstance<Rehandle>) => (
                 <CustomHeaderColumn key={column.id} column={column} />
               ))}
             </tr>
           </thead>
           <tbody className='text-gray-600 fw-bold' {...getTableBodyProps()}>
             {rows.length > 0 ? (
-              rows.map((row: Row<Customer>, i) => {
+              rows.map((row: Row<Rehandle>, i) => {
                 prepareRow(row)
                 return <CustomRow row={row} key={`row-${i}-${row.id}`} />
               })
@@ -57,4 +57,4 @@ const CustomersTable = () => {
   )
 }
 
-export { CustomersTable }
+export { CallBackTable }

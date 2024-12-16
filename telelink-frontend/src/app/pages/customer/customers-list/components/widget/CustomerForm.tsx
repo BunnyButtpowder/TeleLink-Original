@@ -72,10 +72,10 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
         >
           <div className='row'>
             <div className='col-lg-4'>
-              <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
+              <div className='d-flex align-items-center bg-light-danger rounded p-5 mb-7'>
                 {/* <div className='bullet bullet-bar bg-primary h-25px me-5'></div> */}
                 <span className=' text-warning me-5'>
-                  <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
+                  <KTIcon iconName='dropbox' className='text-danger fs-1 me-5' />
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Gói hiện tại:</span>
@@ -84,7 +84,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
                 <span className=' text-warning me-5'>
-                  <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
+                  <KTIcon iconName='dropbox' className='text-primary fs-1 me-5' />
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Gói đặc biệt (ưu tiên 1):</span>
@@ -93,7 +93,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
                 <span className=' text-warning me-5'>
-                  <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
+                  <KTIcon iconName='dropbox' className='text-primary fs-1 me-5' />
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Gói cước gán (ưu tiên 2):</span>
@@ -102,7 +102,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
                 <span className=' text-warning me-5'>
-                  <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
+                  <KTIcon iconName='calendar-tick' className='text-primary fs-1 me-5' />
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Ngày đăng ký:</span>
@@ -111,7 +111,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
                 <span className=' text-warning me-5'>
-                  <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
+                  <KTIcon iconName='calendar-remove' className='text-primary fs-1 me-5' />
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Ngày hết hạn:</span>
@@ -120,7 +120,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
                 <span className=' text-warning me-5'>
-                  <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
+                  <KTIcon iconName='notepad-edit' className='text-primary fs-1 me-5' />
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Ghi chú:</span>
@@ -129,15 +129,24 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
                 <span className=' text-warning me-5'>
-                  <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
+                  <KTIcon iconName='geolocation' className='text-primary fs-1 me-5' />
                 </span>
                 <div className='d-flex flex-column'>
-                  <span className='fw-bold text-gray-800 fs-5'>TKC:</span>
-                  <span className='text-gray-600'>{customerData.TKC || 'N/A'}</span>
+                  <span className='fw-bold text-gray-800 fs-5'>Nơi cấp data:</span>
+                  <span className='text-gray-600'>{customerData.placeOfIssue || 'N/A'}</span>
                 </div>
               </div>
             </div>
             <div className='col-lg-4'>
+              <div className='d-flex align-items-center bg-light-danger rounded p-5 mb-7'>
+                <span className=' text-warning me-5'>
+                  <KTIcon iconName='dropbox' className='text-danger fs-1 me-5' />
+                </span>
+                <div className='d-flex flex-column'>
+                  <span className='fw-bold text-gray-800 fs-5'>Gói cước tư vấn:</span>
+                  <span className='text-gray-600'>{customerData.Package || 'N/A'}</span>
+                </div>
+              </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
                 <span className=' text-warning me-5'>
                   <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
@@ -188,28 +197,19 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                   <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
                 </span>
                 <div className='d-flex flex-column'>
-                  <span className='fw-bold text-gray-800 fs-5'>Gói cước tư vấn:</span>
-                  <span className='text-gray-600'>{customerData.Package || 'N/A'}</span>
-                </div>
-              </div>
-              <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
-                <span className=' text-warning me-5'>
-                  <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
-                </span>
-                <div className='d-flex flex-column'>
-                  <span className='fw-bold text-gray-800 fs-5'>Nơi cấp data:</span>
-                  <span className='text-gray-600'>{customerData.placeOfIssue || 'N/A'}</span>
+                  <span className='fw-bold text-gray-800 fs-5'>Tiêu dùng TKC:</span>
+                  <span className='text-gray-600'>{customerData.totalTKCUsage || 'N/A'}</span>
                 </div>
               </div>
             </div>
             <div className='col-lg-4'>
-              <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
+              <div className='d-flex align-items-center bg-light-danger rounded p-5 mb-7'>
                 <span className=' text-warning me-5'>
-                  <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
+                  <KTIcon iconName='abstract-26' className='text-danger fs-1 me-5' />
                 </span>
                 <div className='d-flex flex-column'>
-                  <span className='fw-bold text-gray-800 fs-5'>Tiêu dùng TKC:</span>
-                  <span className='text-gray-600'>{customerData.totalTKCUsage || 'N/A'}</span>
+                  <span className='fw-bold text-gray-800 fs-5'>TKC:</span>
+                  <span className='text-gray-600'>{customerData.TKC || 'N/A'}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>

@@ -213,6 +213,11 @@ const SidebarMenuMain = () => {
             fontIcon='bi-app-indicator'
           />
           <SidebarMenuItem
+            to='/rehandle'
+            icon='arrow-circle-left'
+            title={intl.formatMessage({ id: 'REHANDLE' })}
+          />
+          <SidebarMenuItem
             to='/blacklist'
             title={intl.formatMessage({ id: 'BLACKLIST' })}
             icon='abstract-11'

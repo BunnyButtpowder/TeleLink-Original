@@ -139,7 +139,7 @@ const DeleteManyModalForm: FC<Props> = ({ onClose }) => {
             className="btn btn-light me-3"
             disabled={deleteFormik.isSubmitting}
           >
-            Đặt lại
+            Huỷ
           </button>
           <button
             type="submit"

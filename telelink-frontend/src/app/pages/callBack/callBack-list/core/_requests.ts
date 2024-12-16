@@ -1,21 +1,28 @@
 import axios, { AxiosResponse } from "axios";
 import { ID, Response } from "../../../../../_metronic/helpers";
-import { Customer, Result } from "./_models";
+import { Rehandle, Result, CallBackQueryResponse } from "./_models";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 const token = localStorage.getItem("auth_token");
 
-const getData = async (salesmanId: ID): Promise<Customer> => {
-  const response = await axios.get(`${API_URL}/data-assign/salesman?id=${salesmanId}`);
-  return response.data.dataDetails;
-};
+interface RehandleQueryParams {
+  result?: number;
+  searchTerm?: string;
+  sort?: string;
+  order?: "asc" | "desc";
+}
 
-const getAllPackages = async() => {
-  try{
-    const response = await axios.get(`${API_URL}/packages/getall`);
+const getAllRehandles = async (params?: RehandleQueryParams): Promise<CallBackQueryResponse> => {
+  try {
+    const response: AxiosResponse<CallBackQueryResponse> = await axios.get(`${API_URL}/rehandle/get`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params,
+    });
     return response.data;
   } catch (error) {
-    console.error('Failed to fetch packages: ', error);
+    console.error('Failed to fetch rehandles: ', error);
     throw error;
   }
 }
@@ -36,7 +43,7 @@ const getPackagesByDataId = async (dataId: string): Promise<Array<{ id: number; 
 
 
 const createCallResult = async (result: Result, dataId: string, date: string) => {
-  const response = await axios.post(`${API_URL}/data/works?dataId=${dataId}`,
+  const response = await axios.post(`${API_URL}/rehandle/works?dataId=${dataId}`,
     {
       callResult: {
         result: result.result,
@@ -59,8 +66,7 @@ const createCallResult = async (result: Result, dataId: string, date: string) =>
 
 
 export {
-  getData,
+  getAllRehandles,
   createCallResult,
-  getAllPackages,
   getPackagesByDataId
 };

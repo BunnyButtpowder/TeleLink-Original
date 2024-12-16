@@ -101,7 +101,10 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
         {userRole === 1 && (
           
           <>
-          
+          <button className='btn btn-danger me-3' onClick={openDeleteManyModal}>
+            <KTIcon iconName='abstract-11' className='fs-2' />
+            Xóa dữ liệu
+          </button>
             {/* begin::Upload data */}
             < input
               ref={fileInputRef}
