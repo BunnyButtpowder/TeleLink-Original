@@ -18,7 +18,7 @@ function parseExcelDate(date) {
 }
 
 module.exports = {
-  importData: async function (req, res, filePath) {
+  importData: async function (req, res, filePath,id) {
     try {
       const workbook = XLSX.readFile(filePath);
       const sheetName = workbook.SheetNames[0];
@@ -115,6 +115,7 @@ module.exports = {
         }
 
         validData.push({
+          user: id,
           subscriberNumber,
           placeOfIssue: row[headerIndexes['placeOfIssue']] || '',
           networkName,

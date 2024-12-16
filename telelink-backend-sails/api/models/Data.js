@@ -43,7 +43,7 @@ module.exports = {
     expirationDate: {
       type: 'string',
       allowNull: true,
-    }, 
+    },
     notes: {    // Ghi chú
       type: 'string',
       allowNull: true,
@@ -116,6 +116,13 @@ module.exports = {
       model: 'agency',
 
     },
+    isBlock: {
+      type: 'boolean',
+      defaultsTo: false
+    },
+    user: {
+      model: 'user'
+    }
 
   }
 }

@@ -63,8 +63,9 @@ module.exports = {
         dataDetails: dataDetails,
       };
       
-      return res.status(200).json(result);
-    } catch (error) {
+      return res.ok(result);
+    } catch (error) { 
+      console.log(error)
       return res.status(500).json({ message: 'Lỗi khi lấy dữ liệu.', error });
     }
   },

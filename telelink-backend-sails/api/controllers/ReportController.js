@@ -5,8 +5,6 @@ module.exports = {
     try {
       // Fetch users and ensure correct population
       const reports = await Report.find().populate('agency');
-      
-      // Log the data to ensure correct population
       console.log('Users:', reports);
       
       if (!reports || reports.length === 0) {
