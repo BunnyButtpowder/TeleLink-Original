@@ -14,7 +14,7 @@ export function Settings() {
       {/* <ConnectedAccounts />
       <EmailPreferences />
       <Notifications /> */}
-      <DeactivateAccount />
+      {/* <DeactivateAccount /> */}
     </Content>
   )
 }

@@ -29,10 +29,10 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
   }, [updatedQuery])
 
   const fetchData = () => {
-    const {search = '', sort = '', order = '', filter = {}} = state;
+    const {search = '', sort = '', order = '', filter = {}, page = 1, items_per_page = 10} = state;
 
     const {provider, type } = filter;
-    return getPackages({ searchTerm: search, sort, order, provider, type });
+    return getPackages({ searchTerm: search, sort, order, provider, type, page, limit: items_per_page });
   }
   const { isFetching, refetch, data: response } = useQuery(
     [`${QUERIES.USERS_LIST}-${query}`, state.filter],
@@ -67,7 +67,12 @@ const useQueryResponsePagination = () => {
     return defaultPaginationState
   }
 
-  return response
+  return {
+    page: response.currentPage,
+    items_per_page: response.perPage,
+    total: response.totalCount,
+    total_pages: response.totalPages,
+  }
 }
 
 const useQueryResponseLoading = (): boolean => {

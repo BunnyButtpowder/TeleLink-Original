@@ -137,6 +137,7 @@ module.exports = {
             email: user.auth.email,
             role: user.auth.role,
             username: user.auth.username,
+            isActive: user.auth.isActive,
           },
         };
       });
