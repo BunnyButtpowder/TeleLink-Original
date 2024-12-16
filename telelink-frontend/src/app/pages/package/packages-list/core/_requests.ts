@@ -23,7 +23,7 @@ const importData = async (file: File, userID: string): Promise<any> => {
   }
 };
 
-const getPackages = (params: {searchTerm?: string, sort?: string, order?: string, provider?: string, type?: string}): Promise<PackageQueryResponse> => {
+const getPackages = (params: {searchTerm?: string, sort?: string, order?: string, provider?: string, type?: string, page?: number, limit?: number}): Promise<PackageQueryResponse> => {
   return axios
     .get(`${API_URL}/packages/getall`, { params })
     .then((response: AxiosResponse<PackageQueryResponse>) => response.data);
