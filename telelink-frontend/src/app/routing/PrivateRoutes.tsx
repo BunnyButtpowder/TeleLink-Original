@@ -8,6 +8,7 @@ import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils'
 import { WithChildren } from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import { CustomersPage } from '../pages/customer/CustomersPage'
+import { CallBackPage } from '../pages/callBack/CallBackPage'
 import { DataPage } from '../pages/data/DataPage'
 import { RevenuePage } from '../pages/reportRevenue/RevenuePage'
 import { ResultPage } from '../pages/reportCallResults/ResultPage'
@@ -44,6 +45,14 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <CustomersPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='rehandle'
+          element={
+            <SuspensedView>
+              <CallBackPage />
             </SuspensedView>
           }
         />

@@ -42,9 +42,9 @@ const getAllPlaceOfIssues = (): Promise<any> => {
     .then((response: AxiosResponse<any>) => response.data);
 }
 
-const getDataByAgency = async (agencyId: ID): Promise<DataQueryResponse> => {
+const getDataByAgency = async (agencyId: ID, page?: number, limit?: number): Promise<DataQueryResponse> => {
   return axios
-    .get(`${API_URL}/data/agency`, { params: { agencyId } })
+    .get(`${API_URL}/data/agency`, { params: { agencyId, page, limit } })
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 }
 

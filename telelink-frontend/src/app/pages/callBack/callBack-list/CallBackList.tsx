@@ -1,37 +1,37 @@
 import {ListViewProvider, useListView} from './core/ListViewProvider'
 import {QueryRequestProvider} from './core/QueryRequestProvider'
 import {QueryResponseProvider} from './core/QueryResponseProvider'
-import {CustomersListHeader} from './components/header/CustomersListHeader'
-import {CustomersTable} from './table/CustomersTable'
+import {CallBackListHeader} from './components/header/CallBackListHeader'
+import {CallBackTable} from './table/CallBackTable'
 import {AddReportModal} from './add-report-modal/AddReportModal'
 import {KTCard} from '../../../../_metronic/helpers'
 import { ToolbarWrapper } from '../../../../_metronic/layout/components/toolbar'
 import { Content } from '../../../../_metronic/layout/components/content'
 
-const CustomersList = () => {
+const CallBackList = () => {
   const {itemIdForUpdate} = useListView()
   return (
     <>
       <KTCard>
-        <CustomersListHeader />
-        <CustomersTable />
+        <CallBackListHeader />
+        <CallBackTable />
       </KTCard>
       {/* {itemIdForUpdate !== undefined && <AddReportModal />} */}
     </>
   )
 }
 
-const CustomersListWrapper = () => (
+const CallBackListWrapper = () => (
   <QueryRequestProvider>
     <QueryResponseProvider>
       <ListViewProvider>
         <ToolbarWrapper />
         <Content>
-          <CustomersList />
+          <CallBackList />
         </Content>
       </ListViewProvider>
     </QueryResponseProvider>
   </QueryRequestProvider>
 )
 
-export {CustomersListWrapper}
+export {CallBackListWrapper}

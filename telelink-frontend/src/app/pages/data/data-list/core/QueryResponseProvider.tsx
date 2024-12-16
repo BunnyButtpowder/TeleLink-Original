@@ -49,7 +49,7 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
     if (userRole === 1) {
       return getAllData({ searchTerm: search, sort, order, placeOfIssue, networkName, page, limit: items_per_page });
     } else if (userRole === 2 && agencyId) {
-      return getDataByAgency(agencyId);
+      return getDataByAgency(agencyId,page,items_per_page);
     } else {
       return Promise.resolve({ data: [], count: 0 });
     }

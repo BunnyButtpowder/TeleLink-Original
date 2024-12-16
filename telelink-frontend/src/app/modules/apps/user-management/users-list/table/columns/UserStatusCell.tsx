@@ -7,6 +7,8 @@ type Props = {
 const UserStatusCell: FC<Props> = ({ status }) => {
   let statusLabel = '';
   let badgeClass = '';
+  console.log('status:', status);
+
 
   switch (status) {
     case 1:

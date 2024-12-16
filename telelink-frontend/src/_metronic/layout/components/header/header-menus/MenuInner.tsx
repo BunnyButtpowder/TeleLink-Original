@@ -173,7 +173,7 @@ export function MenuInner() {
             menuTrigger={`{default:'click', lg: 'hover'}`}
           >
             {/* ACCOUNT */}
-            <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} />
+            {/* <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} /> */}
             <MenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
           </MenuInnerWithSub>
           <MenuInnerWithSub

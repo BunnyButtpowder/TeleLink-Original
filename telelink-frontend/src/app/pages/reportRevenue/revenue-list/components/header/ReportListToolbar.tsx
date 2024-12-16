@@ -34,7 +34,7 @@ const ReportListToolbar = () => {
         className="btn btn-info me-3"
         onClick={handleExportExcel}
       >
-        <KTIcon iconName="exit-up" className="fs-2" />
+        <KTIcon iconName="folder-up" className="fs-2" />
         Xuất báo cáo 
       </button>
 

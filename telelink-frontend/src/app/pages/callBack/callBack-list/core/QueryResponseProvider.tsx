@@ -14,19 +14,20 @@ import {
   stringifyRequestQuery,
   WithChildren,
 } from '../../../../../_metronic/helpers'
-import { Customer } from './_models'
+import { Rehandle } from './_models'
 import { useAuth } from '../../../../modules/auth'
+import { getAllRehandles } from './_requests'
 
-const QueryResponseContext = createSingleResponseContext<Customer>({
+const QueryResponseContext = createSingleResponseContext<Rehandle>({
   response: undefined,
   refetch: () => { },
   isLoading: false,
-  setDataDetails: (data: Customer | undefined) => { },
+  setDataDetails: (data: Rehandle | undefined) => { },
 });
 
 const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   const { currentUser } = useAuth();
-  const [dataDetails, setDataDetails] = useState<Customer | undefined>(undefined);
+  const [dataDetails, setDataDetails] = useState<Rehandle | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -37,13 +38,8 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
     setIsLoading(false);
   }, [currentUser]);
 
-  const handleSetDataDetails = (data: Customer | undefined) => {
+  const handleSetDataDetails = (data: Rehandle | undefined) => {
     setDataDetails(data);
-    if (currentUser && data) {
-      localStorage.setItem(`dataDetails_${currentUser.id}`, JSON.stringify(data));
-    } else if (currentUser) {
-      localStorage.removeItem(`dataDetails_${currentUser.id}`);
-    }
   };
 
   return (
@@ -55,7 +51,7 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
 
 const useQueryResponse = () => useContext(QueryResponseContext)
 
-const useQueryResponseData = () => {
+const useQueryResponseData = (): Rehandle [] => {
   const { response } = useQueryResponse()
 
   return response ? [response] : [];

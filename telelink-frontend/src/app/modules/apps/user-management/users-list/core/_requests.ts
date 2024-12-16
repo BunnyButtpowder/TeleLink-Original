@@ -119,6 +119,17 @@ const deleteSelectedUsers = (ids: Array<ID>): Promise<void> => {
     .then(() => {});
 };
 
+const banUser = (id: ID, isBan: boolean): Promise<void> => {
+  return axios
+    .patch(`${API_URL}/auth/ban`, null, { params: { id, isBan } })
+    .then(() => {})
+    .catch((error) => {
+      console.error('Failed to ban/unban user', error);
+      throw error;
+    });
+};
+
+
 export {
   getUsers,
   getSalesmenByAgency,
@@ -127,4 +138,5 @@ export {
   getUserById,
   createUser,
   updateUser,
+  banUser
 };
