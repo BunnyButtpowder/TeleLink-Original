@@ -354,7 +354,6 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
                     const value = parseInt(rawValue, 10);
                     if (!isNaN(value) && value >= 10000 && value <= 999999999999) {
                       packageFormik.setFieldValue('price', value.toLocaleString('vi-VN')); 
-                      packageFormik.setFieldValue('price', ''); 
                     }
                     packageFormik.validateField('price'); 
                   }}

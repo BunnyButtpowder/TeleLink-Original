@@ -1,10 +1,10 @@
 import clsx from 'clsx'
 import {FC} from 'react'
 import {Row} from 'react-table'
-import {Customer} from '../../core/_models'
+import {Rehandle} from '../../core/_models'
 
 type Props = {
-  row: Row<Customer>
+  row: Row<Rehandle>
 }
 
 const CustomRow: FC<Props> = ({row}) => (

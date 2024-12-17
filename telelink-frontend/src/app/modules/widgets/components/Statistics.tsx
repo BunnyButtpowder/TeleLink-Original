@@ -156,7 +156,7 @@ const Statistics: FC = () => {
               svgIcon='basket'
               color='danger'
               iconColor='white'
-              title='Shopping Cart'
+              title={5}
               titleColor='white'
               description='Lands, Houses, Ranchos, Farms'
               descriptionColor='white'
@@ -169,7 +169,7 @@ const Statistics: FC = () => {
               svgIcon='cheque'
               color='primary'
               iconColor='white'
-              title='Appartments'
+              title={6}
               titleColor='white'
               description='Flats, Shared Rooms, Duplex'
               descriptionColor='white'
@@ -182,7 +182,7 @@ const Statistics: FC = () => {
               svgIcon='chart-simple-3'
               color='success'
               iconColor='white'
-              title='Sales Stats'
+              title={6}
               titleColor='white'
               description='50% Increased for FY20'
               descriptionColor='white'
@@ -199,7 +199,7 @@ const Statistics: FC = () => {
               svgIcon='chart-simple'
               color='white'
               iconColor='primary'
-              title='500M$'
+              title={6}
               description='SAP UI Progress'
             />
           </div>
@@ -210,7 +210,7 @@ const Statistics: FC = () => {
               svgIcon='cheque'
               color='dark'
               iconColor='white'
-              title='+3000'
+              title={6}
               titleColor='white'
               description='New Customers'
               descriptionColor='white'
@@ -223,7 +223,7 @@ const Statistics: FC = () => {
               svgIcon='briefcase'
               color='warning'
               iconColor='white'
-              title='$50,000'
+              title={6}
               titleColor='white'
               description='Milestone Reached'
               descriptionColor='white'
@@ -236,7 +236,7 @@ const Statistics: FC = () => {
               svgIcon='chart-pie-simple'
               color='info'
               iconColor='white'
-              title='$50,000'
+              title={6}
               titleColor='white'
               description='Milestone Reached'
               descriptionColor='white'
