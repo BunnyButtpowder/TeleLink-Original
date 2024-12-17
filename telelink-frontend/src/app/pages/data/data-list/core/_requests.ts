@@ -175,6 +175,29 @@ const deleteManyData = async (filters: { networkName: string; createdAt: string 
   }
 };
 
+const exportSample = (): Promise<void> => {
+  return axios
+    .get(`${API_URL}/data/sample`, {
+      responseType: "blob", 
+      headers: {
+        Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+    })
+    .then((response: AxiosResponse<Blob>) => {
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "DataSample.xlsx"; 
+      link.click();
+    })
+    .catch((error) => {
+      console.error("Error exporting report:", error);
+      throw error;
+    });
+};
+
 export {
   importData,
   getAllData,
@@ -194,5 +217,6 @@ export {
   deleteSelectedData,
   getAllPlaceOfIssues,
   getDataCategoriesByNetworks,
-  deleteManyData
+  deleteManyData,
+  exportSample
 };
