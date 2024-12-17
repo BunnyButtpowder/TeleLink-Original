@@ -4,16 +4,17 @@ import {MenuComponent} from '../../../../../../../_metronic/assets/ts/components
 import {ID, KTIcon, QUERIES} from '../../../../../../../_metronic/helpers'
 import {useListView} from '../../core/ListViewProvider'
 import {useQueryResponse} from '../../core/QueryResponseProvider'
-import {deleteUser} from '../../core/_requests'
+import {deleteUser, banUser} from '../../core/_requests'
 import {toast} from 'react-toastify'
 import Swal from 'sweetalert2';
 
 type Props = {
   id: ID
   role?: number
+  isActive?: number
 }
 
-const UserActionsCell: FC<Props> = ({id, role}) => {
+const UserActionsCell: FC<Props> = ({id, role, isActive }) => {
   const {setItemIdForUpdate} = useListView()
   const {query} = useQueryResponse()
   const queryClient = useQueryClient()
@@ -25,6 +26,10 @@ const UserActionsCell: FC<Props> = ({id, role}) => {
   const openEditModal = () => {
     setItemIdForUpdate(id)
   }
+
+  useEffect(() => {
+    console.log('Component Mounted/Updated. Current isActive:', isActive)
+  }, [isActive])
 
   const deleteItem = useMutation(() => deleteUser(id), {
     onSuccess: () => {
@@ -47,6 +52,30 @@ const UserActionsCell: FC<Props> = ({id, role}) => {
     });
     if (result.isConfirmed) {
       await deleteItem.mutateAsync()
+    }
+  }
+
+  const banItem = useMutation((isBan: boolean) => banUser(id, isBan), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([`${QUERIES.USERS_LIST}-${query}`])
+      toast.success('Thay đổi trạng thái chặn thành công!', { position: 'top-right' })
+    },
+    onError: () => {
+      toast.error('Thay đổi trạng thái chặn thất bại. Vui lòng thử lại.', { position: 'top-right' })
+    },
+  })
+
+  const handleBanUnban = async () => {
+    console.log('isActive value:', isActive) // Logs the current value of isActive
+    console.log(id)
+    console.log(role)
+
+    const action = isActive === 1 ? 'chặn' : 'bỏ chặn' // Adjusted to check if isActive is 1 or 0
+    const isConfirmed = window.confirm(`Bạn có chắc chắn muốn ${action} người dùng này?`)
+    
+    if (isConfirmed) {
+      // If isActive is 1, ban the user (true); if 0, unban the user (false)
+      await banItem.mutateAsync(isActive === 1 ? false : true)
     }
   }
 
@@ -74,15 +103,24 @@ const UserActionsCell: FC<Props> = ({id, role}) => {
         </div>
         {/* end::Menu item */}
 
-        {role === 3 && ( // Render only if the role is Salesman
+        {(role === 3 || role === 2) && ( // Salesman or Agency
           <div className='menu-item px-3'>
             <a
               className='menu-link px-3'
-              data-kt-users-table-filter='delete_row'
-              onClick={handleDelete}
+              data-kt-users-table-filter='ban_unban_row'
+              onClick={handleBanUnban}
             >
-              Xoá
+              {isActive === 1 ? 'Chặn' : 'Bỏ chặn'}
             </a>
+            {role === 3 && (
+              <a
+                className='menu-link px-3'
+                data-kt-users-table-filter='delete_row'
+                onClick={handleDelete}
+              >
+                Xoá
+              </a>
+            )}
           </div>
         )}
       </div>

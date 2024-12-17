@@ -112,7 +112,13 @@ const RehandleModalForm: FC<Props> = ({result, isUserLoading}) => {
       try {
         if (values.id) {
           let response;
-          response = await createRehandleResult(values, values.id, values.dateToCall || '');
+          if (typeof values.data.id === 'number') {
+            response = await createRehandleResult(values, values.data.id, values.dateToCall || '');
+            toast.success('Cập nhật kết quả thành công');
+            refetch();
+          } else {
+            toast.error('ID của dữ liệu không hợp lệ');
+          }
           toast.success('Cập nhật kết quả thành công');
           refetch()
         } else {

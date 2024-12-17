@@ -195,7 +195,7 @@ const Permissions: React.FC = () => {
                     </td>
                   </tr>
 
-                  <tr>
+                  {/* <tr>
                     <td>Danh sách chặn số</td>
                     <td>
                       <div className='form-check form-check-solid'>
@@ -284,7 +284,7 @@ const Permissions: React.FC = () => {
                         <label className='form-check-label ps-2' htmlFor='newsletter2'></label>
                       </div>
                     </td>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </table>
             </div>
