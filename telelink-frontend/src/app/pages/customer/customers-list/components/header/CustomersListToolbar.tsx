@@ -9,6 +9,7 @@ import { useQueryResponse } from '../../core/QueryResponseProvider';
 import { AddReportModal } from '../../add-report-modal/AddReportModal';
 import { BlacklistEditModal } from '../../blacklist-edit-modal/BlackListEditModal';
 import React from 'react'
+import Swal from 'sweetalert2';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -65,7 +66,16 @@ const CustomersListToolbar = () => {
       // setCurrentUserData({dataDetails});
       setDataDetails(dataDetails);
       console.log('Fetched data details:', dataDetails);
-      toast.success('Lấy số thành công');
+      Swal.fire({
+        title: 'Thành công',
+        text: 'Lấy số thành công',
+        icon: 'success',
+        timer: 5000,  
+        showConfirmButton: false,  
+        position: 'top-end',  
+        toast: true,  
+        timerProgressBar: true,  
+      });
     } catch (error: any) {
       console.error('Failed to fetch data details:', error);
       const errorMessage = error.response?.data?.message
