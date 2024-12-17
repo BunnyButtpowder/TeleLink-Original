@@ -80,10 +80,10 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
         confirmButtonText: 'Đồng ý'
       }).then((result) => {
         if (result.isConfirmed) {
-          refetch();  // Gọi lại refetch để tải lại dữ liệu mới khi người dùng nhấn "Đồng ý"
+          refetch();  
         }
       });
-      // refetch();
+      refetch();
     });
     
     socket.on('disconnect', function() {
