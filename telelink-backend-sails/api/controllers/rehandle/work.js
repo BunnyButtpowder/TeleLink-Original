@@ -155,9 +155,7 @@ module.exports = {
         dateToCall: date,
       });
       await DataRehandle.updateOne({
-        data: dataId,
-        user: userId,
-        complete: false,
+        id: assignment.id
       }).set({ complete: true });
 
       let rawQuery, groupedResults;
