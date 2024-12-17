@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { importData } from '../../core/_requests'
+import { importData, exportSample } from '../../core/_requests'
 import { KTIcon } from '../../../../../../_metronic/helpers'
 import { useListView } from '../../core/ListViewProvider'
 import { DataListFilter } from './DataListFilter'
@@ -73,6 +73,15 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
     setDeleteManyModalOpen(false);
     onRefresh();
   }
+
+  const handleExportExcel = async () => {
+    try {
+      await exportSample();
+      toast.success('Xuất báo cáo thành công');
+    } catch (error) {
+      toast.error('Có lỗi trong quá trình xuất báo cáo: ' + error);
+    }
+  };
   
   return (
     <>
@@ -92,6 +101,14 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
         </div>
       )} */}
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
+      <button
+        type="button"
+        className="btn btn-success me-3"
+        onClick={handleExportExcel}
+      >
+        <KTIcon iconName="exit-up" className="fs-2" />
+        Xuất mẫu
+      </button>
       <button className='btn btn-danger me-3' onClick={openDeleteManyModal}>
             <KTIcon iconName='abstract-11' className='fs-2' />
             Xóa nhiều Dữ liệu
