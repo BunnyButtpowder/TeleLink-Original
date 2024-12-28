@@ -71,9 +71,17 @@ const UserActionsCell: FC<Props> = ({id, role, isActive }) => {
     console.log(role)
 
     const action = isActive === 1 ? 'chặn' : 'bỏ chặn' // Adjusted to check if isActive is 1 or 0
-    const isConfirmed = window.confirm(`Bạn có chắc chắn muốn ${action} người dùng này?`)
+    // const isConfirmed = window.confirm(`Bạn có chắc chắn muốn ${action} người dùng này?`)
+    const result = await Swal.fire({
+      title: `Bạn có chắc chắn muốn ${action} người dùng này?`,
+      text: 'Hành động này không thể hoàn tác!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy'
+    });
     
-    if (isConfirmed) {
+    if (result.isConfirmed) {
       // If isActive is 1, ban the user (true); if 0, unban the user (false)
       await banItem.mutateAsync(isActive === 1 ? false : true)
     }

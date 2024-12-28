@@ -65,6 +65,7 @@ module.exports = {
       if (searchTerm) {
         dataQuery = Data.find({
           where: {
+            agency: null , isBlock: false,
             isDelete: false,
             or: [
               { placeOfIssue: { like: `%${searchTerm.toLowerCase()}%` } },
