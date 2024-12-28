@@ -9,6 +9,7 @@ import { useIntl } from 'react-intl'
 import React from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Swal from 'sweetalert2';
 
 type Props = {
   id: ID
@@ -39,8 +40,15 @@ const BlacklistActionsCell: FC<Props> = ({ id }) => {
   })
 
   const handleDelete = async () => {
-    const isConfirmed = window.confirm('Bạn có chắc chắn muốn xóa?')
-    if (isConfirmed) {
+    const result = await Swal.fire({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      text: 'Hành động này không thể hoàn tác!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy'
+    });
+    if (result.isConfirmed) {
       await deleteItem.mutateAsync()
     }
   }

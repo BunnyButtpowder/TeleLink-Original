@@ -92,7 +92,7 @@ const revenueColumns: ReadonlyArray<Column<Revenue>> = [
   },
   {
     Header: (props) => (
-      <ResultCustomHeader tableProps={props} title='Đồng ý xử lý lại' className='min-w-150px' />
+      <ResultCustomHeader tableProps={props} title='Xử lý lại' className='min-w-150px' />
     ),
     id: 'rehandle',
     Cell: ({ ...props }) => <span>{props.data[props.row.index]?.rehandle}</span>,

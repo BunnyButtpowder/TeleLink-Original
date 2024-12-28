@@ -292,7 +292,7 @@ const UserEditModalForm: FC<Props> = ({ user, isUserLoading }) => {
   return (
     <>
       {/* Role Selection */}
-      {!currentUser?.agency && (
+      {!user.id &&!currentUser?.agency && (
         <div className='mb-7'>
           <label className='required fw-bold fs-6 mb-5'>{intl.formatMessage({ id: 'USERS.ROLE' })}</label>
           <div className='d-flex'>

@@ -1,8 +1,8 @@
 import {useListView} from '../../core/ListViewProvider'
-import {CustomersListToolbar} from './CustomersListToolbar'
+import {CallBackListToolbar} from './CallBackListToolbar'
 import {UsersListSearchComponent} from './UsersListSearchComponent'
 
-const CustomersListHeader = () => {
+const CallBackListHeader = () => {
   const {selected} = useListView()
   return (
     <div className='card-header border-0 pt-6 d-flex justify-content-end'>
@@ -10,7 +10,7 @@ const CustomersListHeader = () => {
       {/* begin::Card toolbar */}
       <div className='card-toolbar'>
         {/* begin::Group actions */}
-        <CustomersListToolbar />
+        <CallBackListToolbar />
         {/* end::Group actions */}
       </div>
       {/* end::Card toolbar */}
@@ -18,4 +18,4 @@ const CustomersListHeader = () => {
   )
 }
 
-export {CustomersListHeader}
+export {CallBackListHeader}

@@ -7,11 +7,11 @@ import {Data} from '../../core/_models'
 import { DataNetworkCell } from './DataNetworkCell'
 
 const usersColumns: ReadonlyArray<Column<Data>> = [
-  {
-    Header: (props) => <UserSelectionHeader tableProps={props} />,
-    id: 'selection',
-    Cell: ({...props}) => <UserSelectionCell id={props.data[props.row.index].id} />,
-  },
+  // {
+  //   Header: (props) => <UserSelectionHeader tableProps={props} />,
+  //   id: 'selection',
+  //   Cell: ({...props}) => <UserSelectionCell id={props.data[props.row.index].id} />,
+  // },
   {
     Header: (props) => (
       <DataCustomHeader tableProps={props} title='Nơi cấp data' className='min-w-125px' />
@@ -67,23 +67,23 @@ const usersColumns: ReadonlyArray<Column<Data>> = [
     ),
     id: 'registrationDate',
     accessor: 'registrationDate',
-    Cell: ({...props}) => {
-      const timestamp = props.data[props.row.index].registrationDate
+    // Cell: ({...props}) => {
+    //   const timestamp = props.data[props.row.index].registrationDate
 
-      if (timestamp) {
-        const date = new Date(timestamp);
-        const formattedDate = date.toLocaleString('vi-VN', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        });
-        return <span>{formattedDate}</span>
-      }
-      return <span></span> // return empty span if `registrationDate` is null or undefined
-    }
+    //   if (timestamp) {
+    //     const date = new Date(timestamp);
+    //     const formattedDate = date.toLocaleString('vi-VN', {
+    //       year: 'numeric',
+    //       month: '2-digit',
+    //       day: '2-digit',
+    //       hour: '2-digit',
+    //       minute: '2-digit',
+    //       hour12: false,
+    //     });
+    //     return <span>{formattedDate}</span>
+    //   }
+    //   return <span></span> // return empty span if `registrationDate` is null or undefined
+    // }
   },
   {
     Header: (props) => (
@@ -91,23 +91,23 @@ const usersColumns: ReadonlyArray<Column<Data>> = [
     ),
     id: 'expirationDate',
     accessor: 'expirationDate',
-    Cell: ({...props}) => {
-      const timestamp = props.data[props.row.index].expirationDate
+    // Cell: ({...props}) => {
+    //   const timestamp = props.data[props.row.index].expirationDate
 
-      if (timestamp) {
-        const date = new Date(timestamp);
-        const formattedDate = date.toLocaleString('vi-VN', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        });
-        return <span>{formattedDate}</span>
-      }
-      return <span></span> // return empty span if `registrationDate` is null or undefined
-    }
+    //   if (timestamp) {
+    //     const date = new Date(timestamp);
+    //     const formattedDate = date.toLocaleString('vi-VN', {
+    //       year: 'numeric',
+    //       month: '2-digit',
+    //       day: '2-digit',
+    //       hour: '2-digit',
+    //       minute: '2-digit',
+    //       hour12: false,
+    //     });
+    //     return <span>{formattedDate}</span>
+    //   }
+    //   return <span></span> // return empty span if `registrationDate` is null or undefined
+    // }
   },
   {
     Header: (props) => (

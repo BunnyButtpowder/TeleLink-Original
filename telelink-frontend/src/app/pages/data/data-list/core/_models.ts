@@ -9,8 +9,8 @@ export type Data = {
   currentPackage?: string
   priorityPackage1?: string
   priorityPackage2?: string
-  registrationDate?: Date
-  expirationDate?: Date
+  registrationDate?: string
+  expirationDate?: string
   notes?: string
   TKC?: string
   APRU3Months?: string
@@ -36,8 +36,8 @@ export const initialData: Data = {
   currentPackage: '',
   priorityPackage1: '',
   priorityPackage2: '',
-  registrationDate: new Date(),
-  expirationDate: new Date(),
+  registrationDate: '',
+  expirationDate: '',
   notes: '',
   TKC: '',
   APRU3Months: '',

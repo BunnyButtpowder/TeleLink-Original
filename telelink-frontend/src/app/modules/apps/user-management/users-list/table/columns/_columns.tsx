@@ -97,21 +97,23 @@ const usersColumns: ReadonlyArray<Column<User>> = [
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Trạng thái' className='min-w-125px' />,
     id: 'status',
-    Cell: ({ ...props }) => <UserStatusCell status={props.data[props.row.index].auth?.isActive ? 0 : 1}></UserStatusCell>,
+    Cell: ({ ...props }) => <UserStatusCell status={props.data[props.row.index].auth?.isActive ? 1 : 0}></UserStatusCell>,
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Tác vụ' className=' min-w-100px' />
+      <UserCustomHeader tableProps={props} title="Tác vụ" className="min-w-100px" />
     ),
-    id: 'actions',
-    Cell: ({ ...props }) => (
-      <UserActionsCell 
-        id={props.data[props.row.index].id} 
-        role={props.data[props.row.index].auth?.role} 
-      />
-    ),
-  },
-  
+    id: "actions",
+    Cell: ({ ...props }) => {
+      if (props.data[props.row.index].auth?.role === 1) {
+        return null; // Do not render anything if role is 1
+      }
+      return <UserActionsCell id={props.data[props.row.index].id} 
+      role={props.data[props.row.index].auth?.role} 
+      isActive={props.data[props.row.index].auth?.isActive ? 1 : 0} />;
+    },
+  }
+
 ]
 
 export { usersColumns }

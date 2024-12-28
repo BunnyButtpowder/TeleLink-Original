@@ -6,9 +6,10 @@ const API_URL = import.meta.env.VITE_APP_API_URL;
 const PACKAGE_URL = `${API_URL}/package`;
 const DELETE_PACKAGE_URL = `${API_URL}/package?id=`;
 
-const importData = async (file: File): Promise<any> => {
+const importData = async (file: File, userID: string): Promise<any> => {
   const formData = new FormData();
   formData.append('file', file);
+  formData.append('id', userID);
   try {
     const response = await axios.post(`${API_URL}/import-package`, formData, {
       headers: {
@@ -22,7 +23,7 @@ const importData = async (file: File): Promise<any> => {
   }
 };
 
-const getPackages = (params: {searchTerm?: string, sort?: string, order?: string, provider?: string, type?: string}): Promise<PackageQueryResponse> => {
+const getPackages = (params: {searchTerm?: string, sort?: string, order?: string, provider?: string, type?: string, page?: number, limit?: number}): Promise<PackageQueryResponse> => {
   return axios
     .get(`${API_URL}/packages/getall`, { params })
     .then((response: AxiosResponse<PackageQueryResponse>) => response.data);

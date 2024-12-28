@@ -1,6 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useContext, useState, useEffect, useMemo } from 'react'
+import io from 'socket.io-client';
+import Swal from 'sweetalert2';
 import { useQuery } from 'react-query'
 import {
   createResponseContext,
@@ -54,6 +56,32 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
     fetchBlacklist,
     { cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false }
   )
+  useEffect(() => {
+    const socket = io('http://localhost:9999', {
+      transports: ['websocket']
+    });
+
+    socket.on('connect', function() {
+      console.log('WebSocket client connected1!');
+      
+    });
+    
+    socket.on('newblacklist', function() {
+       console.log("hihi")
+      refetch();
+    });
+    
+    socket.on('disconnect', function() {
+      console.log('WebSocket client disconnected');
+    });
+    socket.on('connect_error', function() {
+      console.log('Connection error:', );
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [refetch]);
 
   return (
     <QueryResponseContext.Provider value={{ isLoading: isFetching, refetch, response, query }}>

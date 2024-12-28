@@ -22,7 +22,7 @@ const token = localStorage.getItem('auth_token');
 
 const numberToWords = (num: number): string => {
   const viUnits = ["", "mươi", "trăm", "nghìn", "triệu", "tỷ"];
-  const viNums = ["Không", "Một", "Hai", "Ba", "Bốn", "Năm", "Sáu", "Bảy", "Tám", "Chín"];
+  const viNums = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"];
 
   if (num === 0) return "Không đồng";
 
@@ -41,7 +41,7 @@ const numberToWords = (num: number): string => {
     // Handle tens and ones
     if (tens > 0) {
       if (tens === 1) {
-        part += "Mười ";
+        part += "mười ";
       } else {
         part += viNums[tens] + " " + viUnits[1] + " ";
       }
@@ -91,12 +91,17 @@ const packageSchema = Yup.object().shape({
   provider: Yup.string().required('Vui lòng điền vào trường này'),
   type: Yup.string().required('Vui lòng chọn 1 loại gói cước'),
   price: Yup.string()
-    .required('Vui lòng điền vào trường này')
-    .test('min-price', 'Giá tối thiểu là 10.000 VND', (value) => {
-      if (!value) return false; // Ensure the field is not empty
-      const numericValue = parseInt(value.replace(/\./g, ''), 10); // Remove dots and convert to number
-      return numericValue >= 10000; // Check minimum price
-    }),
+  .required('Vui lòng điền vào trường này')
+  .test('min-price', 'Giá tối thiểu là 10.000 VND', (value) => {
+    if (!value) return false; // Đảm bảo trường không bị bỏ trống
+    const numericValue = parseInt(value.replace(/\./g, ''), 10); // Xóa dấu chấm và chuyển sang số
+    return numericValue >= 10000; // Kiểm tra giá tối thiểu
+  })
+  .test('max-price', 'Giá tối đa là 999.999.999.999 VND', (value) => {
+    if (!value) return false; // Đảm bảo trường không bị bỏ trống
+    const numericValue = parseInt(value.replace(/\./g, ''), 10); // Xóa dấu chấm và chuyển sang số
+    return numericValue <= 999999999999; // Kiểm tra giá tối đa
+  }),
   //  code: Yup.string().nullable(),
   //  title: Yup.string().nullable(),
   //  provider: Yup.string().nullable(),
@@ -347,21 +352,23 @@ const PackageEditModalForm: FC<Props> = ({ pack, isUserLoading }) => {
                   onBlur={(e) => {
                     const rawValue = e.target.value.replace(/\./g, '');
                     const value = parseInt(rawValue, 10);
-                    if (!isNaN(value) && value >= 10000) {
-                      packageFormik.setFieldValue('price', value.toLocaleString('vi-VN')); // Format value
-                    } else {
-                      packageFormik.setFieldValue('price', ''); // Reset invalid values
+                    if (!isNaN(value) && value >= 10000 && value <= 999999999999) {
+                      packageFormik.setFieldValue('price', value.toLocaleString('vi-VN')); 
                     }
-                    packageFormik.validateField('price'); // Trigger validation on blur
+                    packageFormik.validateField('price'); 
                   }}
                   onChange={(e) => {
                     let rawValue = e.target.value.replace(/\./g, '');
                     if (/^\d*$/.test(rawValue)) {
-                      const formattedValue = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                      packageFormik.setFieldValue('price', formattedValue); // Format value dynamically
+                      const value = parseInt(rawValue, 10);
+                      if (value <= 999999999999) {
+                        const formattedValue = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        packageFormik.setFieldValue('price', formattedValue); 
+                      }
                     }
-                    packageFormik.validateField('price'); // Validate on every change
+                    packageFormik.validateField('price'); 
                   }}
+                  
                 />
                 <span className="position-absolute top-50 end-0 translate-middle-y pe-3">VND</span>
               </div>

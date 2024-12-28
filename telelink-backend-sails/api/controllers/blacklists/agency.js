@@ -76,7 +76,7 @@ module.exports = {
 
 
       if (blacklistData.length === 0) {
-        return res.notFound({ message: searchTerm ? 'Không tìm thấy dữ liệu phù hợp.' : 'Không có dữ liệu' });
+        return res.ok({ message: searchTerm ? 'Không tìm thấy dữ liệu phù hợp.' : 'Không có dữ liệu' }) 
       }
 
       // Sorting logic

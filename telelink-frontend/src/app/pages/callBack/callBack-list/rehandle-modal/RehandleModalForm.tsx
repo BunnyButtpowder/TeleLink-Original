@@ -1,36 +1,46 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, {FC, useState, useEffect} from 'react'
 import * as Yup from 'yup'
-import { useFormik } from 'formik'
-import { initialResult, Result } from '../core/_models'
+import {useFormik} from 'formik'
+import {isNotEmpty, toAbsoluteUrl} from '../../../../../_metronic/helpers'
+import {initialResult, Result} from '../core/_models'
 import clsx from 'clsx'
-import { useListView } from '../core/ListViewProvider'
-import { UsersListLoading } from '../components/loading/UsersListLoading'
-import { createCallResult, getPackagesByDataId } from '../core/_requests'
-import { useQueryResponse } from '../core/QueryResponseProvider'
-import { useIntl } from 'react-intl'
+import {useListView} from '../core/ListViewProvider'
+import {UsersListLoading} from '../components/loading/UsersListLoading'
+import {createRehandleResult} from '../core/_requests'
+import {useQueryResponse} from '../core/QueryResponseProvider'
+import {useIntl} from 'react-intl'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '../../../../modules/auth'
+import { getPackagesByDataId } from '../core/_requests'
 
 type Props = {
-  onClose: () => void
+  isUserLoading: boolean
+  result: Result
 }
 
-const resultSchema = Yup.object().shape({
+const vietnamesePhoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+
+const editResultSchema = Yup.object().shape({
   result: Yup.number().required('Vui lòng chọn kết quả cuộc gọi'),
-  dataPackage: Yup.string().nullable(),
+  dataPackage: Yup.string()
+  // .nullable()
+  // .typeError('Vui lòng chọn gói cước hợp lệ') // Custom error message for invalid type
+  .required('Vui lòng chọn gói cước'),  
   customerName: Yup.string().nullable(),
   address: Yup.string().nullable(),
   note: Yup.string().nullable(),
+  // subscriberNumber: Yup.string()
+  // .matches(vietnamesePhoneRegExp, 'Số điện thoại không hợp lệ')
+  // .nullable(),
+  revenue: Yup.number().nullable(),
+  dateToCall: Yup.string().nullable(),
+  
 })
 
-const AddReportModalForm: FC<Props> = ({ onClose }) => {
+const RehandleModalForm: FC<Props> = ({result, isUserLoading}) => {
   const intl = useIntl();
-  const { currentUser } = useAuth();
-  const dataDetails = localStorage.getItem(`dataDetails_${currentUser?.id}`) || ''
-  const dataId = dataDetails ? JSON.parse(dataDetails).id : ''
-  const { setDataDetails, refetch } = useQueryResponse()
-  const [date, setDate] = useState<string>('')
+  const {setItemIdForUpdate} = useListView()
+  const {refetch} = useQueryResponse()
   const [packages, setPackages] = useState<Array<{ id: number, title: string }>>([]);
   const [isLoadingPackages, setIsLoadingPackages] = useState(false);
 
@@ -45,13 +55,16 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
     { value: 8, label: 'Mất đơn' },
   ]
 
-  const fetchPackages = async () => {
+  const fetchPackages = async (dataId: number) => {
     setIsLoadingPackages(true);
     try {
-      const packageArray = await getPackagesByDataId(dataId); // Correctly typed return value
-      console.log('Fetched packages:', packageArray);
-  
-      setPackages(packageArray); // Directly set the result
+      const packageArray = await getPackagesByDataId(dataId.toString());
+      setPackages(
+        packageArray.map((pack) => ({
+          id: Number(pack.id), // Ensure IDs are numbers
+          title: pack.title,
+        }))
+      );
     } catch (error) {
       console.error('Failed to fetch packages:', error);
     } finally {
@@ -60,47 +73,85 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
   };
   
 
-  useEffect(() => {
-    fetchPackages();
-  }, [])
+  const handlePackageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedPackageId = parseInt(e.target.value, 10); // Ensure it's a number
+    formik.setFieldValue('dataPackage', isNaN(selectedPackageId) ? null : selectedPackageId);
+  };
+  
+  
 
-  const handlePackageChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedPackage = e.target.value;
-    formik.setFieldValue('dataPackage', selectedPackage);
+  const [resultForEdit] = useState<Result>({
+    ...result,
+    result: result.result || initialResult.result,
+    data: result.data || initialResult.data,
+    dataPackage: result.dataPackage || '',
+    customerName: result.customerName || initialResult.customerName,
+    address: result.address || initialResult.address,
+    note: result.note || initialResult.note,
+    // subscriberNumber: result.subscriberNumber || initialCallResult.subscriberNumber,
+    revenue: result.revenue || initialResult.revenue,
+    dateToCall: result.dateToCall || initialResult.dateToCall,
+  })
+
+  // console.log('resultForEdit:', resultForEdit);
+
+  const cancel = (withRefresh?: boolean) => {
+    if (withRefresh) {
+      refetch()
+    }
+    setItemIdForUpdate(undefined)
   }
 
-  const formik = useFormik<Result>({
-    initialValues: initialResult,
+  const formik = useFormik({
     enableReinitialize: true,
-    validationSchema: resultSchema,
-    onSubmit: async (values, { setSubmitting }) => {
+    initialValues: resultForEdit,
+    validationSchema: editResultSchema,
+    onSubmit: async (values, {setSubmitting}) => {
       setSubmitting(true)
+      console.log(resultForEdit)
       try {
-        let response;
-        if (dataId) {
-          response = await createCallResult(values, dataId, date);
-          refetch();
-          localStorage.removeItem(`dataDetails_${currentUser?.id}`);
-          setDataDetails(undefined);
-          onClose()
-          toast.success('Gửi báo cáo thành công!')
+        if (values.id) {
+          let response;
+          if (typeof values.data.id === 'number') {
+            response = await createRehandleResult(values, values.data.id, values.dateToCall || '');
+            toast.success('Cập nhật kết quả thành công');
+            refetch();
+          } else {
+            toast.error('ID của dữ liệu không hợp lệ');
+          }
+          toast.success('Cập nhật kết quả thành công');
+          refetch()
+        } else {
+          toast.error('Không tìm thấy ID của kết quả cuộc gọi')
         }
-        else {
-          console.log('Data ID: ', dataId);
-          toast.error('Hãy lấy số trước khi gửi kết quả cuộc gọi!')
-        }
-      } catch (error) {
-        const errorMessage = (error as any).response?.data?.message || 'Gửi kết quả cuộc gọi thất bại!'
-        toast.error(errorMessage)
-        console.error('Có lỗi trong quá trình tạo kết quả cuộc gọi', errorMessage)
+      } catch (error: any) {
+        console.error('Error updating call result:', error);
+        const errorMessage = error.response?.data?.message || 'Cập nhật thất bại';
+        toast.error(errorMessage);
       } finally {
-        setSubmitting(false)
+        setSubmitting(true)
+        cancel(true)
       }
     },
   })
 
+  useEffect(() => {
+    if (result?.data?.id) {
+      console.log('Calling fetchPackages with data.id:', result.data.id);
+      fetchPackages(result.data.id);
+    }
+  }, [result?.data?.id]);
+  
+  useEffect(() => {
+    // Clear 'dateToCall' if result is not 5, 6, or 7
+    if (![5, 6, 7].includes(formik.values.result)) {
+      formik.setFieldValue('dateToCall', '');
+    }
+  }, [formik.values.result]);
+
   // Show call back field only if the call result case is 5, 6, 7
   const showCallbackDate = [5, 6, 7].includes(formik.values.result)
+  // console.log('Rendering ResultEditModalForm with:', { isUserLoading, result });
 
   return (
     <>
@@ -206,7 +257,7 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
 
             {/* begin::Package Selection */}
             <div className='fv-row mb-7'>
-              <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'PACKAGE' })}</label>
+              <label className='fw-bold fs-6 mb-2 required'>{intl.formatMessage({ id: 'PACKAGE' })}</label>
 
               <select
                 {...formik.getFieldProps('dataPackage')}
@@ -215,18 +266,21 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
                   { 'is-invalid': formik.touched.dataPackage && formik.errors.dataPackage },
                   { 'is-valid': formik.touched.dataPackage && !formik.errors.dataPackage }
                 )}
+                value={formik.values.dataPackage || ''} // Explicitly set the value to '' when not selected
                 onChange={handlePackageChange}
               >
-                <option value='' disabled>{intl.formatMessage({ id: 'CHOOSE_PACKAGE' })}</option>
+                <option value='' disabled>
+                  {intl.formatMessage({ id: 'CHOOSE_PACKAGE' })}
+                </option>
                 {isLoadingPackages ? (
-                  <option>Loading packages...</option>
+                  <option disabled>Loading packages...</option>
                 ) : (
                   packages.map((pack) => (
                     <option key={pack.id} value={pack.id}>
                       {pack.title}
                     </option>
-                  )))
-                }
+                  ))
+                )}
               </select>
               {formik.touched.dataPackage && formik.errors.dataPackage && (
                 <div className='fv-plugins-message-container'>
@@ -237,6 +291,7 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
               )}
             </div>
             {/* end::Package Selection */}
+
 
             <div className='fv-row mb-7'>
               <label className='fw-bold fs-6 mb-2'>{intl.formatMessage({ id: 'NOTE' })}</label>
@@ -270,11 +325,12 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
 
                 <input
                   placeholder='Ngày gọi lại'
+                  {...formik.getFieldProps('dateToCall')}
                   className='form-control form-control-solid mb-3 mb-lg-0'
                   type='date'
-                  value={date}
+                  value={formik.values.dateToCall || ''}
                   autoComplete='off'
-                  onChange={(e) => setDate(e.target.value)}
+                  onChange={(e) => formik.setFieldValue('dateToCall', e.target.value)}
                 />
               </div>
             )}
@@ -284,7 +340,7 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
 
           {/* begin::Actions */}
           <div className='text-center pt-5'>
-            <button type='button' onClick={onClose} className='btn btn-light me-3' disabled={formik.isSubmitting}>
+            <button type='button' onClick={() => cancel()} className='btn btn-light me-3' disabled={formik.isSubmitting}>
               {intl.formatMessage({ id: 'FORM.CANCEL' })}
             </button>
             <button
@@ -309,4 +365,4 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
   )
 }
 
-export { AddReportModalForm }
+export {RehandleModalForm}

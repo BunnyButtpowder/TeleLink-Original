@@ -42,9 +42,9 @@ const getAllPlaceOfIssues = (): Promise<any> => {
     .then((response: AxiosResponse<any>) => response.data);
 }
 
-const getDataByAgency = async (agencyId: ID): Promise<DataQueryResponse> => {
+const getDataByAgency = async (agencyId: ID, page?: number, limit?: number): Promise<DataQueryResponse> => {
   return axios
-    .get(`${API_URL}/data/agency`, { params: { agencyId } })
+    .get(`${API_URL}/data/agency`, { params: { agencyId, page, limit } })
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 }
 
@@ -163,6 +163,41 @@ const deleteSelectedData = (ids: ID[]): Promise<void> => {
   return axios.delete(`${API_URL}/data/many-delete`, { data: { ids } }).then(() => { });
 };
 
+const deleteManyData = async (filters: { networkName: string; createdAt: string }): Promise<void> => {
+  try {
+    const response = await axios.delete(`${API_URL}/data/many-delete`, {
+      data: filters,
+    });
+    console.log('Filtered data deleted successfully:', response.data);
+  } catch (error) {
+    console.error('Error deleting filtered data:', error);
+    throw error;
+  }
+};
+
+const exportSample = (): Promise<void> => {
+  return axios
+    .get(`${API_URL}/data/sample`, {
+      responseType: "blob", 
+      headers: {
+        Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+    })
+    .then((response: AxiosResponse<Blob>) => {
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "DataSample.xlsx"; 
+      link.click();
+    })
+    .catch((error) => {
+      console.error("Error exporting report:", error);
+      throw error;
+    });
+};
+
 export {
   importData,
   getAllData,
@@ -181,5 +216,7 @@ export {
   dataAssignAdminToSaleman,
   deleteSelectedData,
   getAllPlaceOfIssues,
-  getDataCategoriesByNetworks
+  getDataCategoriesByNetworks,
+  deleteManyData,
+  exportSample
 };

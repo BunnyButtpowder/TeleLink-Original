@@ -32,7 +32,7 @@ module.exports = {
                 return res.forbidden({ message: "Mật khẩu không đúng" });
             }
             if (!auth.isActive) {
-                return res.forbidden({ message: "Tài khoản chưa được actived" });
+                return res.forbidden({ message: "Tài khoản chưa được kích hoạt" });
             }
             const user = await User.findOne({ auth: auth.id });
             if (!user) {
