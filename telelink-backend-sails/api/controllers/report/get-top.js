@@ -1,11 +1,15 @@
 const { fail } = require("grunt");
 
 module.exports = {
-  friendlyName: "Get top 10 saleman of the month or all-time",
+  friendlyName: "Get top saleman of the month or all-time",
 
-  description: "Top 10 best selling salemans",
+  description: "Top best selling salemans",
 
   inputs: {
+    number: {
+      type: "number",
+      required: true,
+    },
     agencyId: {
       type: "string",
       required: false,
@@ -20,7 +24,7 @@ module.exports = {
 
   fn: async function (inputs) {
     let { res } = this;
-    let { agencyId, date } = inputs;
+    let { number, agencyId, date } = inputs;
 
     if (agencyId) {
       const AgencyExist = await Agency.findOne({ id: agencyId });
@@ -56,7 +60,7 @@ module.exports = {
       ($3 IS NULL OR result.createdAt < $3)
     GROUP BY saleman
     ORDER BY SUM(revenue) DESC
-    LIMIT 10
+    LIMIT $4
   `;
 
     // Execute the query
@@ -64,6 +68,7 @@ module.exports = {
       agencyId || null,
       startDate || null,
       endDate || null,
+      number
     ]);
 
     console.log(groupedResults.rows);
