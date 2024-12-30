@@ -2,6 +2,7 @@ import {ID, Response} from '../../../../../_metronic/helpers'
 import { Agency } from '../../../../modules/apps/user-management/users-list/core/_models'
 export type Data = {
   id?: ID
+  updatedAt?: number
   placeOfIssue ?: string
   networkName?: string
   category?: string

@@ -5,12 +5,23 @@ import { CustomersListHeader } from '../header/CustomersListHeader'
 import { Customer } from '../../core/_models'
 import { useQueryResponseData, useQueryResponseLoading } from '../../core/QueryResponseProvider'
 import { UsersListLoading } from '../loading/UsersListLoading'
+import { ToastContainer } from 'react-bootstrap'
 
 type Props = {
   className: string
   color: string
   img: string
 }
+
+const formatMoney = (value: string): string => {
+  if (!value) return 'N/A';
+  
+  // bo so thap phan
+  const integerPart = value.split('.')[0];
+  return integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
+
+
 
 const CustomerForm: FC<Props> = ({ className, color, img }) => {
   const customer = useQueryResponseData();
@@ -44,6 +55,8 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
   };
 
   return (
+    <>
+    <ToastContainer />
     <div className={`card ${className}`}>
       {/* begin::Body */}
       <div className='card-body p-0'>
@@ -152,8 +165,8 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                   <KTIcon iconName='abstract-26' className='text-primary fs-1 me-5' />
                 </span>
                 <div className='d-flex flex-column'>
-                  <span className='fw-bold text-gray-800 fs-5'>APRU 3 tháng:</span>
-                  <span className='text-gray-600'>{customerData.APRU3Months || 'N/A'}</span>
+                  <span className='fw-bold text-gray-800 fs-5'>APRU 4 tháng:</span>
+                  <span className='text-gray-600'>{formatMoney(customerData.APRU3Months || 'N/A')}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
@@ -162,7 +175,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Tiêu dùng n-1:</span>
-                  <span className='text-gray-600'>{customerData.usageMonth1 || 'N/A'}</span>
+                  <span className='text-gray-600'>{formatMoney(customerData.usageMonth1 || 'N/A')}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
@@ -171,7 +184,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Tiêu dùng n-2:</span>
-                  <span className='text-gray-600'>{customerData.usageMonth2 || 'N/A'}</span>
+                  <span className='text-gray-600'>{formatMoney(customerData.usageMonth2 || 'N/A')}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
@@ -180,7 +193,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Tiêu dùng n-3:</span>
-                  <span className='text-gray-600'>{customerData.usageMonth3 || 'N/A'}</span>
+                  <span className='text-gray-600'>{formatMoney(customerData.usageMonth3 || 'N/A')}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
@@ -189,7 +202,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Tiêu dùng n-4:</span>
-                  <span className='text-gray-600'>{customerData.usageMonth4 || 'N/A'}</span>
+                  <span className='text-gray-600'>{formatMoney(customerData.usageMonth4 || 'N/A')}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
@@ -198,7 +211,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Tiêu dùng TKC:</span>
-                  <span className='text-gray-600'>{customerData.totalTKCUsage || 'N/A'}</span>
+                  <span className='text-gray-600'>{formatMoney(customerData.totalTKCUsage || 'N/A')}</span>
                 </div>
               </div>
             </div>
@@ -209,7 +222,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>TKC:</span>
-                  <span className='text-gray-600'>{customerData.TKC || 'N/A'}</span>
+                  <span className='text-gray-600'>{formatMoney(customerData.TKC || 'N/A')}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
@@ -218,7 +231,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Tiêu dùng thoại:</span>
-                  <span className='text-gray-600'>{customerData.voiceUsage || 'N/A'}</span>
+                  <span className='text-gray-600'>{formatMoney(customerData.voiceUsage || 'N/A')}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
@@ -227,7 +240,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Tiêu dùng data:</span>
-                  <span className='text-gray-600'>{customerData.dataUsage || 'N/A'}</span>
+                  <span className='text-gray-600'>{formatMoney(customerData.dataUsage || 'N/A')}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
@@ -236,7 +249,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Dùng data ngoài gói:</span>
-                  <span className='text-gray-600'>{customerData.outOfPackageDataUsage || 'N/A'}</span>
+                  <span className='text-gray-600'>{formatMoney(customerData.outOfPackageDataUsage || 'N/A')}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
@@ -274,6 +287,8 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
       </div>
       {/* end::Body */}
     </div>
+    </>
+    
   )
 }
 

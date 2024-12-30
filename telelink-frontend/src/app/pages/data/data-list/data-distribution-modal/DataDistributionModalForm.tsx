@@ -26,10 +26,14 @@ const salesmanDataDistributionSchema = Yup.object().shape({
     .min(1, 'Số lượng phải lớn hơn hoặc bằng 1')
     .required('Vui lòng điền vào trường này'),
   agencyId: Yup.string().required('Vui lòng chọn chi nhánh'),
-  userId: Yup.string().required('Vui lòng chọn nhân viên'),
+  userIds: Yup.array()
+    .of(Yup.string().required('Vui lòng chọn nhân viên')) // Validate array of strings
+    .min(1, 'Vui lòng chọn ít nhất một nhân viên'), // Ensure at least one salesman is selected
   network: Yup.string().required('Vui lòng chọn nhà mạng'),
   category: Yup.string().required('Vui lòng chọn loại data'),
-})
+});
+
+
 
 interface DataDistributionModalFormProps {
   onClose: () => void;
@@ -94,23 +98,6 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
     }
   }
 
-  // const fetchCategories = async () => {
-  //   setIsLoadingCategories(true);
-  //   try {
-  //     if (isAdmin && networks) {
-  //       const categories = await getDataCategoriesByNetworks();
-  //       setCategories(categories);
-  //     } else {
-  //       const categories = await getCategoriesByAgency(agencyId?.toString() || '');
-  //       setCategories(categories);
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to fetch data categories:', error);
-  //   } finally {
-  //     setIsLoadingCategories(false);
-  //   }
-  // }
-
   // Fetch agencies only if logged in user is admin
   useEffect(() => {
     if (isAdmin) {
@@ -159,60 +146,58 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
     }
   };
 
-  // Update count when category changes
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCategory = e.target.value;
-    formik.setFieldValue('category', selectedCategory);
-    setSelectedCategoryCount(categories[selectedCategory]?.count || null);
-  }
 
-  const formik = useFormik({
-    initialValues: {
-      agencyId: agencyId || '',
-      userId: '',
-      quantity: '',
-      network: '',
-      category: '',
-    },
-    validationSchema: isAdmin && selectedTarget === 'agency' ? dataDistributionSchema : salesmanDataDistributionSchema,
-    onSubmit: async (values, { resetForm }) => {
-      setIsSubmitting(true);
-      try {
-        let response;
-        if (isAdmin && selectedTarget === 'agency') {
-          response = await dataAssignAgency(values);
-        } else if (isAdmin && selectedTarget === 'salesman') {
-          response = await dataAssignAdminToSaleman(values);
-        } else {
-          response = await dataAssignSalesman(values);
-        }
-
-        resetForm();
-        fetchNetworks();
-        // fetchCategories();
-        refetch();
-        onClose();
-        Swal.fire({
-          title: 'Dữ liệu',
-          text: 'Dữ liệu đã được phân bổ thành công',
-          icon: 'success',
-          timer: 5000,  
-          showConfirmButton: false,  
-          position: 'top-end',  
-          toast: true,  
-          timerProgressBar: true,  
-        });
-
-      } catch (error) {
-        const errorMessage = (error as any).response?.data?.message || 'Phân phối dữ liệu thất bại!';
-
-        console.error('Error distributing data:', errorMessage);
-        toast.error(errorMessage);
-      } finally {
-        setIsSubmitting(false);
+  // Update the formik initialization
+const formik = useFormik({
+  initialValues: {
+    agencyId: agencyId || '',
+    userIds: [], // Changed from userId to an array
+    quantity: '',
+    network: '',
+    category: '',
+  },
+  validationSchema: isAdmin && selectedTarget === 'agency' ? dataDistributionSchema : salesmanDataDistributionSchema,
+  onSubmit: async (values, { resetForm }) => {
+    setIsSubmitting(true);
+    try {
+      let response;
+      if (isAdmin && selectedTarget === 'agency') {
+        response = await dataAssignAgency(values);
+      } else if (isAdmin && selectedTarget === 'salesman') {
+        // Prepare the API payload
+        const payload = {
+          ...values,
+          userIds: values.userIds.map(Number), // Ensure userIds is an array of numbers
+        };
+        response = await dataAssignAdminToSaleman(payload); // Send the request with updated payload
+      } else {
+        response = await dataAssignSalesman(values);
       }
-    },
-  });
+
+      resetForm();
+      fetchNetworks();
+      refetch();
+      onClose();
+      Swal.fire({
+        title: 'Dữ liệu',
+        text: 'Dữ liệu đã được phân bổ thành công',
+        icon: 'success',
+        timer: 5000,
+        showConfirmButton: false,
+        position: 'top-end',
+        toast: true,
+        timerProgressBar: true,
+      });
+    } catch (error) {
+      const errorMessage = (error as any).response?.data?.message || 'Phân phối dữ liệu thất bại!';
+      console.error('Error distributing data:', errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  },
+});
+
 
 
   return (
@@ -303,23 +288,28 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
                 value: employee.id,
                 label: employee.fullName,
               }))}
-              onChange={(selectedOption) => {
-                formik.setFieldValue('userId', selectedOption?.value || '');
+              onChange={(selectedOptions) => {
+                formik.setFieldValue(
+                  'userIds',
+                  selectedOptions ? selectedOptions.map((option) => option.value) : []
+                );
               }}
+              isMulti={true} // Enable multiple selection
               isClearable
               isSearchable={true}
               placeholder={intl.formatMessage({ id: 'SELECT.SALESMAN' })}
               classNamePrefix="react-select"
             />
-            {formik.touched.userId && formik.errors.userId && (
+            {formik.touched.userIds && formik.errors.userIds && (
               <div className='fv-plugins-message-container'>
                 <div className="fv-help-block">
-                  <span role='alert'>{formik.errors.userId}</span>
+                  <span role='alert'>{formik.errors.userIds}</span>
                 </div>
               </div>
             )}
           </div>
         )}
+
 
           {/* Begin::Network Input */}
           <div className='fv-row mb-7'>

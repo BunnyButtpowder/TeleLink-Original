@@ -5,6 +5,48 @@ import { CallResult, CallResultQueryResponse } from "./_models";
 const API_URL = import.meta.env.VITE_APP_API_URL;
 const GET_ALL_RESULT_URL = `${API_URL}/result/getall`;
 
+const exportReport = (startDate?: string, endDate?: string): Promise<void> => {
+  let url = `${API_URL}/results/export`;
+  const params = new URLSearchParams();
+
+  if (startDate) {
+    params.append('startDate', startDate);
+  }
+  if (endDate) {
+    params.append('endDate', endDate);
+  }
+
+  if (params.toString()) {
+    url += `?${params.toString()}`;
+  }
+
+  return axios
+    .get(url, {
+      responseType: "blob", 
+      headers: {
+        Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+    })
+    .then((response: AxiosResponse<Blob>) => {
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      let fileName = "bao_cao_ket_qua_goi";
+      if (startDate && endDate) {
+        fileName += `_${startDate}_den_${endDate}`;
+      }
+      fileName += ".xlsx";
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName; 
+      link.click();
+    })
+    .catch((error) => {
+      console.error("Error exporting report:", error);
+      throw error;
+    });
+};
+
 const getAllCallResults = (params: {
   saleman?: number,
   agencyId?: number,
@@ -72,5 +114,6 @@ export {
   deleteSelectedUsers,
   getResultById,
   updateCallResult,
-  getPackagesByDataId
+  getPackagesByDataId,
+  exportReport,
 };
