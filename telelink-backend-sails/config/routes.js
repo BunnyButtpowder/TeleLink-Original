@@ -68,7 +68,7 @@ module.exports.routes = {
       await uploadedFile.mv(tempPath);
       console.log('File uploaded to: ', tempPath);
       const id = req.body.id;
-      return DataController.importData(req, res, tempPath , id);
+      return DataController.importData(req, res, tempPath, id);
     } catch (err) {
       console.error('Error during file upload: ', err);
       return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
@@ -76,7 +76,7 @@ module.exports.routes = {
   },
   'POST /import-blacklist': async (req, res) => {
     try {
-      
+
       if (!req.files || Object.keys(req.files).length === 0) {
         console.log('No files uploaded');
         return res.badRequest({ error: 'Không có tệp được tải lên' });
@@ -95,9 +95,9 @@ module.exports.routes = {
       console.error('Error during file upload: ', err);
       return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
     }
-  },'POST /import-package': async (req, res) => {
+  }, 'POST /import-package': async (req, res) => {
     try {
-      
+
       if (!req.files || Object.keys(req.files).length === 0) {
         console.log('No files uploaded');
         return res.badRequest({ error: 'Không có tệp được tải lên' });
@@ -117,5 +117,6 @@ module.exports.routes = {
       return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
     }
   },
-  'GET /api/reports/export': 'ReportController.exportReport'
+  'GET /api/reports/export': 'ReportController.exportReport',
+  'POST /api/result/export': 'ResultController.exportResults',
 };

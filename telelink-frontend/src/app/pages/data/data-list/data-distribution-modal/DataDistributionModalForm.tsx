@@ -196,11 +196,11 @@ const DataDistributionModalForm: FC<DataDistributionModalFormProps> = ({ onClose
           title: 'Dữ liệu',
           text: 'Dữ liệu đã được phân bổ thành công',
           icon: 'success',
-          timer: 5000,  // Thông báo tự động đóng sau 5 giây
-          showConfirmButton: false,  // Ẩn nút xác nhận
-          position: 'top-end',  // Đặt vị trí của modal ở góc trên bên phải
-          toast: true,  // Bật chế độ "toast"
-          timerProgressBar: true,  // Hiển thị thanh tiến trình
+          timer: 5000,  
+          showConfirmButton: false,  
+          position: 'top-end',  
+          toast: true,  
+          timerProgressBar: true,  
         });
 
       } catch (error) {
