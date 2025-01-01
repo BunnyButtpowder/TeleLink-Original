@@ -11,6 +11,8 @@
 
 module.exports.bootstrap = async function () {
   // require('dotenv').config();
+  const dataImportCron = require('../cron-job/data-import-cron');
+  dataImportCron.start();
   sails.services = require("include-all")({
     dirname: require("path").resolve("api/services"),
     filter: /(.+Service)\.js$/,
@@ -45,7 +47,7 @@ module.exports.bootstrap = async function () {
         phoneNumber: "0974009765",
         address: "Tây Mỗ, Hà Nội",
         dob: "2003-09-21",
-        
+
         avatar: "",
         gender: "male",
         dataType: "",
@@ -56,7 +58,7 @@ module.exports.bootstrap = async function () {
         phoneNumber: "0928911447",
         address: "Hoàn Kiếm, Hà Nội",
         dob: "2003-07-25",
-        
+
         avatar: "",
         gender: "male",
         dataType: "",
@@ -73,97 +75,97 @@ module.exports.bootstrap = async function () {
 
   if ((await Role.count()) == 0) {
     await Role.createEach([
-      {title: 'Admin', onlyViewCreateBy: false, permissions: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]},
-      {title: 'Agency', onlyViewCreateBy: false, permissions: [2,6,7,8,11,14,15,16]},
-      {title: 'Salesman', onlyViewCreateBy: false, permissions: [7,8]}
+      { title: 'Admin', onlyViewCreateBy: false, permissions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] },
+      { title: 'Agency', onlyViewCreateBy: false, permissions: [2, 6, 7, 8, 11, 14, 15, 16] },
+      { title: 'Salesman', onlyViewCreateBy: false, permissions: [7, 8] }
     ])
   }
 
-  if((await Permission.count()) == 0){
+  if ((await Permission.count()) == 0) {
     await Permission.createEach([
       {
-        "title" : "GetAllData",
-        "path" : "data/getall",
-        "method" : "GET"
+        "title": "GetAllData",
+        "path": "data/getall",
+        "method": "GET"
       },
       {
-        "title" : "GetAgencyData",
-        "path" : "data/agency",
-        "method" : "GET"
+        "title": "GetAgencyData",
+        "path": "data/agency",
+        "method": "GET"
       },
       {
-        "title" : "ImportData",
-        "path" : "import-data",
-        "method" : "POST"
+        "title": "ImportData",
+        "path": "import-data",
+        "method": "POST"
       },
       {
-        "title" : "GetAllPackages",
-        "path" : "packages/getall",
-        "method" : "GET"
+        "title": "GetAllPackages",
+        "path": "packages/getall",
+        "method": "GET"
       },
       {
-        "title" : "GetAllBlacklist",
-        "path" : "blacklists/getall",
-        "method" : "GET"
+        "title": "GetAllBlacklist",
+        "path": "blacklists/getall",
+        "method": "GET"
       },
       {
-        "title" : "GetAgencyBlacklist",
-        "path" : "blacklists/agency",
-        "method" : "GET"
+        "title": "GetAgencyBlacklist",
+        "path": "blacklists/agency",
+        "method": "GET"
       },
       {
-        "title" : "GetSalemanBlacklist",
-        "path" : "blacklists/salesman",
-        "method" : "GET"
+        "title": "GetSalemanBlacklist",
+        "path": "blacklists/salesman",
+        "method": "GET"
       },
       {
-        "title" : "GetAllCallResults",
-        "path" : "result/getall",
-        "method" : "GET"
+        "title": "GetAllCallResults",
+        "path": "result/getall",
+        "method": "GET"
       },
       {
-        "title" : "AssignDataAdminAgency",
-        "path" : "data-assign/agency",
-        "method" : "POST"
+        "title": "AssignDataAdminAgency",
+        "path": "data-assign/agency",
+        "method": "POST"
       },
       {
-        "title" : "AssignDataAdminSaleman",
-        "path" : "data-assign/admin-user",
-        "method" : "POST"
+        "title": "AssignDataAdminSaleman",
+        "path": "data-assign/admin-user",
+        "method": "POST"
       },
       {
-        "title" : "AssignDataAgencySaleman",
-        "path" : "data-assign/agency-user",
-        "method" : "POST"
+        "title": "AssignDataAgencySaleman",
+        "path": "data-assign/agency-user",
+        "method": "POST"
       },
       {
-        "title" : "CreatePackage",
-        "path" : "package",
-        "method" : "POST"
+        "title": "CreatePackage",
+        "path": "package",
+        "method": "POST"
       },
       {
-        "title" : "CreateAgency",
-        "path" : "users/create",
-        "method" : "POST"
+        "title": "CreateAgency",
+        "path": "users/create",
+        "method": "POST"
       },
       {
-        "title" : "CreateSalesman",
-        "path" : "users/saleman",
-        "method" : "POST"
+        "title": "CreateSalesman",
+        "path": "users/saleman",
+        "method": "POST"
       },
       {
-        "title" : "DeleteAccount/BanAccount",
-        "path" : "users/delete",
-        "method" : "DELETE"
+        "title": "DeleteAccount/BanAccount",
+        "path": "users/delete",
+        "method": "DELETE"
       },
       {
-        "title" : "ExportReport",
-        "path" : "export-report",
-        "method" : "GET"
+        "title": "ExportReport",
+        "path": "export-report",
+        "method": "GET"
       },
     ])
   }
-    
+
 
   // By convention, this is a good place to set up fake data during development.
   //
