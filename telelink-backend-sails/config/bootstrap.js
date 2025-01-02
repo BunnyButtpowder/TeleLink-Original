@@ -13,6 +13,8 @@ module.exports.bootstrap = async function () {
   // require('dotenv').config();
   const dataImportCron = require('../cron-job/data-import-cron');
   dataImportCron.start();
+  const packageImportCron = require('../cron-job/package-import-cron');
+  packageImportCron.start();
   sails.services = require("include-all")({
     dirname: require("path").resolve("api/services"),
     filter: /(.+Service)\.js$/,
