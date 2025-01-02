@@ -4,8 +4,6 @@ const fs = require('fs');
 
 const ImportPackage = require('../api/controllers/ImportPackage');
 
-
-
 module.exports = {
   start: function () {
     cron.schedule('* * * * *', async () => {
@@ -25,7 +23,7 @@ module.exports = {
           }
 
           await ImportPackage.importPackage(filePath, user);
-          await ScheduledData.update({ id }, { isProcessed: true });
+          await ScheduledPackage.update({ id }, { isProcessed: true });
         }
       } catch (err) {
         console.error('Lỗi trong quá trình xử lý lịch trình:', err.message);
