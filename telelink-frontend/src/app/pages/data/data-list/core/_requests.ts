@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_APP_API_URL;
 const USER_URL = `${API_URL}/user`;
 const GET_ALL_DATA_URL = `${API_URL}/data/getall`;
 
-const importData = async (file: File, onUploadProgress: (ProgressEvent: any) => void): Promise<any> => {
+const importData = async (file: File): Promise<any> => {
   const formData = new FormData();
   formData.append('file', file);
 
@@ -15,7 +15,24 @@ const importData = async (file: File, onUploadProgress: (ProgressEvent: any) => 
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      onUploadProgress,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error importing data', error);
+    throw error;
+  }
+};
+const importScheduledData = async (file: File, id: number, scheduledDate: string): Promise<any> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('id', id.toString());
+  formData.append('scheduledDate', scheduledDate);
+
+  try {
+    const response = await axios.post(`${API_URL}/schedule-import`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
     return response.data;
   } catch (error) {
@@ -218,5 +235,6 @@ export {
   getAllPlaceOfIssues,
   getDataCategoriesByNetworks,
   deleteManyData,
-  exportSample
+  exportSample,
+  importScheduledData
 };
