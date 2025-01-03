@@ -23,6 +23,25 @@ const importData = async (file: File, userID: string): Promise<any> => {
   }
 };
 
+const importScheduledData = async (file: File, id: number, scheduledDate: string): Promise<any> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('id', id.toString());
+  formData.append('scheduledDate', scheduledDate);
+
+  try {
+    const response = await axios.post(`${API_URL}/schedule-import-package`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error importing data', error);
+    throw error;
+  }
+};
+
 const getPackages = (params: {searchTerm?: string, sort?: string, order?: string, provider?: string, type?: string, page?: number, limit?: number}): Promise<PackageQueryResponse> => {
   return axios
     .get(`${API_URL}/packages/getall`, { params })
@@ -76,6 +95,12 @@ const updatePackage = async (pack: Package, token: string): Promise<Package | un
   }
 }
 
+const getAllScheduledFiles = (): Promise<any> => {
+  return axios
+    .get(`${API_URL}/schedule/getpackage`)
+    .then((response: AxiosResponse<any>) => response.data);
+}
+
 const deletePackage = (packageId: ID): Promise<void> => {
   return axios.delete(`${DELETE_PACKAGE_URL}${packageId}`).then(() => { });
 };
@@ -85,6 +110,10 @@ const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
   return axios.all(requests).then(() => { });
 };
 
+const deleteScheduledFile = (id: ID): Promise<void> => {
+  return axios.delete(`${API_URL}/schedule/deletepackage?id=${id}`).then(() => { });
+}
+
 export {
   getPackages,
   deletePackage,
@@ -92,5 +121,8 @@ export {
   getPackageById,
   createPackage,
   updatePackage,
-  importData
+  importData,
+  importScheduledData,
+  getAllScheduledFiles,
+  deleteScheduledFile
 };

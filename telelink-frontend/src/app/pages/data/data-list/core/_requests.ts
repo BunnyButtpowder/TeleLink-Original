@@ -47,6 +47,12 @@ const getAllData = (params?: {searchTerm?: string, sort?: string, order?: string
     .then((response: AxiosResponse<DataQueryResponse>) => response.data);
 };
 
+const getAllScheduledFiles = (): Promise<any> => {
+  return axios
+    .get(`${API_URL}/schedule/getdata`)
+    .then((response: AxiosResponse<any>) => response.data);
+}
+
 const getAllNetworks = (): Promise<any> => {
   return axios
     .get(`${API_URL}/data/network`)
@@ -192,6 +198,10 @@ const deleteManyData = async (filters: { networkName: string; createdAt: string 
   }
 };
 
+const deleteScheduledFile = (id: ID): Promise<void> => {
+  return axios.delete(`${API_URL}/schedule/deletedata?id=${id}`).then(() => { });
+}
+
 const exportSample = (): Promise<void> => {
   return axios
     .get(`${API_URL}/data/sample`, {
@@ -236,5 +246,7 @@ export {
   getDataCategoriesByNetworks,
   deleteManyData,
   exportSample,
-  importScheduledData
+  importScheduledData,
+  getAllScheduledFiles,
+  deleteScheduledFile
 };

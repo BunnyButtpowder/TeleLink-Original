@@ -12,11 +12,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useQueryResponse } from '../../core/QueryResponseProvider'
 import { useAuth } from '../../../../../../app/modules/auth'
 import { UploadDataModal } from '../../upload-data-modal/UploadDataModal'
+import { ManageScheduledModal } from '../../manage-scheduled-package-modal/ManageScheduledModal'
+
 const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRefresh: () => void }> = ({ onUploadComplete, onRefresh }) => {
   const intl = useIntl()
   const [isDistributionModalOpen, setDistributionModalOpen] = useState(false)
   const [isDeleteManyModalOpen, setDeleteManyModalOpen] = useState(false)
   const [isUploadModalOpen, setUploadModalOpen] = useState(false); // State for UploadDataModal
+  const [isManageScheduledModalOpen, setManageScheduledModalOpen] = useState(false); // State for ManageScheduledModal
 
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -81,6 +84,11 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
     setDeleteManyModalOpen(false);
     onRefresh();
   }
+  const openManageScheduledModal = () => {
+    setManageScheduledModalOpen(true);
+  }
+  const closeManageScheduledModal = () => {setManageScheduledModalOpen(false); refetch()};
+
 
   const handleExportExcel = async () => {
     try {
@@ -129,6 +137,10 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
               <KTIcon iconName="upload" className="fs-2" />
               Upload dữ liệu
             </button>
+            <button type="button" className="btn btn-light-primary me-3" onClick={openManageScheduledModal} >
+              <KTIcon iconName="upload" className="fs-2" />
+              Lịch upload
+            </button>
           </>
         )}
 
@@ -142,6 +154,8 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
       {isUploadModalOpen && <UploadDataModal onClose={closeUploadModal} />}
       {isDistributionModalOpen && <DataDistributionModal onClose={closeDataDistributionModal} />}
       {isDeleteManyModalOpen && <DeleteManyModal onClose={closeDeleteManyModal} />}
+      {isManageScheduledModalOpen && <ManageScheduledModal onClose={closeManageScheduledModal} />}
+
     </>
   )
 }
