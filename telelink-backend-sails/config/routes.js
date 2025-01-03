@@ -13,6 +13,7 @@ const DataController = require('../api/controllers/DataController');
 const PackageController = require('../api/controllers/PackageController');
 const scheduleImport = require('../api/controllers/scheduleImport');
 const schedulePackage = require('../api/controllers/schedulePackage');
+const fs = require('fs');
 
 
 module.exports.routes = {
@@ -130,7 +131,11 @@ module.exports.routes = {
 
       const uploadedFile = req.files.file;
       console.log(uploadedFile);
-      const tempPath = __dirname + '/tmp/' + uploadedFile.name;
+      const tempPath = __dirname + '/data/' + uploadedFile.name;
+      if (fs.existsSync(tempPath)) {
+        console.log('File already exists in the temp directory:', tempPath);
+        return res.badRequest({ error: 'Tệp đã tồn tại trong thư mục tạm.' });
+      }
       await uploadedFile.mv(tempPath);
       console.log('File uploaded to: ', tempPath);
       const id = req.body.id;
@@ -150,7 +155,11 @@ module.exports.routes = {
 
       const uploadedFile = req.files.file;
       console.log(uploadedFile);
-      const tempPath = __dirname + '/tmp/' + uploadedFile.name;
+      const tempPath = __dirname + '/packages/' + uploadedFile.name;
+      if (fs.existsSync(tempPath)) {
+        console.log('File already exists in the temp directory:', tempPath);
+        return res.badRequest({ error: 'Tệp đã tồn tại trong thư mục tạm.' });
+      }
       await uploadedFile.mv(tempPath);
       console.log('File uploaded to: ', tempPath);
       const id = req.body.id;
