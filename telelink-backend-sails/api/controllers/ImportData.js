@@ -18,7 +18,7 @@ function parseExcelDate(date) {
 }
 
 module.exports = {
-  importData: async function (req,res, filePath, id) {
+  importData1: async function ( filePath, id) {
     try {
       const workbook = XLSX.readFile(filePath);
       const sheetName = workbook.SheetNames[0];
@@ -169,16 +169,16 @@ module.exports = {
         fs.unlinkSync(filePath);
       }
 
-      return res.ok({
-        message: `Xử lý hoàn tất:  Đã xóa ${deleteResult.length} bản ghi cũ. Đã thêm mới ${createResult.length} bản ghi.`,
-        skippedRows,
-        blacklistedRows,
-      });
-      // console.log({
-      //   message: `Xử lý hoàn tất: Đã xóa ${deleteResult.length} bản ghi cũ. Đã thêm mới ${createResult.length} bản ghi.`,
+      // return res.ok({
+      //   message: `Xử lý hoàn tất:  Đã xóa ${deleteResult.length} bản ghi cũ. Đã thêm mới ${createResult.length} bản ghi.`,
       //   skippedRows,
       //   blacklistedRows,
       // });
+      console.log({
+        message: `Xử lý hoàn tất: Đã xóa ${deleteResult.length} bản ghi cũ. Đã thêm mới ${createResult.length} bản ghi.`,
+        skippedRows,
+        blacklistedRows,
+      });
     } catch (err) {
       console.error('Lỗi trong quá trình nhập dữ liệu:', err.message);
 
@@ -186,14 +186,14 @@ module.exports = {
         fs.unlinkSync(filePath);
       }
 
-      return res.serverError({
-        message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.',
-        error: err.message,
-      });
-      // console.error({
+      // return res.serverError({
       //   message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.',
       //   error: err.message,
       // });
+      console.error({
+        message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.',
+        error: err.message,
+      });
     }
   },
 };
