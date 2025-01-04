@@ -58,45 +58,61 @@ module.exports = {
     let rawQuery, groupedResults;
 
     rawQuery = `
-        SELECT 
-          agency,
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000)) AS year,
-          WEEK(FROM_UNIXTIME(r.createdAt / 1000)) AS week, 
-          SUM(revenue) AS total_revenue,
-          a.name
-      FROM 
-          result r join agency a on r.agency = a.id
-      Where
-        r.createdAt > $1 AND r.createdAt < $2
-      GROUP BY 
-          r.agency, 
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000)),
-          WEEK(FROM_UNIXTIME(r.createdAt / 1000))
-      ORDER BY 
-          r.agency, 
-          year, 
-          week;
+    WITH RECURSIVE weeks AS (
+    SELECT YEAR(FROM_UNIXTIME(${startDate} / 1000)) AS year, WEEK(FROM_UNIXTIME(${startDate} / 1000), 3) AS week
+    UNION ALL
+    SELECT 
+      CASE WHEN week < 52 THEN year ELSE year + 1 END,
+      CASE WHEN week < 52 THEN week + 1 ELSE 1 END
+    FROM weeks
+    WHERE (year < YEAR(FROM_UNIXTIME(${endDate} / 1000))) OR (year = YEAR(FROM_UNIXTIME(${endDate} / 1000)) AND week < WEEK(FROM_UNIXTIME(${endDate} / 1000), 3))
+    LIMIT 1000
+  )
+  SELECT 
+    w.year,
+    w.week,
+    COALESCE(SUM(r.revenue), 0) AS total_revenue
+  FROM 
+    weeks w
+    LEFT JOIN result r ON YEAR(FROM_UNIXTIME(r.createdAt / 1000)) = w.year AND WEEK(FROM_UNIXTIME(r.createdAt / 1000), 3) = w.week
+  WHERE
+    r.createdAt IS NULL OR (r.createdAt > $1 AND r.createdAt < $2)
+  GROUP BY 
+    w.year, 
+    w.week
+  ORDER BY 
+    w.year, 
+    w.week;
         `;
     if (agencyId) {
       rawQuery = `
-        SELECT 
-          agency,
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000)) AS year,
-          WEEK(FROM_UNIXTIME(r.createdAt / 1000)) AS week, 
-          SUM(revenue) AS total_revenue,
-          a.name
-      FROM 
-          result r join agency a on r.agency = a.id
-      Where
-        r.agency = $1 AND r.createdAt > $2 AND r.createdAt < $3
-      GROUP BY 
-          r.agency, 
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000)), 
-          WEEK(FROM_UNIXTIME(r.createdAt / 1000))
-      ORDER BY 
-          r.agency, 
-          year, 
-          week;
+    WITH RECURSIVE weeks AS (
+      SELECT YEAR(FROM_UNIXTIME(${startDate} / 1000)) AS year, WEEK(FROM_UNIXTIME(${startDate} / 1000), 3) AS week
+      UNION ALL
+      SELECT 
+        CASE WHEN week < 52 THEN year ELSE year + 1 END,
+        CASE WHEN week < 52 THEN week + 1 ELSE 1 END
+      FROM weeks
+      WHERE (year < YEAR(FROM_UNIXTIME(${endDate} / 1000))) OR (year = YEAR(FROM_UNIXTIME(${endDate} / 1000)) AND week < WEEK(FROM_UNIXTIME(${endDate} / 1000), 3))
+      LIMIT 1000
+    )
+    SELECT 
+      w.year,
+      w.week,
+      COALESCE(SUM(r.revenue), 0) AS total_revenue
+    FROM 
+      weeks w
+      LEFT JOIN result r ON YEAR(FROM_UNIXTIME(r.createdAt / 1000)) = w.year AND WEEK(FROM_UNIXTIME(r.createdAt / 1000), 3) = w.week
+      LEFT JOIN agency a ON r.agency = a.id
+    WHERE
+      (r.agency = $1 AND r.createdAt > $2 AND r.createdAt < $3) OR r.createdAt IS NULL
+    GROUP BY 
+      w.year, 
+      w.week,
+      a.name
+    ORDER BY 
+      w.year, 
+      w.week;
         `;
       groupedResults = await sails.sendNativeQuery(rawQuery, [
         agencyId,

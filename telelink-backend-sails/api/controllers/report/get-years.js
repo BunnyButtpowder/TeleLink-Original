@@ -43,9 +43,9 @@ module.exports = {
       )
     );
 
-    const oneYearAgo = new Date(
+    const fiveYearAgo = new Date(
       Date.UTC(
-        now.getUTCFullYear() - 5,
+        now.getUTCFullYear() - 4,
         now.getUTCMonth(),
         now.getUTCDate(),
         0,
@@ -53,44 +53,56 @@ module.exports = {
         0
       )
     );
-    startDate = Date.parse(oneYearAgo);
+    startDate = Date.parse(fiveYearAgo);
 
     let rawQuery, groupedResults;
 
     rawQuery = `
-        SELECT 
-          agency,
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000)) AS year,
-          SUM(revenue) AS total_revenue,
-          a.name
+      WITH RECURSIVE years AS (
+        SELECT YEAR(FROM_UNIXTIME(${startDate} / 1000)) AS year
+        UNION ALL
+        SELECT year + 1
+        FROM years
+        WHERE year < YEAR(FROM_UNIXTIME(${endDate} / 1000))
+      )
+      SELECT 
+        y.year,
+        COALESCE(SUM(r.revenue), 0) AS total_revenue
       FROM 
-          result r join agency a on r.agency = a.id
-      Where
-        r.createdAt > $1 AND r.createdAt < $2
+        years y
+        LEFT JOIN result r ON YEAR(FROM_UNIXTIME(r.createdAt / 1000)) = y.year
+        LEFT JOIN agency a ON r.agency = a.id
+      WHERE
+        r.createdAt IS NULL OR (r.createdAt > $1 AND r.createdAt < $2)
       GROUP BY 
-          r.agency, 
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000))
+        y.year,
+        a.name
       ORDER BY 
-          r.agency, 
-          year;
+        y.year;
         `;
     if (agencyId) {
       rawQuery = `
+      WITH RECURSIVE years AS (
+          SELECT YEAR(FROM_UNIXTIME(${startDate} / 1000)) AS year
+          UNION ALL
+          SELECT year + 1
+          FROM years
+          WHERE year < YEAR(FROM_UNIXTIME(${endDate} / 1000))
+        )
         SELECT 
-          agency,
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000)) AS year,
-          SUM(revenue) AS total_revenue,
+          y.year,
+          COALESCE(SUM(r.revenue), 0) AS total_revenue
+        FROM 
+          years y
+          LEFT JOIN result r ON YEAR(FROM_UNIXTIME(r.createdAt / 1000)) = y.year
+          LEFT JOIN agency a ON r.agency = a.id
+        WHERE
+          (r.agency = $1 AND r.createdAt > $2 AND r.createdAt < $3) OR r.createdAt IS NULL
+        GROUP BY 
+          y.year,
           a.name
-      FROM 
-          result r join agency a on r.agency = a.id
-      Where
-        r.agency = $1 AND r.createdAt > $2 AND r.createdAt < $3
-      GROUP BY 
-          r.agency, 
-          YEAR(FROM_UNIXTIME(r.createdAt / 1000))
-      ORDER BY 
-          r.agency, 
-          year;
+        ORDER BY 
+          y.year;
         `;
       groupedResults = await sails.sendNativeQuery(rawQuery, [
         agencyId,
