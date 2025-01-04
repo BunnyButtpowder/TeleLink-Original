@@ -20,11 +20,25 @@ const getAllRevenue = (params: {
 };
 
 const getTop10Salesmen = async (params?: {
+  number: number,
   date?: string,
   agencyId?: number
 }) => {
   try {
     const response = await axios.get(`${REVENUE_URL}/get-top`, { params });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch top 10 salesmen:", error);
+    throw error;
+  }
+}
+
+const getTop10Agencies = async (params?: {
+  top: number,
+  date?: string,
+}) => {
+  try {
+    const response = await axios.get(`${REVENUE_URL}/get-top-agency`, { params });
     return response.data;
   } catch (error) {
     console.error("Failed to fetch top 10 salesmen:", error);
@@ -93,5 +107,6 @@ export {
   createUser,
   updateUser,
   getTop10Salesmen,
+  getTop10Agencies,
   exportReport
 };

@@ -21,7 +21,7 @@ const CustomersListToolbar = () => {
   const { setDataDetails } = useQueryResponse();
   const [cooldown, setCooldown] = useState(false);
   const salesmanId = currentUser?.id;
-  const COOLDOWN_TIME = 15000;
+  const COOLDOWN_TIME = 10000;
 
   const getRemainingCooldown = (): number => {
     const savedTimestamp = localStorage.getItem(`cooldown_${salesmanId}`);

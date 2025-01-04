@@ -10,6 +10,7 @@ type Props = {
   stats: number
   labelColor: string
   textColor: string
+  topSalesmen: Salesman[]
 }
 
 type Salesman = {
@@ -17,25 +18,10 @@ type Salesman = {
   avatar?: string
   "Total revenue"?: number
   saleman: number
-  agency: number
+  agency: string
 }
 
-const CardsWidget7 = ({ className, description, stats, labelColor, textColor }: Props) => {
-  const [topSalesmen, setTopSalesmen] = useState<Salesman[]>([])
-
-  useEffect(() => {
-    const fetchTopSalesmen = async () => {
-      try {
-        const response = await getTop10Salesmen()
-        setTopSalesmen(response.data)
-      } catch (error) {
-        console.error('Error fetching top salesmen:', error)
-      }
-    }
-
-    fetchTopSalesmen()
-  }, [])
-
+const CardsWidget7 = ({ className, description, stats, labelColor, textColor, topSalesmen }: Props) => {
   return (
     <div className={`card card-flush ${className}`}>
       <div className="card-header pt-5">

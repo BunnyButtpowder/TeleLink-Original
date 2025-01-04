@@ -321,8 +321,6 @@ const ProfileDetails: FC = () => {
           </div>
         </form>
       </div>
-      <ToastContainer position="top-right" autoClose={5000} />
-
     </div>
   );
 };

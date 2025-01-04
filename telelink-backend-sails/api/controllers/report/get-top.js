@@ -51,14 +51,15 @@ module.exports = {
 
     let rawQuery, groupedResults;
     rawQuery = `
-    SELECT SUM(revenue) as 'Total revenue', saleman, user.fullname, user.agency, user.avatar
+    SELECT SUM(revenue) as 'Total revenue', saleman, user.fullname, user.avatar, agency.name as agency
     FROM result
     JOIN user ON saleman = user.id
+    LEFT JOIN agency ON user.agency = agency.id
     WHERE 
       ($1 IS NULL OR result.agency = $1) AND 
       ($2 IS NULL OR result.createdAt > $2) AND 
       ($3 IS NULL OR result.createdAt < $3)
-    GROUP BY saleman
+    GROUP BY saleman, agency.name
     ORDER BY SUM(revenue) DESC
     LIMIT $4
   `;

@@ -3,9 +3,11 @@ import { KTIcon, toAbsoluteUrl } from '../../../../helpers'
 import { SidebarMenuItemWithSub } from './SidebarMenuItemWithSub'
 import { SidebarMenuItem } from './SidebarMenuItem'
 import { useAuth } from '../../../../../app/modules/auth'
+import { usePermissions } from '../../../../../app/pages/permission/context/PermissionsContext'
 
 const SidebarMenuMain = () => {
   const intl = useIntl()
+  const { permissions } = usePermissions()
   const { currentUser } = useAuth()
   const userRole = currentUser?.auth.role
 
@@ -23,12 +25,15 @@ const SidebarMenuMain = () => {
             title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
             fontIcon='bi-app-indicator'
           />
-          <SidebarMenuItem
-            to='/data'
-            icon='wifi-square'
-            title={intl.formatMessage({ id: 'DATA' })}
-            fontIcon='bi-app-indicator'
-          />
+          {permissions.includes(1) || permissions.includes(2) ? (
+            <SidebarMenuItem
+              to='/data'
+              icon='wifi-square'
+              title={intl.formatMessage({ id: 'DATA' })}
+              fontIcon='bi-app-indicator'
+            />
+          ) : null}
+
           <SidebarMenuItem
             to='/packages'
             icon='ocean'
@@ -160,12 +165,14 @@ const SidebarMenuMain = () => {
             title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
             fontIcon='bi-app-indicator'
           />
-          <SidebarMenuItem
-            to='/data'
-            icon='wifi-square'
-            title={intl.formatMessage({ id: 'DATA' })}
-            fontIcon='bi-app-indicator'
-          />
+          {/* { permissions.includes(2) ? ( */}
+            <SidebarMenuItem
+              to='/data'
+              icon='wifi-square'
+              title={intl.formatMessage({ id: 'DATA' })}
+              fontIcon='bi-app-indicator'
+            />
+          {/* ) : null} */}
 
           <SidebarMenuItem
             to='/blacklist'
@@ -213,6 +220,12 @@ const SidebarMenuMain = () => {
       {/* Salesman access */}
       {userRole === 3 && (
         <>
+          <SidebarMenuItem
+            to='/dashboard'
+            icon='element-11'
+            title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
+            fontIcon='bi-app-indicator'
+          />
           <SidebarMenuItem
             to='/customers'
             icon='profile-user'
