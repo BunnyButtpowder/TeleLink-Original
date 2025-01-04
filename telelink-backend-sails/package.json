@@ -8,6 +8,7 @@
     "@sailshq/lodash": "^3.10.3",
     "array-query": "^0.2.2",
     "bcrypt": "^5.1.1",
+    "cron": "^3.3.2",
     "dotenv": "^16.4.5",
     "exceljs": "^4.4.0",
     "express-fileupload": "^1.5.1",
