@@ -9,7 +9,7 @@ module.exports = {
       model: 'data',
       required: true,
     },
-    subcriberNumber: {
+    subscriberNumber: {
       type: 'string',
       allowNull:true
     },

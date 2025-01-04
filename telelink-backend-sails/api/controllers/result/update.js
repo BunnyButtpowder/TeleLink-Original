@@ -88,6 +88,7 @@ module.exports = {
             data: existingResult.data_id,
             subscriberNumber: existingResult.subscriberNumber,
             customerName,
+            address: address,
             complete: false,
             latestResult: result,
             dateToCall,

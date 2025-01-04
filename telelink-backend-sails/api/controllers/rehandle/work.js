@@ -127,6 +127,7 @@ module.exports = {
             data: dataId,
             subscriberNumber: data.subscriberNumber,
             customerName,
+            address: address,
             complete: false,
             latestResult: result,
             dateToCall: date,
