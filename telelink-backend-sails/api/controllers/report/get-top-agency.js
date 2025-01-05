@@ -32,9 +32,15 @@ module.exports = {
 
     let rawQuery, groupedResults;
     rawQuery = `
-    SELECT SUM(revenue) as 'Total revenue', agency.name
+    SELECT SUM(revenue) as 'Total revenue', agency.name, agency.avatar
     FROM result
-    JOIN agency on result.agency = agency.id
+    JOIN (SELECT 
+      a.id as id, name, avatar
+      FROM user u 
+      join agency a on u.agency = a.id
+      join auth au on u.auth = au.id
+      WHERE au.role = 2
+    ) as agency ON result.agency = agency.id
     WHERE 
       ($1 IS NULL OR result.createdAt > $1) AND 
       ($2 IS NULL OR result.createdAt < $2)

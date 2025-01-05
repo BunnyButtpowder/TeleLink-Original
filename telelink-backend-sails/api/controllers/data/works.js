@@ -126,6 +126,7 @@ module.exports = {
             user: userId,
             data: dataId,
             subscriberNumber: data.subscriberNumber,
+            address: address,
             customerName,
             complete: false,
             latestResult: result,
