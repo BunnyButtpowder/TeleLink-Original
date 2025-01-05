@@ -12,11 +12,19 @@ type Props = {
 };
 
 const UploadDataSchema = Yup.object().shape({
-  scheduledDate: Yup.string().when('type', (type, schema) => {
-    return type[0] === 'scheduled'
-      ? schema.required('Vui lòng chọn ngày!')
-      : schema.notRequired();
-  }),
+  scheduledDate: Yup.string()
+    .when('type', (type, schema) => {
+      return type[0] === 'scheduled'
+        ? schema
+            .required('Vui lòng chọn ngày!')
+            .test('is-future-date', 'Ngày phải từ ngày mai trở đi!', (value) => {
+              const tomorrow = new Date();
+              tomorrow.setDate(tomorrow.getDate() + 1);
+              tomorrow.setHours(0, 0, 0, 0);
+              return value ? new Date(value) >= tomorrow : true;
+            })
+        : schema.notRequired();
+    }),
   file: Yup.mixed()
     .required('Vui lòng tải lên tệp!')
     .test('fileType', 'Chỉ chấp nhận tệp định dạng Excel!', (value) => {
@@ -28,6 +36,7 @@ const UploadDataSchema = Yup.object().shape({
       );
     }),
 });
+
 
 const UploadDataModalForm: FC<Props> = ({ onClose }) => {
   const { currentUser } = useAuth();
@@ -46,30 +55,30 @@ const UploadDataModalForm: FC<Props> = ({ onClose }) => {
       setSubmitting(true);
       try {
         const userId = currentUser?.id;
-
+    
         if (!userId) {
           toast.error('Người dùng chưa đăng nhập!');
           return;
         }
-
+    
         if (values.type === 'scheduled') {
           await importScheduledData(values.file!, userId, values.scheduledDate);
         } else {
           await importData(values.file!, currentUser?.id.toString());
         }
-
+    
         refetch();
         toast.success('Tải lên dữ liệu thành công!');
         onClose();
       } catch (error) {
         const errorMessage =
-          (error as any)?.response?.data?.message || 'Tải lên dữ liệu thất bại!';
+          (error as any)?.response?.data?.error || 'Tải lên dữ liệu thất bại!';
         toast.error(errorMessage);
         console.error('Error uploading data:', errorMessage);
       } finally {
         setSubmitting(false);
       }
-    },
+    },    
   });
 
   return (
@@ -148,7 +157,9 @@ const UploadDataModalForm: FC<Props> = ({ onClose }) => {
                 }`}
                 autoComplete="off"
                 disabled={uploadFormik.isSubmitting}
+                min={new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]}
               />
+
               {uploadFormik.touched.scheduledDate && uploadFormik.errors.scheduledDate && (
                 <div className="fv-plugins-message-container">
                   <div className="fv-help-block">
