@@ -14,7 +14,14 @@ type Props = {
 const UploadDataSchema = Yup.object().shape({
   scheduledDate: Yup.string().when('type', (type, schema) => {
     return type[0] === 'scheduled'
-      ? schema.required('Vui lòng chọn ngày!')
+      ? schema
+          .required('Vui lòng chọn ngày!')
+          .test('is-future-date', 'Ngày phải từ ngày mai trở đi!', (value) => {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+            return value ? new Date(value) >= tomorrow : true;
+          })
       : schema.notRequired();
   }),
   file: Yup.mixed()
@@ -32,7 +39,7 @@ const UploadDataSchema = Yup.object().shape({
 const UploadDataModalForm: FC<Props> = ({ onClose }) => {
   const { currentUser } = useAuth();
   const { refetch } = useQueryResponse();
-  const [uploadType, setUploadType] = useState('normal'); // Default to 'normal'
+  const [uploadType, setUploadType] = useState('normal');
 
   const uploadFormik = useFormik({
     initialValues: {
@@ -63,7 +70,7 @@ const UploadDataModalForm: FC<Props> = ({ onClose }) => {
         onClose();
       } catch (error) {
         const errorMessage =
-          (error as any)?.response?.data?.message || 'Tải lên dữ liệu thất bại!';
+          (error as any)?.response?.data?.error || 'Tải lên dữ liệu thất bại!';
         toast.error(errorMessage);
         console.error('Error uploading data:', errorMessage);
       } finally {
@@ -130,34 +137,32 @@ const UploadDataModalForm: FC<Props> = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Input Group: Scheduled Date and ID (Conditional) */}
+        {/* Input Group: Scheduled Date (Conditional) */}
         {uploadType === 'scheduled' && (
-          <>
-
-            <div className="fv-row mb-7">
-              <label className="required fw-bold fs-6 mb-2">Ngày tạo</label>
-              <input
-                placeholder="Ngày tạo (YYYY-MM-DD)"
-                {...uploadFormik.getFieldProps('scheduledDate')}
-                type="date"
-                name="scheduledDate"
-                className={`form-control form-control-solid ${
-                  uploadFormik.touched.scheduledDate && uploadFormik.errors.scheduledDate
-                    ? 'is-invalid'
-                    : 'is-valid'
-                }`}
-                autoComplete="off"
-                disabled={uploadFormik.isSubmitting}
-              />
-              {uploadFormik.touched.scheduledDate && uploadFormik.errors.scheduledDate && (
-                <div className="fv-plugins-message-container">
-                  <div className="fv-help-block">
-                    <span role="alert">{uploadFormik.errors.scheduledDate}</span>
-                  </div>
+          <div className="fv-row mb-7">
+            <label className="required fw-bold fs-6 mb-2">Ngày tạo</label>
+            <input
+              placeholder="Ngày tạo (YYYY-MM-DD)"
+              {...uploadFormik.getFieldProps('scheduledDate')}
+              type="date"
+              name="scheduledDate"
+              className={`form-control form-control-solid ${
+                uploadFormik.touched.scheduledDate && uploadFormik.errors.scheduledDate
+                  ? 'is-invalid'
+                  : 'is-valid'
+              }`}
+              autoComplete="off"
+              disabled={uploadFormik.isSubmitting}
+              min={new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]} 
+            />
+            {uploadFormik.touched.scheduledDate && uploadFormik.errors.scheduledDate && (
+              <div className="fv-plugins-message-container">
+                <div className="fv-help-block">
+                  <span role="alert">{uploadFormik.errors.scheduledDate}</span>
                 </div>
-              )}
-            </div>
-          </>
+              </div>
+            )}
+          </div>
         )}
 
         {/* File Input */}
