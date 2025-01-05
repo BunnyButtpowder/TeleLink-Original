@@ -1,4 +1,4 @@
-const { fail } = require("grunt");
+const { fail, log } = require("grunt");
 
 module.exports = {
   friendlyName: "Get revenue report by months",
@@ -21,7 +21,7 @@ module.exports = {
   fn: async function (inputs) {
     let { res } = this;
     let { agencyId, date } = inputs;
-    const year = parseInt(date); 
+    let year = parseInt(date); 
 
     if (agencyId) {
       const AgencyExist = await Agency.findOne({ id: agencyId });
@@ -62,12 +62,13 @@ module.exports = {
         )
       );
       startDate = Date.parse(oneYearAgo);
+      year = now.getFullYear();
     } else {
       
       startDate = Date.parse(new Date(Date.UTC(year, 0, 1, 0, 0, 0))); 
       endDate = Date.parse(new Date(Date.UTC(year, 11, 31, 23, 59, 59)));
     }
-
+    
     let rawQuery, groupedResults;
 
     rawQuery = `
