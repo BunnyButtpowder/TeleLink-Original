@@ -25,7 +25,8 @@ module.exports = {
                 'magoi': 'title',
                 'nhamang': 'provider',
                 'loaihinh': 'type',
-                'giagoi': 'price'
+                'giagoi': 'price',
+                'uudai': 'discount'
             };
 
             const headerIndexes = {};
@@ -81,6 +82,7 @@ module.exports = {
                     provider: row[headerIndexes['provider']] || '',
                     type: row[headerIndexes['type']] || '',
                     price: price,
+                    discount: row[headerIndexes['discount']] || '',
                     user: id
                 });
             }
