@@ -11,11 +11,11 @@ module.exports = {
             // Hàm chuẩn hóa chuỗi
             function normalizeString(str) {
                 return str
-                    .normalize('NFD')
-                    .replace(/[\u0300-\u036f]/g, '')
-                    .replace(/\s+/g, '')
-                    .replace(/đ/g, 'd')
-                    .toLowerCase();
+                    ?.normalize('NFD')
+                    ?.replace(/[\u0300-\u036f]/g, '')
+                    ?.replace(/\s+/g, '')
+                    ?.replace(/đ/g, 'd')
+                    ?.toLowerCase();
             }
 
             const headers = worksheet[0].map(header => normalizeString(header));
@@ -33,19 +33,19 @@ module.exports = {
             const missingColumns = [];
             for (const [normalizedHeader, field] of Object.entries(columnMapping)) {
                 const index = headers.indexOf(normalizeString(normalizedHeader));
-                if (index !== -1) {
-                    headerIndexes[field] = index;
-                } else {
+                if (index === -1) {
                     missingColumns.push(normalizedHeader);
+                } else {
+                    headerIndexes[field] = index;
                 }
             }
 
             if (missingColumns.length > 0) {
-                return res.badRequest({ message: `Không tìm thấy cột cho trường: ${missingColumns.join(', ')}` });
+                throw new Error(`Không tìm thấy cột cho trường: ${missingColumns.join(', ')}`);
             }
 
             // Loại bỏ các dòng trống
-            const cleanedWorksheet = worksheet.slice(1).filter((row) => 
+            const cleanedWorksheet = worksheet.slice(1).filter((row) =>
                 row.some((cell) => cell && cell.toString().trim() !== '')
             );
 
@@ -53,16 +53,18 @@ module.exports = {
             console.log(`Tổng số dòng sau khi loại bỏ dòng trống: ${cleanedWorksheet.length}`);
 
             if (cleanedWorksheet.length === 0) {
-                return res.badRequest({ message: "Không có dữ liệu hợp lệ sau khi loại bỏ các dòng trống." });
+                throw new Error("Không có dữ liệu hợp lệ sau khi loại bỏ các dòng trống.");
             }
 
-            // Xử lý từng dòng dữ liệu
+            const validData = [];
+            const skippedRows = [];
+
             for (let i = 0; i < cleanedWorksheet.length; i++) {
                 const row = cleanedWorksheet[i];
                 const title = row[headerIndexes['title']] || '';
 
                 if (!title) {
-                    console.log(`Bỏ qua dòng ${i + 2} vì không có tên gói.`);
+                    skippedRows.push(i + 2); // Dòng bị bỏ qua
                     continue;
                 }
 
@@ -74,10 +76,10 @@ module.exports = {
                 }
 
                 let price = row[headerIndexes['price']] || '0';
-                price = String(price).replace(/,/g, '');  // Xóa dấu phẩy
+                price = String(price).replace(/,/g, ''); 
                 price = parseFloat(price);
 
-                await Package.create({
+                validData.push({
                     title: title,
                     provider: row[headerIndexes['provider']] || '',
                     type: row[headerIndexes['type']] || '',
@@ -87,19 +89,32 @@ module.exports = {
                 });
             }
 
-            // Xóa file đã tải lên sau khi xử lý xong
+            if (validData.length === 0) {
+                throw new Error("Không có dữ liệu hợp lệ để nhập.");
+            }
+
+            // Tạo dữ liệu mới
+            const createResult = await Package.createEach(validData).fetch();
+
+            // Xóa file sau khi xử lý xong
             if (fs.existsSync(filePath)) {
                 fs.unlinkSync(filePath);
             }
 
-            return res.ok({ message: 'Dữ liệu packages được nhập thành công' });
+            return res.ok({
+                message: `Xử lý hoàn tất: Đã thêm mới ${createResult.length} bản ghi.`,
+                skippedRows,
+            });
 
         } catch (err) {
             if (fs.existsSync(filePath)) {
                 fs.unlinkSync(filePath);
             }
-            console.log(err);
-            return res.serverError({ message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu packages.', err });
+            console.error('Lỗi trong quá trình nhập dữ liệu packages:', err.message);
+            return res.serverError({
+                message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu packages.',
+                error: err.message,
+            });
         }
     },
 };
