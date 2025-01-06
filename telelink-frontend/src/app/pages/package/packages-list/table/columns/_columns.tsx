@@ -45,10 +45,18 @@ const usersColumns: ReadonlyArray<Column<Package>> = [
     },
   },
   {
-    Header: (props) => <PackageCustomHeader tableProps={props} title='Thời điểm tạo' className='min-w-125px' />,
-    accessor: 'createdAt',
+    Header: (props) => <PackageCustomHeader tableProps={props} title='Ưu đãi' className='min-w-125px' />,
+    accessor: 'discount',
     Cell: ({ ...props }) => {
-      const timestamp = props.data[props.row.index].createdAt;
+      const discount = props.data[props.row.index].discount;
+      return <span>{discount}</span>;
+    },
+  },
+  {
+    Header: (props) => <PackageCustomHeader tableProps={props} title='Thời gian cập nhật' className='min-w-125px' />,
+    accessor: 'updatedAt',
+    Cell: ({ ...props }) => {
+      const timestamp = props.data[props.row.index].updatedAt;
 
       if (timestamp) {
         const date = new Date(timestamp);
