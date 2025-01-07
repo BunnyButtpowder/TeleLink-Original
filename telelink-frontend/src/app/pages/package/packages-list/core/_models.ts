@@ -7,6 +7,8 @@ export type Package = {
   type?: string
   price?: number
   createdAt?: number
+  updatedAt?: number
+  discount?: string
 }
 
 export type ScheduledFile = {
