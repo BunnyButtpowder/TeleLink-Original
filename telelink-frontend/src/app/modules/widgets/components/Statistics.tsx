@@ -1,4 +1,4 @@
-import {FC} from 'react'
+import { FC } from 'react'
 import {
   StatisticsWidget1,
   StatisticsWidget2,
@@ -160,6 +160,8 @@ const Statistics: FC = () => {
               titleColor='white'
               description='Lands, Houses, Ranchos, Farms'
               descriptionColor='white'
+              labelColor='dark'
+              textColor='gray-300'
             />
           </div>
 
@@ -173,6 +175,8 @@ const Statistics: FC = () => {
               titleColor='white'
               description='Flats, Shared Rooms, Duplex'
               descriptionColor='white'
+              labelColor='dark'
+              textColor='gray-300'
             />
           </div>
 
@@ -186,6 +190,8 @@ const Statistics: FC = () => {
               titleColor='white'
               description='50% Increased for FY20'
               descriptionColor='white'
+              labelColor='dark'
+              textColor='gray-300'
             />
           </div>
         </div>
@@ -201,6 +207,8 @@ const Statistics: FC = () => {
               iconColor='primary'
               title={6}
               description='SAP UI Progress'
+              labelColor='dark'
+              textColor='gray-300'
             />
           </div>
 
@@ -214,6 +222,8 @@ const Statistics: FC = () => {
               titleColor='white'
               description='New Customers'
               descriptionColor='white'
+              labelColor='dark'
+              textColor='gray-300'
             />
           </div>
 
@@ -227,6 +237,8 @@ const Statistics: FC = () => {
               titleColor='white'
               description='Milestone Reached'
               descriptionColor='white'
+              labelColor='dark'
+              textColor='gray-300'
             />
           </div>
 
@@ -240,6 +252,8 @@ const Statistics: FC = () => {
               titleColor='white'
               description='Milestone Reached'
               descriptionColor='white'
+              labelColor='dark'
+              textColor='gray-300'
             />
           </div>
         </div>
@@ -283,4 +297,4 @@ const Statistics: FC = () => {
   )
 }
 
-export {Statistics}
+export { Statistics }

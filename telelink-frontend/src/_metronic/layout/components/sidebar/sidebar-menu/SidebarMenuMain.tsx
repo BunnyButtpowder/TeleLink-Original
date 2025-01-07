@@ -25,14 +25,14 @@ const SidebarMenuMain = () => {
             title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
             fontIcon='bi-app-indicator'
           />
-          {permissions.includes(1) || permissions.includes(2) ? (
+          {/* {permissions.includes(1) || permissions.includes(2) ? ( */}
             <SidebarMenuItem
               to='/data'
               icon='wifi-square'
               title={intl.formatMessage({ id: 'DATA' })}
               fontIcon='bi-app-indicator'
             />
-          ) : null}
+          {/* ) : null} */}
 
           <SidebarMenuItem
             to='/packages'

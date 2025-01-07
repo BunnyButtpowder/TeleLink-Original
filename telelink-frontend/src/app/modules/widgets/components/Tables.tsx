@@ -88,7 +88,7 @@ const Tables: FC = () => {
 
         <TablesWidget9 className='mb-5 mb-xl-8' />
 
-        <TablesWidget10 className='mb-5 mb-xl-8' />
+        {/* <TablesWidget10 className='mb-5 mb-xl-8' /> */}
 
         <TablesWidget11 className='mb-5 mb-xl-8' />
 

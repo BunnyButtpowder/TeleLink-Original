@@ -80,14 +80,14 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
     setDeleteManyModalOpen(true);
   }
 
-  const closeDeleteManyModal = () => {    
+  const closeDeleteManyModal = () => {
     setDeleteManyModalOpen(false);
     onRefresh();
   }
   const openManageScheduledModal = () => {
     setManageScheduledModalOpen(true);
   }
-  const closeManageScheduledModal = () => {setManageScheduledModalOpen(false); refetch()};
+  const closeManageScheduledModal = () => { setManageScheduledModalOpen(false); refetch() };
 
 
   const handleExportExcel = async () => {
@@ -98,7 +98,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
       toast.error('Có lỗi trong quá trình xuất báo cáo: ' + error);
     }
   };
-  
+
   return (
     <>
       <ToastContainer />
@@ -117,15 +117,14 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
         </div>
       )} */}
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-      <button
-        type="button"
-        className="btn btn-success me-3"
-        onClick={handleExportExcel}
-      >
-        <KTIcon iconName="exit-up" className="fs-2" />
-        Xuất mẫu
-      </button>
-        <DataListFilter />
+        <button
+          type="button"
+          className="btn btn-info me-3"
+          onClick={handleExportExcel}
+        >
+          <KTIcon iconName="folder-up" className="fs-2" />
+          Xuất mẫu
+        </button>
 
         {userRole === 1 && (
           <>
@@ -134,11 +133,11 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
               Xóa dữ liệu
             </button>
             <button type="button" className="btn btn-light-primary me-3" onClick={openUploadModal}>
-              <KTIcon iconName="upload" className="fs-2" />
+              <KTIcon iconName="exit-up" className="fs-2" />
               Upload dữ liệu
             </button>
             <button type="button" className="btn btn-light-primary me-3" onClick={openManageScheduledModal} >
-              <KTIcon iconName="upload" className="fs-2" />
+              <KTIcon iconName="calendar" className="fs-2" />
               Lịch upload
             </button>
           </>
@@ -150,6 +149,8 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
           {intl.formatMessage({ id: 'DATA.DISTRIBUTION' })}
         </button>
         {/* end::Distribute Data */}
+
+        <DataListFilter />
       </div>
       {isUploadModalOpen && <UploadDataModal onClose={closeUploadModal} />}
       {isDistributionModalOpen && <DataDistributionModal onClose={closeDataDistributionModal} />}

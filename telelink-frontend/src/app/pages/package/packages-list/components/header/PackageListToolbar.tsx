@@ -78,12 +78,12 @@ const PackageListToolbar: React.FC<{ onUploadComplete: (data: Package[]) => void
 
       {/* begin::Upload data */}
       <button type="button" className="btn btn-light-primary me-3" onClick={openUploadModal}>
-        <KTIcon iconName="upload" className="fs-2" />
+        <KTIcon iconName="exit-up" className="fs-2" />
         Upload gói cước
       </button>
         {/* end::Upload data */}
       <button type="button" className="btn btn-light-primary me-3" onClick={openManageScheduledModal} >
-        <KTIcon iconName="upload" className="fs-2" />
+        <KTIcon iconName="calendar" className="fs-2" />
         Lịch upload
       </button>
       {/* begin::Add user */}
