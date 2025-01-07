@@ -283,6 +283,7 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
                   className='form-control form-control-solid mb-3 mb-lg-0'
                   type='date'
                   value={date}
+                  min={new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]}
                   autoComplete='off'
                   onChange={(e) => setDate(e.target.value)}
                 />
