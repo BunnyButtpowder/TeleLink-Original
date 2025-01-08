@@ -1,23 +1,17 @@
 const _ = require('lodash');
 module.exports = {
 
-
   friendlyName: 'Agency user',
-
 
   description: '',
 
-
-
   inputs: {
-    quantity: {
-      type: 'number',
+    userIds: {
+      type: 'json',
       required: true,
-      min: 1,
-    },
-    userId: {
-      type: 'number',
-      required: true,
+      custom: function(value) {
+        return _.isArray(value) && value.every(item => _.isNumber(item));
+      }
     },
     network: {
       type: 'string',
@@ -27,18 +21,24 @@ module.exports = {
       type: 'string',
       required: true
     },
+    quantity: {
+      type: 'number',
+      required: true,
+      custom: function(value) {
+        return _.isNumber(value) && value > 0;
+      }
+    }
   },
 
   exits: {
 
   },
 
-
   fn: async function (inputs) {
 
     let { res } = this;
     try {
-      const { userId, quantity, network,category} = inputs;
+      const { userIds, network, category, quantity } = inputs;
       const unassignedData = await Data.find({
         isDelete: false,
         agency: null,
@@ -50,32 +50,49 @@ module.exports = {
         return res.status(404).json({ message: 'Không còn dữ liệu chưa được phân công.' });
       }
 
-      const employee = await User.findOne({ id: userId }).populate('auth');
-      console.log('Employee fetched:', employee);
-
-      if (!employee || !employee.auth || employee.auth.role !== 3) {
-        return res.status(404).json({ message: 'Không tìm thấy nhân viên hợp lệ.' });
-      }
       if (quantity > unassignedData.length) {
-        return this.res.badRequest({ message: `Chỉ có ${unassignedData.length} data sẵn có. Không đủ để phân bổ số lượng yêu cầu.` });
+        return res.status(400).json({ message: `Chỉ có ${unassignedData.length} dữ liệu sẵn có. Không đủ để phân bổ số lượng yêu cầu.` });
       }
 
+      const quantityPerUser = Math.floor(quantity / userIds.length);
+      const remainder = quantity % userIds.length;
+      const assignments = [];
 
-      const randomData = _.sampleSize(unassignedData, Math.min(quantity, unassignedData.length));
+      for (let i = 0; i < userIds.length; i++) {
+        const userId = userIds[i];
+        const employee = await User.findOne({ id: userId }).populate('auth');
+        console.log('Employee fetched:', employee);
 
-      await Promise.all(randomData.map(async (data) => {
-        await DataAssignment.create({
-          user: employee.id,
-          data: data.id,
-          assignedAt: new Date(),
-        });
-        await Data.updateOne({ id: data.id }).set({ isDelete: true ,agency: employee.agency});
-      }));
+        if (!employee || !employee.auth || employee.auth.role !== 3) {
+          return res.status(404).json({ message: `Không tìm thấy nhân viên hợp lệ với ID ${userId}.` });
+        }
+
+        let userQuantity = quantityPerUser;
+        if (i < remainder) {
+          userQuantity += 1; // Distribute the remainder
+        }
+
+        const randomData = _.sampleSize(unassignedData, Math.min(userQuantity, unassignedData.length));
+
+        await Promise.all(randomData.map(async (data) => {
+          await DataAssignment.create({
+            user: employee.id,
+            data: data.id,
+            assignedAt: new Date(),
+          });
+          await Data.updateOne({ id: data.id }).set({ isDelete: true, agency: employee.agency });
+        }));
+
+        // Remove assigned data from unassignedData
+        _.remove(unassignedData, data => randomData.includes(data));
+
+        // Store assignment details
+        assignments.push({ userId: userId, assignedDataCount: randomData.length });
+      }
 
       return res.status(200).json({
-        message: 'Đã phân công dữ liệu thành công cho nhân viên.',
-        employee: employee,
-        data: randomData
+        message: 'Đã phân công dữ liệu thành công cho các nhân viên.',
+        assignments: assignments
       });
 
     } catch (error) {
@@ -85,6 +102,4 @@ module.exports = {
       });
     }
   }
-
-
 };

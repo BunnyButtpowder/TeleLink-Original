@@ -2,37 +2,44 @@ import { KTIcon } from '../../../../../../_metronic/helpers'
 import { useListView } from '../../core/ListViewProvider'
 import { ResultListFilter } from './ResultListFilter'
 import { useIntl } from 'react-intl'
-import React from 'react'
+import { useState } from 'react'
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
+import { ResultListExportModal } from '../../result-export-modal/ResultListExportModal'
+import { close } from 'node:inspector'
 
 const ResultListToolbar = () => {
   const intl = useIntl()
+  const [isResultExportModalOpen, setResultExportModalOpen] = useState(false)
   const { setItemIdForUpdate } = useListView()
   const openAddUserModal = () => {
     setItemIdForUpdate(null)
   }
+
+  const openResultExportModal = () => {
+    setResultExportModalOpen(true);
+  }
+
+  const closeResultExportModal = () => {
+    setResultExportModalOpen(false);
+  }
+
 
   return (
     <>
       <ToastContainer />
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
         <ResultListFilter />
-
-        {/* begin::Export */}
-        {/* <button type='button' className='btn btn-light-primary me-3'>
-        <KTIcon iconName='exit-up' className='fs-2' />
-        Export
-      </button> */}
-        {/* end::Export */}
-
-        {/* begin::Add user */}
-        {/* <button type='button' className='btn btn-primary' onClick={openAddUserModal}>
-        <KTIcon iconName='plus' className='fs-2' />
-        {intl.formatMessage({id: 'USERS.MANAGEMENT.ADD_USER'})}
-      </button> */}
-        {/* end::Add user */}
+        <button
+          type="button"
+          className="btn btn-info me-3"
+          onClick={openResultExportModal}
+        >
+          <KTIcon iconName="folder-up" className="fs-2" />
+          Xuất báo cáo
+        </button>
       </div>
+      {isResultExportModalOpen && <ResultListExportModal onClose={closeResultExportModal} />}
     </>
 
   )

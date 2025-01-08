@@ -18,8 +18,8 @@ module.exports = {
     };
     const assignment = await DataRehandle.find({
       where: criteria,
-      sort: `dateToCall desc` 
-    }).populate("data").limit(3);
+      sort: `dateToCall asc` 
+    }).populate("data").limit(6);
 
     if (assignment.length === 0) {
       return res.ok({

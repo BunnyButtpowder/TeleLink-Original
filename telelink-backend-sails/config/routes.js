@@ -11,6 +11,9 @@
 const BlacklistController = require('../api/controllers/BlacklistController');
 const DataController = require('../api/controllers/DataController');
 const PackageController = require('../api/controllers/PackageController');
+const scheduleImport = require('../api/controllers/scheduleImport');
+const schedulePackage = require('../api/controllers/schedulePackage');
+const fs = require('fs');
 
 
 module.exports.routes = {
@@ -68,7 +71,7 @@ module.exports.routes = {
       await uploadedFile.mv(tempPath);
       console.log('File uploaded to: ', tempPath);
       const id = req.body.id;
-      return DataController.importData(req, res, tempPath , id);
+      return DataController.importData(req, res, tempPath, id);
     } catch (err) {
       console.error('Error during file upload: ', err);
       return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
@@ -76,7 +79,7 @@ module.exports.routes = {
   },
   'POST /import-blacklist': async (req, res) => {
     try {
-      
+
       if (!req.files || Object.keys(req.files).length === 0) {
         console.log('No files uploaded');
         return res.badRequest({ error: 'Không có tệp được tải lên' });
@@ -95,9 +98,9 @@ module.exports.routes = {
       console.error('Error during file upload: ', err);
       return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
     }
-  },'POST /import-package': async (req, res) => {
+  }, 'POST /import-package': async (req, res) => {
     try {
-      
+
       if (!req.files || Object.keys(req.files).length === 0) {
         console.log('No files uploaded');
         return res.badRequest({ error: 'Không có tệp được tải lên' });
@@ -117,5 +120,55 @@ module.exports.routes = {
       return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
     }
   },
-  'GET /api/reports/export': 'ReportController.exportReport'
+  'GET /api/reports/export': 'ReportController.exportReport',
+  'POST /api/result/export': 'ResultController.exportResults',
+  'POST /schedule-import': async (req, res) => {
+    try {
+      if (!req.files || Object.keys(req.files).length === 0) {
+        console.log('No files uploaded');
+        return res.badRequest({ error: 'Không có tệp được tải lên' });
+      }
+
+      const uploadedFile = req.files.file;
+      console.log(uploadedFile);
+      const tempPath = __dirname + '/data/' + uploadedFile.name;
+      if (fs.existsSync(tempPath)) {
+        console.log('File already exists in the temp directory:', tempPath);
+        return res.badRequest({ error: 'Tệp đã tồn tại trong thư mục tạm.' });
+      }
+      await uploadedFile.mv(tempPath);
+      console.log('File uploaded to: ', tempPath);
+      const id = req.body.id;
+      const scheduledDate = req.body.scheduledDate;
+      return scheduleImport.scheduleImport(req, res, tempPath, id,scheduledDate);
+    } catch (err) {
+      console.error('Error during file upload: ', err);
+      return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
+    }
+  },
+  'POST /schedule-import-package': async (req, res) => {
+    try {
+      if (!req.files || Object.keys(req.files).length === 0) {
+        console.log('No files uploaded');
+        return res.badRequest({ error: 'Không có tệp được tải lên' });
+      }
+
+      const uploadedFile = req.files.file;
+      console.log(uploadedFile);
+      const tempPath = __dirname + '/packages/' + uploadedFile.name;
+      if (fs.existsSync(tempPath)) {
+        console.log('File already exists in the temp directory:', tempPath);
+        return res.badRequest({ error: 'Tệp đã tồn tại trong thư mục tạm.' });
+      }
+      await uploadedFile.mv(tempPath);
+      console.log('File uploaded to: ', tempPath);
+      const id = req.body.id;
+      const scheduledDate = req.body.scheduledDate;
+      return schedulePackage.scheduleImport(req, res, tempPath, id,scheduledDate);
+    } catch (err) {
+      console.error('Error during file upload: ', err);
+      return res.serverError({ error: 'Có lỗi xảy ra khi tải lên tệp.', details: err.message });
+    }
+  },
+  
 };

@@ -3,7 +3,7 @@ const ExcelJS = require('exceljs');
 module.exports = {
   exportReport: async function (req, res) {
     try {
-      // Fetch users and ensure correct population
+      
       const reports = await Report.find().populate('agency');
       console.log('Users:', reports);
       

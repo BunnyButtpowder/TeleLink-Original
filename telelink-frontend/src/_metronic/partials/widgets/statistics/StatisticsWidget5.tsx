@@ -1,6 +1,7 @@
 
 import React from 'react'
 import { KTIcon } from '../../../helpers'
+import clsx from 'clsx'
 
 type Props = {
   className: string
@@ -11,6 +12,15 @@ type Props = {
   titleColor?: string
   description: string
   descriptionColor?: string
+  topAgencies?: Agency[]
+  labelColor: string
+  textColor: string
+}
+
+type Agency = {
+  name: string
+  avatar?: string
+  "Total revenue"?: number
 }
 
 const StatisticsWidget5: React.FC<Props> = ({
@@ -19,9 +29,12 @@ const StatisticsWidget5: React.FC<Props> = ({
   svgIcon,
   iconColor,
   title,
+  topAgencies = [],
   titleColor,
   description,
   descriptionColor,
+  labelColor,
+  textColor,
 }) => {
   return (
     <div className={`card bg-${color} hoverable ${className}`}>
@@ -32,18 +45,18 @@ const StatisticsWidget5: React.FC<Props> = ({
 
         <div className={`fw-semibold text-${descriptionColor}`}>{description}</div>
       </div>
-      {/* <div className="card-body d-flex flex-column justify-content-end pe-0">
-        <span className="fs-6 fw-bolder text-gray-800 d-block mb-2">Chi nhánh xuất sắc</span>
+      <div className="card-body d-flex flex-column justify-content-end pe-0">
+        <span className="fs-6 fw-bolder text-white d-block mb-2">Chi nhánh xuất sắc</span>
         <div className="symbol-group symbol-hover flex-nowrap">
-          {topSalesmen.map((salesman, index) => (
+          {topAgencies.map((agency, index) => (
             <div
               className="symbol symbol-35px symbol-circle"
               data-bs-toggle="tooltip"
-              title={salesman.fullname}
+              title={agency.name}
               key={`cw7-salesman-${index}`}
             >
-              {salesman.avatar ? (
-                <img alt={salesman.fullname} src={salesman.avatar} />
+              {agency.avatar ? (
+                <img alt={agency.name} src={agency.avatar} />
               ) : (
                 <span
                   className={clsx(
@@ -52,12 +65,12 @@ const StatisticsWidget5: React.FC<Props> = ({
                     'text-' + textColor
                   )}
                 >
-                  {salesman.fullname.charAt(0)}
+                  {agency.name.charAt(0)}
                 </span>
               )}
             </div>
           ))}
-          <a href="#" className="symbol symbol-35px symbol-circle">
+          {/* <a href="#" className="symbol symbol-35px symbol-circle">
             <span
               className={clsx(
                 'symbol-label fs-8 fw-bold',
@@ -65,11 +78,11 @@ const StatisticsWidget5: React.FC<Props> = ({
                 'text-' + textColor
               )}
             >
-              +{Math.max(10 - topSalesmen.length, 0)}
+              +{Math.max(10 - topAgencies.length, 0)}
             </span>
-          </a>
+          </a> */}
         </div>
-      </div> */}
+      </div>
     </div>
   )
 }

@@ -11,11 +11,16 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQueryResponse } from '../../core/QueryResponseProvider'
 import { useAuth } from '../../../../../../app/modules/auth'
+import { UploadDataModal } from '../../upload-data-modal/UploadDataModal'
+import { ManageScheduledModal } from '../../manage-scheduled-package-modal/ManageScheduledModal'
 
 const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRefresh: () => void }> = ({ onUploadComplete, onRefresh }) => {
   const intl = useIntl()
   const [isDistributionModalOpen, setDistributionModalOpen] = useState(false)
   const [isDeleteManyModalOpen, setDeleteManyModalOpen] = useState(false)
+  const [isUploadModalOpen, setUploadModalOpen] = useState(false); // State for UploadDataModal
+  const [isManageScheduledModalOpen, setManageScheduledModalOpen] = useState(false); // State for ManageScheduledModal
+
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input element
@@ -23,38 +28,44 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
   const { currentUser } = useAuth()
   const userRole = currentUser?.auth.role
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files?.[0];
-    if (files) {
-      setUploading(true);
-      setProgress(0);
-      try {
-        const response = await importData(files, (progressEvent: any) => {
-          const total = progressEvent.total || 1;
-          const percentCompleted = Math.round((progressEvent.loaded / total) * 100);
-          setProgress(percentCompleted);
-        });
-        onUploadComplete(response.data);
-        refetch();
-        toast.success('Upload data thành công!');
-      } catch (error) {
-        console.error('Error uploading the file: ', error);
-        toast.error('Upload data thất bại!');
-      } finally {
-        setUploading(false);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-        onRefresh()
-      }
-    }
-  };
+  // const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = event.target.files?.[0];
+  //   if (files) {
+  //     setUploading(true);
+  //     setProgress(0);
+  //     try {
+  //       const response = await importData(files, (progressEvent: any) => {
+  //         const total = progressEvent.total || 1;
+  //         const percentCompleted = Math.round((progressEvent.loaded / total) * 100);
+  //         setProgress(percentCompleted);
+  //       });
+  //       onUploadComplete(response.data);
+  //       refetch();
+  //       toast.success('Upload data thành công!');
+  //     } catch (error) {
+  //       console.error('Error uploading the file: ', error);
+  //       toast.error('Upload data thất bại!');
+  //     } finally {
+  //       setUploading(false);
+  //       if (fileInputRef.current) {
+  //         fileInputRef.current.value = '';
+  //       }
+  //       onRefresh()
+  //     }
+  //   }
+  // };
 
   const triggerFileUpload = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   }
+
+  const openUploadModal = () => setUploadModalOpen(true);
+  const closeUploadModal = () => {
+    setUploadModalOpen(false);
+    onRefresh();
+  };
 
   const openDataDistributionModal = () => {
     setDistributionModalOpen(true);
@@ -69,10 +80,15 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
     setDeleteManyModalOpen(true);
   }
 
-  const closeDeleteManyModal = () => {    
+  const closeDeleteManyModal = () => {
     setDeleteManyModalOpen(false);
     onRefresh();
   }
+  const openManageScheduledModal = () => {
+    setManageScheduledModalOpen(true);
+  }
+  const closeManageScheduledModal = () => { setManageScheduledModalOpen(false); refetch() };
+
 
   const handleExportExcel = async () => {
     try {
@@ -82,7 +98,7 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
       toast.error('Có lỗi trong quá trình xuất báo cáo: ' + error);
     }
   };
-  
+
   return (
     <>
       <ToastContainer />
@@ -101,45 +117,29 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
         </div>
       )} */}
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
-      <button
-        type="button"
-        className="btn btn-success me-3"
-        onClick={handleExportExcel}
-      >
-        <KTIcon iconName="exit-up" className="fs-2" />
-        Xuất mẫu
-      </button>
-        <DataListFilter />
+        <button
+          type="button"
+          className="btn btn-info me-3"
+          onClick={handleExportExcel}
+        >
+          <KTIcon iconName="folder-up" className="fs-2" />
+          Xuất mẫu
+        </button>
 
         {userRole === 1 && (
-          
           <>
-          <button className='btn btn-danger me-3' onClick={openDeleteManyModal}>
-            <KTIcon iconName='abstract-11' className='fs-2' />
-            Xóa dữ liệu
-          </button>
-            {/* begin::Upload data */}
-            < input
-              ref={fileInputRef}
-              type="file"
-              accept=".xlsx, .xls"
-              onChange={handleFileChange}
-              id="fileInput"
-              style={{ display: 'none' }}
-              disabled={uploading}
-            />
-            <label htmlFor="fileInput">
-              <button
-                type="button"
-                className="btn btn-light-primary me-3"
-                disabled={uploading}
-                onClick={triggerFileUpload}
-              >
-                <KTIcon iconName="exit-up" className="fs-2" />
-                {uploading ? 'Đang tải lên...' : 'Upload dữ liệu'}
-              </button>
-            </label>
-            {/* end::Upload data */}
+            <button className="btn btn-danger me-3" onClick={openDeleteManyModal}>
+              <KTIcon iconName="abstract-11" className="fs-2" />
+              Xóa dữ liệu
+            </button>
+            <button type="button" className="btn btn-light-primary me-3" onClick={openUploadModal}>
+              <KTIcon iconName="exit-up" className="fs-2" />
+              Upload dữ liệu
+            </button>
+            <button type="button" className="btn btn-light-primary me-3" onClick={openManageScheduledModal} >
+              <KTIcon iconName="calendar" className="fs-2" />
+              Lịch upload
+            </button>
           </>
         )}
 
@@ -149,9 +149,14 @@ const DataListToolbar: React.FC<{ onUploadComplete: (data: Data[]) => void, onRe
           {intl.formatMessage({ id: 'DATA.DISTRIBUTION' })}
         </button>
         {/* end::Distribute Data */}
+
+        <DataListFilter />
       </div>
+      {isUploadModalOpen && <UploadDataModal onClose={closeUploadModal} />}
       {isDistributionModalOpen && <DataDistributionModal onClose={closeDataDistributionModal} />}
       {isDeleteManyModalOpen && <DeleteManyModal onClose={closeDeleteManyModal} />}
+      {isManageScheduledModalOpen && <ManageScheduledModal onClose={closeManageScheduledModal} />}
+
     </>
   )
 }

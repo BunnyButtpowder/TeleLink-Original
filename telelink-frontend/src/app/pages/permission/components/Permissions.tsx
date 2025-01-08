@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { getPermissionsByRole, updatePermissionByRole } from '../core/_requests'
 import { toast } from 'react-toastify'
+import { usePermissions } from '../context/PermissionsContext'
 import 'react-toastify/dist/ReactToastify.css';
 
 const Permissions: React.FC = () => {
   const intl = useIntl()
   const [loading, setLoading] = useState(false)
   const [role, setRole] = useState<number>(1)
-  const [permissions, setPermissions] = useState<number[]>([]);
+  const {permissions, setPermissions} = usePermissions();
 
   const fetchPermissions = async (roleId: number) => {
     setLoading(true)
@@ -27,16 +28,16 @@ const Permissions: React.FC = () => {
   const togglePermission = (permissionId: number) => {
     if (role === 1 && (permissionId === 1 || permissionId === 2)) {
       if (permissions.includes(1) && permissions.includes(2)) {
-        setPermissions((prevPermissions) => prevPermissions.filter((id) => id !== 1 && id !== 2)); // Remove both permissions
+        setPermissions((prevPermissions: any[]) => prevPermissions.filter((id: number) => id !== 1 && id !== 2)); // Remove both permissions
       } else {
-        setPermissions((prevPermissions) =>
+        setPermissions((prevPermissions: number[]) =>
           prevPermissions.includes(permissionId) ?
           prevPermissions : [...new Set([...prevPermissions, 1, 2])]); // Add both permissions
       }
     } else {
-      setPermissions((prevPermissions) =>
+      setPermissions((prevPermissions: number[]) =>
         prevPermissions.includes(permissionId) ?
-          prevPermissions.filter((id) => id !== permissionId) // Remove permission
+          prevPermissions.filter((id: number) => id !== permissionId) // Remove permission
           : [...prevPermissions, permissionId] // Add permission
       );
     }

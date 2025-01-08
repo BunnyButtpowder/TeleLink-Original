@@ -27,6 +27,21 @@ const getAllRehandles = async (params?: RehandleQueryParams): Promise<CallBackQu
   }
 }
 
+const getLatestCalls = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/rehandle/get-latest`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch top 10 salesmen:", error);
+    throw error;
+  }
+}
+
 const getRehandleById = async (id: ID): Promise<Result> => {
   const response = await axios.get(`${API_URL}/rehandles/getid?id=${id}`);
   return response.data.data;
@@ -74,5 +89,6 @@ export {
   getAllRehandles,
   createRehandleResult,
   getPackagesByDataId,
-  getRehandleById
+  getRehandleById,
+  getLatestCalls
 };

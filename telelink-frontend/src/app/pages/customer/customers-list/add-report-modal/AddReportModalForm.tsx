@@ -11,6 +11,7 @@ import { useIntl } from 'react-intl'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../../../app/modules/auth'
+import Swal from 'sweetalert2';
 
 type Props = {
   onClose: () => void
@@ -83,7 +84,16 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
           localStorage.removeItem(`dataDetails_${currentUser?.id}`);
           setDataDetails(undefined);
           onClose()
-          toast.success('Gửi báo cáo thành công!')
+          Swal.fire({
+            title: 'Thành công',
+            text: 'Gửi báo cáo thành công !',
+            icon: 'success',
+            timer: 5000,  
+            showConfirmButton: false,  
+            position: 'top-end',  
+            toast: true,  
+            timerProgressBar: true,  
+          });
         }
         else {
           console.log('Data ID: ', dataId);

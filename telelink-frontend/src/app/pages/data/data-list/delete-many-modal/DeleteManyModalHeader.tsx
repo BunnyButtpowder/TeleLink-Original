@@ -10,7 +10,7 @@ const DeleteManyModalHeader: React.FC<DeleteManyModalHeaderProps> = ({ onClose }
   return (
     <div className='modal-header'>
       {/* begin::Modal title */}
-      <h2 className='fw-bolder'>Xóa Data</h2>
+      <h2 className='fw-bolder'>Xóa dữ liệu</h2>
       {/* end::Modal title */}
 
       {/* begin::Close */}

@@ -22,6 +22,9 @@ module.exports = {
     price: {
       type: 'number'
     },
+    discount: {
+      type: 'string'
+    },
     user: {
       model: 'user',
     },

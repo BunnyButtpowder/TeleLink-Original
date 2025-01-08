@@ -83,7 +83,7 @@ const BlackListToolbar: React.FC<{ onUploadComplete: (data: Blacklist[]) => void
                 onClick={triggerFileUpload}
               >
                 <KTIcon iconName="exit-up" className="fs-2" />
-                {uploading ? 'Đang tải lên...' : 'Upload dữ liệu'}
+                {uploading ? 'Đang tải lên...' : 'Upload số chặn'}
               </button>
             </label>
             {/* end::Upload data */}

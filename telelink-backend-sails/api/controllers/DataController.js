@@ -4,13 +4,13 @@ const fs = require('fs');
 function parseExcelDate(date) {
   if (!date) return null;
 
- 
+
   if (typeof date === 'string') {
-    return date.trim();  
+    return date.trim();
   }
   if (typeof date === 'number') {
-    const excelDate = new Date((date - 25569) * 86400 * 1000); 
-    const localDate = new Date(excelDate.getTime() - 7 * 60 * 60 * 1000); 
+    const excelDate = new Date((date - 25569) * 86400 * 1000);
+    const localDate = new Date(excelDate.getTime() - 7 * 60 * 60 * 1000);
     return localDate.toLocaleString('en-GB');
   }
 
@@ -18,7 +18,7 @@ function parseExcelDate(date) {
 }
 
 module.exports = {
-  importData: async function (req, res, filePath,id) {
+  importData: async function (req,res, filePath, id) {
     try {
       const workbook = XLSX.readFile(filePath);
       const sheetName = workbook.SheetNames[0];
@@ -108,10 +108,10 @@ module.exports = {
           return;
         }
 
-        
+
         if (blacklistNumbers.has(subscriberNumber)) {
           blacklistedRows.push(index + 2);
-          return; 
+          return;
         }
 
         validData.push({
@@ -123,8 +123,8 @@ module.exports = {
           currentPackage: row[headerIndexes['currentPackage']] || '',
           priorityPackage1: row[headerIndexes['priorityPackage1']] || '',
           priorityPackage2: row[headerIndexes['priorityPackage2']] || '',
-          registrationDate: parseExcelDate(row[headerIndexes['registrationDate']] || ''),  
-          expirationDate: parseExcelDate(row[headerIndexes['expirationDate']] || ''),  
+          registrationDate: parseExcelDate(row[headerIndexes['registrationDate']] || ''),
+          expirationDate: parseExcelDate(row[headerIndexes['expirationDate']] || ''),
           notes: row[headerIndexes['notes']] || '',
           TKC: row[headerIndexes['TKC']] || '',
           APRU3Months: row[headerIndexes['APRU3Months']] || '',
@@ -174,6 +174,11 @@ module.exports = {
         skippedRows,
         blacklistedRows,
       });
+      // console.log({
+      //   message: `Xử lý hoàn tất: Đã xóa ${deleteResult.length} bản ghi cũ. Đã thêm mới ${createResult.length} bản ghi.`,
+      //   skippedRows,
+      //   blacklistedRows,
+      // });
     } catch (err) {
       console.error('Lỗi trong quá trình nhập dữ liệu:', err.message);
 
@@ -185,6 +190,10 @@ module.exports = {
         message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.',
         error: err.message,
       });
+      // console.error({
+      //   message: 'Có lỗi xảy ra trong quá trình nhập dữ liệu.',
+      //   error: err.message,
+      // });
     }
   },
 };

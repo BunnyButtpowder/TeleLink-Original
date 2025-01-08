@@ -1,5 +1,5 @@
 import {ID, Response} from '../../../../../_metronic/helpers'
-
+import { User } from '../../../../modules/apps/user-management/users-list/core/_models'
 export type Package = {
   id?: ID
   title?: string
@@ -7,6 +7,16 @@ export type Package = {
   type?: string
   price?: number
   createdAt?: number
+  updatedAt?: number
+  discount?: string
+}
+
+export type ScheduledFile = {
+  id: number;
+  createdAt: string;
+  filePath: string;
+  scheduledDate: string;
+  user: User;
 }
 
 export type PackageQueryResponse = Response<Array<Package>>
