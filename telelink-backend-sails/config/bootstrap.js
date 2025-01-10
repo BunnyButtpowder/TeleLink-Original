@@ -24,18 +24,18 @@ module.exports.bootstrap = async function () {
   if ((await Auth.count()) == 0) {
     await Auth.createEach([
       {
-        email: "meobeo@gmail.com",
-        username: "meobeo",
+        email: "admin1@gmail.com",
+        username: "admin1",
         password:
-          "$2b$10$V5BWlTlI7NxV/38PLy3RweHe78ySzZFGuGcBpGzpBkQz7bTu/Ul0q",
+          "$2b$10$uyzkAB5HVYYKiKcq95uGQ.KEmh.07NxGFl1JROAaq4tEXeNW0D27.",
         isActive: 1,
         role: 1,
       },
       {
-        email: "minhvu.contactforwork@gmail.com",
-        username: "minhvu",
+        email: "admin2@gmail.com",
+        username: "admin2",
         password:
-          "$2b$10$twymI2UzxiLkV6T/TyQbN.JcUgolOEJa6//vfbeXgdgVH/OgKQO7q",
+          "$2b$10$uyzkAB5HVYYKiKcq95uGQ.KEmh.07NxGFl1JROAaq4tEXeNW0D27.",
         isActive: 1,
         role: 1,
       },
@@ -45,22 +45,22 @@ module.exports.bootstrap = async function () {
   if ((await User.count()) == 0) {
     await User.createEach([
       {
-        fullName: "DM Tuan Cuong",
-        phoneNumber: "0974009765",
-        address: "Tây Mỗ, Hà Nội",
-        dob: "2003-09-21",
-
+        fullName: "admin1",
+        phoneNumber: "",
+        address: "",
+        dob: "",
+        
         avatar: "",
         gender: "male",
         dataType: "",
         auth: 1,
       },
       {
-        fullName: "Minh Vu",
-        phoneNumber: "0928911447",
-        address: "Hoàn Kiếm, Hà Nội",
-        dob: "2003-07-25",
-
+        fullName: "admin2",
+        phoneNumber: "",
+        address: "",
+        dob: "",
+        
         avatar: "",
         gender: "male",
         dataType: "",
