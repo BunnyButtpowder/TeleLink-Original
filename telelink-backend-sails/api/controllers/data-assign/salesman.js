@@ -11,12 +11,16 @@ module.exports = {
       required: true,
       description: 'ID của nhân viên.',
     },
+    networkName: {
+      type: 'string',
+      required: false
+    }
   },
 
   fn: async function (inputs) {
     let { res } = this;
     try {
-      const {id} = inputs;
+      const {id,networkName} = inputs;
       const assignedData = await DataAssignment.find({
         user : id,
         complete:false
@@ -36,6 +40,10 @@ module.exports = {
 
      
       const dataDetails = await Data.findOne({ id: randomAssignedData.data });
+
+      if (networkName && dataDetails.networkName !== networkName) {
+        return res.status(404).json({ message: 'Không có dữ liệu phù hợp với danh mục được yêu cầu.' });
+      }
 
       let packageUpdate = ""
       let package = dataDetails.Package.split(",");
