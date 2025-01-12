@@ -4,11 +4,13 @@ import { useListView } from '../../core/ListViewProvider'
 import { UsersListFilter } from './UsersListFilter'
 import { useIntl } from 'react-intl'
 import { useAuth } from '../../../../../../app/modules/auth'
-import { getData } from '../../core/_requests'
+import { getData, getNetworkCategories } from '../../core/_requests'
 import { useQueryResponse } from '../../core/QueryResponseProvider';
 import { AddReportModal } from '../../add-report-modal/AddReportModal';
 import { BlacklistEditModal } from '../../blacklist-edit-modal/BlackListEditModal';
 import React from 'react'
+import clsx from 'clsx'
+
 import Swal from 'sweetalert2';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,6 +20,8 @@ const CustomersListToolbar = () => {
   const { currentUser, setCurrentUserData } = useAuth();
   const [isAddReportModalOpen, setAddReportModalOpen] = useState(false)
   const [isBlacklistEditModalOpen, setBlacklistEditModalOpen] = useState(false)
+  const [networkCategories, setNetworkCategories] = useState<string[]>([]);
+  const [selectedNetwork, setSelectedNetwork] = useState<string>('');
   const { setDataDetails } = useQueryResponse();
   const [cooldown, setCooldown] = useState(false);
   const salesmanId = currentUser?.id;
@@ -40,6 +44,22 @@ const CustomersListToolbar = () => {
     }
   }, [salesmanId]);
 
+  useEffect(() => {
+    const fetchNetworkCategories = async () => {
+      if (!salesmanId) return;
+
+      try {
+        console.log(salesmanId);
+        const response = await getNetworkCategories(salesmanId);
+        setNetworkCategories(response.categories);
+      } catch (error) {
+        console.error('Error fetching network categories:', error);
+      }
+    };
+
+    fetchNetworkCategories();
+  }, [salesmanId]);
+
   const openAddReportModal = () => {
     setAddReportModalOpen(true);
   }
@@ -57,10 +77,10 @@ const CustomersListToolbar = () => {
   }
 
   const fetchData = async () => {
-    if (!salesmanId) return;
+    if (!salesmanId || !selectedNetwork) return;
 
     try {
-      const dataDetails = await getData(salesmanId);
+      const dataDetails = await getData(salesmanId, selectedNetwork);
       // Store data details in salesman's local storage or token
       localStorage.setItem(`dataDetails_${salesmanId}`, JSON.stringify(dataDetails));
       // setCurrentUserData({dataDetails});
@@ -92,7 +112,7 @@ const CustomersListToolbar = () => {
     setTimeout(() => {
       setCooldown(false),
       localStorage.removeItem(`cooldown_${salesmanId}`);
-    }, COOLDOWN_TIME); // 15 seconds cooldown
+    }, COOLDOWN_TIME); // 10 seconds cooldown
   }
 
   return (
@@ -100,8 +120,28 @@ const CustomersListToolbar = () => {
       <div className='d-flex justify-content-end' data-kt-user-table-toolbar='base'>
         {/* <UsersListFilter /> */}
 
+        <div className='me-3'>
+        <select
+          id="network-select"
+          value={selectedNetwork}
+          onChange={(e) => setSelectedNetwork(e.target.value)}
+          className={clsx(
+            'cursor-pointer form-control form-control-solid mb-3 mb-lg-0',
+            { 'is-invalid': !selectedNetwork },
+            { 'is-valid': selectedNetwork }
+          )}
+        >
+          <option value="">Chọn một nhà mạng</option>
+          {networkCategories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
+
         {/* begin::Get Data */}
-        <button type='button' className='btn btn-success me-3' onClick={handleGetData} disabled={cooldown}>
+        <button type='button' className='btn btn-success me-3' onClick={handleGetData} disabled={cooldown || !selectedNetwork}>
           <KTIcon iconName='exit-up' className='fs-2' />
           Lấy số
         </button>

@@ -5,10 +5,16 @@ import { Customer, Result } from "./_models";
 const API_URL = import.meta.env.VITE_APP_API_URL;
 const token = localStorage.getItem("auth_token");
 
-const getData = async (salesmanId: ID): Promise<Customer> => {
-  const response = await axios.get(`${API_URL}/data-assign/salesman?id=${salesmanId}`);
+const getData = async (salesmanId: ID, networkName: string): Promise<Customer> => {
+  const response = await axios.get(`${API_URL}/data-assign/salesman`, {
+    params: {
+      id: salesmanId,
+      networkName: networkName,
+    },
+  });
   return response.data.dataDetails;
 };
+
 
 const getAllPackages = async() => {
   try{
@@ -57,10 +63,22 @@ const createCallResult = async (result: Result, dataId: string, date: string) =>
   return response.data;
 }
 
+const getNetworkCategories = async (id: number): Promise<{ categories: string[] }> => {
+  try {
+    const response = await axios.get(`${API_URL}/data-assign/network`, {
+      params: { id },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch network categories:', error);
+    throw error;
+  }
+};
 
 export {
   getData,
   createCallResult,
   getAllPackages,
-  getPackagesByDataId
+  getPackagesByDataId,
+  getNetworkCategories
 };
