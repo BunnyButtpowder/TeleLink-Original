@@ -76,7 +76,7 @@ module.exports = {
 
     // All done.
     return this.res.ok({
-      message: `Top 10 saleman of the company in ${date}:`,
+      message: `Top saleman of the company in ${date}:`,
       data: groupedResults.rows,
       // count: result.length,
     });
