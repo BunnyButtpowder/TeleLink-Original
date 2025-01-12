@@ -12,7 +12,7 @@ type Props = {
 };
 
 const DeleteManySchema = Yup.object().shape({
-  networkName: Yup.string().required('Vui lòng chọn tên mạng'),
+  networkName: Yup.string().nullable(),
   createdAt: Yup.string().nullable(),
 });
 
@@ -75,7 +75,7 @@ const DeleteManyModalForm: FC<Props> = ({ onClose }) => {
         >
           {/* Dropdown: Network Name */}
           <div className="fv-row mb-7">
-            <label className="required fw-bold fs-6 mb-2">
+            <label className="fw-bold fs-6 mb-2">
               Nhà mạng
             </label>
             <select
@@ -106,7 +106,7 @@ const DeleteManyModalForm: FC<Props> = ({ onClose }) => {
 
           {/* Input Group: Created At */}
           <div className="fv-row mb-7">
-            <label className="required fw-bold fs-6 mb-2">Ngày tạo</label>
+            <label className="fw-bold fs-6 mb-2">Ngày tạo</label>
             <input
               placeholder="Ngày tạo (YYYY-MM-DD)"
               {...deleteFormik.getFieldProps('createdAt')}
