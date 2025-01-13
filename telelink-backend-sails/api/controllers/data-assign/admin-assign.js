@@ -1,23 +1,23 @@
 module.exports = {
     friendlyName: 'Branch assignments summary',
   
-    description: 'Get a summary of data assignments for all branches, grouped by category, with search and pagination.',
+    description: 'Get a summary of data assignments for all branches, grouped by category and agency.',
   
     inputs: {
       search: {
-        type: "string",
-
+        type: 'string',
+        required: false,
       },
       page: {
-        type: "number",
+        type: 'number',
+        required: false,
         defaultsTo: 1,
-     
       },
       limit: {
-        type: "number",
+        type: 'number',
+        required: false,
         defaultsTo: 10,
-  
-      }
+      },
     },
   
     fn: async function (inputs) {
@@ -25,103 +25,81 @@ module.exports = {
       try {
         const { search, page, limit } = inputs;
   
-
-        let branches = await Agency.find();
-  
-        if (branches.length === 0) {
-          return res.status(404).json({ message: 'Không tìm thấy chi nhánh nào.' });
-        }
-
+        let branchQuery = {};
         if (search) {
-          const lowerCaseSearch = search.toLowerCase();
-          branches = branches.filter(branch =>
-            branch.name && branch.name.toLowerCase().includes(lowerCaseSearch)
-          );
+          branchQuery.name = { contains: search };
         }
+  
+        const branches = await Agency.find(branchQuery)
+          .skip((page - 1) * limit)
+          .limit(limit);
   
         if (branches.length === 0) {
-          return res.status(404).json({ message: 'Không tìm thấy chi nhánh phù hợp với từ khóa tìm kiếm.' });
+          return res.status(404).json({ message: 'Không có chi nhánh nào.' });
         }
+
+        const totalBranches = await Agency.count(branchQuery);
   
-        // Phân trang
-        const totalBranches = branches.length;
-        const totalPages = Math.ceil(totalBranches / limit);
-        const currentPage = Math.min(Math.max(page, 1), totalPages);
-        const paginatedBranches = branches.slice((currentPage - 1) * limit, currentPage * limit);
+        const branchSummaries = [];
   
-        const summary = [];
-  
-        for (const branch of paginatedBranches) {
+        for (const branch of branches) {
           const employees = await User.find({ agency: branch.id }).populate('auth');
-  
-          if (employees.length === 0) {
-            summary.push({
-              agencyID: branch.id,
-              agencyName: branch.name,
-              totalUsers: 0,
-              totalData: 0,
-              categories: {}
-            });
-            continue;
-          }
-  
-        
+
           const salesmen = employees.filter(emp => emp.auth && emp.auth.role === 3);
   
-          if (salesmen.length === 0) {
-            summary.push({
-              branchId: branch.id,
-              branchName: branch.name,
-              totalUsers: 0,
-              totalData: 0,
-              categories: {}
-            });
-            continue;
-          }
-  
-          let totalData = 0;
-          const categoryCounts = {};
-  
+          const branchSummary = {
+            branchId: branch.id,
+            branchName: branch.name,
+            assignedData: [],
+            unassignedData: {},
+          };
+
           for (const salesman of salesmen) {
             const assignedData = await DataAssignment.find({
               user: salesman.id,
-              complete: false
+              complete: false,
             }).populate('data');
   
-            totalData += assignedData.length;
-  
-            assignedData.forEach(item => {
+            const categoryCounts = assignedData.reduce((acc, item) => {
               const category = item.data?.category || 'Unknown';
-              categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+              acc[category] = (acc[category] || 0) + 1;
+              return acc;
+            }, {});
+  
+            branchSummary.assignedData.push({
+              user: salesman.id,
+              userName: salesman.fullName,
+              totalData: assignedData.length,
+              categories: categoryCounts,
             });
           }
-  
-          summary.push({
-            branchId: branch.id,
-            branchName: branch.name,
-            totalUsers: salesmen.length,
-            totalData,
-            categories: categoryCounts
+
+          const unassignedData = await Data.find({
+            agency: branch.id,
+            isDelete: false,
+            id: { '!=': (await DataAssignment.find().select(['data'])).map(d => d.data) },
           });
-        }
   
-        if (summary.length === 0) {
-          return res.status(404).json({ message: 'Không có dữ liệu nào được phân công trong các chi nhánh.' });
-        }
+          branchSummary.unassignedData = unassignedData.reduce((acc, item) => {
+            const category = item.category || 'Unknown';
+            acc[category] = (acc[category] || 0) + 1;
+            return acc;
+          }, {});
   
+          branchSummary.unassignedTotal = unassignedData.length;
+          branchSummaries.push(branchSummary);
+        }
+
         return res.ok({
-          data: summary,
-          pagination: {
-            totalItems: totalBranches,
-            totalPages,
-            currentPage,
-            limit
-          }
+          totalBranches,
+          currentPage: page,
+          totalPages: Math.ceil(totalBranches / limit),
+          branches: branchSummaries,
         });
       } catch (err) {
         console.log(err);
         return res.serverError({ error: 'Có lỗi xảy ra', err });
       }
-    }
+    },
   };
   
