@@ -16,10 +16,8 @@ module.exports = {
 
     let rawQuery, groupedResults;
     rawQuery = `
-    SELECT SUM(revenue) as 'Total revenue', agency.name as agency
+    SELECT SUM(revenue) as 'Total revenue'
     FROM result
-    LEFT JOIN agency ON result.agency = agency.id
-    GROUP BY agency.name
   `;
 
     // Execute the query
