@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {  useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FC, useState } from 'react';
 import * as Yup from 'yup';
+import { useIntl } from 'react-intl'
+import Select from 'react-select';
 import { useFormik } from 'formik';
+import { useAuth } from '../../../../../app/modules/auth'
 import { useQueryResponse } from '../core/QueryResponseProvider';
-import { deleteManyData } from '../core/_requests';
+import { deleteManyData, getAllNetworks, getDataCategoriesByNetworks, deleteCategory } from '../core/_requests';
 
 type Props = {
   onClose: () => void;
@@ -14,31 +17,74 @@ type Props = {
 const DeleteManySchema = Yup.object().shape({
   networkName: Yup.string().nullable(),
   createdAt: Yup.string().nullable(),
+  category: Yup.string().nullable(),
+  network: Yup.string().required('Vui lòng chọn mạng!'),
 });
 
 const DeleteManyModalForm: FC<Props> = ({ onClose }) => {
+  const intl = useIntl();
   const { refetch } = useQueryResponse();
-  
-  const [deleteForm] = useState({
-    networkName: '',
-    createdAt: '',
-  });
+  const { currentUser } = useAuth();
 
-  const cancel = (withRefresh?: boolean) => {
-    if (withRefresh) {
-      refetch();
+  const [isAdmin] = useState(currentUser?.auth?.role === 1);
+  const [selectedTarget, setSelectedTarget] = useState(isAdmin ? 'agency' : 'salesman');
+  const [isLoadingNetworks, setIsLoadingNetworks] = useState(false);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+
+  const [networks, setNetworks] = useState<{ [key: string]: { count: number } }>({});
+  const [categories, setCategories] = useState<{ [key: string]: { count: number } }>({});
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  const fetchNetworks = async () => {
+    setIsLoadingNetworks(true);
+    try {
+      const networks = await getAllNetworks();
+      setNetworks(networks);
+    } catch (error) {
+      console.error('Failed to fetch networks:', error);
+    } finally {
+      setIsLoadingNetworks(false);
     }
-    onClose();
+  };
+
+  useEffect(() => {
+    fetchNetworks();
+  }, [isAdmin]);
+
+  const handleNetworkChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedNetwork = e.target.value;
+    deleteFormik.setFieldValue('network', selectedNetwork);
+
+    if (selectedNetwork) {
+      try {
+        setIsLoadingCategories(true);
+        const categories = await getDataCategoriesByNetworks(selectedNetwork);
+        setCategories(categories);
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    }
   };
 
   const deleteFormik = useFormik({
-    initialValues: deleteForm,
+    initialValues: {
+      networkName: '',
+      createdAt: '',
+      category: '',
+      network: '',
+    },
     enableReinitialize: true,
     validationSchema: DeleteManySchema,
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true);
       try {
-        await deleteManyData(values);
+        if (selectedTarget === 'type') {
+          await deleteCategory(selectedCategories);
+        } else {
+          await deleteManyData(values);
+        }
         refetch();
         toast.success('Xóa dữ liệu thành công!');
         onClose();
@@ -49,7 +95,6 @@ const DeleteManyModalForm: FC<Props> = ({ onClose }) => {
         console.error('Error deleting data:', errorMessage);
       } finally {
         setSubmitting(false);
-        cancel(true);
       }
     },
   });
@@ -58,103 +103,144 @@ const DeleteManyModalForm: FC<Props> = ({ onClose }) => {
     <>
       <ToastContainer />
       <form
-        id="kt_modal_delete_many_form"
-        className="form"
+        id='kt_modal_delete_many_form'
+        className='form'
         onSubmit={deleteFormik.handleSubmit}
         noValidate
       >
-        <div
-          className="d-flex flex-column scroll-y me-n7 pe-7"
-          id="kt_modal_delete_many_scroll"
-          data-kt-scroll="true"
-          data-kt-scroll-activate="{default: false, lg: true}"
-          data-kt-scroll-max-height="auto"
-          data-kt-scroll-dependencies="#kt_modal_delete_many_header"
-          data-kt-scroll-wrappers="#kt_modal_delete_many_scroll"
-          data-kt-scroll-offset="300px"
-        >
-          {/* Dropdown: Network Name */}
-          <div className="fv-row mb-7">
-            <label className="fw-bold fs-6 mb-2">
-              Nhà mạng
+        {isAdmin && (
+        <div className='mb-7'>
+          <label className="fw-bold fs-6 mb-5">Chọn loại xóa</label>
+            <div className="d-flex">
+            <label className='form-check form-check-inline' >
+              <input
+                className='form-check-input'
+                type='radio'
+                name='target'
+                value='normal'
+                checked={selectedTarget === 'normal'}
+                onChange={() => setSelectedTarget('normal')}
+              />
+              <span className='form-check-label'>Xóa thường</span>
             </label>
-            <select
-              {...deleteFormik.getFieldProps('networkName')}
-              name="networkName"
-              className={`form-control form-control-solid mb-3 mb-lg-0 ${
-                deleteFormik.touched.networkName &&
-                deleteFormik.errors.networkName
-                  ? 'is-invalid'
-                  : 'is-valid'
-              }`}
-              disabled={deleteFormik.isSubmitting}
-            >
-              <option value="">Chọn mạng</option>
-              <option value="Viettel">Viettel</option>
-              <option value="Vinaphone">Vinaphone</option>
-              <option value="Mobifone">Mobifone</option>
-            </select>
-            {deleteFormik.touched.networkName &&
-              deleteFormik.errors.networkName && (
-                <div className="fv-plugins-message-container">
-                  <div className="fv-help-block">
-                    <span role="alert">{deleteFormik.errors.networkName}</span>
-                  </div>
-                </div>
-              )}
-          </div>
-
-          {/* Input Group: Created At */}
-          <div className="fv-row mb-7">
-            <label className="fw-bold fs-6 mb-2">Ngày tạo</label>
-            <input
-              placeholder="Ngày tạo (YYYY-MM-DD)"
-              {...deleteFormik.getFieldProps('createdAt')}
-              type="date"
-              name="createdAt"
-              className={`form-control form-control-solid mb-3 mb-lg-0 ${
-                deleteFormik.touched.createdAt && deleteFormik.errors.createdAt
-                  ? 'is-invalid'
-                  : 'is-valid'
-              }`}
-              autoComplete="off"
-              disabled={deleteFormik.isSubmitting}
-            />
-            {deleteFormik.touched.createdAt &&
-              deleteFormik.errors.createdAt && (
-                <div className="fv-plugins-message-container">
-                  <div className="fv-help-block">
-                    <span role="alert">{deleteFormik.errors.createdAt}</span>
-                  </div>
-                </div>
-              )}
+            <label className='form-check form-check-inline' >
+              <input
+                className='form-check-input'
+                type='radio'
+                name='target'
+                value='type'
+                checked={selectedTarget === 'type'}
+                onChange={() => setSelectedTarget('type')}
+              />
+              <span className='form-check-label'>Xóa kho</span>
+            </label>
           </div>
         </div>
+      )}
+        <div className='d-flex flex-column scroll-y me-n7 pe-7'>
+          <div className='fv-row mb-7'>
+            <label className='required fw-bold fs-6 mb-2'>Nhà mạng</label>
+            <select
+              {...deleteFormik.getFieldProps('networkName')}
+              name='networkName'
+              className={`form-control form-control-solid mb-3 mb-lg-0 ${
+                deleteFormik.touched.networkName && deleteFormik.errors.networkName
+                  ? 'is-invalid'
+                  : 'is-valid'
+              }`}
+              value={deleteFormik.values.networkName} 
+              onChange={(e) => {
+                handleNetworkChange(e);
+                deleteFormik.setFieldValue('networkName', e.target.value); 
+              }}
+              disabled={deleteFormik.isSubmitting}
+            >
+              <option value='' disabled>
+                {intl.formatMessage({ id: 'SELECT.NETWORK' })}
+              </option>
+              {isLoadingNetworks ? (
+                <option>Loading networks...</option>
+              ) : (
+                networks &&
+                Object.entries(networks).map(([network]) => (
+                  <option key={network} value={network}>
+                    {network}
+                  </option>
+                ))
+              )}
+            </select>
+            {deleteFormik.touched.networkName && deleteFormik.errors.networkName && (
+              <div className='fv-plugins-message-container'>
+                <div className='fv-help-block'>
+                  <span role='alert'>{deleteFormik.errors.networkName}</span>
+                </div>
+              </div>
+            )}
+          </div>
 
-        {/* Actions */}
-        <div className="text-center pt-5">
+          {selectedTarget !== 'type' && (
+            <div className='fv-row mb-7'>
+              <label className='fw-bold fs-6 mb-2'>Ngày tạo</label>
+              <input
+                type='date'
+                {...deleteFormik.getFieldProps('createdAt')}
+                className={`form-control form-control-solid mb-3 mb-lg-0 ${
+                  deleteFormik.touched.createdAt && deleteFormik.errors.createdAt
+                    ? 'is-invalid'
+                    : 'is-valid'
+                }`}
+                disabled={deleteFormik.isSubmitting}
+              />
+            </div>
+          )}
+
+          {selectedTarget === 'type' && (
+            <div className='fv-row mb-7'>
+              <label className='fw-bold fs-6 mb-2'>Loại danh mục</label>
+              <Select
+                options={Object.entries(categories).map(([category, { count }]) => ({
+                  value: category,
+                  label: `${category} (Số lượng: ${count})`,
+                }))}
+                onChange={(selectedOptions) =>
+                  setSelectedCategories(
+                    selectedOptions ? selectedOptions.map((option) => option.value) : []
+                  )
+                }
+                isMulti={true}
+                isClearable
+                isSearchable
+                isLoading={isLoadingCategories}
+                placeholder='Chọn loại danh mục'
+              />
+            </div>
+          )}
+        </div>
+
+        <div className='text-center pt-5'>
           <button
-            type="reset"
+            type='reset'
             onClick={onClose}
-            className="btn btn-light me-3"
+            className='btn btn-light me-3'
             disabled={deleteFormik.isSubmitting}
           >
             Huỷ
           </button>
           <button
-            type="submit"
-            className="btn btn-primary"
+            type='submit'
+            className='btn btn-primary'
             disabled={
               deleteFormik.isSubmitting ||
               !deleteFormik.isValid ||
-              !deleteFormik.dirty
+              !deleteFormik.dirty ||
+              (selectedTarget === 'type' && selectedCategories.length === 0)
             }
           >
-            <span className="indicator-label">Xóa</span>
+            <span className='indicator-label'>Xóa</span>
             {deleteFormik.isSubmitting && (
-              <span className="indicator-progress">
+              <span className='indicator-progress'>
                 Please wait...{' '}
-                <span className="spinner-border spinner-border-sm align-middle ms-2"></span>
+                <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
               </span>
             )}
           </button>
@@ -163,5 +249,6 @@ const DeleteManyModalForm: FC<Props> = ({ onClose }) => {
     </>
   );
 };
+
 
 export { DeleteManyModalForm };

@@ -198,6 +198,18 @@ const deleteManyData = async (filters: { networkName: string; createdAt: string 
   }
 };
 
+const deleteCategory = async (categories: string[]): Promise<any> => {
+  try {
+    const response = await axios.post(`${API_URL}/data/delete-category`, {
+      categories,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting categories', error);
+    throw error;
+  }
+};
+
 const deleteScheduledFile = (id: ID): Promise<void> => {
   return axios.delete(`${API_URL}/schedule/deletedata?id=${id}`).then(() => { });
 }
@@ -248,5 +260,6 @@ export {
   exportSample,
   importScheduledData,
   getAllScheduledFiles,
-  deleteScheduledFile
+  deleteScheduledFile,
+  deleteCategory
 };
