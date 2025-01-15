@@ -19,7 +19,7 @@ const getAllRevenue = (params: {
     });
 };
 
-const getTop10Salesmen = async (params?: {
+const getTopSalesmen = async (params?: {
   number: number,
   date?: string,
   agencyId?: number
@@ -33,7 +33,7 @@ const getTop10Salesmen = async (params?: {
   }
 }
 
-const getTop10Agencies = async (params?: {
+const getTopAgencies = async (params?: {
   top: number,
   date?: string,
 }) => {
@@ -42,6 +42,64 @@ const getTop10Agencies = async (params?: {
     return response.data;
   } catch (error) {
     console.error("Failed to fetch top 10 salesmen:", error);
+    throw error;
+  }
+}
+
+const getYearlyRevenue = async (params?: {
+  agencyId?: string
+}) => {
+  try {
+    const response = await axios.get(`${REVENUE_URL}/get-years`, { params });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch yearly revenue:", error);
+    throw error;
+  }
+}
+
+const getMonthlyRevenue = async (params?: {
+  agencyId?: string
+  date?: string
+}) => {
+  try {
+    const response = await axios.get(`${REVENUE_URL}/get-months`, { params });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch monthly revenue:", error);
+    throw error;
+  }
+}
+
+const getWeeklyRevenue = async (params?: {
+  agencyId?: string
+  date?: string
+}) => {
+  try {
+    const response = await axios.get(`${REVENUE_URL}/get-weeks`, { params });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch weekly revenue:", error);
+    throw error;
+  }
+}
+
+const getTotalRevenue = async () => {
+  try {
+    const response = await axios.get(`${REVENUE_URL}/get-total`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch total revenue:", error);
+    throw error;
+  }
+}
+
+const agencyGetTotalRevenue = async () => {
+  try {
+    const response = await axios.get(`${REVENUE_URL}/get-total-agency`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch agency total revenue:", error);
     throw error;
   }
 }
@@ -106,7 +164,12 @@ export {
   getUserById,
   createUser,
   updateUser,
-  getTop10Salesmen,
-  getTop10Agencies,
-  exportReport
+  getTopSalesmen,
+  getTopAgencies,
+  exportReport,
+  getYearlyRevenue,
+  getMonthlyRevenue,
+  getWeeklyRevenue,
+  getTotalRevenue,
+  agencyGetTotalRevenue
 };

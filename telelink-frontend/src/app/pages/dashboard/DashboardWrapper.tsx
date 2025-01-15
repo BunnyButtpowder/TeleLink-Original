@@ -23,7 +23,7 @@ import { Content } from '../../../_metronic/layout/components/content'
 import { useAuth } from '../../../app/modules/auth'
 import { getUsers, getSalesmenByAgency } from '../../modules/apps/user-management/users-list/core/_requests'
 import { get } from 'http'
-import { getTop10Salesmen, getTop10Agencies } from '../../../app/pages/reportRevenue/revenue-list/core/_requests'
+import { getTopSalesmen, getTopAgencies, getTotalRevenue, agencyGetTotalRevenue } from '../../../app/pages/reportRevenue/revenue-list/core/_requests'
 
 type Salesman = {
   fullname: string
@@ -48,10 +48,17 @@ const DashboardPage: FC = () => {
   const [isAdmin] = useState(currentUser?.auth?.role === 1);
   const [topSalesmen, setTopSalesmen] = useState<Salesman[]>([])
   const [topAgencies, setTopAgencies] = useState<Agency[]>([])
+  const [topMonthAgencies, setTopMonthAgencies] = useState<Agency[]>([])
+  const [topMonthSalesmen, setTopMonthSalesmen] = useState<Salesman[]>([])
+  const [totalRevenue, setTotalRevenue] = useState<number>(0)
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const year = now.getFullYear()
+  const formattedDate = `${month}-${year}`
 
   const fetchTopSalesmen = async () => {
     try {
-      const response = await getTop10Salesmen({ number: 10 })
+      const response = await getTopSalesmen({ number: 10 })
       setTopSalesmen(response.data)
     } catch (error) {
       console.error('Error fetching top salesmen:', error)
@@ -60,10 +67,29 @@ const DashboardPage: FC = () => {
 
   const fetchTopAgencies = async () => {
     try {
-      const response = await getTop10Agencies({ top: 10 })
+      const response = await getTopAgencies({ top: 3 })
       setTopAgencies(response.data)
     } catch (error) {
       console.error('Error fetching top agencies:', error)
+    }
+  }
+
+  const fetchTopMonthAgencies = async () => {
+    try {
+
+      const response = await getTopAgencies({ top: 3, date: formattedDate })
+      setTopMonthAgencies(response.data)
+    } catch (error) {
+      console.error('Error fetching top agencies:', error)
+    }
+  }
+
+  const fetchTopMonthSalesmen = async () => {
+    try {
+      const response = await getTopSalesmen({ number: 3, date: formattedDate, agencyId: agencyId })
+      setTopMonthSalesmen(response.data)
+    } catch (error) {
+      console.error('Error fetching top salesmen:', error)
     }
   }
 
@@ -90,11 +116,56 @@ const DashboardPage: FC = () => {
     }
   }
 
+  const fetchTotalRevenue = async () => {
+    try {
+      const response = await getTotalRevenue();
+      if (response.data && response.data.length > 0) {
+        setTotalRevenue(response.data[0]["Total revenue"]);
+      } else {
+        console.error('Failed to fetch total revenue:', response);
+        setTotalRevenue(0);
+      }
+    } catch (error) {
+      console.error('Failed to fetch total revenue:', error);
+      setTotalRevenue(0);
+    }
+  }
+
+  const fetchAgencyTotalRevenue = async () => {
+    try {
+      const response = await agencyGetTotalRevenue();
+      if (response.data && response.data.length > 0) {
+        setTotalRevenue(response.data[0]["Total revenue"]);
+      } else {
+        console.error('Failed to fetch total revenue:', response);
+        setTotalRevenue(0);
+      }
+    } catch (error) {
+      console.error('Failed to fetch total revenue:', error);
+      setTotalRevenue(0);
+    }
+  }
+
   useEffect(() => {
-    fetchAgencyCount();
-    fetchSalesmenCount();
-    fetchTopSalesmen();
-    fetchTopAgencies();
+    if (userRole === 1) {
+      fetchAgencyCount();
+      fetchSalesmenCount();
+      fetchTopSalesmen();
+      fetchTopAgencies();
+      fetchTotalRevenue();
+      fetchTopMonthAgencies();
+    }
+    else if (userRole === 2) {
+      fetchSalesmenCount();
+      fetchAgencyCount();
+      fetchTopAgencies();
+      fetchTopSalesmen();
+      fetchTopMonthSalesmen();
+      fetchAgencyTotalRevenue();
+    }
+    else if (userRole === 3) {
+      fetchTopSalesmen();
+    }
   }, []);
 
   return (
@@ -123,7 +194,7 @@ const DashboardPage: FC = () => {
               </div>
 
               <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10'>
-                <CardsWidget17 className='h-md-50 mb-5 mb-xl-10' />
+                <CardsWidget17 className='h-md-50 mb-5 mb-xl-10' topMonthAgencies={topMonthAgencies} totalRevenue={totalRevenue}/>
                 <StatisticsWidget5
                   className='card-xl-stretch mb-xl-8 h-50'
                   svgIcon='briefcase'
@@ -213,7 +284,7 @@ const DashboardPage: FC = () => {
               </div>
 
               <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10'>
-                <CardsWidget17 className='h-md-50 mb-5 mb-xl-10' />
+                <CardsWidget17 className='h-md-50 mb-5 mb-xl-10' totalRevenue={totalRevenue} topMonthSalesmen={topMonthSalesmen} />
                 <StatisticsWidget5
                   className='card-xl-stretch mb-xl-8 h-50'
                   svgIcon='briefcase'

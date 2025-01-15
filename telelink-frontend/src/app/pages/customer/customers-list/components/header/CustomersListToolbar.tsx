@@ -131,7 +131,7 @@ const CustomersListToolbar = () => {
             { 'is-valid': selectedNetwork }
           )}
         >
-          <option value="">Chọn một nhà mạng</option>
+          <option value="">Chọn nhà mạng</option>
           {networkCategories.map((category) => (
             <option key={category} value={category}>
               {category}

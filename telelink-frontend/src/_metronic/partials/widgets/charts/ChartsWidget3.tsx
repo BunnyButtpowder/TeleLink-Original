@@ -1,21 +1,49 @@
-import React, {useEffect, useRef} from 'react'
-import ApexCharts, {ApexOptions} from 'apexcharts'
-import {getCSSVariableValue} from '../../../assets/ts/_utils'
-import {useThemeMode} from '../../layout/theme-mode/ThemeModeProvider'
+import React, { useState, useEffect, useRef } from 'react'
+import ApexCharts, { ApexOptions } from 'apexcharts'
+import { getCSSVariableValue } from '../../../assets/ts/_utils'
+import { useThemeMode } from '../../layout/theme-mode/ThemeModeProvider'
+import { getYearlyRevenue, getMonthlyRevenue, getWeeklyRevenue } from '../../../../app/pages/reportRevenue/revenue-list/core/_requests'
+import { format } from 'path'
+import { useAuth } from '../../../../app/modules/auth'
+
 
 type Props = {
   className: string
 }
 
-const ChartsWidget3: React.FC<Props> = ({className}) => {
+type YearlyRevenue = {
+  year: number
+  total_revenue: number
+}
+
+type MonthlyRevenue = {
+  year: number
+  month: number
+  total_revenue: number
+}
+
+type WeeklyRevenue = {
+  year: number
+  week: number
+  total_revenue: number
+}
+
+const ChartsWidget3: React.FC<Props> = ({ className }) => {
+  const [selectedMode, setSelectedMode] = useState<string>('year')
+  const [revenueData, setRevenueData] = useState<number[]>([])
+  const [categories, setCategories] = useState<string[]>([])
   const chartRef = useRef<HTMLDivElement | null>(null)
-  const {mode} = useThemeMode()
-  const refreshMode = () => {
+  const { mode } = useThemeMode()
+  const { currentUser } = useAuth();
+  const userRole = currentUser?.auth.role;
+  const agencyId = currentUser?.agency?.id;
+
+  const refreshMode = (data: number[], categories: string[]) => {
     if (!chartRef.current) {
       return
     }
 
-    const chart = new ApexCharts(chartRef.current, getChartOptions())
+    const chart = new ApexCharts(chartRef.current, getChartOptions(data, categories))
     if (chart) {
       chart.render()
     }
@@ -23,15 +51,91 @@ const ChartsWidget3: React.FC<Props> = ({className}) => {
     return chart
   }
 
+  const fetchYearlyRevenue = async () => {
+    try {
+      if (userRole === 1) {
+        const response = await getYearlyRevenue()
+        const data = response.data.map((item: YearlyRevenue) => item.total_revenue)
+        const labels = response.data.map((item: YearlyRevenue) => item.year.toString())
+        setRevenueData(data)
+        setCategories(labels)
+      } else if (userRole === 2 && agencyId) {
+        const response = await getYearlyRevenue({ agencyId: agencyId?.toString() })
+        const data = response.data.map((item: YearlyRevenue) => item.total_revenue)
+        const labels = response.data.map((item: YearlyRevenue) => item.year.toString())
+        setRevenueData(data)
+        setCategories(labels)
+      }
+    } catch (error) {
+      console.error('Failed to fetch yearly revenue:', error)
+    }
+  }
+
+  const fetchMonthlyRevenue = async () => {
+    try {
+      if (userRole === 1) {
+        const response = await getMonthlyRevenue()
+        const data = response.data.map((item: MonthlyRevenue) => item.total_revenue)
+        const labels = response.data.map((item: MonthlyRevenue) => item.month.toString())
+        setRevenueData(data)
+        setCategories(labels)
+      } else if (userRole === 2 && agencyId) {
+        const response = await getMonthlyRevenue({ agencyId: agencyId?.toString() })
+        const data = response.data.map((item: MonthlyRevenue) => item.total_revenue)
+        const labels = response.data.map((item: MonthlyRevenue) => item.month.toString())
+        setRevenueData(data)
+        setCategories(labels)
+      }
+    } catch (error) {
+      console.error('Failed to fetch monthly revenue:', error)
+    }
+  }
+
+  const fetchWeeklyRevenue = async () => {
+    try {
+      if (userRole === 1) {
+        const response = await getWeeklyRevenue()
+        const data = response.data.map((item: WeeklyRevenue) => item.total_revenue)
+        const labels = response.data.map((item: WeeklyRevenue) => item.week.toString())
+        setRevenueData(data)
+        setCategories(labels)
+      } else if (userRole === 2 && agencyId) {
+        const response = await getWeeklyRevenue({ agencyId: agencyId?.toString() })
+        const data = response.data.map((item: WeeklyRevenue) => item.total_revenue)
+        const labels = response.data.map((item: WeeklyRevenue) => item.week.toString())
+        setRevenueData(data)
+        setCategories(labels)
+      }
+    } catch (error) {
+      console.error('Failed to fetch weekly revenue:', error)
+    }
+  }
+
+  const handleButtonClick = (value: string) => {
+    setSelectedMode(value)
+  }
+
   useEffect(() => {
-    const chart = refreshMode()
+    if (selectedMode === 'year') {
+      fetchYearlyRevenue()
+    }
+    else if (selectedMode === 'month') {
+      fetchMonthlyRevenue()
+    }
+    else if (selectedMode === 'week') {
+      fetchWeeklyRevenue()
+    }
+  }, [selectedMode])
+
+  useEffect(() => {
+    const chart = refreshMode(revenueData, categories)
 
     return () => {
       if (chart) {
         chart.destroy()
       }
     }
-  }, [chartRef, mode])
+  }, [revenueData, categories, mode])
 
   return (
     <div className={`card ${className}`}>
@@ -46,21 +150,24 @@ const ChartsWidget3: React.FC<Props> = ({className}) => {
         {/* begin::Toolbar */}
         <div className='card-toolbar' data-kt-buttons='true'>
           <a
-            className='btn btn-sm btn-color-muted btn-active btn-active-primary active px-4 me-1'
+            className={`btn btn-sm btn-color-muted btn-active btn-active-primary px-4 me-1 ${selectedMode === 'year' ? 'active' : ''}`}
+            onClick={() => handleButtonClick('year')}
             id='kt_charts_widget_3_year_btn'
           >
             Năm
           </a>
 
           <a
-            className='btn btn-sm btn-color-muted btn-active btn-active-primary px-4 me-1'
+            className={`btn btn-sm btn-color-muted btn-active btn-active-primary px-4 me-1 ${selectedMode === 'month' ? 'active' : ''}`}
+            onClick={() => handleButtonClick('month')}
             id='kt_charts_widget_3_month_btn'
           >
             Tháng
           </a>
 
           <a
-            className='btn btn-sm btn-color-muted btn-active btn-active-primary px-4'
+            className={`btn btn-sm btn-color-muted btn-active btn-active-primary px-4 ${selectedMode === 'week' ? 'active' : ''}`}
+            onClick={() => handleButtonClick('week')}
             id='kt_charts_widget_3_week_btn'
           >
             Tuần
@@ -73,7 +180,7 @@ const ChartsWidget3: React.FC<Props> = ({className}) => {
       {/* begin::Body */}
       <div className='card-body'>
         {/* begin::Chart */}
-        <div ref={chartRef} id='kt_charts_widget_3_chart' style={{height: '350px'}}></div>
+        <div ref={chartRef} id='kt_charts_widget_3_chart' style={{ height: '350px' }}></div>
         {/* end::Chart */}
       </div>
       {/* end::Body */}
@@ -81,19 +188,27 @@ const ChartsWidget3: React.FC<Props> = ({className}) => {
   )
 }
 
-export {ChartsWidget3}
+export { ChartsWidget3 }
 
-function getChartOptions(): ApexOptions {
+function getChartOptions(data: number[], categories: string[]): ApexOptions {
   const labelColor = getCSSVariableValue('--bs-gray-500')
   const borderColor = getCSSVariableValue('--bs-gray-200')
-  const baseColor = getCSSVariableValue('--bs-info')
-  const lightColor = getCSSVariableValue('--bs-info-light')
+  const baseColor = getCSSVariableValue('--bs-success')
+  const lightColor = getCSSVariableValue('--bs-success-light')
+
+  const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0
+    }).format(value)
+  }
 
   return {
     series: [
       {
-        name: 'Net Profit',
-        data: [30, 40, 40, 90, 90, 70, 70],
+        name: 'Doanh thu',
+        data: data,
       },
     ],
     chart: {
@@ -122,7 +237,7 @@ function getChartOptions(): ApexOptions {
       colors: [baseColor],
     },
     xaxis: {
-      categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+      categories: categories,
       axisBorder: {
         show: false,
       },
@@ -154,6 +269,7 @@ function getChartOptions(): ApexOptions {
     },
     yaxis: {
       labels: {
+        formatter: (val: number) => formatCurrency(val),
         style: {
           colors: labelColor,
           fontSize: '12px',
@@ -187,7 +303,7 @@ function getChartOptions(): ApexOptions {
       },
       y: {
         formatter: function (val) {
-          return '$' + val + ' thousands'
+          return formatCurrency(val)
         },
       },
     },

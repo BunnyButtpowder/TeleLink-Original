@@ -27,9 +27,9 @@ const rankingIcon = (rank: number) => {
     case 1:
       return <KTIcon iconName='cup' className='fs-1 text-warning me-2' />;
     case 2:
-      return <KTIcon iconName='cup' className='fs-1 text-dark me-2' />;
+      return <KTIcon iconName='cup' className='fs-1 me-2' />;
     case 3:
-      return <KTIcon iconName='cup' className='fs-1 text-bronze me-2' />;
+      return <KTIcon iconName='cup' className='fs-1 me-2 text-dark' />
     default:
       return <KTIcon iconName='medal-star' className='fs-1 me-2' />;
   }
@@ -120,7 +120,7 @@ const TablesWidget10: FC<Props> = ({ className, stats, topSalesmen }) => {
                   </div>
                 </td> */}
                   <td>
-                      <span className='-gray-900 fw-bold text-hover-warning fs-6'>#{index + 1}</span>
+                    <span className='-gray-900 fw-bold text-hover-warning fs-6'>#{index + 1}</span>
                     {/* <span className='text-muted fw-semibold text-muted d-block fs-7'>
                       Web, UI/UX Design
                     </span> */}
