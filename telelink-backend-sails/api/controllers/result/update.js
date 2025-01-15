@@ -93,8 +93,11 @@ module.exports = {
             latestResult: result,
             dateToCall,
             note,
-          });
-          
+          }).fetch();
+          setTimeout(async () => {
+            await DataRehandle.destroy({ id: rehandle.id });
+            await Data.updateOne({ id: dataId }).set({ isDelete: false });
+          }, 2 * 7 * 24 * 60 * 60 * 1000); 
         }
 
         await Result.updateOne(
