@@ -54,6 +54,7 @@ module.exports = {
       )
     );
     startDate = Date.parse(fiveYearAgo);
+    endDate = Date.parse(now);
 
     let rawQuery, groupedResults;
 
@@ -63,7 +64,7 @@ module.exports = {
         UNION ALL
         SELECT year + 1
         FROM years
-        WHERE year < YEAR(FROM_UNIXTIME(${endDate} / 1000))
+        WHERE year + 1 <= YEAR(FROM_UNIXTIME(${endDate} / 1000))
       )
       SELECT 
         y.year,
@@ -71,27 +72,27 @@ module.exports = {
       FROM 
         years y
         LEFT JOIN result r ON YEAR(FROM_UNIXTIME(r.createdAt / 1000)) = y.year
-        LEFT JOIN agency a ON r.agency = a.id
       WHERE
         r.createdAt IS NULL OR (r.createdAt > $1 AND r.createdAt < $2)
       GROUP BY 
-        y.year,
-        a.name
+        y.year
       ORDER BY 
         y.year;
-        `;
+    `;
+
     if (agencyId) {
       rawQuery = `
-      WITH RECURSIVE years AS (
+        WITH RECURSIVE years AS (
           SELECT YEAR(FROM_UNIXTIME(${startDate} / 1000)) AS year
           UNION ALL
           SELECT year + 1
           FROM years
-          WHERE year < YEAR(FROM_UNIXTIME(${endDate} / 1000))
+          WHERE year + 1 <= YEAR(FROM_UNIXTIME(${endDate} / 1000))
         )
         SELECT 
           y.year,
-          COALESCE(SUM(r.revenue), 0) AS total_revenue
+          COALESCE(SUM(r.revenue), 0) AS total_revenue,
+          COALESCE(a.name, 'No Agency') AS agency
         FROM 
           years y
           LEFT JOIN result r ON YEAR(FROM_UNIXTIME(r.createdAt / 1000)) = y.year
@@ -103,7 +104,7 @@ module.exports = {
           a.name
         ORDER BY 
           y.year;
-        `;
+      `;
       groupedResults = await sails.sendNativeQuery(rawQuery, [
         agencyId,
         startDate,
@@ -118,8 +119,7 @@ module.exports = {
 
     return this.res.ok({
       message: `Revenue report:`,
-      data: groupedResults.rows,
-      count: groupedResults.rows.length,
+      data: groupedResults.rows
     });
   },
 };
