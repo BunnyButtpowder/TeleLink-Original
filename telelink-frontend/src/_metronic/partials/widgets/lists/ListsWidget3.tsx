@@ -50,10 +50,10 @@ const ListsWidget3: React.FC<Props> = ({ className }) => {
         {latestCalls?.map((call, index) => (
           < div className='d-flex align-items-center mb-8' >
             < span className='bullet bullet-vertical h-40px bg-danger' ></span>
-            <div className='form-check form-check-custom form-check-solid mx-5'>
+            {/* <div className='form-check form-check-custom form-check-solid mx-5'>
               <input className='form-check-input' type='checkbox' value='' />
-            </div>
-            <div className='flex-grow-1'>
+            </div> */}
+            <div className='ms-5 flex-grow-1'>
               <a href='#' className='text-gray-800 text-hover-primary fw-bold fs-6'>
                 {call.customerName}
               </a>

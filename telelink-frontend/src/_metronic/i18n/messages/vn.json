@@ -56,6 +56,7 @@
   "AUTH.VALIDATION.PASSWORD_CHANGED": "Mật khẩu đã được thay đổi",
   "AUTH.VALIDATION.PASSWORD_REQUIREMENTS": "Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số",
   "AUTH.PASSWORD.REQUIRED": "Mật khẩu không được để trống",
+  "RETRIEVE": "Thu hồi",
   "ECOMMERCE.COMMON.SELECTED_RECORDS_COUNT": "Selected records count: ",
   "ECOMMERCE.COMMON.ALL": "All",
   "ECOMMERCE.COMMON.SUSPENDED": "Suspended",

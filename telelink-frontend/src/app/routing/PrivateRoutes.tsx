@@ -15,6 +15,7 @@ import { ResultPage } from '../pages/reportCallResults/ResultPage'
 import { PackagePage } from '../pages/package/PackagePage'
 import { BlackListPage } from '../pages/blacklist/BlackListPage'
 import { PermissionPage } from '../pages/permission/PermissionPage'
+import { DataRetrievePage } from '../pages/dataRetrieve/DataRetrievePage'
 // import { PlanPage } from '../pages/plan/PlanPage'
 
 const PrivateRoutes = () => {
@@ -144,6 +145,14 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <PermissionPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='retrieve'
+          element={
+            <SuspensedView>
+              <DataRetrievePage/>
             </SuspensedView>
           }
         />

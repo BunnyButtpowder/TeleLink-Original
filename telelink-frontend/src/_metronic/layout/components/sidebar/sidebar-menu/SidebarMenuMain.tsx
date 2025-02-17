@@ -26,12 +26,12 @@ const SidebarMenuMain = () => {
             fontIcon='bi-app-indicator'
           />
           {/* {permissions.includes(1) || permissions.includes(2) ? ( */}
-            <SidebarMenuItem
-              to='/data'
-              icon='wifi-square'
-              title={intl.formatMessage({ id: 'DATA' })}
-              fontIcon='bi-app-indicator'
-            />
+          <SidebarMenuItem
+            to='/data'
+            icon='wifi-square'
+            title={intl.formatMessage({ id: 'DATA' })}
+            fontIcon='bi-app-indicator'
+          />
           {/* ) : null} */}
 
           <SidebarMenuItem
@@ -46,6 +46,11 @@ const SidebarMenuMain = () => {
             title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })}
             fontIcon='bi-app-indicator'
           /> */}
+          <SidebarMenuItem
+            to='/retrieve'
+            icon='arrows-loop'
+            title={intl.formatMessage({ id: 'RETRIEVE' })}
+          />
           <SidebarMenuItem
             to='/blacklist'
             title={intl.formatMessage({ id: 'BLACKLIST' })}
@@ -114,7 +119,7 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/error/404' title='Error 404' hasBullet={true} />
         <SidebarMenuItem to='/error/500' title='Error 500' hasBullet={true} />
       </SidebarMenuItemWithSub> */}
-          {/* <SidebarMenuItemWithSub
+          <SidebarMenuItemWithSub
             to='/crafted/widgets'
             title='Widgets'
             icon='element-7'
@@ -126,7 +131,7 @@ const SidebarMenuMain = () => {
             <SidebarMenuItem to='/crafted/widgets/mixed' title='Mixed' hasBullet={true} />
             <SidebarMenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
             <SidebarMenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
-          </SidebarMenuItemWithSub> */}
+          </SidebarMenuItemWithSub>
           <div className='menu-item'>
             <div className='menu-content pt-8 pb-2'>
               <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{intl.formatMessage({ id: 'SIDEBAR.ADMINISTRATION' })}</span>
@@ -166,13 +171,19 @@ const SidebarMenuMain = () => {
             fontIcon='bi-app-indicator'
           />
           {/* { permissions.includes(2) ? ( */}
-            <SidebarMenuItem
-              to='/data'
-              icon='wifi-square'
-              title={intl.formatMessage({ id: 'DATA' })}
-              fontIcon='bi-app-indicator'
-            />
+          <SidebarMenuItem
+            to='/data'
+            icon='wifi-square'
+            title={intl.formatMessage({ id: 'DATA' })}
+            fontIcon='bi-app-indicator'
+          />
           {/* ) : null} */}
+
+          <SidebarMenuItem
+            to='/retrieve'
+            icon='arrows-loop'
+            title={intl.formatMessage({ id: 'RETRIEVE' })}
+          />
 
           <SidebarMenuItem
             to='/blacklist'
