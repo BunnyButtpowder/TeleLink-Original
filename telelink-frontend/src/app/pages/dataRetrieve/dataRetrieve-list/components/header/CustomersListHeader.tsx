@@ -7,6 +7,7 @@ const CustomersListHeader = () => {
   return (
     <div className='border-0  d-flex justify-content-end'>
       {/* <UsersListSearchComponent /> */}
+      <UsersListSearchComponent/>
       {/* begin::Card toolbar */}
       <div className='card-toolbar'>
         {/* begin::Group actions */}
