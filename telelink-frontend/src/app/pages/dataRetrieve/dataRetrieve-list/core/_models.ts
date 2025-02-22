@@ -45,23 +45,15 @@ export type Result = {
   id?: number;
   data_id: number;
   agency?: number;
-  saleman?: number;
-  subscriberNumber: string;
-  result: number;
-  dataPackage?: string;
-  customerName: string;
-  address?: string;
-  note?: string;
-  revenue?: number;
+  salesman?: number;
+  categories?: string[];
   createdAt?: number;
   updatedAt?: number;
 }
 
 export const initialResult: Result = {
   data_id: 0,
-  subscriberNumber: '',
-  result: 1,
-  dataPackage: '',
-  customerName: '',
-  address: '',
+  agency: 0,
+  salesman: 0,
+  categories: [],
 }
