@@ -10,11 +10,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../../modules/auth';
 import Swal from 'sweetalert2';
 import Select from 'react-select';
+import { useQueryResponse } from '../core/QueryResponseProvider'
 
 type Props = {
   onClose: () => void;
 };
-
 
 const AddReportModalForm: FC<Props> = ({ onClose }) => {
   const intl = useIntl();
@@ -28,6 +28,7 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
   const [categories, setCategories] = useState<{ value: string, label: string }[]>([]);
   const [selectedTarget, setSelectedTarget] = useState<'agency' | 'salesman'>('agency');
   const isAdmin = currentUser?.auth?.role === 1;
+  const { refetch } = useQueryResponse()
 
   const API_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -168,7 +169,8 @@ const AddReportModalForm: FC<Props> = ({ onClose }) => {
             throw new Error('Salesman is not selected');
           }
         }
-  
+
+        refetch();
         onClose();
         Swal.fire({
           title: 'Thành công',

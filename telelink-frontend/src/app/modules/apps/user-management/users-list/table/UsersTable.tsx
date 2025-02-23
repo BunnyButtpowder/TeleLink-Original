@@ -7,7 +7,7 @@ import {usersColumns} from './columns/_columns'
 import {User} from '../core/_models'
 import {UsersListLoading} from '../components/loading/UsersListLoading'
 import {KTCardBody} from '../../../../../../_metronic/helpers'
-
+import {UserManagePagination} from '../components/pagination/UserManagePagination'
 const UsersTable = () => {
   const users = useQueryResponseData()
   const isLoading = useQueryResponseLoading()
@@ -51,6 +51,7 @@ const UsersTable = () => {
           </tbody>
         </table>
       </div>
+      <UserManagePagination />
       {/* <UsersListPagination /> */}
       {isLoading && <UsersListLoading />}
     </KTCardBody>

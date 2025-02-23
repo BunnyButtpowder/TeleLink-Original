@@ -35,6 +35,13 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
     }
   }, [updatedQuery])
 
+  // useEffect(() => {
+  //   if (query !== updatedQuery && updatedQuery.includes("search")) {
+  //     console.log("Query change detected:", query, updatedQuery);
+  //     setQuery(updatedQuery);
+  //   }
+  // }, [updatedQuery]);
+
   useEffect(() => {
     if (userRole === 3) {
       navigate('/error/404');
@@ -42,45 +49,58 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
   }, [userRole, navigate])
 
   const fetchData = async () => {
-    const { search = '', sort = '', order = '', filter = {}, page = 1, items_per_page = 10 } = state;
+    // console.log('fetchData called with state:', state);
+    if (!state.search && !state.page) {
+      return { data: [], count: 0 }; // Prevent unnecessary API call
+    }
+    const { search = '', sort = '', order = '', page = 1, items_per_page = 8 } = state;
 
-    const { placeOfIssue, networkName } = filter;
     if (userRole === 1) {
-      const branches = await getAllDataAssignedAgency();
-      return { data: branches };
+      const response = await getAllDataAssignedAgency({ search: search, sort, order, page, limit: 8 });
+      return {
+        data: response.branches,
+        currentPage: response.currentPage,
+        totalBranches: response.totalBranches,
+        totalPages: response.totalPages
+      };
     } else if (userRole === 2 && agencyId) {
-      const response = await getSalemanDataAssignedByAgencyID(agencyId);
+      const response = await getSalemanDataAssignedByAgencyID(agencyId, search);
       const salesmenData = response.data;
       const groupedBranches = salesmenData.reduce((acc: { [key: string]: any }, salesman) => {
         const { agency, user, userName, totalData, categories } = salesman;
-  
+
         if (!acc[agency]) {
           acc[agency] = {
-            branchId: agencyId, // Assuming agencyId is unique
+            branchId: agencyId,
             branchName: agency,
             assignedData: [],
             unassignedData: {},
             unassignedTotal: 0
           };
         }
-  
+
         acc[agency].assignedData.push({ user, userName, totalData, categories });
-  
+
         return acc;
       }, {});
-  
-      // Convert object to array format
+
+      // Convert object to array
       const transformedData = Object.values(groupedBranches);
-  
-      console.log("Transformed Data for Agency:", transformedData); // Debugging
-      return { data: transformedData };
+
+      // console.log("Transformed Data for Agency:", transformedData); // Debugging
+      return {
+        data: transformedData,
+        currentPage: response.currentPage,
+        totalItems: response.totalItems,
+        totalPages: response.totalPages
+      };
     } else {
       return Promise.resolve({ data: [], count: 0 });
     }
   };
 
   const { isFetching, refetch, data: response } = useQuery(
-    [`${QUERIES.USERS_LIST}-${query}`, state.filter],
+    [`${QUERIES.USERS_LIST}-${query}`],
     fetchData,
     { cacheTime: 0, keepPreviousData: true, refetchOnWindowFocus: false }
   )

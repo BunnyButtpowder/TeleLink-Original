@@ -63,6 +63,7 @@ const useQueryResponsePagination = () => {
   }
 
   const {response} = useQueryResponse()
+  console.log("Packages response", response)
   if (!response) {
     return defaultPaginationState
   }

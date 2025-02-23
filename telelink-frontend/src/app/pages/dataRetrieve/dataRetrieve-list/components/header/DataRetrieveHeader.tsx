@@ -1,13 +1,12 @@
 import {useListView} from '../../core/ListViewProvider'
 import {CustomersListToolbar} from './CustomersListToolbar'
-import {UsersListSearchComponent} from './UsersListSearchComponent'
+import {DataRetrieveSearchComponent} from './DataRetrieveSearchComponent'
 
-const CustomersListHeader = () => {
+const DataRetrieveHeader = () => {
   const {selected} = useListView()
   return (
     <div className='border-0  d-flex justify-content-end'>
-      {/* <UsersListSearchComponent /> */}
-      <UsersListSearchComponent/>
+      <DataRetrieveSearchComponent/>
       {/* begin::Card toolbar */}
       <div className='card-toolbar'>
         {/* begin::Group actions */}
@@ -19,4 +18,4 @@ const CustomersListHeader = () => {
   )
 }
 
-export {CustomersListHeader}
+export {DataRetrieveHeader}

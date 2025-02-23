@@ -25,14 +25,11 @@ export type SalesmanAssignedData = {
   categories: Record<string, number>
 }
 
-export type SalesmanAssignedResponse = {
-  data: SalesmanAssignedData[]
-  pagination: {
-    totalItems: number,
-    totalPages: number,
-    currentPage: number,
-    limit: number
-  }
+export interface SalesmanAssignedResponse {
+  data: any[];
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
 }
 
 type AdminBranchResponse = {

@@ -32,15 +32,15 @@ const QueryResponseProvider: FC<WithChildren> = ({children}) => {
   }, [updatedQuery])
 
   const fetchUsers = async () => {
-    const { search = '', sort = '', order = '', filter = {} } = state;
+    const { search = '', sort = '', order = '', filter = {}, page = 1, items_per_page = 10 } = state;
     
     const {role, gender, agency} = filter;
     // Admin gets all users
     if (userRole === 1) {
-      return getUsers({searchTermAuth: search, sort , order, role, gender, agency});
+      return getUsers({searchTermAuth: search, sort , order, role, gender, agency, page, limit: items_per_page});
     } else if (userRole === 2 && agencyId) {
       // Agency gets data by agency id
-      const response = await getSalesmenByAgency({searchTermAuth: search, sort, order, agencyId});
+      const response = await getSalesmenByAgency({searchTermAuth: search, sort, order, agencyId, page, limit: items_per_page});
       return {data: response.employees};
     } else {
       // Undefined role gets empty data
@@ -86,7 +86,12 @@ const useQueryResponsePagination = () => {
     return defaultPaginationState
   }
 
-  return response
+  return {
+    page: response.currentPage,
+    items_per_page: response.perPage,
+    total: response.totalCount,
+    total_pages: response.totalPages,
+  }
 }
 
 const useQueryResponseLoading = (): boolean => {
