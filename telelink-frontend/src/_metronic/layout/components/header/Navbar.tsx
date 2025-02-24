@@ -19,13 +19,13 @@ const Navbar = () => {
         <Search />
       </div> */}
 
-      <div className={clsx('app-navbar-item', itemClass)}>
+      {/* <div className={clsx('app-navbar-item', itemClass)}>
         <div id='kt_activities_toggle' className={btnClass}>
           <KTIcon iconName='chart-simple' className={btnIconClass} />
         </div>
-      </div>
+      </div> */}
 
-      <div className={clsx('app-navbar-item', itemClass)}>
+      {/* <div className={clsx('app-navbar-item', itemClass)}>
         <div
           data-kt-menu-trigger="{default: 'click'}"
           data-kt-menu-attach='parent'
@@ -34,9 +34,9 @@ const Navbar = () => {
         >
           <KTIcon iconName='notification' className={btnIconClass} />
         </div>
-        <HeaderNotificationsMenu />
-      </div>
-
+        
+      </div> */}
+      {/* <HeaderNotificationsMenu /> */}
       {/* <div className={clsx('app-navbar-item', itemClass)}>
         <div className={clsx('position-relative', btnClass)} id='kt_drawer_chat_toggle'>
           <KTIcon iconName='message-text-2' className={btnIconClass} />

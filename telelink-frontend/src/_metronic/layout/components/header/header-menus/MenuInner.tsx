@@ -111,6 +111,8 @@ export function MenuInner() {
         </MenuInnerWithSub> */}
           </MenuInnerWithSub>
 
+          <MenuItem title='Thu hồi' to='/retrieve' />
+
           <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger={`{default:'click', lg: 'hover'}`}>
             <MenuItem icon='abstract-28' to='/apps/user-management/users' title='Quản lý tài khoản' />
           </MenuInnerWithSub>
@@ -156,6 +158,7 @@ export function MenuInner() {
             <MenuItem to='/crafted/account/settings' title='Cài đặt' hasBullet={true} />
           </MenuInnerWithSub>
           {/* MANAGEMENT */}
+          <MenuItem title='Thu hồi' to='/retrieve' />
           <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger={`{default:'click', lg: 'hover'}`}>
             <MenuItem icon='abstract-28' to='/apps/user-management/users' title='Quản lý tài khoản' />
           </MenuInnerWithSub>
