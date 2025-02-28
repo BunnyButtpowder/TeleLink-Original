@@ -119,7 +119,7 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/error/404' title='Error 404' hasBullet={true} />
         <SidebarMenuItem to='/error/500' title='Error 500' hasBullet={true} />
       </SidebarMenuItemWithSub> */}
-          <SidebarMenuItemWithSub
+          {/* <SidebarMenuItemWithSub
             to='/crafted/widgets'
             title='Widgets'
             icon='element-7'
@@ -131,7 +131,7 @@ const SidebarMenuMain = () => {
             <SidebarMenuItem to='/crafted/widgets/mixed' title='Mixed' hasBullet={true} />
             <SidebarMenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
             <SidebarMenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
-          </SidebarMenuItemWithSub>
+          </SidebarMenuItemWithSub> */}
           <div className='menu-item'>
             <div className='menu-content pt-8 pb-2'>
               <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{intl.formatMessage({ id: 'SIDEBAR.ADMINISTRATION' })}</span>

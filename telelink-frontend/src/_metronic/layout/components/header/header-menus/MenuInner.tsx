@@ -19,7 +19,17 @@ export function MenuInner() {
       {/* Admin access */}
       {userRole === 1 && (
         <>
-          <MenuItem title={intl.formatMessage({ id: 'DATA' })} to='/data' />
+          <MenuInnerWithSub
+            title={intl.formatMessage({ id: 'DATA' })}
+            to='/data'
+            menuPlacement='bottom-start'
+            menuTrigger={`{default:'click', lg: 'hover'}`}
+          >
+            <MenuItem icon='wifi-square' title='Data' to='/data'/>
+            <MenuItem icon='ocean' title='Gói cước' to='/packages' />
+            <MenuItem icon='arrows-loop' title='Thu hồi' to='/retrieve' />
+            <MenuItem icon='abstract-11' title='Số chặn' to='/blacklist' />
+          </MenuInnerWithSub>
 
           <MenuInnerWithSub
             title='Báo cáo'
@@ -113,6 +123,7 @@ export function MenuInner() {
 
           <MenuInnerWithSub title='Quản trị' to='/apps' menuPlacement='bottom-start' menuTrigger={`{default:'click', lg: 'hover'}`}>
             <MenuItem icon='abstract-28' to='/apps/user-management/users' title='Quản lý tài khoản' />
+            <MenuItem icon='shield-tick' to='/permissions' title='Quyền hạn' />
           </MenuInnerWithSub>
           {/* PAGES */}
           {/* <MenuInnerWithSub
@@ -134,7 +145,16 @@ export function MenuInner() {
       {/* Agency access */}
       {userRole === 2 && (
         <>
-          <MenuItem title={intl.formatMessage({ id: 'DATA' })} to='/data' />
+          <MenuInnerWithSub
+            title={intl.formatMessage({ id: 'DATA' })}
+            to='/data'
+            menuPlacement='bottom-start'
+            menuTrigger={`{default:'click', lg: 'hover'}`}
+          >
+            <MenuItem icon='wifi-square' title='Data' to='/data'/>
+            <MenuItem icon='arrows-loop' title='Thu hồi' to='/retrieve' />
+            <MenuItem icon='abstract-11' title='Số chặn' to='/blacklist' />
+          </MenuInnerWithSub>
           <MenuInnerWithSub
             title='Báo cáo'
             to='/reports'
@@ -166,16 +186,9 @@ export function MenuInner() {
       {userRole === 3 && (
         <>
           <MenuItem title={intl.formatMessage({ id: 'ECOMMERCE.CUSTOMERS.CUSTOMERS' })} to='/customers' />
-          <MenuInnerWithSub
-            title='Báo cáo'
-            to='/reports'
-            menuPlacement='bottom-start'
-            menuTrigger={`{default:'click', lg: 'hover'}`}
-          >
-            {/* ACCOUNT */}
-            {/* <MenuItem to='/reports/revenue' title='Báo cáo doanh thu' hasBullet={true} /> */}
-            <MenuItem to='/reports/call-results' title='Báo cáo cuộc gọi' hasBullet={true} />
-          </MenuInnerWithSub>
+          <MenuItem to='/rehandle' title={intl.formatMessage({ id: 'REHANDLE' })}/>
+          <MenuItem to='/blacklist' title='Số chặn'/>
+          <MenuItem to='/reports/call-results' title='Báo cáo'/>
           <MenuInnerWithSub
             title='Cá Nhân'
             to='/crafted'

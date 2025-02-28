@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import axios from 'axios'
-import { getTop10Salesmen } from '../../../../../app/pages/reportRevenue/revenue-list/core/_requests'
+// import { getTop10Salesmen } from '../../../../../app/pages/reportRevenue/revenue-list/core/_requests'
 
 type Props = {
   className: string

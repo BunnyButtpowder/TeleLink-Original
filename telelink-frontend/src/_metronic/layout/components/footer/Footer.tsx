@@ -1,8 +1,9 @@
-import {useEffect} from 'react'
-import {ILayout, useLayout} from '../../core'
+import { useEffect } from 'react'
+import { ILayout, useLayout } from '../../core'
+import Immutable from '../../../helpers/components/Immutable'
 
 const Footer = () => {
-  const {config} = useLayout()
+  const { config } = useLayout()
   useEffect(() => {
     updateDOM(config)
   }, [config])
@@ -23,25 +24,7 @@ const Footer = () => {
 
       <ul className='menu menu-gray-600 menu-hover-primary fw-semibold order-1'>
         <li className='menu-item'>
-          <a href='#' target='_blank' className='menu-link px-2'>
-            About
-          </a>
-        </li>
-
-        <li className='menu-item'>
-          <a href='#' target='_blank' className='menu-link px-2'>
-            Support
-          </a>
-        </li>
-
-        <li className='menu-item'>
-          <a
-            href='https://selfolio.pages.dev/minhvu'
-            target='_blank'
-            className='menu-link px-2'
-          >
-            Credit
-          </a>
+          <Immutable />
         </li>
       </ul>
     </>
@@ -58,4 +41,4 @@ const updateDOM = (config: ILayout) => {
   }
 }
 
-export {Footer}
+export { Footer }
