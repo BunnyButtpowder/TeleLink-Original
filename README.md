@@ -1,7 +1,7 @@
 # TeleLink
 Telesale management system for didongtelecom telesale companies
 
-Originally developed by 
+Originally developed by:
 
 [Minh Vu] (https://github.com/BunnyButtpowder).
 
