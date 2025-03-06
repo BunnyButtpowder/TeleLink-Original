@@ -119,7 +119,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Ngày đăng ký:</span>
-                  <span className='text-gray-600'>{customerData.registrationDate ? formatDate(customerData.registrationDate) : 'N/A'}</span>
+                  <span className='text-gray-600'>{customerData.registrationDate || 'N/A'}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>
@@ -128,7 +128,7 @@ const CustomerForm: FC<Props> = ({ className, color, img }) => {
                 </span>
                 <div className='d-flex flex-column'>
                   <span className='fw-bold text-gray-800 fs-5'>Ngày hết hạn:</span>
-                  <span className='text-gray-600'>{customerData.expirationDate ? formatDate(customerData.expirationDate) : 'N/A'}</span>
+                  <span className='text-gray-600'>{customerData.expirationDate || 'N/A'}</span>
                 </div>
               </div>
               <div className='d-flex align-items-center bg-light-primary rounded p-5 mb-7'>

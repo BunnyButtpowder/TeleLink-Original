@@ -35,7 +35,7 @@ const CardsWidget7 = ({ className, description, stats, labelColor, textColor, to
       <div className="card-body d-flex flex-column justify-content-end pe-0">
         <span className="fs-6 fw-bolder text-gray-800 d-block mb-2">Nhân viên xuất sắc</span>
         <div className="symbol-group symbol-hover flex-nowrap">
-          {topSalesmen.map((salesman, index) => (
+          {topSalesmen.slice(0, 8).map((salesman, index) => (
             <div
               className="symbol symbol-35px symbol-circle"
               data-bs-toggle="tooltip"
