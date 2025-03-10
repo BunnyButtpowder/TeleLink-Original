@@ -1,5 +1,5 @@
 # TeleLink
-Telesale management system for didongtelecom telesale companies
+Telesale management system for didongtelecom telesale company
 
 Originally developed by:
 
