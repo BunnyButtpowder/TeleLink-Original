@@ -64,7 +64,7 @@ const QueryResponseProvider: FC<WithChildren> = ({ children }) => {
         totalPages: response.totalPages
       };
     } else if (userRole === 2 && agencyId) {
-      const response = await getSalemanDataAssignedByAgencyID(agencyId, search);
+      const response = await getSalemanDataAssignedByAgencyID(agencyId, search, page, 8);
       const salesmenData = response.data;
       const groupedBranches = salesmenData.reduce((acc: { [key: string]: any }, salesman) => {
         const { agency, user, userName, totalData, categories } = salesman;

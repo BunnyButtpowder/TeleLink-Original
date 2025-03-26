@@ -28,11 +28,13 @@ const getAllDataAssignedAgency = async(params: {search?: string, sort?: string, 
   }
 }
 
-const getSalemanDataAssignedByAgencyID = async (agencyId: ID, search?: string): Promise<SalesmanAssignedResponse> => {
+const getSalemanDataAssignedByAgencyID = async (agencyId: ID, search?: string, page?: number, limit?: number): Promise<SalesmanAssignedResponse> => {
   const response = await axios.get(`${API_URL}/data-assign/agency-assign`, {
     params: {
       id: agencyId,
       search: search,
+      page: page,
+      limit: limit,
     },
   });
   
