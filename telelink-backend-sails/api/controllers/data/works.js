@@ -97,6 +97,7 @@ module.exports = {
           });
           if (rejection < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
+            await DataAssignment.destroy({ data: dataId });
           }
           break;
         case 3: //khong nghe may
@@ -106,6 +107,7 @@ module.exports = {
           });
           if (unanswered < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
+            await DataAssignment.destroy({ data: dataId });
           }
           break;
         case 4: //khong lien lac duoc
@@ -115,6 +117,7 @@ module.exports = {
           });
           if (unavailable < 2) {
             await Data.updateOne({ id: dataId }).set({ isDelete: false });
+            await DataAssignment.destroy({ data: dataId });
           }
           break;
         case 5: //xu ly lai
